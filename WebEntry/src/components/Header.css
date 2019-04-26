@@ -1,0 +1,8 @@
+.spacer{
+  flex-grow: 1;
+  background-color: red;
+}
+
+.headerIcon{
+  position: absolute;
+}
