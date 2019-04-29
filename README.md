@@ -1,1 +1,1 @@
-# SynOpticonLite
+# SynopticonLite
