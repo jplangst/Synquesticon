@@ -16,9 +16,12 @@ import CreateTaskDialog from '../components/dialogs/CreateTaskDialog';
 
 //icons
 import AddIcon from '@material-ui/icons/AddToQueue';
+import NavigationIcon from '@material-ui/icons/NavigateNextTwoTone';
 
 import './TaskSetCreation.css';
-import * as dbFunctions from '../core/db_helper.js'
+import * as dbFunctions from '../core/db_helper.js';
+
+import store from '../core/store';
 
 class TaskSetCreation extends Component {
   constructor(props) {
@@ -41,8 +44,13 @@ class TaskSetCreation extends Component {
 
     //Task dialog related
     this.closeTaskDialog = this.onCloseCreateTaskDialog.bind(this);
+
+    this.gotoPage = this.gotoPageHandler.bind(this);
   }
 
+  gotoPageHandler(e, route){
+    this.props.history.push(route);
+  }
 
   //---------------------------create task dialog-------------------------------
   onOpenCreateTaskDialog(e) {
@@ -96,8 +104,13 @@ class TaskSetCreation extends Component {
   }
 
   selectTask(task) {
-    console.log("selectTask", task.question);
+    console.log("selectTask_Hoa", task);
     this.setState({selectedTask: task, editing: true});
+  }
+
+  removeTask(task) {
+    console.log("deleteTask", task);
+    dbFunctions.deleteQuestionFromDb(task._id);
   }
 
   //Adds escape characters in fornt of all common regex symbols
@@ -129,6 +142,16 @@ class TaskSetCreation extends Component {
     dbFunctions.queryQuestionsFromDb(false, searchString, this.dbQueryCallback);
   }
 
+  //bottom button handler
+  onPlayButtonClick() {
+    var action = {
+      type: 'SET_TASK_LIST',
+      taskList: this.state.taskList
+    }
+    store.dispatch(action);
+    this.props.history.push('/PlayScreen');
+  }
+
   render() {
     return (< div className = "page" >
       <div className = "QuestionsList" >
@@ -147,7 +170,12 @@ class TaskSetCreation extends Component {
             <div className ="Grow"/ >
           < /Toolbar>
         < /AppBar >
-        < TaskListComponent taskList={ this.state.taskList } selectTask={ this.selectTask.bind(this) } / >
+        < TaskListComponent taskList={ this.state.taskList } selectTask={ this.selectTask.bind(this) } removeTask={this.removeTask.bind(this)}/ >
+        <div className="playButtonWrapper">
+          <Button variant="fab" onClick={this.onPlayButtonClick.bind(this)} className="playButton">
+            <NavigationIcon fontSize="large"/>
+          </Button>
+        </div>
       < / div>
 
       <div className = "QuestionSetList" >

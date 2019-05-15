@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-
+import Button from '@material-ui/core/Button';
+import DeleteIcon from '@material-ui/icons/Clear';
+import EditIcon from '@material-ui/icons/Edit';
 import './TaskItemComponent.css';
 
 class TaskItemComponent extends Component {
@@ -8,6 +10,16 @@ class TaskItemComponent extends Component {
       return(
         <div className="listItem" onClick={()=>this.props.onSelectedCallback(this.props.task)}>
           {this.props.task.question}
+          <span className="handlingbuttons">
+          <Button className="buttons" size="small" onClick={()=>{}}>
+            <EditIcon />
+          </Button>
+          <Button className="buttons" size="small" onClick={()=>{
+              this.props.removeCallback(this.props.task);
+            }}>
+            <DeleteIcon />
+          </Button>
+          </span>
         </div>
       );
     }

@@ -21,6 +21,7 @@ class PlayScreen extends Component {
   }
 
   componentWillMount() {
+    console.log(store.getState());
     wamp.startStopTask(store.getState().taskList[this.state.currentQuestion]);
   }
 
@@ -48,7 +49,7 @@ class PlayScreen extends Component {
           </div>
           <div className="responsesButtons">
           {
-            task.responses.map((index, item)=>{
+            task.responses.map((item, index)=>{
               console.log("play task buttons", index, item);
               return (<Button variant="contained">{item}</Button>);
             })

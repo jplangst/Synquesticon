@@ -23,10 +23,9 @@ class TaskListComponent extends Component {
   }
 
   onRemoveTask(task) {
-    var index = this.taskList.findIndex(x => x.label === task.label && x.instructions === task.instructions);
-    console.log(index, this.taskList);
+    var index = this.taskList.findIndex(x => x.question === task.question);
     this.taskList.splice(index, 1);
-    console.log(this.taskList);
+    this.props.removeTask(task);
     this.forceUpdate();
   }
 

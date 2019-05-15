@@ -59,7 +59,7 @@ class CreateTaskScreen extends Component {
 
   //---------------------------component functions------------------------------
   componentWillMount() {
-    this.testDatabase();
+    //this.testDatabase();
   }
 
   handleAllQuestionsFromDB(questions){

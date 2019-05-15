@@ -237,15 +237,3 @@ export function removeQuestionFromSetDb(setID, questionID){
 export function deleteAllSetsFromDb(){
   axios.delete("api/deleteAllSets");
 };
-
-export function onDeleteQuestion(task){
-  var databaseID = this.findDatabaseID(task.id);
-  this.deleteFromDB(databaseID);
-  var index = this.state.taskList.indexOf(task);
-  if(index > -1) {
-    this.state.taskList.splice(index, 1);
-  }
-  this.setState({
-    selectedTask: null
-  });
-}
