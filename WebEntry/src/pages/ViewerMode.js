@@ -10,9 +10,9 @@ import NavigationIcon from '@material-ui/icons/NavigateNext';
 import wamp from '../core/wamp';
 import store from '../core/store';
 
-import './PlayScreen.css';
+import './ViewerMode.css';
 
-class PlayScreen extends Component {
+class ViewerMode extends Component {
   constructor() {
     super();
     this.state = {
@@ -83,4 +83,4 @@ class PlayScreen extends Component {
   }
 }
 
-export default PlayScreen;
+export default ViewerMode;

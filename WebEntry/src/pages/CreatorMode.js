@@ -18,7 +18,7 @@ import CreateTaskDialog from '../components/dialogs/CreateTaskDialog';
 import AddIcon from '@material-ui/icons/AddToQueue';
 import NavigationIcon from '@material-ui/icons/NavigateNextTwoTone';
 
-import './TaskSetCreation.css';
+import './CreatorMode.css';
 import * as dbFunctions from '../core/db_helper.js';
 
 import store from '../core/store';

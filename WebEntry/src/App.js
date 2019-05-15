@@ -3,10 +3,10 @@ import React, { Component } from 'react';
 
 import Header from './components/Header'
 //import EditScreen from './pages/EditScreen';
-import CreateTaskScreen from './pages/CreateTaskScreen';
-import TaskSetScreation from './pages/TaskSetCreation';
+import CreatorMode from './pages/CreatorMode';
 import IntroductionScreen from './pages/IntroductionScreen';
-import PlayScreen from './pages/PlayScreen';
+import PlayerMode from './pages/PlayerMode';
+import ViewerMode from './pages/ViewerMode';
 
 import './App.css'
 
@@ -22,9 +22,9 @@ class App extends Component {
           <div className="MainContent">
             <Switch>
               <Route exact path="/" component={IntroductionScreen} />
-              <Route path="/TaskCreation" component={CreateTaskScreen} />
-              <Route path="/TaskSetCreation" component={TaskSetScreation} />
-              <Route path="/PlayScreen" component={PlayScreen} />
+              <Route path="/CreatorMode" component={CreatorMode} />
+              <Route path="/PlayerMode" component={PlayerMode} />
+              <Route path="/ViewerMode" component={ViewerMode} />
             </Switch>
           </div>
         </div>
