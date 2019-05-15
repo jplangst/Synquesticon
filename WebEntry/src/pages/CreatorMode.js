@@ -13,6 +13,7 @@ import TaskListComponent from '../components/TaskListComponent';
 
 //Dialogs
 import CreateTaskDialog from '../components/dialogs/CreateTaskDialog';
+import CreateTaskSetDialog from '../components/dialogs/CreateTaskSetDialog';
 
 //icons
 import AddIcon from '@material-ui/icons/AddToQueue';
@@ -30,12 +31,15 @@ class CreatorMode extends Component {
     this.state = {
       showMenu: false,
       taskList: [],
+      taskSetList: [],
       allowRegex: false,
       showCreateTaskDialog: false,
+      showCreateTaskSetDialog: false,
     };
 
     //Database callbacks
-    this.dbCallback = this.dbCallbackFunction.bind(this);
+    this.dbTaskCallback = this.dbTaskCallbackFunction.bind(this);
+    this.dbTaskSetCallback = this.dbTaskSetCallbackFunction.bind(this);
     this.dbQueryCallback = this.onDatabaseSearched.bind(this);
 
     //Search bar callbacks
@@ -44,6 +48,7 @@ class CreatorMode extends Component {
 
     //Task dialog related
     this.closeTaskDialog = this.onCloseCreateTaskDialog.bind(this);
+    this.closeTaskSetDialog = this.onCloseCreateTaskSetDialog.bind(this);
 
     this.gotoPage = this.gotoPageHandler.bind(this);
   }
@@ -65,7 +70,24 @@ class CreatorMode extends Component {
     });
 
     if(changeRegistered){
-      dbFunctions.getAllTasksFromDb(this.dbCallback);
+      dbFunctions.getAllTasksFromDb(this.dbTaskCallback);
+    }
+  }
+
+  //---------------------------create task set dialog-------------------------------
+  onOpenCreateTaskSetDialog(e) {
+    this.setState({
+      showCreateTaskSetDialog: true
+    });
+  }
+
+  onCloseCreateTaskSetDialog(questionID, changeRegistered) {
+    this.setState({
+      showCreateTaskSetDialog: false
+    });
+
+    if(changeRegistered){
+      dbFunctions.getAllTaskSetsFromDb(this.dbTaskSetCallback);
     }
   }
 
@@ -74,9 +96,14 @@ class CreatorMode extends Component {
     this.testDatabase();
   }
 
-  dbCallbackFunction(dbQueryResult) {
+  dbTaskCallbackFunction(dbQueryResult) {
     console.log(dbQueryResult);
     this.setState({taskList: dbQueryResult});
+  }
+
+  dbTaskSetCallbackFunction(dbQueryResult) {
+    console.log(dbQueryResult);
+    this.setState({taskSetList: dbQueryResult});
   }
 
   onDatabaseSearched(queryTasks, result){
@@ -88,7 +115,8 @@ class CreatorMode extends Component {
   }
 
   testDatabase() {
-    dbFunctions.getAllTasksFromDb(this.dbCallback);
+    dbFunctions.getAllTasksFromDb(this.dbTaskCallback);
+    dbFunctions.getAllTaskSetsFromDb(this.dbTaskSetCallback);
   }
 
   //actions callbacks
@@ -108,9 +136,19 @@ class CreatorMode extends Component {
     this.setState({selectedTask: task, editing: true});
   }
 
+  selectTaskSet(taskSet) {
+    console.log("selectTaskSet_Hoa", taskSet);
+    this.setState({selectedTaskSet: taskSet, editing: true});
+  }
+
   removeTask(task) {
     console.log("deleteTask", task);
     dbFunctions.deleteTaskFromDb(task._id);
+  }
+
+  removeTaskSet(taskSet) {
+    console.log("deleteTaskSet", taskSet);
+    dbFunctions.deleteTaskSetFromDb(taskSet._id);
   }
 
   //Adds escape characters in fornt of all common regex symbols
@@ -170,7 +208,7 @@ class CreatorMode extends Component {
             <div className ="Grow"/ >
           < /Toolbar>
         < /AppBar >
-        < TaskListComponent taskList={ this.state.taskList } selectTask={ this.selectTask.bind(this) } removeTask={this.removeTask.bind(this)}/ >
+        < TaskListComponent reorderDisabled={true} placeholderName="TaskPlaceholder" reorderID="tasksReorder" taskList={ this.state.taskList } selectTask={ this.selectTask.bind(this) } removeTask={this.removeTask.bind(this)}/ >
         <div className="playButtonWrapper">
           <Button variant="fab" onClick={this.onPlayButtonClick.bind(this)} className="playButton">
             <NavigationIcon fontSize="large"/>
@@ -188,14 +226,16 @@ class CreatorMode extends Component {
             Task Sets
           < /Typography >
           <SearchBar onChange={this.taskSetSearchCallback} searchID="taskSetSearch"/>
-          <Button >
+          <Button onClick={this.onOpenCreateTaskSetDialog.bind(this)}>
             <AddIcon fontSize = "large" / >
           < /Button>
           <div className ="Grow"/ >
         < /Toolbar>
       < /AppBar >
+      < TaskListComponent selectedTask={this.state.selectedTaskSet} reorderDisabled={false} placeholderName="TaskSetPlaceholder" reorderID="taskSetsReorder" taskList={ this.state.taskSetList } selectTask={ this.selectTaskSet.bind(this) } removeTask={this.removeTaskSet.bind(this)}/ >
       < /div >
 
+      <CreateTaskSetDialog openTaskSetDialog={this.state.showCreateTaskSetDialog} closeTaskSetDialog={this.closeTaskSetDialog} isEditing={false}/>
       <CreateTaskDialog openTaskDialog={this.state.showCreateTaskDialog} closeTaskDialog={this.closeTaskDialog} isEditing={false}/>
     < /div>);
   }

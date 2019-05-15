@@ -8,8 +8,9 @@ class TaskItemComponent extends Component {
   render() {
     if(!this.props.placeholder) {
       return(
-        <div className="listItem" onClick={()=>this.props.onSelectedCallback(this.props.task)}>
+        <div className={"listItem "+this.props.highlight} onClick={()=>this.props.onSelectedCallback(this.props.task)}>
           {this.props.task.question}
+          {this.props.task.name}
           <span className="handlingbuttons">
           <Button className="buttons" size="small" onClick={()=>{}}>
             <EditIcon />

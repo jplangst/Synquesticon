@@ -25,3 +25,15 @@ export class TaskObject{
     this.question = question;
   }
 }
+
+export class TaskSetObject{
+  constructor(){
+      this.taskSetName = "";
+      this.tags = [];
+      this.tasks = [];
+  }
+
+  addTask(task){
+    this.tasks.add(task);
+  }
+}
