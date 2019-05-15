@@ -23,7 +23,7 @@ import * as dbFunctions from '../core/db_helper.js';
 
 import store from '../core/store';
 
-class TaskSetCreation extends Component {
+class CreatorMode extends Component {
   constructor(props) {
     super(props);
 
@@ -149,7 +149,7 @@ class TaskSetCreation extends Component {
       taskList: this.state.taskList
     }
     store.dispatch(action);
-    this.props.history.push('/PlayScreen');
+    this.props.history.push('/PlayerMode');
   }
 
   render() {
@@ -200,4 +200,4 @@ class TaskSetCreation extends Component {
     < /div>);
   }
 }
-export default TaskSetCreation;
+export default CreatorMode;
