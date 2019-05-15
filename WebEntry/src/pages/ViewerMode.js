@@ -33,10 +33,6 @@ class ViewerMode extends Component {
     });
   }
 
-  onClickCancel(e) {
-
-  }
-
   render() {
     var getDisplayedQuestion = () => {
       if(store.getState().taskList.length > 0 && this.state.currentQuestion < store.getState().taskList.length){
@@ -59,24 +55,17 @@ class ViewerMode extends Component {
       }
     };
 
-    var getNextButton = () => {
-      if (this.state.currentQuestion < (store.getState().taskList.length) - 1){
-        return (  <Button className="nextButton" onClick={this.onClickNext.bind(this)}>
-                    <NavigationIcon />
-                  </Button>);
-      }
-    }
-
     return (
-      <div className="page">
-       {getDisplayedQuestion()}
-        <div className="footer">
-          <Link to="/" >
-            <Button className="cancelButton" onClick={this.onClickCancel.bind(this)}>
-              <CancelIcon />
-            </Button>
-          </Link>
-          {getNextButton()}
+      <div className="ViewerContainer">
+        <div className="TaskSetHeaderContainer">
+
+        </div>
+
+        <div className="SelectedTaskContainer">
+
+        </div>
+        <div className="ViewerComments"> 
+
         </div>
       </div>
       );
