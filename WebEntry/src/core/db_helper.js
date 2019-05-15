@@ -48,8 +48,8 @@ import axios from 'axios';
 //////// END EXAMPLES
 
 // fetch data from our data base
-export function getAllQuestionsFromDb(callback){
-  fetch("/api/getAllQuestions")
+export function getAllTasksFromDb(callback){
+  fetch("/api/getAllTasks")
     .then((response) => {
       if(response.ok) {
         return response.json();
@@ -68,17 +68,17 @@ export function getAllQuestionsFromDb(callback){
     });
 };
 
-export function queryQuestionsFromDb(queryTasks, queryString,callback){
+export function queryTasksFromDb(queryTasks, queryString,callback){
   console.log("Finding tasks containing ", queryString);
 
   var queryCollection = queryTasks ? 'Tasks' : 'TaskSets';
 
-  axios.post("/api/getAllQuestionContaining", {
+  axios.post("/api/getAllTasksContaining", {
     queryCollection: queryCollection,
     queryString: queryString,
   }).then((response) => {
     if(response.status === 200) {
-      console.log("question received from database with id: ", queryString, response.data);
+      console.log("Task received from database with id: ", queryString, response.data);
       callback(queryTasks, response.data);
     }
     else {
@@ -91,18 +91,18 @@ export function queryQuestionsFromDb(queryTasks, queryString,callback){
   });
 };
 
-//retrieve a question of an //ID
-export function getQuestionWithID(id, callback){
+//retrieve a task of an //ID
+export function getTaskWithID(id, callback){
   console.log("find ", id);
-  axios.post("/api/getQuestionWithID", {
+  axios.post("/api/getTaskWithID", {
     id: id
   }).then((response) => {
     if(response.status === 200) {
-      console.log("question received from database with id: ", id, response.data.question);
+      console.log("Task received from database with id: ", id, response.data.question);
       callback(response.data.question);
     }
     else {
-      alert("Cannot find question with this ID ", id);
+      alert("Cannot find task with this ID ", id);
       throw new Error("Database connection failed");
     }
   })
@@ -112,48 +112,48 @@ export function getQuestionWithID(id, callback){
 };
 
 // to create new query into our data base
-export function addQuestionToDb(dbQuestionObject, callback){
-  axios.post("/api/addQuestion", {
+export function addTaskToDb(dbQuestionObject, callback){
+  axios.post("/api/addTask", {
     message: JSON.stringify(dbQuestionObject)
   })
   .then((response) => {
     if(response.status === 200) {
       if(response.data.success === true){
-        console.log("added question to database", response.data._id);
+        console.log("added task to database", response.data._id);
         callback(response.data._id);
       }
       else{
-        alert("Failed to add question to the database!");
+        alert("Failed to add task to the database!");
       }
     }
     else {
-      alert("Something's wrong! Cannot add new question to database.");
-      throw new Error("Cannot add new question");
+      alert("Something's wrong! Cannot add new task to database.");
+      throw new Error("Cannot add new task");
     }
   });
 };
 
 // to overwrite existing data base information
-export function updateQuestionFromDb(id, editedObj){
-  axios.post("/api/updateQuestion", {
+export function updateTaskFromDb(id, editedObj){
+  axios.post("/api/updateTask", {
     id: id,
     message: JSON.stringify(editedObj)
   }).then(data => {console.log("after updating", data)});
 };
 
 // to remove existing database information
-export function deleteQuestionFromDb(idTodelete){
-  axios.post("/api/deleteQuestion", {
+export function deleteTaskFromDb(idTodelete){
+  axios.post("/api/deleteTask", {
       id: idTodelete
   }).then(response => {console.log("after deleting", response)});
 };
 
-export function deleteAllQuestionsFromDb(){
-  axios.delete("/api/deleteAllQuestions");
+export function deleteAllTasksFromDb(){
+  axios.delete("/api/deleteAllTasks");
 };
 
-export function getAllSetsFromDb(callback){
-  fetch("/api/getAllSets")
+export function getAllTaskSetsFromDb(callback){
+  fetch("/api/getAllTaskSets")
     .then((response) => {
       if(response.ok) {
         return response.json();
@@ -164,7 +164,7 @@ export function getAllSetsFromDb(callback){
       }
     })
     .then(res => {
-      console.log("sets fetched from database", res.sets);
+      console.log("Tasksets fetched from database", res.sets);
       callback(res.sets)
     })
     .catch((error) => {
@@ -172,16 +172,16 @@ export function getAllSetsFromDb(callback){
     });
 };
 
-export function getSetWithID(id, callback){
-  axios.post("/api/getSetWithID", {
+export function getTaskSetWithID(id, callback){
+  axios.post("/api/getTaskSetWithID", {
     id: id
   }).then((response) => {
     if(response.status === 200) {
-      console.log("set received from database with id: ", id, response.data.set);
+      console.log("Task set received from database with id: ", id, response.data.set);
       callback(response.data.set);
     }
     else {
-      alert("Cannot find question with this ID ", id);
+      alert("Cannot find task set with this ID ", id);
       throw new Error("Database connection failed");
     }
   })
@@ -190,13 +190,13 @@ export function getSetWithID(id, callback){
   });
 }
 
-export function addSetToDb(obj, callback){
-  axios.post("/api/addSet", {
+export function addTaskSetToDb(obj, callback){
+  axios.post("/api/addTaskSet", {
     message: JSON.stringify(obj)
   })
   .then((response) => {
     if(response.status === 200) {
-      console.log("added set to database", response.data._id);
+      console.log("added task set to database", response.data._id);
       callback(response.data._id);
     }
     else {
@@ -207,33 +207,33 @@ export function addSetToDb(obj, callback){
 };
 
 // to overwrite existing data base information
-export function updateSetFromDb(id, editedObj){
-  axios.post("/api/updateSet", {
+export function updateTaskSetFromDb(id, editedObj){
+  axios.post("/api/updateTaskSet", {
     id: id,
     message: JSON.stringify(editedObj)
   }).then(data => {console.log("after updating set", data)});
 };
 
-export function deleteSetFromDb(idTodelete){
-  axios.post("/api/deleteSet", {
+export function deleteTaskSetFromDb(idTodelete){
+  axios.post("/api/deleteTaskSet", {
       id: idTodelete
   }).then(response => {console.log("after deleting set", response)});
 };
 
-export function addQuestionToSetDb(setID, questionID){
-  axios.post("/api/addQuestionToSet", {
+export function addTaskToTaskSetDb(setID, questionID){
+  axios.post("/api/addTaskToTaskSet", {
     setId: setID,
     questionId: questionID
-  }).then(data => {console.log("after adding question to set", data)});
+  }).then(data => {console.log("after adding task to set", data)});
 }
 
-export function removeQuestionFromSetDb(setID, questionID){
-  axios.post("/api/removeQuestionFromSet", {
+export function removeTaskFromTaskSetDb(setID, questionID){
+  axios.post("/api/removeTaskFromTaskSet", {
     setId: setID,
     questionId: questionID
-  }).then(data => {console.log("after remove question from set", data)});
+  }).then(data => {console.log("after remove task from set", data)});
 }
 
-export function deleteAllSetsFromDb(){
-  axios.delete("api/deleteAllSets");
+export function deleteAllTaskSetsFromDb(){
+  axios.delete("api/deleteAllTaskSets");
 };

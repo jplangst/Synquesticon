@@ -65,7 +65,7 @@ class CreatorMode extends Component {
     });
 
     if(changeRegistered){
-      dbFunctions.getAllQuestionsFromDb(this.dbCallback);
+      dbFunctions.getAllTasksFromDb(this.dbCallback);
     }
   }
 
@@ -88,7 +88,7 @@ class CreatorMode extends Component {
   }
 
   testDatabase() {
-    dbFunctions.getAllQuestionsFromDb(this.dbCallback);
+    dbFunctions.getAllTasksFromDb(this.dbCallback);
   }
 
   //actions callbacks
@@ -110,7 +110,7 @@ class CreatorMode extends Component {
 
   removeTask(task) {
     console.log("deleteTask", task);
-    dbFunctions.deleteQuestionFromDb(task._id);
+    dbFunctions.deleteTaskFromDb(task._id);
   }
 
   //Adds escape characters in fornt of all common regex symbols
@@ -127,7 +127,7 @@ class CreatorMode extends Component {
       }
     }
 
-    dbFunctions.queryQuestionsFromDb(true, searchString, this.dbQueryCallback);
+    dbFunctions.queryTasksFromDb(true, searchString, this.dbQueryCallback);
   }
   onTaskSetSearchInputChanged(e){
     var searchString = "";
@@ -139,7 +139,7 @@ class CreatorMode extends Component {
       }
     }
 
-    dbFunctions.queryQuestionsFromDb(false, searchString, this.dbQueryCallback);
+    dbFunctions.queryTasksFromDb(false, searchString, this.dbQueryCallback);
   }
 
   //bottom button handler

@@ -70,7 +70,7 @@ class CreateTaskDialog extends Component {
       //dbFunctions.addQuestionToDb(this.task, this.handleQuestionCallback);
     }
     else{
-      dbFunctions.addQuestionToDb(this.task, this.handleQuestionCallback);
+      dbFunctions.addTaskToDb(this.task, this.handleQuestionCallback);
     }
   }
 

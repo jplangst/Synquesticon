@@ -7,10 +7,10 @@ const logger = require("morgan");
 
 
 const dataSchema = require("./data");
-const Question = dataSchema.Question;
-Question.createIndexes({queryString: "text", tags: "text"});
-const Set = dataSchema.Set;
-Set.createIndexes({queryString: "text", tags: "text"});
+const Tasks = dataSchema.Question;
+Tasks.createIndexes({queryString: "text", tags: "text"});
+const TaskSets = dataSchema.Set;
+TaskSets.createIndexes({queryString: "text", tags: "text"});
 
 const API_PORT = 3001;
 const app = express();
@@ -51,8 +51,8 @@ app.use(logger("dev"));
  **                    DATA functions                    *
  *********************************************************/
  // this method fetches all available questions in our database
-router.get("/getAllQuestions", (req, res) => {
-  Question.find((err, data) => {
+router.get("/getAllTasks", (req, res) => {
+  Tasks.find((err, data) => {
     if (err) {
       return res.json({ success: false, error: err });
     }
@@ -60,9 +60,9 @@ router.get("/getAllQuestions", (req, res) => {
   });
 });
 
-router.post("/getQuestionWithID", (req, res) => {
+router.post("/getTaskWithID", (req, res) => {
   const { id } = req.body;
-  Question.findOne({_id: id}, (err, obj) => {
+  Tasks.findOne({_id: id}, (err, obj) => {
     if (err) {
       return res.json({success: false, error: err});
     }
@@ -71,15 +71,15 @@ router.post("/getQuestionWithID", (req, res) => {
   });
 });
 
-router.post("/getAllQuestionContaining", (req, res) => {
+router.post("/getAllTasksContaining", (req, res) => {
   const { queryCollection, queryString } = req.body;
 
   var collection = null;
   if(queryCollection === 'Tasks'){
-    collection = Question;
+    collection = Tasks;
   }
   else{
-    collection = Set;
+    collection = TaskSets;
   }
 
   collection.find( {$or:[{'question': {"$regex" : queryString, "$options":"i"}},
@@ -94,10 +94,10 @@ router.post("/getAllQuestionContaining", (req, res) => {
 });
 
 // this method adds new question in our database
-router.post("/addQuestion", (req, res) => {
+router.post("/addTask", (req, res) => {
   const { message } = req.body;
   var obj = JSON.parse(message);
-  let question = new Question({
+  let question = new Tasks({
     question: obj.question,
     aois: obj.aois,
     tags: obj.tags,
@@ -116,23 +116,23 @@ router.post("/addQuestion", (req, res) => {
 });
 
 // this method modifies existing question in our database
-router.post("/updateQuestion", (req, res) => {
+router.post("/updateTask", (req, res) => {
   const { id, message } = req.body;
   var obj = JSON.parse(message);
-  Question.findOneAndUpdate({_id: id}, obj, err => {
+  Tasks.findOneAndUpdate({_id: id}, obj, err => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
   });
 });
 
 // this method deletes existing question in our database
-router.post("/deleteQuestion", (req, res) => {
+router.post("/deleteTask", (req, res) => {
   const { id } = req.body;
 
-  Set.updateMany({ }, { $pull: {questions: id}}, err => {
+  TaskSets.updateMany({ }, { $pull: {questions: id}}, err => {
 
   })
-  Question.findOneAndDelete({_id: id}, err => {
+  Tasks.findOneAndDelete({_id: id}, err => {
     if (err) return res.send(err);
     return res.json({ success: true });
   });
@@ -141,16 +141,16 @@ router.post("/deleteQuestion", (req, res) => {
 
 });
 
-router.delete("/deleteAllQuestions", (req, res) => {
-  Question.deleteMany({}, err => {
+router.delete("/deleteAllTasks", (req, res) => {
+  Tasks.deleteMany({}, err => {
     if (err) return res.send(err);
     return res.json({ success: true });
   });
 })
 
 //---------------SET----------------
-router.get("/getAllSets", (req, res) => {
-  Set.find((err, data) => {
+router.get("/getAllTaskSets", (req, res) => {
+  TaskSets.find((err, data) => {
     if (err) {
       return res.json({ success: false, error: err });
     }
@@ -158,9 +158,9 @@ router.get("/getAllSets", (req, res) => {
   });
 });
 
-router.post("/getSetWithID", (req, res) => {
+router.post("/getTaskSetWithID", (req, res) => {
   const { id } = req.body;
-  Set.findOne({_id: id}, (err, obj) => {
+  TaskSets.findOne({_id: id}, (err, obj) => {
     if (err) {
       return res.json({success: false, error: err});
     }
@@ -169,10 +169,10 @@ router.post("/getSetWithID", (req, res) => {
   });
 });
 
-router.post("/addSet", (req, res) => {
+router.post("/addTaskSet", (req, res) => {
   const { id, message } = req.body;
   var obj = JSON.parse(message);
-  let set = new Set({
+  let set = new TaskSets({
     name: obj.name,
     questions: [] //list questions belong to this set
   });
@@ -186,42 +186,42 @@ router.post("/addSet", (req, res) => {
 });
 
 // this method modifies existing question in our database
-router.post("/updateSet", (req, res) => {
+router.post("/updateTaskSet", (req, res) => {
   const { id, message } = req.body;
   var obj = JSON.parse(message);
-  Set.findOneAndUpdate({_id: id}, obj, err => {
+  TaskSets.findOneAndUpdate({_id: id}, obj, err => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
   });
 });
 
-router.post("/addQuestionToSet", (req, res) => {
+router.post("/addTaskToTaskSet", (req, res) => {
   const { setId, questionId} = req.body;
-  Set.updateOne({_id: setId}, { $addToSet: {questions: questionId}}, err => {
+  TaskSets.updateOne({_id: setId}, { $addToSet: {questions: questionId}}, err => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
   });
 })
 
-router.post("/removeQuestionFromSet", (req, res) => {
+router.post("/removeTaskFromTaskSet", (req, res) => {
   const { setId, questionId } = req.body;
-  Set.updateOne({_id: setId}, { $pull: {questions: questionId}}, err => {
+  TaskSets.updateOne({_id: setId}, { $pull: {questions: questionId}}, err => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
   })
 })
 
 // this method deletes existing question in our database
-router.post("/deleteSet", (req, res) => {
+router.post("/deleteTaskSet", (req, res) => {
   const { id } = req.body;
-  Set.findOneAndDelete({_id: id}, err => {
+  TaskSets.findOneAndDelete({_id: id}, err => {
     if (err) return res.send(err);
     return res.json({ success: true });
   });
 });
 
-router.delete("/deleteAllSets", (req, res) => {
-  Set.deleteMany({}, err => {
+router.delete("/deleteAllTaskSets", (req, res) => {
+  TaskSets.deleteMany({}, err => {
     if (err) return res.send(err);
     return res.json({ success: true });
   });
