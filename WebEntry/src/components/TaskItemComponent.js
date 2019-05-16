@@ -11,6 +11,7 @@ class TaskItemComponent extends Component {
         <div className={"listItem "+this.props.highlight} onClick={()=>this.props.onSelectedCallback(this.props.task)}>
           {this.props.task.question}
           {this.props.task.name}
+          <p> TESTING COLLAPSE </p>
           <span className="handlingbuttons">
           <Button className="buttons" size="small" onClick={()=>{}}>
             <EditIcon />
@@ -27,7 +28,7 @@ class TaskItemComponent extends Component {
     else {
       return (
         <div className="listItemPlaceholder">
-
+          {this.task}
         </div>
       );
     }
