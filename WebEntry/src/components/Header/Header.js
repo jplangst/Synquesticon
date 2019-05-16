@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 import './Header.css';
 
 //Components
-import CrossbarDialog from './dialogs/CrossbarDialog';
-import SpeechDialog from './dialogs/SpeechDialog';
+import CrossbarDialog from '../dialogs/CrossbarDialog';
+import SpeechDialog from '../dialogs/SpeechDialog';
 
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
