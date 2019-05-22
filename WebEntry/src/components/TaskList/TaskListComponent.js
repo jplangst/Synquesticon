@@ -80,7 +80,6 @@ class TaskListComponent extends Component {
         this.taskList.map((item, index) => {
           var highlightBG = "";
           if(item == this.props.selectedTask){
-            console.log("It's the same");
             highlightBG = "highlightBG";
           }
           return <div key={index}><TaskItemComponent highlight={highlightBG} placeholder={false} task={item} removeCallback={this.onRemoveTask.bind(this)} onSelectedCallback={this.onSelectTask.bind(this)}/></div>

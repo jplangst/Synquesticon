@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 
 import SearchBar from '../components/SearchBar';
 
-import TaskListComponent from '../components/TaskListComponent';
+import TaskListComponent from '../components/TaskList/TaskListComponent';
 
 //Dialogs
 import CreateTaskDialog from '../components/dialogs/CreateTaskDialog';

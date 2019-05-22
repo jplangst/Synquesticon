@@ -26,13 +26,24 @@ class TaskItemComponent extends Component {
           {this.props.task.question}
           {this.props.task.name}
           {editableButtons}
+          <p> TESTING COLLAPSE </p>
+          <span className="handlingbuttons">
+          <Button className="buttons" size="small" onClick={()=>{}}>
+            <EditIcon />
+          </Button>
+          <Button className="buttons" size="small" onClick={()=>{
+              this.props.removeCallback(this.props.task);
+            }}>
+            <DeleteIcon />
+          </Button>
+          </span>
         </div>
       );
     }
     else {
       return (
         <div className="listItemPlaceholder">
-
+          {this.task}
         </div>
       );
     }

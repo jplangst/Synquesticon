@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Switch  } from 'react-router-dom';
 import React, { Component } from 'react';
 
-import Header from './components/Header'
+import Header from './components/Header/Header'
 //import EditScreen from './pages/EditScreen';
 import CreatorMode from './pages/CreatorMode';
 import IntroductionScreen from './pages/IntroductionScreen';
