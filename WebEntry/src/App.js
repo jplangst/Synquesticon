@@ -7,6 +7,7 @@ import CreatorMode from './pages/CreatorMode';
 import IntroductionScreen from './pages/IntroductionScreen';
 import PlayerMode from './pages/PlayerMode';
 import ViewerMode from './pages/ViewerMode';
+import RunTasksMode from './components/DisplayQuestionComponent';
 
 import './App.css'
 
@@ -15,6 +16,7 @@ window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
 
 class App extends Component {
   render() {
+    //console.log("Router path: ", this);
     return (
         <Router>
         <div className="App">
@@ -25,6 +27,7 @@ class App extends Component {
               <Route path="/CreatorMode" component={CreatorMode} />
               <Route path="/PlayerMode" component={PlayerMode} />
               <Route path="/ViewerMode" component={ViewerMode} />
+              <Route path="/RunTasksMode" component={RunTasksMode}/>} />
             </Switch>
           </div>
         </div>

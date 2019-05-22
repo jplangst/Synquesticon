@@ -17,7 +17,6 @@ import CreateTaskSetDialog from '../components/dialogs/CreateTaskSetDialog';
 
 //icons
 import AddIcon from '@material-ui/icons/AddToQueue';
-import NavigationIcon from '@material-ui/icons/NavigateNextTwoTone';
 
 import './CreatorMode.css';
 import * as dbFunctions from '../core/db_helper.js';
@@ -180,16 +179,6 @@ class CreatorMode extends Component {
     dbFunctions.queryTasksFromDb(false, searchString, this.dbQueryCallback);
   }
 
-  //bottom button handler
-  onPlayButtonClick() {
-    var action = {
-      type: 'SET_TASK_LIST',
-      taskList: this.state.taskList
-    }
-    store.dispatch(action);
-    this.props.history.push('/PlayerMode');
-  }
-
   render() {
     return (< div className = "page" >
       <div className = "QuestionsList" >
@@ -209,11 +198,7 @@ class CreatorMode extends Component {
           < /Toolbar>
         < /AppBar >
         < TaskListComponent reorderDisabled={true} placeholderName="TaskPlaceholder" reorderID="tasksReorder" taskList={ this.state.taskList } selectTask={ this.selectTask.bind(this) } removeTask={this.removeTask.bind(this)}/ >
-        <div className="playButtonWrapper">
-          <Button variant="fab" onClick={this.onPlayButtonClick.bind(this)} className="playButton">
-            <NavigationIcon fontSize="large"/>
-          </Button>
-        </div>
+
       < / div>
 
       <div className = "QuestionSetList" >

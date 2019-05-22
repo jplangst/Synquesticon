@@ -237,3 +237,12 @@ export function removeTaskFromTaskSetDb(setID, questionID){
 export function deleteAllTaskSetsFromDb(){
   axios.delete("api/deleteAllTaskSets");
 };
+
+export function getTasksWithIDs(taskIDs, callback) {
+  axios.post("/api/getTasksWithIDs", {
+      ids: taskIDs
+  }).then(response => {
+    console.log("after get all tasks from set", response);
+    callback(response.data.tasks);
+  });
+};

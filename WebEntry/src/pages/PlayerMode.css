@@ -16,31 +16,7 @@
   color: white;
 }
 
-.cancelButton {
-
-}
-
-.nextButton {
-  position: absolute;
-  float: right;
-}
-.mainDisplay{
-  margin: auto;
-  position: fixed;
-  width: 50%;
-  height: auto;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 10px;
-}
-
-.questionDisplay {
-  background-color: white;
-  font-size: 4em;
-  text-align: center;
-}
-
-.responsesButtons {
-  text-align: center;
+.textinput {
+  position: relative;
+  left: 2.5%;
 }

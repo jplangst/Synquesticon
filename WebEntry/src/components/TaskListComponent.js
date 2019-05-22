@@ -73,7 +73,7 @@ class TaskListComponent extends Component {
         disabled={this.props.reorderDisabled} // Disable reordering (optional), defaults to false
         disableContextMenus={true} // Disable context menus when holding on touch devices (optional), defaults to true
         placeholder={
-          <TaskItemComponent  placeholder={true}/> // Custom placeholder element (optional), defaults to clone of dragged element
+          <TaskItemComponent  placeholder={true} editable={this.props.editable}/> // Custom placeholder element (optional), defaults to clone of dragged element
         }
       >
       {

@@ -7,10 +7,14 @@ const logger = require("morgan");
 
 
 const dataSchema = require("./data");
-const Tasks = dataSchema.Question;
+const Tasks = dataSchema.Tasks;
 Tasks.createIndexes({queryString: "text", tags: "text"});
-const TaskSets = dataSchema.Set;
+const TaskSets = dataSchema.TaskSets;
 TaskSets.createIndexes({queryString: "text", tags: "text"});
+const Participants = dataSchema.Participants;
+Participants.createIndexes({queryString: "text", tags: "text"});
+const Experiments = dataSchema.Experiments;
+Experiments.createIndexes({queryString: "text", tags: "text"});
 
 const API_PORT = 3001;
 const app = express();
@@ -50,6 +54,7 @@ app.use(logger("dev"));
 /*********************************************************
  **                    DATA functions                    *
  *********************************************************/
+ //---------------------TASKS---------------------
  // this method fetches all available questions in our database
 router.get("/getAllTasks", (req, res) => {
   Tasks.find((err, data) => {
@@ -68,6 +73,17 @@ router.post("/getTaskWithID", (req, res) => {
     }
     console.log(err, obj);
     return res.json({success: true, question: obj});
+  });
+});
+
+router.post("/getTasksWithIDs", (req, res) => {
+  const { ids } = req.body;
+  count = 0;
+  len = ids.length;
+  Tasks.find({
+      '_id': { $in: ids}
+  }, function(err, objs){
+       return res.json({success: true, tasks: objs});
   });
 });
 
@@ -102,8 +118,6 @@ router.post("/addTask", (req, res) => {
     aois: obj.aois,
     tags: obj.tags,
     responses: obj.responses,
-    startTimestamp: obj.startTimestamp,
-    stopTimestamp: obj.stopTimestamp,
     refSets: []
   });
 
@@ -129,7 +143,7 @@ router.post("/updateTask", (req, res) => {
 router.post("/deleteTask", (req, res) => {
   const { id } = req.body;
 
-  TaskSets.updateMany({ }, { $pull: {questions: id}}, err => {
+  TaskSets.updateMany({ }, { $pull: {taskIds: id}}, err => {
 
   })
   Tasks.findOneAndDelete({_id: id}, err => {
@@ -146,7 +160,7 @@ router.delete("/deleteAllTasks", (req, res) => {
     if (err) return res.send(err);
     return res.json({ success: true });
   });
-})
+});
 
 //---------------SET----------------
 router.get("/getAllTaskSets", (req, res) => {
@@ -197,19 +211,19 @@ router.post("/updateTaskSet", (req, res) => {
 
 router.post("/addTaskToTaskSet", (req, res) => {
   const { setId, questionId} = req.body;
-  TaskSets.updateOne({_id: setId}, { $addToSet: {questions: questionId}}, err => {
+  TaskSets.updateOne({_id: setId}, { $addToSet: {taskIds: questionId}}, err => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
   });
-})
+});
 
 router.post("/removeTaskFromTaskSet", (req, res) => {
   const { setId, questionId } = req.body;
-  TaskSets.updateOne({_id: setId}, { $pull: {questions: questionId}}, err => {
+  TaskSets.updateOne({_id: setId}, { $pull: {taskIds: questionId}}, err => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
   })
-})
+});
 
 // this method deletes existing question in our database
 router.post("/deleteTaskSet", (req, res) => {
@@ -225,7 +239,177 @@ router.delete("/deleteAllTaskSets", (req, res) => {
     if (err) return res.send(err);
     return res.json({ success: true });
   });
-})
+});
+
+//---------------------PARTICIPANTS---------------------
+router.get("/getAllParticipants", (req, res) => {
+  Participants.find((err, data) => {
+    if (err) {
+      return res.json({ success: false, error: err });
+    }
+    return res.json({ success: true, participants: data });
+  });
+});
+
+router.post("/getParticipantWithID", (req, res) => {
+  const { id } = req.body;
+  Participants.findOne({_id: id}, (err, obj) => {
+    if (err) {
+      return res.json({success: false, error: err});
+    }
+    console.log(err, obj);
+    return res.json({success: true, participant: obj});
+  });
+});
+
+router.post("/getParticipantsWithIDs", (req, res) => {
+  const { ids } = req.body;
+  count = 0;
+  len = ids.length;
+  Participants.find({
+      '_id': { $in: ids}
+  }, function(err, objs){
+       return res.json({success: true, participants: objs});
+  });
+});
+
+// this method adds new question in our database
+router.post("/addParticipant", (req, res) => {
+  const { message } = req.body;
+  var obj = JSON.parse(message);
+  let participant = new Participants({
+    readableId: obj.name,
+    taskSetId: obj.taskSetId,
+    eyeData: obj.eyeDataFile,
+    answers: []
+  });
+
+  participant.save((err, p) => {
+    if (err) {
+      return res.json({ success: false, error: err });
+    }
+    return res.json({ success: true, _id: p._id });
+  });
+});
+
+// this method modifies existing question in our database
+router.post("/updateParticipant", (req, res) => {
+  const { id, message } = req.body;
+  var obj = JSON.parse(message);
+  Participants.findOneAndUpdate({_id: id}, obj, err => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true });
+  });
+});
+
+router.post("/addAnswerToParticipant", (req, res) => {
+  const { participantId, answer} = req.body;
+  Participants.updateOne({_id: participantId}, { $addToSet: {answers: answer}}, err => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true });
+  });
+});
+
+// this method deletes existing question in our database
+router.post("/deleteParticipant", (req, res) => {
+  const { id } = req.body;
+
+  Experiments.updateOne({ taskIds: id }, { $pull: {taskIds: id}}, err => {
+
+  })
+  Participants.findOneAndDelete({_id: id}, err => {
+    if (err) return res.send(err);
+    return res.json({ success: true });
+  });
+
+  //remove this question from all sets
+
+});
+
+router.delete("/deleteAllParticipants", (req, res) => {
+  Participants.deleteMany({}, err => {
+    if (err) return res.send(err);
+    return res.json({ success: true });
+  });
+});
+
+//---------------------EXPERIMENTS---------------------
+router.get("/getAllExperiments", (req, res) => {
+  Experiments.find((err, data) => {
+    if (err) {
+      return res.json({ success: false, error: err });
+    }
+    return res.json({ success: true, experiments: data });
+  });
+});
+
+router.post("/getExperimentWithID", (req, res) => {
+  const { id } = req.body;
+  Experiments.findOne({_id: id}, (err, obj) => {
+    if (err) {
+      return res.json({success: false, error: err});
+    }
+    return res.json({success: true, experiments: obj});
+  });
+});
+
+router.post("/addExperiment", (req, res) => {
+  const { id, message } = req.body;
+  var obj = JSON.parse(message);
+  let experiment = new Experiments({
+    readableId: obj.name,
+    participantIds: [] //list questions belong to this set
+  });
+
+  experiment.save((err, s) => {
+    if (err) {
+      return res.json({ success: false, error: err });
+    }
+    return res.json({ success: true, _id: s._id });
+  });
+});
+
+// this method modifies existing question in our database
+router.post("/updateExperiment", (req, res) => {
+  const { id, message } = req.body;
+  var obj = JSON.parse(message);
+  Experiments.findOneAndUpdate({_id: id}, obj, err => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true });
+  });
+});
+
+router.post("/addParticipantToExperiment", (req, res) => {
+  const { experimentId, participantId} = req.body;
+  Experiments.updateOne({_id: experimentId}, { $addToSet: {participantIds: participantId}}, err => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true });
+  });
+});
+
+router.post("/removeParticipantFromExperiment", (req, res) => {
+  const { experimentId, participantId } = req.body;
+  Experiments.updateOne({_id: experimentId}, { $pull: {participantIds: participantId}}, err => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true });
+  })
+});
+
+// this method deletes existing question in our database
+router.post("/deleteExperiment", (req, res) => {
+  const { id } = req.body;
+  Experiments.findOneAndDelete({_id: id}, err => {
+    if (err) return res.send(err);
+    return res.json({ success: true });
+  });
+});
+
+router.delete("/deleteAllExperiments", (req, res) => {
+  Experiments.deleteMany({}, err => {
+    if (err) return res.send(err);
+    return res.json({ success: true });
+  });
+});
 
 // append /api for our http requests
 app.use("/api", router);

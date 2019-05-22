@@ -6,77 +6,95 @@ import Button from '@material-ui/core/Button';
 //icons
 import CancelIcon from '@material-ui/icons/Cancel';
 import NavigationIcon from '@material-ui/icons/NavigateNext';
+import TextField from '@material-ui/core/TextField';
+
+import TaskListComponent from '../components/TaskListComponent';
 
 import wamp from '../core/wamp';
 import store from '../core/store';
 
+import * as dbFunctions from '../core/db_helper.js';
 import './PlayerMode.css';
 
 class PlayerMode extends Component {
   constructor() {
     super();
+
     this.state = {
-      currentQuestion: 0
+      experiment: '',
+      participant: '',
+      selectedTaskSet: null,
+      taskSets: []
     }
+
+    //Database callbacks
+    this.dbTaskSetCallback = this.dbTaskSetCallbackFunction.bind(this);
+    this.dbTasksCallback = this.dbTasksCallbackFunction.bind(this);
   }
 
   componentWillMount() {
-    console.log(store.getState());
-    wamp.startStopTask(store.getState().taskList[this.state.currentQuestion]);
+    dbFunctions.getAllTaskSetsFromDb(this.dbTaskSetCallback);
   }
 
-  onClickNext(e) {
-    console.log("current question", this.state.currentQuestion, store.getState().taskList);
-    wamp.startStopTask(store.getState().taskList[(this.state.currentQuestion + 1)]);
-    this.setState({
-      currentQuestion: (this.state.currentQuestion + 1)
-    });
+  handleChange = name => event => {
+    this.setState({ [name]: event.target.value });
+  };
+
+  dbTaskSetCallbackFunction(dbQueryResult) {
+    console.log(dbQueryResult);
+    //5cdc1bfbce788a06b852777e
+    this.setState({taskSets: dbQueryResult});
   }
 
-  onClickCancel(e) {
+  dbTasksCallbackFunction(dbQueryResult) {
+    //console.log(dbQueryResult);
+    //5cdc1bfbce788a06b852777e
+    var action = {
+      type: 'SET_TASK_LIST',
+      taskList: dbQueryResult
+    }
+    store.dispatch(action);
+    this.props.history.push('/RunTasksMode');
+  }
 
+  onSelectTaskSet(taskSet) {
+    this.setState({selectedTaskSet: taskSet});
+  }
+
+  //bottom button handler
+  onPlayButtonClick() {
+    dbFunctions.getTasksWithIDs(this.state.selectedTaskSet.taskIds, this.dbTasksCallback);
   }
 
   render() {
-    var getDisplayedQuestion = () => {
-      if(store.getState().taskList.length > 0 && this.state.currentQuestion < store.getState().taskList.length){
-        var task = store.getState().taskList[this.state.currentQuestion];
-        console.log("play task", task);
-        return (
-        <div className="mainDisplay">
-          <div className="questionDisplay">
-            {task.question}
-          </div>
-          <div className="responsesButtons">
-          {
-            task.responses.map((item, index)=>{
-              console.log("play task buttons", index, item);
-              return (<Button variant="contained">{item}</Button>);
-            })
-          }
-          </div>
-        </div>);
-      }
-    };
-
-    var getNextButton = () => {
-      if (this.state.currentQuestion < (store.getState().taskList.length) - 1){
-        return (  <Button className="nextButton" onClick={this.onClickNext.bind(this)}>
-                    <NavigationIcon />
-                  </Button>);
-      }
-    }
-
     return (
       <div className="page">
-       {getDisplayedQuestion()}
+        <div className="textinput">
+          <TextField
+            id="experiment-name"
+            label="Experiment"
+            value={this.state.experiment}
+            onChange={this.handleChange('experiment')}
+            margin="normal"
+          />
+        </div>
+        <div className="textinput">
+          <TextField
+            id="participant-code"
+            label="Participant"
+            value={this.state.participant}
+            onChange={this.handleChange('participant')}
+            margin="normal"
+          />
+        </div>
+        < TaskListComponent selectedTask={this.state.selectedTaskSet} reorderDisabled={true} reorderID="tasksReorder" taskList={ this.state.taskSets } selectTask={ this.onSelectTaskSet.bind(this) } editable={false}/ >
+        <div className="playButtonWrapper">
+          <Button variant="fab" onClick={this.onPlayButtonClick.bind(this)}
+                  className="playButton" disabled={(!this.state.experiment)||(!this.state.participant)||(!this.state.selectedTaskSet)}>
+            <NavigationIcon fontSize="large"/>
+          </Button>
+        </div>
         <div className="footer">
-          <Link to="/" >
-            <Button className="cancelButton" onClick={this.onClickCancel.bind(this)}>
-              <CancelIcon />
-            </Button>
-          </Link>
-          {getNextButton()}
         </div>
       </div>
       );
