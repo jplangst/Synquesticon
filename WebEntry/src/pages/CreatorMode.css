@@ -1,17 +1,79 @@
-.QuestionsList{
-  position: absolute;
+/*
+Primary theme colors
+light: "#7986cb"
+main: "#3f51b5"
+dark: "#303f9f"
+*/
+
+.Background{
+  width: 100%;
   height: 100%;
-  width: 50%;
-  left: 0%;
+  background-color: #EEE;
 }
 
-.QuestionSetList{
+/****** Asset Viewer ********/
+.AssetViewer{
   position: absolute;
+  width: 26%;
+  height: 96%;
+  top: 2%;
+  left: 2%;
+  background-color: white;
+
+  border-width: thin;
+  border-style: solid;
+  border-color: #303f9f;
+  border-radius: 11px;
+}
+.collapsableHeaderBtnsContainer{
   height: 100%;
-  width: 50%;
-  left: 50%;
+}
+.collapsableHeaderBtns{
+  height: 100%;
 }
 
+.AssetViewerTitle{
+  padding: 5px 0px 2px 15px;
+  font-size: large;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: bold;
+  color: #999;
+}
+
+.ContainerSeperator{
+  position: relative;
+  border-top-width: thin;
+  border-top-style: solid;
+  border-color: #303f9f;
+}
+
+/****** Asset Editor ********/
+.AssetEditor{
+  position: absolute;
+  width: 66%;
+  height: 96%;
+  top: 2%;
+  left: 32%;
+  background-color: white;
+
+  border-width: thin;
+  border-style: solid;
+  border-color: #303f9f;
+  border-radius: 11px;
+}
+.AssetEditorTitle{
+  padding: 5px 0px 2px 15px;
+  font-size: large;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: bold;
+  color: #999;
+}
+.AssetEditorContent{
+  border-top-width: thin;
+  border-top-style: solid;
+  border-color: #303f9f;
+}
+/***** Others *****/
 .playButton{
   position: relative;
   width: 50px;

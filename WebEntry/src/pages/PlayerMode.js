@@ -24,7 +24,7 @@ class PlayerMode extends Component {
       experiment: '',
       participant: '',
       selectedTaskSet: null,
-      taskSets: []
+      taskSets: [] 
     }
 
     //Database callbacks

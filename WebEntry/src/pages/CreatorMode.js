@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 
+import CollapsableContainer from '../components/Containers/CollapsableContainer';
+
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -17,6 +19,8 @@ import CreateTaskSetDialog from '../components/dialogs/CreateTaskSetDialog';
 
 //icons
 import AddIcon from '@material-ui/icons/AddToQueue';
+
+import {FilterList, AddCircleOutline, Search} from '@material-ui/icons';
 
 import './CreatorMode.css';
 import * as dbFunctions from '../core/db_helper.js';
@@ -179,49 +183,121 @@ class CreatorMode extends Component {
     dbFunctions.queryTasksFromDb(false, searchString, this.dbQueryCallback);
   }
 
+  addTaskCallback(){
+
+  }
+
+  searchTasksCallback(){
+
+  }
+
+  filterTasksCallback(){
+
+  }
+
+  addSetCallback(){
+
+  }
+
+  searchSetsCallback(){
+
+  }
+
+  filterSetsCallback(){
+
+  }
+
   render() {
-    return (< div className = "page" >
-      <div className = "QuestionsList" >
+    var collapsableTaskHeaderButtons =
+    <div className="collapsableHeaderBtnsContainer">
+      <Button className="collapsableHeaderBtns" size="small" onClick={this.addTaskCallback.bind(this)} >
+        <AddCircleOutline fontSize="medium" className="addItemsIcon" />
+      </Button>
+      <Button className="collapsableHeaderBtns" size="small" onClick={this.searchTasksCallback.bind(this)} >
+        <Search fontSize="medium" className="addItemsIcon" />
+      </Button>
+      <Button className="collapsableHeaderBtns" size="small" onClick={this.filterTasksCallback.bind(this)} >
+        <FilterList fontSize="medium" className="addItemsIcon" />
+      </Button>
+    </div>;
+
+    var collapsableSetHeaderButtons =
+    <div className="collapsableHeaderBtnsContainer">
+      <Button className="collapsableHeaderBtns" size="small" onClick={this.addSetCallback.bind(this)} >
+        <AddCircleOutline fontSize="medium" className="addItemsIcon" />
+      </Button>
+      <Button className="collapsableHeaderBtns" size="small" onClick={this.searchSetsCallback.bind(this)} >
+        <Search fontSize="medium" className="addItemsIcon" />
+      </Button>
+      <Button className="collapsableHeaderBtns" size="small" onClick={this.filterSetsCallback.bind(this)} >
+        <FilterList fontSize="medium" className="addItemsIcon" />
+      </Button>
+    </div>;
+
+    return (
+    <div className = "Background">
+      <div className = "AssetViewer">
+        <div className="AssetViewerTitle">Asset viewer</div>
+        <CollapsableContainer classNames="ContainerSeperator" style={{height: "5%"}} headerTitle="Tasks" headerComponents={collapsableTaskHeaderButtons}>
+          <div>
+            <AppBar position = "static" >
+              <Toolbar className="appBar">
+                <IconButton className = "MenuButton" color = "inherit" aria-label = "Open drawer" >
+                  <MenuIcon / >
+                < /IconButton>
+                < Typography className="TasksTitle" variant="h6" color="inherit" noWrap>
+                  Tasks
+                < /Typography >
+                <SearchBar classes ={{search: "testSearch"}} onChange={this.taskSearchCallback} searchID="taskSearch"/>
+                <Button onClick={this.onOpenCreateTaskDialog.bind(this)}>
+                <AddIcon fontSize = "large" / >
+              < /Button>
+              <div className ="Grow"/ >
+            < /Toolbar>
+            < /AppBar >
+            < TaskListComponent reorderDisabled={true} placeholderName="TaskPlaceholder" reorderID="tasksReorder" taskList={ this.state.taskList }
+              selectTask={ this.selectTask.bind(this) } removeTask={this.removeTask.bind(this)}/ >
+          < / div>
+        </CollapsableContainer>
+
+        <CollapsableContainer classNames="ContainerSeperator" headerTitle="Sets" headerComponents={collapsableSetHeaderButtons}>
+        <div>
         <AppBar position = "static" >
           <Toolbar className="appBar">
             <IconButton className = "MenuButton" color = "inherit" aria-label = "Open drawer" >
               <MenuIcon / >
             < /IconButton>
             < Typography className="TasksTitle" variant="h6" color="inherit" noWrap>
-              Tasks
+              Task Sets
             < /Typography >
-            <SearchBar classes ={{search: "testSearch"}} onChange={this.taskSearchCallback} searchID="taskSearch"/>
-            <Button onClick={this.onOpenCreateTaskDialog.bind(this)}>
+            <SearchBar onChange={this.taskSetSearchCallback} searchID="taskSetSearch"/>
+            <Button onClick={this.onOpenCreateTaskSetDialog.bind(this)}>
               <AddIcon fontSize = "large" / >
             < /Button>
             <div className ="Grow"/ >
           < /Toolbar>
         < /AppBar >
-        < TaskListComponent reorderDisabled={true} placeholderName="TaskPlaceholder" reorderID="tasksReorder" taskList={ this.state.taskList } selectTask={ this.selectTask.bind(this) } removeTask={this.removeTask.bind(this)}/ >
+        < TaskListComponent selectedTask={this.state.selectedTaskSet} reorderDisabled={false} placeholderName="TaskSetPlaceholder" reorderID="taskSetsReorder" taskList={ this.state.taskSetList } selectTask={ this.selectTaskSet.bind(this) } removeTask={this.removeTaskSet.bind(this)}/ >
+        < /div >
+        </CollapsableContainer>
 
-      < / div>
+        <CollapsableContainer classNames="ContainerSeperator TaskSetContainer" headerTitle="Images">
+        </CollapsableContainer>
 
-      <div className = "QuestionSetList" >
-      <AppBar position = "static" >
-        <Toolbar className="appBar">
-          <IconButton className = "MenuButton" color = "inherit" aria-label = "Open drawer" >
-            <MenuIcon / >
-          < /IconButton>
-          < Typography className="TasksTitle" variant="h6" color="inherit" noWrap>
-            Task Sets
-          < /Typography >
-          <SearchBar onChange={this.taskSetSearchCallback} searchID="taskSetSearch"/>
-          <Button onClick={this.onOpenCreateTaskSetDialog.bind(this)}>
-            <AddIcon fontSize = "large" / >
-          < /Button>
-          <div className ="Grow"/ >
-        < /Toolbar>
-      < /AppBar >
-      < TaskListComponent selectedTask={this.state.selectedTaskSet} reorderDisabled={false} placeholderName="TaskSetPlaceholder" reorderID="taskSetsReorder" taskList={ this.state.taskSetList } selectTask={ this.selectTaskSet.bind(this) } removeTask={this.removeTaskSet.bind(this)}/ >
-      < /div >
+        <CollapsableContainer classNames="ContainerSeperator TaskSetContainer" headerTitle="Templates">
+        </CollapsableContainer>
+      </div>
 
-      <CreateTaskSetDialog openTaskSetDialog={this.state.showCreateTaskSetDialog} closeTaskSetDialog={this.closeTaskSetDialog} isEditing={false}/>
-      <CreateTaskDialog openTaskDialog={this.state.showCreateTaskDialog} closeTaskDialog={this.closeTaskDialog} isEditing={false}/>
+      <div className = "AssetEditor">
+        <div className="AssetEditorTitle">Asset editor</div>
+        <div className="AssetEditorContent">
+        </div>
+      </div>
+
+
+
+        <CreateTaskSetDialog openTaskSetDialog={this.state.showCreateTaskSetDialog} closeTaskSetDialog={this.closeTaskSetDialog} isEditing={false}/>
+        <CreateTaskDialog openTaskDialog={this.state.showCreateTaskDialog} closeTaskDialog={this.closeTaskDialog} isEditing={false}/>
     < /div>);
   }
 }
