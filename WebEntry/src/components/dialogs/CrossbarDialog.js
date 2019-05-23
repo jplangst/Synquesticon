@@ -9,7 +9,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-import wamp from '../../core/wamp';
+import {restartWAMP} from '../../core/wamp';
 
 var myStorage = window.localStorage;
 
@@ -21,7 +21,7 @@ class CrossbarDialog extends Component {
 
   componentWillMount() {
     this.crossbarConfigurations();
-    wamp.restartWAMP(this.crossbar);
+    restartWAMP(this.crossbar);
   }
 
   componentWillUnmount() {
@@ -39,7 +39,7 @@ class CrossbarDialog extends Component {
 
   onChangeCrossbarSettings(e) {
     myStorage.setItem('crossbar', JSON.stringify(this.crossbar));
-    wamp.restartWAMP(this.crossbar);
+    restartWAMP(this.crossbar);
 
     //Callback to close the dialog from the header
     this.props.closeCrossbarSettings();

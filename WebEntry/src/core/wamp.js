@@ -1,3 +1,5 @@
+var store = require('./store');
+
 try {
    // for Node.js
    var autobahn = require('autobahn');
@@ -9,6 +11,7 @@ try {
 var connection = null;
 var glob_session = null;
 var WebEntryTopic = "Synopticon.WebEntry";
+var RemoteEyeTrackingTopic = "RETDataSample";
 
 function startWAMP(config) {
   if(connection) {
@@ -30,6 +33,43 @@ function startWAMP(config) {
      // 2) publish an event
      glob_session = session;
      console.log("connected to router");
+
+     function onRETData(args) {
+        let gazeRadius = store.default.getState().gazeCursorRadius;
+
+        let gazeData = args[1];
+        let gazeX = 0;
+        let gazeY = 0;
+
+        //Both eyes valid
+        if(!(gazeData[0] < Number.EPSILON) && !(gazeData[3] < Number.EPSILON)){
+          gazeX = (gazeData[1] + gazeData[4])/2;
+          gazeY = (gazeData[2] + gazeData[5])/2;
+        }
+        //Left eye validity
+        else if(!(gazeData[0] < Number.EPSILON)){
+          gazeX = gazeData[1];
+          gazeY = gazeData[2];
+        }
+        //Right eye validity
+        else if(!(gazeData[3] < Number.EPSILON)){
+          gazeX = gazeData[4];
+          gazeY = gazeData[5];
+        }
+        else{
+          return;
+        }
+
+        let gazeAction = {
+          type: 'SET_GAZE_DATA',
+          gazeData: {
+            locX: gazeX,
+            locY: gazeY
+          }
+        }
+        store.default.dispatch(gazeAction);
+      }
+    session.subscribe('RETDataSample', onRETData);
   };
   connection.open();
 }

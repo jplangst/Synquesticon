@@ -113,6 +113,7 @@ router.post("/getAllTasksContaining", (req, res) => {
 router.post("/addTask", (req, res) => {
   const { message } = req.body;
   var obj = JSON.parse(message);
+  console.log(obj.aois);
   let question = new Tasks({
     question: obj.question,
     aois: obj.aois,

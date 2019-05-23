@@ -8,7 +8,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import NavigationIcon from '@material-ui/icons/NavigateNext';
 import TextField from '@material-ui/core/TextField';
 
-import TaskListComponent from '../components/TaskListComponent';
+import TaskListComponent from '../components/TaskList/TaskListComponent';
 
 import wamp from '../core/wamp';
 import store from '../core/store';
