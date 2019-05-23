@@ -7,7 +7,8 @@ import Button from '@material-ui/core/Button';
 import CancelIcon from '@material-ui/icons/Cancel';
 import NavigationIcon from '@material-ui/icons/NavigateNext';
 
-import wamp from '../core/wamp';
+import GazeCursor from '../components/Views/GazeCursor';
+
 import store from '../core/store';
 
 import './ViewerMode.css';
@@ -22,12 +23,12 @@ class ViewerMode extends Component {
 
   componentWillMount() {
     console.log(store.getState());
-    wamp.startStopTask(store.getState().taskList[this.state.currentQuestion]);
+    // wamp.startStopTask(store.getState().taskList[this.state.currentQuestion]);
   }
 
   onClickNext(e) {
     console.log("current question", this.state.currentQuestion, store.getState().taskList);
-    wamp.startStopTask(store.getState().taskList[(this.state.currentQuestion + 1)]);
+    // wamp.startStopTask(store.getState().taskList[(this.state.currentQuestion + 1)]);
     this.setState({
       currentQuestion: (this.state.currentQuestion + 1)
     });
@@ -56,17 +57,20 @@ class ViewerMode extends Component {
     };
 
     return (
-      <div className="ViewerContainer">
-        <div className="TaskSetHeaderContainer">
-
-        </div>
-
-        <div className="SelectedTaskContainer">
-
-        </div>
-        <div className="ViewerComments"> 
-
-        </div>
+      // <div className="ViewerContainer">
+      //   <div className="TaskSetHeaderContainer">
+      //
+      //   </div>
+      //
+      //   <div className="SelectedTaskContainer">
+      //
+      //   </div>
+      //   <div className="ViewerComments">
+      //
+      //   </div>
+      // </div>
+      <div>
+        <GazeCursor viewWidth={1920} viewHeight={1080}/>
       </div>
       );
   }

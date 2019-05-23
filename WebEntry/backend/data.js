@@ -9,7 +9,10 @@ const TaskSchema = new Schema(
     taskType: String, //The type of the task
     question: String, //Used if the task type is "Question"
     responseType: String, //Determines the response type of the Task e.g. "Multiple choice", "Single choice"
-    aois: [String], //A list of AOIs relevant to the task
+    aois: [{
+      name: String,
+      boundingbox: [[Number]]
+    }], //A list of AOIs relevant to the task
     tags: [String], //A list of searchable tags
     responses: [String], //The possible responses to the task
     correctResponse: String, //The correct response

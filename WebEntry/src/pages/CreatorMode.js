@@ -122,12 +122,12 @@ class CreatorMode extends Component {
   onAddAOIs(task, AOIs) {
     console.log("edit AOIs", task, AOIs);
     task.aois = AOIs;
-    this.updateDB(task);
+    //this.updateDB(task);
   }
 
   onAddResponse(task, response) {
     task.response = response;
-    this.updateDB(task);
+    //this.updateDB(task);
   }
 
   selectTask(task) {

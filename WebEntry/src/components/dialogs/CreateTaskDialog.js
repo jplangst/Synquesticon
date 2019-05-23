@@ -70,6 +70,7 @@ class CreateTaskDialog extends Component {
       //dbFunctions.addQuestionToDb(this.task, this.handleQuestionCallback);
     }
     else{
+      console.log(this.task);
       dbFunctions.addTaskToDb(this.task, this.handleQuestionCallback);
     }
   }
@@ -90,7 +91,22 @@ class CreateTaskDialog extends Component {
       this.task.tags = response;
     }
     else if(target==="AOIs"){
-      this.task.aois = response;
+      //this.task.aois = response;
+      //TODO: implement interface for this functionality
+
+      this.task.aois = [{
+          name: "window1",
+          boundingbox: [[0.07234043, 0.156989247], [0.07234043, 0.56774193], [0.440425545, 0.56774193], [0.440425545, 0.156989247]]
+        },
+        {
+          name: "window2",
+          boundingbox: [[0.6, 0.156989247], [0.6, 0.688172042], [0.976595759, 0.688172042], [0.976595759, 0.156989247]]
+        },
+        {
+          name: "fish",
+          boundingbox: [[0.385106385, 0.677419364], [0.385106385, 0.8731183], [0.568085134, 0.8731183], [0.568085134, 0.677419364]]
+        }
+      ];
     }
     else if(target==="Answers"){
       this.task.correctResponses = response;
