@@ -3,6 +3,7 @@
   padding: 10px;
   background-color: #F5F5F5;
   margin-right: 2.5%;
+  min-height: 40px;
 }
 
 .listItemPlaceholder {
@@ -14,10 +15,6 @@
 .handlingbuttons {
   float: right;
   margin: 0;
-}
-
-.button {
-
 }
 
 .highlightBG{

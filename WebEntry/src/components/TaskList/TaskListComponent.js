@@ -82,7 +82,7 @@ class TaskListComponent extends Component {
           if(item == this.props.selectedTask){
             highlightBG = "highlightBG";
           }
-          return <div key={index}><TaskItemComponent highlight={highlightBG} placeholder={false} task={item} removeCallback={this.onRemoveTask.bind(this)} onSelectedCallback={this.onSelectTask.bind(this)}/></div>
+          return <div key={index}><TaskItemComponent highlight={highlightBG} placeholder={false} task={item} startDragCallback={this.props.startDragCallback} onSelectedCallback={this.onSelectTask.bind(this)}/></div>
         })
       }
       </Reorder>
