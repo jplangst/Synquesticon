@@ -1,5 +1,19 @@
 var store = require('./store');
 
+const EventEmitter = require('events');
+class CWAMPEventsStore extends EventEmitter {
+  addFixationListener(callback) {
+    this.addListener('NEW FIXATION', callback);
+  }
+  removeFixationListener(callback) {
+    this.removeListener('NEW FIXATION', callback);
+  }
+  addNewFixation() {
+    this.emit('NEW FIXATION');
+  }
+}
+let wampEventsStore = new CWAMPEventsStore();
+
 try {
    // for Node.js
    var autobahn = require('autobahn');
@@ -10,7 +24,7 @@ try {
 //var dat = [dat0, dat1, dat2];
 var connection = null;
 var glob_session = null;
-var WebEntryTopic = "Synopticon.WebEntry";
+var SynquesticonTopic = "Synquesticon.Task";
 var RemoteEyeTrackingTopic = "RETDataSample";
 
 function startWAMP(config) {
@@ -62,6 +76,7 @@ function startWAMP(config) {
 
         let gazeAction = {
           type: 'SET_GAZE_DATA',
+          tracker: args[0],
           gazeData: {
             locX: gazeX,
             locY: gazeY
@@ -84,20 +99,13 @@ module.exports = {
   changeImageAndAOIs: function (image, aois) {
 
   },
-  startStopTask(task) {
+  broadcastEvents(info) {
     if(glob_session) {
-      /*
-      int32 ClientID
-      int32 QuestionID
-      int32 EventCode
-      FString Content
-      TArray<FString> AOIs
-      */
-      console.log("publish task", task.question, task.aois);
-      glob_session.publish(WebEntryTopic, [-1, -1, -1, task.question, task.aois]);
+      glob_session.publish(SynquesticonTopic, info);
     }
   },
   restartWAMP(config) {
     startWAMP(config);
-  }
+  },
+  wampEventsStore
 };
