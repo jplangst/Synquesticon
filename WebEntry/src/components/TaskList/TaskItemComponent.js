@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
-import DeleteIcon from '@material-ui/icons/Clear';
-import EditIcon from '@material-ui/icons/Edit';
+import DragIcon from '@material-ui/icons/ControlCamera';
 import './TaskItemComponent.css';
 
 class TaskItemComponent extends Component {
@@ -26,7 +25,11 @@ class TaskItemComponent extends Component {
         <div className={"listItem "+this.props.highlight} onClick={()=>this.props.onSelectedCallback(this.props.task)}>
           {this.props.task.question}
           {this.props.task.name}
-          {editableButtons}
+          <Button className="buttons" size="small" onClick={()=>{
+              this.props.startDragCallback(this.props.task);
+            }}>
+            <DragIcon />
+          </Button>
         </div>
       );
     }

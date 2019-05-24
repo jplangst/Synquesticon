@@ -170,6 +170,10 @@ class CreatorMode extends Component {
 
   }
 
+  startDragCallback(dragableItem){
+    console.log("start drag");
+  }
+
   render() {
     var collapsableTaskHeaderButtons =
     <div className="collapsableHeaderBtnsContainer">
@@ -203,18 +207,14 @@ class CreatorMode extends Component {
         <div className="AssetViewerTitle">Asset viewer</div>
           <CollapsableContainer classNames="ContainerSeperator" style={{height: "5%"}} headerTitle="Tasks" headerComponents={collapsableTaskHeaderButtons}>
               < TaskListComponent reorderDisabled={true} placeholderName="TaskPlaceholder" reorderID="tasksReorder" taskList={ this.state.taskList }
-                selectTask={ this.selectTask.bind(this) } removeTask={this.removeTask.bind(this)} selectedTask={this.state.selectedTask}/ >
+                selectTask={ this.selectTask.bind(this) } selectedTask={this.state.selectedTask} startDragCallback={this.startDragCallback.bind(this)}/ >
           </CollapsableContainer>
           <CollapsableContainer classNames="ContainerSeperator" headerTitle="Sets" headerComponents={collapsableSetHeaderButtons}>
-            <div>
-              <div className ="Grow"/ >
-                < TaskListComponent selectedTask={this.state.selectedTaskSet} reorderDisabled={false} placeholderName="TaskSetPlaceholder" reorderID="taskSetsReorder"
-                  taskList={ this.state.taskSetList } selectTask={ this.selectTaskSet.bind(this) } removeTask={this.removeTaskSet.bind(this)} selectedTask={this.state.selectedTaskSet}/ >
-            < /div >
+              < TaskListComponent selectedTask={this.state.selectedTaskSet} reorderDisabled={false} placeholderName="TaskSetPlaceholder" reorderID="taskSetsReorder"
+                taskList={ this.state.taskSetList } selectTask={ this.selectTaskSet.bind(this) } selectedTask={this.state.selectedTaskSet}/ >
           </CollapsableContainer>
           <CollapsableContainer classNames="ContainerSeperator TaskSetContainer" headerTitle="Images">
           </CollapsableContainer>
-
           <CollapsableContainer classNames="ContainerSeperator TaskSetContainer" headerTitle="Templates">
           </CollapsableContainer>
       </div>
