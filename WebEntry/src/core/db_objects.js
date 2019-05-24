@@ -17,8 +17,6 @@ export class TaskObject{
       this.responses = [];
       this.correctResponses = [];
       this.responseUnit = "";
-      this.startTimestamp = null;
-      this.stopTimestamp = null;
   }
 
   setQuestion(question){

@@ -13,7 +13,7 @@
 
 .leftHeaderContent{
   position: absolute;
-  width: 60%;
+  width: 30%;
   height: 100%;
 }
 .collapseBtnContainer{
@@ -45,9 +45,9 @@
 .customHeaderComponents{
   position: absolute;
   height: 100%;
-  width: 40%;
+  width: 70%;
   top: 0;
-  left: 60%;
+  left: 30%;
 }
 
 /**** Content ******/

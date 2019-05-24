@@ -14,7 +14,7 @@ dark: "#303f9f"
 /****** Asset Viewer ********/
 .AssetViewer{
   position: absolute;
-  width: 26%;
+  width: 28%;
   height: 96%;
   top: 2%;
   left: 2%;
@@ -27,9 +27,23 @@ dark: "#303f9f"
 }
 .collapsableHeaderBtnsContainer{
   height: 100%;
+  width: 100%;
+  position: absolute;
+}
+.collapsableBtns{
+  position: absolute;
+  left: 62%;
+  height: 100%;
+  width: 38%;
 }
 .collapsableHeaderBtns{
   height: 100%;
+}
+.searchContainer{
+  position: absolute;
+  width: 62%;
+  height: 100%;
+  left: 0;
 }
 
 .AssetViewerTitle{
