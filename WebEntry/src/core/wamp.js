@@ -1,18 +1,5 @@
 var store = require('./store');
-
-const EventEmitter = require('events');
-class CWAMPEventsStore extends EventEmitter {
-  addFixationListener(callback) {
-    this.addListener('NEW FIXATION', callback);
-  }
-  removeFixationListener(callback) {
-    this.removeListener('NEW FIXATION', callback);
-  }
-  addNewFixation() {
-    this.emit('NEW FIXATION');
-  }
-}
-let wampEventsStore = new CWAMPEventsStore();
+var wampStore = require('./wampStore');
 
 try {
    // for Node.js
@@ -84,7 +71,13 @@ function startWAMP(config) {
         }
         store.default.dispatch(gazeAction);
       }
-    session.subscribe('RETDataSample', onRETData);
+    session.subscribe(RemoteEyeTrackingTopic, onRETData);
+
+    function onWAMPEvent(args) {
+      wampStore.default.setCurrentMessage(args);
+      wampStore.default.emitNewWAMPEvent();
+    }
+    session.subscribe(SynquesticonTopic, onWAMPEvent);
   };
   connection.open();
 }
@@ -106,6 +99,5 @@ module.exports = {
   },
   restartWAMP(config) {
     startWAMP(config);
-  },
-  wampEventsStore
+  }
 };

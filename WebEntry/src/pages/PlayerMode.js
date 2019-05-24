@@ -44,8 +44,6 @@ class PlayerMode extends Component {
   }
 
   handleChange = name => event => {
-    console.log(name, event);
-    //if (event.target.value === "") selectedTracker
     this.setState({ [name]: event.target.value });
   };
 
@@ -61,17 +59,18 @@ class PlayerMode extends Component {
   }
 
   dbTasksCallbackFunction(dbQueryResult) {
-    console.log("task list returned by db", dbQueryResult);
+
     //5cdc1bfbce788a06b852777e
     var action = {
       type: 'SET_EXPERIMENT_INFO',
       experimentInfo: {
         experimentId: this.state.experiment,
-        partiticipantId: this.state.participant,
+        participantId: this.state.participant,
         taskSet: dbQueryResult,
         selectedTracker: this.state.selectedTracker
       }
     }
+    console.log("dispatch contain", action);
     store.dispatch(action);
     this.props.history.push('/RunTasksMode');
   }

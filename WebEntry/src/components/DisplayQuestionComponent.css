@@ -43,4 +43,9 @@
 
 .responsesButtons {
   text-align: center;
+  margin: 5px;
+}
+
+.picked {
+  background-color: green;
 }
