@@ -8,6 +8,12 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import NavigationIcon from '@material-ui/icons/NavigateNext';
 import TextField from '@material-ui/core/TextField';
 
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import FilledInput from '@material-ui/core/FilledInput';
+
 import TaskListComponent from '../components/TaskList/TaskListComponent';
 
 import wamp from '../core/wamp';
@@ -24,6 +30,7 @@ class PlayerMode extends Component {
       experiment: '',
       participant: '',
       selectedTaskSet: null,
+      selectedTracker: '',
       taskSets: []
     }
 
@@ -37,21 +44,33 @@ class PlayerMode extends Component {
   }
 
   handleChange = name => event => {
+    console.log(name, event);
+    //if (event.target.value === "") selectedTracker
     this.setState({ [name]: event.target.value });
   };
 
   dbTaskSetCallbackFunction(dbQueryResult) {
     console.log(dbQueryResult);
-    //5cdc1bfbce788a06b852777e
+    //5ce55a585ed92d33d4c33a32
+    //5ce7a7d4b3258d5910a303c5
+    //5ce7a7fdb3258d5910a303c9
+    //5ce7a812b3258d5910a303cd
+
+    //set: 5ce55a645ed92d33d4c33a36
     this.setState({taskSets: dbQueryResult});
   }
 
   dbTasksCallbackFunction(dbQueryResult) {
-    //console.log(dbQueryResult);
+    console.log("task list returned by db", dbQueryResult);
     //5cdc1bfbce788a06b852777e
     var action = {
-      type: 'SET_TASK_LIST',
-      taskList: dbQueryResult
+      type: 'SET_EXPERIMENT_INFO',
+      experimentInfo: {
+        experimentId: this.state.experiment,
+        partiticipantId: this.state.participant,
+        taskSet: dbQueryResult,
+        selectedTracker: this.state.selectedTracker
+      }
     }
     store.dispatch(action);
     this.props.history.push('/RunTasksMode');
@@ -87,9 +106,23 @@ class PlayerMode extends Component {
             margin="normal"
           />
         </div>
+        <FormControl className="textinput">
+          <InputLabel htmlFor="age-simple">Remote Eye Tracker</InputLabel>
+          <Select
+            value={this.state.selectedTracker}
+            onChange={this.handleChange('selectedTracker')}
+            input={<FilledInput name="selectedTracker" id="selectedTracker-helper" />}
+          >
+            {
+              store.getState().remoteEyeTrackers.map((item, index) => {
+                return <MenuItem value={item} id={index}>{item}</MenuItem>
+              })
+            }
+          </Select>
+        </FormControl>
         < TaskListComponent selectedTask={this.state.selectedTaskSet} reorderDisabled={true} reorderID="tasksReorder" taskList={ this.state.taskSets } selectTask={ this.onSelectTaskSet.bind(this) } editable={false}/ >
         <div className="playButtonWrapper">
-          <Button variant="fab" onClick={this.onPlayButtonClick.bind(this)}
+          <Button onClick={this.onPlayButtonClick.bind(this)}
                   className="playButton" disabled={(!this.state.experiment)||(!this.state.participant)||(!this.state.selectedTaskSet)}>
             <NavigationIcon fontSize="large"/>
           </Button>

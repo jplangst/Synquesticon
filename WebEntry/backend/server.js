@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const express = require("express");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
+var generateSchema = require("generate-schema");s
 
 //var ObjectID = require('mongodb').ObjectID;
 
@@ -113,16 +114,17 @@ router.post("/getAllTasksContaining", (req, res) => {
 router.post("/addTask", (req, res) => {
   const { message } = req.body;
   var obj = JSON.parse(message);
-  console.log(obj.aois);
-  let question = new Tasks({
-    question: obj.question,
-    aois: obj.aois,
-    tags: obj.tags,
-    responses: obj.responses,
-    refSets: []
-  });
+  console.log(obj);
+  let task = generateSchema.json('Tasks', obj);
+  // let question = new Tasks({
+  //   question: obj.question,
+  //   aois: obj.aois,
+  //   tags: obj.tags,
+  //   responses: obj.responses,
+  //   refSets: []
+  // });
 
-  question.save((err, q) => {
+  task.save((err, q) => {
     if (err) {
       return res.json({ success: false, error: err });
     }
@@ -187,10 +189,11 @@ router.post("/getTaskSetWithID", (req, res) => {
 router.post("/addTaskSet", (req, res) => {
   const { id, message } = req.body;
   var obj = JSON.parse(message);
-  let set = new TaskSets({
-    name: obj.name,
-    questions: [] //list questions belong to this set
-  });
+  let set = generateSchema.json('TaskSets', obj);
+  // let set = new TaskSets({
+  //   name: obj.name,
+  //   questions: [] //list questions belong to this set
+  // });
 
   set.save((err, s) => {
     if (err) {
@@ -278,12 +281,13 @@ router.post("/getParticipantsWithIDs", (req, res) => {
 router.post("/addParticipant", (req, res) => {
   const { message } = req.body;
   var obj = JSON.parse(message);
-  let participant = new Participants({
-    readableId: obj.name,
-    taskSetId: obj.taskSetId,
-    eyeData: obj.eyeDataFile,
-    answers: []
-  });
+  let participant = generateSchema.json('Participants', obj);
+  // let participant = new Participants({
+  //   readableId: obj.name,
+  //   taskSetId: obj.taskSetId,
+  //   eyeData: obj.eyeDataFile,
+  //   answers: []
+  // });
 
   participant.save((err, p) => {
     if (err) {
@@ -357,10 +361,11 @@ router.post("/getExperimentWithID", (req, res) => {
 router.post("/addExperiment", (req, res) => {
   const { id, message } = req.body;
   var obj = JSON.parse(message);
-  let experiment = new Experiments({
-    readableId: obj.name,
-    participantIds: [] //list questions belong to this set
-  });
+  let experiment = generateSchema.json('Experiments', obj);
+  // let experiment = new Experiments({
+  //   readableId: obj.name,
+  //   participantIds: [] //list questions belong to this set
+  // });
 
   experiment.save((err, s) => {
     if (err) {

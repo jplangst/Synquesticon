@@ -8,6 +8,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import NavigationIcon from '@material-ui/icons/NavigateNext';
 
 import GazeCursor from '../components/Views/GazeCursor';
+import WAMPMessageComponent from '../components/Views/WAMPMessageComponent';
 
 import store from '../core/store';
 
@@ -57,21 +58,22 @@ class ViewerMode extends Component {
     };
 
     return (
-      // <div className="ViewerContainer">
-      //   <div className="TaskSetHeaderContainer">
-      //
-      //   </div>
-      //
-      //   <div className="SelectedTaskContainer">
-      //
-      //   </div>
-      //   <div className="ViewerComments">
-      //
-      //   </div>
-      // </div>
-      <div>
-        <GazeCursor viewWidth={1920} viewHeight={1080}/>
+      <div className="ViewerContainer">
+        <div className="TaskSetHeaderContainer">
+
+        </div>
+
+        <div className="SelectedTaskContainer">
+          <WAMPMessageComponent />
+        </div>
+
+        <div className="ViewerGaze">
+
+        </div>
       </div>
+      // <div>
+      //   <GazeCursor viewWidth={1920} viewHeight={1080}/>
+      // </div>
       );
   }
 }
