@@ -134,11 +134,15 @@ export function addTaskToDb(dbQuestionObject, callback){
 };
 
 // to overwrite existing data base information
-export function updateTaskFromDb(id, editedObj){
+export function updateTaskFromDb(id, editedObj, callback){
   axios.post("/api/updateTask", {
     id: id,
     message: JSON.stringify(editedObj)
-  }).then(data => {console.log("after updating", data)});
+  }).then(data =>
+    {
+      console.log("after updating", data)
+      callback(data._id)
+    });
 };
 
 // to remove existing database information

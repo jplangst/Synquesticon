@@ -24,17 +24,17 @@ const styles = theme => ({
     },
   },
   search: {
-    position: 'relative',
+    //position: 'relative',
     borderRadius: theme.shape.borderRadius,
     backgroundColor: fade(theme.palette.common.white, 0.15),
     '&:hover': {
       backgroundColor: fade(theme.palette.common.white, 0.25),
     },
     marginLeft: 0,
-    width: '100%',
+    //width: '100%',
     [theme.breakpoints.up('sm')]: {
       marginLeft: theme.spacing.unit,
-      width: 'auto',
+      //width: 'auto',
     },
   },
   searchIcon: {
@@ -61,7 +61,13 @@ const styles = theme => ({
   },
   inputRoot: {
     color: 'inherit',
+    //backgroundColor: '#EEE',
+    borderStyle: 'solid',
+    borderWidth: 'thin',
+    borderRadius: '15px',
     width: '100%',
+    height: 'calc(100%-5px)',
+    marginTop: '10px',
   },
   inputInput: {
     paddingTop: theme.spacing.unit,
@@ -70,6 +76,7 @@ const styles = theme => ({
     paddingLeft: theme.spacing.unit * 8,
     transition: theme.transitions.create('width'),
     width: '100%',
+    borderRadius: '15px',
     [theme.breakpoints.up('sm')]: {
       width: 120,
       '&:focus': {
@@ -87,7 +94,7 @@ function ClearSearch(e, elementID, onChange){
 function SearchAppBar(props) {
   const { classes } = props;
   return (
-      <div className={classes.search}>
+    <div className={classes.search}>
         <div className={classes.searchIcon}>
           <SearchIcon />
         </div>
