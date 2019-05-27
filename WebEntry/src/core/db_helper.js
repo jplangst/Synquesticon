@@ -146,10 +146,13 @@ export function updateTaskFromDb(id, editedObj, callback){
 };
 
 // to remove existing database information
-export function deleteTaskFromDb(idTodelete){
+export function deleteTaskFromDb(idTodelete, callback){
   axios.post("/api/deleteTask", {
       id: idTodelete
-  }).then(response => {console.log("after deleting", response)});
+  }).then(response =>
+    {console.log("after deleting", response)
+    callback();
+  });
 };
 
 export function deleteAllTasksFromDb(){

@@ -15,7 +15,7 @@ const TaskSchema = new Schema(
     }], //A list of AOIs relevant to the task
     tags: [String], //A list of searchable tags
     responses: [String], //The possible responses to the task
-    correctResponses: String, //The correct response
+    correctResponses: [String], //The correct response
     responseUnit: String, //The unit of the response e.g. "%", "RPM"
     refSets: [String], //list of sets that reference to this questions
   }, {
