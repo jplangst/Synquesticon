@@ -11,12 +11,10 @@ import TaskListComponent from '../components/TaskList/TaskListComponent';
 //Asset Editor components
 import EditTaskComponent from '../components/AssetEditorComponents/EditTaskComponent'
 
-import {FilterList, AddCircleOutline, Search} from '@material-ui/icons';
+import {FilterList, AddCircleOutline} from '@material-ui/icons';
 
 import './CreatorMode.css';
 import * as dbFunctions from '../core/db_helper.js';
-
-import store from '../core/store';
 
 class CreatorMode extends Component {
   constructor(props) {

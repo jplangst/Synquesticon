@@ -3,11 +3,6 @@ import React, { Component } from 'react';
 import * as dbFunctions from '../../core/db_helper';
 import * as dbObjects from '../../core/db_objects';
 
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-import Dialog from '@material-ui/core/Dialog';
-
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import InputLabel from "@material-ui/core/InputLabel";
@@ -31,7 +26,7 @@ const responseTypeOptions = [
 class EditTaskComponent extends Component {
   constructor(props){
     super(props);
-    
+
     //If we got a taskObject passed as a prop we use it, otherwise we init with a default constructed object
     this.task = this.props.isEditing ? this.props.taskObject : new dbObjects.TaskObject();
 
@@ -137,8 +132,6 @@ class EditTaskComponent extends Component {
   }
 
   render() {
-    var headerTitle = this.props.isEditing ? "Edit task" : "Create Task";
-
     var questionTypeContent = null;
     var questionResponseType = null;
 
@@ -253,9 +246,6 @@ class EditTaskComponent extends Component {
     if(this.state.taskType === "Instruction"){
 
     }
-
-    var removeCloseBtnCallback = this.props.isEditing ? this.removeTask : this.closeTaskComponent;
-    var removeCloseBtnLabel = this.props.isEditing ? "Delete Task" : "Cancel";
 
     var deleteTaskBtn = null;
     if(this.props.isEditing){

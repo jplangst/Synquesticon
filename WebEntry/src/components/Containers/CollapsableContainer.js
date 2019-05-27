@@ -44,7 +44,7 @@ class CollapsableContainer extends Component {
           </div>
         </div>
         <div className="collapsableContent">
-          <Collapse in={this.state.open} timeout="auto" unmountOnExit disableRipple >
+          <Collapse in={this.state.open} timeout="auto" unmountOnExit >
             {this.props.children}
           </Collapse>
         </div>
