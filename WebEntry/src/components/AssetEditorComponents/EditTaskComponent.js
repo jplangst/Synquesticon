@@ -31,7 +31,7 @@ const responseTypeOptions = [
 class EditTaskComponent extends Component {
   constructor(props){
     super(props);
-
+    
     //If we got a taskObject passed as a prop we use it, otherwise we init with a default constructed object
     this.task = this.props.isEditing ? this.props.taskObject : new dbObjects.TaskObject();
 
@@ -65,14 +65,6 @@ class EditTaskComponent extends Component {
   }
 
   componentWillUnmount() {
-  }
-
-  componentDidUpdate(oldProps){
-    if (this.props.taskObject !== oldProps.taskObject){
-      this.task = this.props.taskObject;
-      this.setState({taskType: this.task.taskType, responseType: this.task.responseType});
-      document.getElementById("formRootId").reset();
-    }
   }
 
   onDBCallback(questionDBID){
@@ -136,8 +128,6 @@ class EditTaskComponent extends Component {
   }
 
   removeTask() {
-    console.log("deleteTask", this.state.task._id);
-
     //TODO Dialog prompt "Are you sure you want to delte "Task", it will also be removed from the data base...
     dbFunctions.deleteTaskFromDb(this.state.task._id, this.handleQuestionCallback);
   }

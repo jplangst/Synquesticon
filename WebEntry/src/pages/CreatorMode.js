@@ -55,6 +55,9 @@ class CreatorMode extends Component {
     this.taskSetSearchCallback = this.onTaskSetSearchInputChanged.bind(this);
 
     this.gotoPage = this.gotoPageHandler.bind(this);
+
+    //Asset Editor Component Key. Used to force reconstruction...
+    this.assetEditorCompKey = 0;
   }
 
   gotoPageHandler(e, route){
@@ -91,8 +94,10 @@ class CreatorMode extends Component {
 
   //actions callbacks
   selectTask(task) {
+    this.assetEditorCompKey += 1;
     var assetObject = <EditTaskComponent isEditing={true} taskObject={task}
       closeTaskCallback={this.assetEditorObjectClosed.bind(this)}
+      key={this.assetEditorCompKey}
     />;
 
     this.setState(state => ({selectedTask: task, assetEditorObject: assetObject}));
@@ -150,8 +155,11 @@ class CreatorMode extends Component {
   }
 
   addTaskCallback(){
+    this.assetEditorCompKey += 1;
     this.clearAssetEditorObject();
-    this.setState({assetEditorObject: <EditTaskComponent isEditing={false} closeTaskCallback={this.assetEditorObjectClosed.bind(this)} />});
+    this.setState({assetEditorObject: <EditTaskComponent isEditing={false}
+      closeTaskCallback={this.assetEditorObjectClosed.bind(this)}
+      key={this.assetEditorCompKey} />});
   }
 
   addSetCallback(){
@@ -176,10 +184,10 @@ class CreatorMode extends Component {
       <SearchBar classes ={{search: "searchContainer"}} onChange={this.taskSearchCallback} searchID="taskSearch"/>
       <div className="collapsableBtns">
         <Button className="collapsableHeaderBtns" size="small" onClick={this.addTaskCallback.bind(this)} >
-          <AddCircleOutline fontSize="medium" className="addItemsIcon" />
+          <AddCircleOutline fontSize="large" className="addItemsIcon" />
         </Button>
         <Button className="collapsableHeaderBtns" size="small" onClick={this.filterTasksCallback.bind(this)} >
-          <FilterList fontSize="medium" className="addItemsIcon" />
+          <FilterList fontSize="large" className="addItemsIcon" />
         </Button>
       </div>
     </div>;
@@ -189,10 +197,10 @@ class CreatorMode extends Component {
       <SearchBar classes ={{search: "searchContainer"}} onChange={this.taskSetSearchCallback} searchID="taskSetSearch"/>
       <div className="collapsableBtns">
         <Button className="collapsableHeaderBtns" size="small" onClick={this.addSetCallback.bind(this)} >
-          <AddCircleOutline fontSize="medium" className="addItemsIcon" />
+          <AddCircleOutline fontSize="large" className="addItemsIcon" />
         </Button>
         <Button className="collapsableHeaderBtns" size="small" onClick={this.filterSetsCallback.bind(this)} >
-          <FilterList fontSize="medium" className="addItemsIcon" />
+          <FilterList fontSize="large" className="addItemsIcon" />
         </Button>
       </div>
     </div>;
@@ -207,7 +215,7 @@ class CreatorMode extends Component {
           </CollapsableContainer>
           <CollapsableContainer classNames="ContainerSeperator" headerTitle="Sets" headerComponents={collapsableSetHeaderButtons}>
               < TaskListComponent selectedTask={this.state.selectedTaskSet} reorderDisabled={false} placeholderName="TaskSetPlaceholder" reorderID="taskSetsReorder"
-                taskList={ this.state.taskSetList } selectTask={ this.selectTaskSet.bind(this) } selectedTask={this.state.selectedTaskSet}/ >
+                taskList={ this.state.taskSetList } selectTask={ this.selectTaskSet.bind(this) }/ >
           </CollapsableContainer>
           <CollapsableContainer classNames="ContainerSeperator TaskSetContainer" headerTitle="Images">
           </CollapsableContainer>
