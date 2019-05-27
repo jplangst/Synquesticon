@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import './GazeCursor.css';
 
 import store from '../../core/store';

@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
 
 //icons
-import CancelIcon from '@material-ui/icons/Cancel';
 import NavigationIcon from '@material-ui/icons/NavigateNext';
 import TextField from '@material-ui/core/TextField';
 
@@ -16,7 +14,6 @@ import FilledInput from '@material-ui/core/FilledInput';
 
 import TaskListComponent from '../components/TaskList/TaskListComponent';
 
-import wamp from '../core/wamp';
 import store from '../core/store';
 
 import * as dbFunctions from '../core/db_helper.js';

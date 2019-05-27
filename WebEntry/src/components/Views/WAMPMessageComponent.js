@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 
 import wampStore from '../../core/wampStore';
 
@@ -52,7 +52,7 @@ class WAMPMessageComponent extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="wampMessageBoard">
       {this.state.messages.map((item, index) => {
         return (<div>{item}</div>);
       })}

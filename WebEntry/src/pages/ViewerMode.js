@@ -1,11 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-
-import Button from '@material-ui/core/Button';
-
-//icons
-import CancelIcon from '@material-ui/icons/Cancel';
-import NavigationIcon from '@material-ui/icons/NavigateNext';
 
 import GazeCursor from '../components/Views/GazeCursor';
 import WAMPMessageComponent from '../components/Views/WAMPMessageComponent';
@@ -36,33 +29,8 @@ class ViewerMode extends Component {
   }
 
   render() {
-    var getDisplayedQuestion = () => {
-      if(store.getState().taskList.length > 0 && this.state.currentQuestion < store.getState().taskList.length){
-        var task = store.getState().taskList[this.state.currentQuestion];
-        console.log("play task", task);
-        return (
-        <div className="mainDisplay">
-          <div className="questionDisplay">
-            {task.question}
-          </div>
-          <div className="responsesButtons">
-          {
-            task.responses.map((item, index)=>{
-              console.log("play task buttons", index, item);
-              return (<Button variant="contained">{item}</Button>);
-            })
-          }
-          </div>
-        </div>);
-      }
-    };
-
     return (
       <div className="ViewerContainer">
-        <div className="TaskSetHeaderContainer">
-
-        </div>
-
         <div className="SelectedTaskContainer">
           <WAMPMessageComponent />
         </div>
@@ -71,9 +39,6 @@ class ViewerMode extends Component {
 
         </div>
       </div>
-      // <div>
-      //   <GazeCursor viewWidth={1920} viewHeight={1080}/>
-      // </div>
       );
   }
 }

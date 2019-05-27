@@ -3,11 +3,6 @@ import React, { Component } from 'react';
 import * as dbFunctions from '../../core/db_helper';
 import * as dbObjects from '../../core/db_objects';
 
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-import Dialog from '@material-ui/core/Dialog';
-
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import InputLabel from "@material-ui/core/InputLabel";
@@ -90,8 +85,10 @@ class EditTaskComponent extends Component {
   }
 
   onChangeTaskSettings(){
-    this.state.task.taskType = this.state.taskType;
-    this.state.task.responseType = this.state.responseType;
+    var task = this.state.task;
+    task.taskType = this.state.taskType;
+    task.responseType = this.state.responseType;
+    this.setState({task: task});
 
     if(this.props.isEditing){
       dbFunctions.updateTaskFromDb(this.state.task._id, this.state.task, this.handleQuestionCallback);
@@ -110,18 +107,18 @@ class EditTaskComponent extends Component {
       return value.trim();
     });
     response = response.filter(Boolean); //Remove empty values
-
+    var task = this.state.task;
     if(target==="Responses"){
-      this.state.task.responses = response;
+      task.responses = response;
     }
     else if(target==="Tags"){
-      this.state.task.tags = response;
+      task.tags = response;
     }
     else if(target==="AOIs"){
       //this.task.aois = response;
       //TODO: implement interface for this functionality
 
-      this.state.task.aois = [{
+      task.aois = [{
           name: "window1",
           boundingbox: [[0.07234043, 0.156989247], [0.07234043, 0.56774193], [0.440425545, 0.56774193], [0.440425545, 0.156989247]]
         },
@@ -136,8 +133,9 @@ class EditTaskComponent extends Component {
       ];
     }
     else if(target==="Answers"){
-      this.state.task.correctResponses = response;
+      task.correctResponses = response;
     }
+    this.setState({task: task});
 
     console.log(response);
   }
@@ -180,7 +178,10 @@ class EditTaskComponent extends Component {
           fullWidth
           multiline
           rows="3"
-          onChange={(e)=>{this.state.task.question = e.target.value}}
+          onChange={(e)=>{
+            var task = this.state.task;
+            task.question = e.target.value;
+            this.setState({task: task});}}
         />
 
         <TextField
@@ -206,7 +207,11 @@ class EditTaskComponent extends Component {
           helperText="The unit of the responses if they are numerical"
           label="Unit"
           ref="unitRef"
-          onChange={(e)=> this.state.task.responseUnit = e.target.value}
+          onChange={(e)=> {
+            var task = this.state.task;
+            task.responseUnit = e.target.value;
+            this.setState({task: task});}
+          }
         />
 
         <TextField

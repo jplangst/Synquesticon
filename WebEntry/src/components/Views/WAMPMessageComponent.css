@@ -1,0 +1,13 @@
+.wampMessageBoard {
+  border: 1px solid black;
+  border-radius: 10px;
+  box-sizing: border-box;
+  background-color: white;
+  width: 96%;
+  height: 96%;
+  position: absolute;
+  left: 2%;
+  top: 2%;
+  font-family: Arial;
+  padding: 15px;
+}

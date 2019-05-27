@@ -18,12 +18,12 @@
   position: relative;
   width: 100%;
   height: 70%;
-  background-color: blue;
+  background-color: gray;
+  border-bottom: 1px solid black;
 }
 
 .ViewerGaze{
   position: relative;
   width: 100%;
   height: 20%;
-  background-color: green;
 }
