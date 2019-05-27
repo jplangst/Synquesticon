@@ -32,14 +32,25 @@ class EditTaskComponent extends Component {
   constructor(props){
     super(props);
 
+    //If we got a taskObject passed as a prop we use it, otherwise we init with a default constructed object
+    this.task = this.props.isEditing ? this.props.taskObject : new dbObjects.TaskObject();
 
+    var taskType = "Question";
+    var responseType = "Single Choice";
+    if(this.props.task){
+      if(this.props.task.taskType){
+        taskType = this.props.task.taskType;
+      }
+      if(this.props.task.responseType){
+        responseType = this.props.task.responseType;
+      }
+    }
 
-    //If we already have a type from props use it. Otherwise set default to Question
-    this.state = {
-      taskType: this.props.taskType ? this.props.taskType : "Question",
-      responseType: this.props.responseType ? this.props.responseType : "Free text",
-      task: null,
-    };
+    this.state = { //We keep these fields in the state as they affect how the component is rendered
+      taskType: taskType,
+      responseType: responseType,
+      task: this.task,
+    }
 
     this.responseHandler = this.onResponsesChanged;
     this.handleQuestionCallback = this.onDBCallback.bind(this);
@@ -50,35 +61,18 @@ class EditTaskComponent extends Component {
   };
 
   componentWillMount() {
-    this.setupComponent();
+
   }
 
   componentWillUnmount() {
   }
 
-  componentWillReceiveProps(){
-    this.setupComponent();
-
-
-  }
-
-  setupComponent(){
-    console.log("RecieveProps");
-    var task;
-    if(this.props.isEditing){
-      task = this.props.taskObject;
+  componentDidUpdate(oldProps){
+    if (this.props.taskObject !== oldProps.taskObject){
+      this.task = this.props.taskObject;
+      this.setState({taskType: this.task.taskType, responseType: this.task.responseType});
+      document.getElementById("formRootId").reset();
     }
-    else{
-      task = new dbObjects.TaskObject();
-    }
-
-    this.setState(
-      {
-        taskType: this.props.taskType ? this.props.taskType : "Question",
-        responseType: this.props.responseType ? this.props.responseType : "Free text",
-        task: task,
-      }
-    );
   }
 
   onDBCallback(questionDBID){
@@ -90,15 +84,15 @@ class EditTaskComponent extends Component {
   }
 
   onChangeTaskSettings(){
-    this.state.task.taskType = this.state.taskType;
-    this.state.task.responseType = this.state.responseType;
+    this.task.taskType = this.state.taskType; //TODO this looks weird
+    this.task.responseType = this.state.responseType;
 
     if(this.props.isEditing){
-      dbFunctions.updateTaskFromDb(this.state.task._id, this.state.task, this.handleQuestionCallback);
+      dbFunctions.updateTaskFromDb(this.task._id, this.task, this.handleQuestionCallback);
     }
     else{
-      console.log(this.state.task);
-      dbFunctions.addTaskToDb(this.state.task, this.handleQuestionCallback);
+      console.log(this.task);
+      dbFunctions.addTaskToDb(this.task, this.handleQuestionCallback);
     }
   }
 
@@ -112,16 +106,16 @@ class EditTaskComponent extends Component {
     response = response.filter(Boolean); //Remove empty values
 
     if(target==="Responses"){
-      this.state.task.responses = response;
+      this.task.responses = response;
     }
     else if(target==="Tags"){
-      this.state.task.tags = response;
+      this.task.tags = response;
     }
     else if(target==="AOIs"){
       //this.task.aois = response;
       //TODO: implement interface for this functionality
 
-      this.state.task.aois = [{
+      this.task.aois = [{
           name: "window1",
           boundingbox: [[0.07234043, 0.156989247], [0.07234043, 0.56774193], [0.440425545, 0.56774193], [0.440425545, 0.156989247]]
         },
@@ -136,23 +130,19 @@ class EditTaskComponent extends Component {
       ];
     }
     else if(target==="Answers"){
-      this.state.task.correctResponses = response;
+      this.task.correctResponses = response;
     }
-
     console.log(response);
   }
 
   removeTask() {
     console.log("deleteTask", this.state.task._id);
-    dbFunctions.deleteTaskFromDb(this.state.task._id);
 
     //TODO Dialog prompt "Are you sure you want to delte "Task", it will also be removed from the data base...
-
-    this.closeTaskComponent(true);
+    dbFunctions.deleteTaskFromDb(this.state.task._id, this.handleQuestionCallback);
   }
 
   closeTaskComponent(componentChanged){
-    //TODO check if anything changes, pass true if it did, otherwise pass false
     this.props.closeTaskCallback(componentChanged);
   }
 
@@ -161,8 +151,6 @@ class EditTaskComponent extends Component {
 
     var questionTypeContent = null;
     var questionResponseType = null;
-
-    console.log(this.state.task);
 
     if(this.state.taskType === "Question"){
       questionTypeContent =
@@ -173,14 +161,14 @@ class EditTaskComponent extends Component {
           margin="dense"
           style={{width:"calc(96% + 10px)"}}
           id="questionText"
-          defaultValue={this.state.task.question}
+          defaultValue={this.task.question}
           placeholder="What is your favorite colour? What is thy quest? What is the air speed velocity of a Swallow? What do you mean? Is it an African Swallow or a European Swallow?"
           label="Question"
           ref="questionTextRef"
           fullWidth
           multiline
           rows="3"
-          onChange={(e)=>{this.state.task.question = e.target.value}}
+          onChange={(e)=>{this.task.question = e.target.value}}
         />
 
         <TextField
@@ -189,7 +177,7 @@ class EditTaskComponent extends Component {
           margin="dense"
           style={{marginRight:"10px", width:"48%"}}
           id="responses"
-          defaultValue={this.state.task.responses.join(',')}
+          defaultValue={this.task.responses.join(',')}
           placeholder="Arrrrrghhhhh, Castle Arrrrrghhh"
           helperText="Question responses seperated by a comma"
           label="Responses"
@@ -201,12 +189,12 @@ class EditTaskComponent extends Component {
           margin="dense"
           style={{width:"48%"}}
           id="unit"
-          defaultValue={this.state.task.responseUnit}
+          defaultValue={this.task.responseUnit}
           placeholder="%"
           helperText="The unit of the responses if they are numerical"
           label="Unit"
           ref="unitRef"
-          onChange={(e)=> this.state.task.responseUnit = e.target.value}
+          onChange={(e)=> this.task.responseUnit = e.target.value}
         />
 
         <TextField
@@ -215,7 +203,7 @@ class EditTaskComponent extends Component {
           margin="dense"
           style={{marginRight:"10px", width:"48%"}}
           id="tags"
-          defaultValue={this.state.task.correctResponses.join(',')}
+          defaultValue={this.task.correctResponses.join(',')}
           placeholder="What do you mean? Is it an African swallow or a European swallow?"
           helperText="The correct answer to the question"
           label="Correct Answers"
@@ -228,20 +216,19 @@ class EditTaskComponent extends Component {
           margin="dense"
           style={{width:"48%"}}
           id="tags"
-          defaultValue={this.state.task.tags.join(',')}
+          defaultValue={this.task.tags.join(',')}
           placeholder="SillyWalks, Swallows"
           helperText="Tags seperated by a comma"
           label="Tags"
           ref="tagsRef"
           onChange={(e)=> this.responseHandler(e, e.target.value, "Tags")}
         />
-
         <TextField
           autoFocus
           margin="dense"
           style={{width:"calc(96% + 10px)"}}
           id="aoisText"
-          defaultValue={this.state.task.aois.join(',')}
+          defaultValue={this.task.aois.join(',')}
           placeholder="Screen A, Screen B"
           helperText="AOIs seperated by a comma"
           label="AOIs"
@@ -289,7 +276,7 @@ class EditTaskComponent extends Component {
 
     return(
       <div className="componentContainer">
-        <form className="formRoot" autoComplete="off">
+        <form className="formRoot" autoComplete="off" id="formRootId">
             <FormControl className="formControl">
               <InputLabel htmlFor="TaskType">Task Type</InputLabel>
               <Select

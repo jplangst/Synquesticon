@@ -91,19 +91,15 @@ class CreatorMode extends Component {
 
   //actions callbacks
   selectTask(task) {
-    this.setState(state => ({selectedTask: task, assetEditorObject:
-      <EditTaskComponent isEditing={true} taskObject={task}
-        closeTaskCallback={this.assetEditorObjectClosed.bind(this)}
-      />}));
+    var assetObject = <EditTaskComponent isEditing={true} taskObject={task}
+      closeTaskCallback={this.assetEditorObjectClosed.bind(this)}
+    />;
+
+    this.setState(state => ({selectedTask: task, assetEditorObject: assetObject}));
   }
 
   selectTaskSet(taskSet) {
     this.setState({selectedTaskSet: taskSet, editing: true});
-  }
-
-  removeTask(task) {
-    console.log("deleteTask", task);
-    dbFunctions.deleteTaskFromDb(task._id);
   }
 
   assetEditorObjectClosed(dbChanged, editedObject){
