@@ -9,7 +9,8 @@ import SearchBar from '../components/SearchBar';
 import TaskListComponent from '../components/TaskList/TaskListComponent';
 
 //Asset Editor components
-import EditTaskComponent from '../components/AssetEditorComponents/EditTaskComponent'
+import EditTaskComponent from '../components/AssetEditorComponents/EditTaskComponent';
+import EditSetComponent from '../components/AssetEditorComponents/EditSetComponent';
 
 import {FilterList, AddCircleOutline} from '@material-ui/icons';
 
@@ -86,11 +87,14 @@ class CreatorMode extends Component {
       key={this.assetEditorCompKey}
     />;
 
-    this.setState(state => ({selectedTask: task, assetEditorObject: assetObject}));
+    this.setState(state => ({selectedTaskSet:null, selectedTask: task, assetEditorObject: assetObject}));
   }
 
   selectTaskSet(taskSet) {
-    this.setState({selectedTaskSet: taskSet, editing: true});
+    this.assetEditorCompKey += 1;
+    this.setState({selectedTask: null, selectedTaskSet:taskSet, assetEditorObject: <EditSetComponent isEditing={true}
+      setObject={taskSet} closeSetCallback={this.assetEditorObjectClosed.bind(this)}
+      key={this.assetEditorCompKey}/>});
   }
 
   assetEditorObjectClosed(dbChanged, editedObject){
@@ -103,7 +107,7 @@ class CreatorMode extends Component {
   }
 
   clearAssetEditorObject(){
-    this.setState({selectedTask: null, assetEditorContext: "empty", assetEditorObject: null});
+    this.setState({selectedTask: null, assetEditorContext: "empty", assetEditorObject: null, selectedTaskSet: null});
   }
 
   removeTaskSet(taskSet) {
@@ -149,7 +153,11 @@ class CreatorMode extends Component {
   }
 
   addSetCallback(){
-    //this.setState({assetEditorObject: <EditTaskSetComponent isEditing={false}/>});
+    this.assetEditorCompKey += 1;
+    this.clearAssetEditorObject();
+    this.setState({assetEditorObject: <EditSetComponent isEditing={false}
+      closeSetCallback={this.assetEditorObjectClosed.bind(this)}
+      key={this.assetEditorCompKey} />});
   }
 
   filterTasksCallback(){
@@ -201,7 +209,7 @@ class CreatorMode extends Component {
           </CollapsableContainer>
           <CollapsableContainer classNames="ContainerSeperator" headerTitle="Sets" headerComponents={collapsableSetHeaderButtons}>
               < TaskListComponent selectedTask={this.state.selectedTaskSet} reorderDisabled={false} placeholderName="TaskSetPlaceholder" reorderID="taskSetsReorder"
-                taskList={ this.state.taskSetList } selectTask={ this.selectTaskSet.bind(this) }/ >
+                taskList={ this.state.taskSetList } selectTask={ this.selectTaskSet.bind(this) } startDragCallback={this.startDragCallback.bind(this)}/ >
           </CollapsableContainer>
           <CollapsableContainer classNames="ContainerSeperator TaskSetContainer" headerTitle="Images">
           </CollapsableContainer>

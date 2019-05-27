@@ -45,7 +45,7 @@ class EditTaskComponent extends Component {
       taskType: taskType,
       responseType: responseType,
       task: this.task,
-    }
+    };
 
     this.responseHandler = this.onResponsesChanged;
     this.handleQuestionCallback = this.onDBCallback.bind(this);
