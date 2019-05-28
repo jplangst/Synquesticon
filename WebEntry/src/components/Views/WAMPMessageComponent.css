@@ -11,3 +11,11 @@
   font-family: Arial;
   padding: 15px;
 }
+
+.title {
+  text-decoration: underline;
+}
+
+.messages {
+  padding-left: 15px;
+}

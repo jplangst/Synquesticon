@@ -1,6 +1,7 @@
 const EventEmitter = require('events');
 
-const STATE_UPDATE_EVENT = "WAMPEvent";
+const NEW_MESSAGE_EVENT = "WAMPEvent";
+const NEW_PARTICIPANT_EVENT = "ParticipantEvent";
 
 class CWampStore extends EventEmitter {
   constructor() {
@@ -9,14 +10,24 @@ class CWampStore extends EventEmitter {
   }
 
 	addEventListener(callback) {
-		this.addListener(STATE_UPDATE_EVENT, callback);
+		this.addListener(NEW_MESSAGE_EVENT, callback);
 	}
 	removeEventListener(callback) {
-		this.removeListener(STATE_UPDATE_EVENT, callback);
+		this.removeListener(NEW_MESSAGE_EVENT, callback);
 	}
 	emitNewWAMPEvent() {
-		this.emit(STATE_UPDATE_EVENT);
+		this.emit(NEW_MESSAGE_EVENT);
 	}
+
+  addNewParticipantListener(callback) {
+    this.addListener(NEW_PARTICIPANT_EVENT, callback);
+  }
+  removeNewParticipantListener(callback) {
+    this.removeListener(NEW_PARTICIPANT_EVENT, callback);
+  }
+  emitNewParticipant() {
+    this.emit(NEW_PARTICIPANT_EVENT);
+  }
 
 	getCurrentMessage(){
 		return this.currentMessage;

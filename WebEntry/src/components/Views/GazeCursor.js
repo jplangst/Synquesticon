@@ -15,13 +15,15 @@ class GazeCursor extends React.Component {
     }
     this.handleCursorVisibility = this.toggleVisibility.bind(this);
     this.handleGazeLocUpdate = this.updateCursorLocation.bind(this);
-    this.cursorRadius = 50;
+    this.cursorRadius = 20;
 
     let radiusAction = {
       type: 'SET_GAZE_RADIUS',
       gazeRadius: this.cursorRadius
     }
     store.dispatch(radiusAction);
+
+    this.frameDiv = React.createRef();
   }
 
   componentDidMount() {
@@ -38,22 +40,28 @@ class GazeCursor extends React.Component {
   render() {
     let cursor = null;
     if(this.state.visible){
-      cursor = <div className="gazeCursor" id="gazeCursorDiv"/>;
+      cursor = <span className="gazeCursor" id={"gazeCursorDiv" + this.props.id}/>;
     }
 
     return (
-      cursor
+      <div className="wrapper" >
+        <div className="title">{this.props.participant}</div>
+        <div className="frame" ref={this.frameDiv}>
+          {cursor}
+        </div>
+      </div>
     );
   }
 
   updateCursorLocation(){
     try {
       let gazeLoc = store.getState().gazeData[this.props.tracker];
+
       //Only draw the cursor if it is visible
-      if(this.state.visible){
-        var cursorDiv = document.getElementById("gazeCursorDiv");
-        cursorDiv.style.left = (gazeLoc.locX*this.props.viewWidth-this.cursorRadius)+'px';
-        cursorDiv.style.top = (gazeLoc.locY*this.props.viewHeight-this.cursorRadius)+'px';
+      if(this.state.visible && this.frameDiv){
+        var cursorDiv = document.getElementById("gazeCursorDiv" + this.props.id);
+        cursorDiv.style.left = (gazeLoc.locX*this.frameDiv.current.offsetWidth-this.cursorRadius)+'px';
+        cursorDiv.style.top = (gazeLoc.locY*this.frameDiv.current.offsetHeight-this.cursorRadius)+'px';
         cursorDiv.style.width = this.cursorRadius*2+"px";
         cursorDiv.style.height = this.cursorRadius*2+"px";
       }

@@ -42,7 +42,8 @@ class PlayerMode extends Component {
                 store.getState().experimentInfo.experimentId,
                 store.getState().experimentInfo.participantId,
                 this.currentTask.question,
-                timestamp];
+                timestamp,
+                store.getState().experimentInfo.selectedTracker];
     wamp.broadcastEvents(info);
   }
 

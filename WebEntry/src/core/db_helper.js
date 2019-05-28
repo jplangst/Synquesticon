@@ -253,3 +253,43 @@ export function getTasksWithIDs(taskIDs, callback) {
     callback(response.data.tasks);
   });
 };
+
+//----------------------experiments-----------------------
+export function getAllExperimentsFromDb(callback){
+  fetch("/api/getAllExperiments")
+    .then((response) => {
+      if(response.ok) {
+        return response.json();
+      }
+      else {
+        alert("Database connection failed!");
+        throw new Error("Database connection failed");
+      }
+    })
+    .then(res => {
+      callback(res.experiments)
+    })
+    .catch((error) => {
+      console.log(error)
+    });
+};
+
+//---------------------participants-----------------------
+export function getAllParticipantsFromDb(callback){
+  fetch("/api/getAllParticipants")
+    .then((response) => {
+      if(response.ok) {
+        return response.json();
+      }
+      else {
+        alert("Database connection failed!");
+        throw new Error("Database connection failed");
+      }
+    })
+    .then(res => {
+      callback(res.participants)
+    })
+    .catch((error) => {
+      console.log(error)
+    });
+};
