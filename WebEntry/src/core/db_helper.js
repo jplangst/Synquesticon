@@ -214,17 +214,23 @@ export function addTaskSetToDb(obj, callback){
 };
 
 // to overwrite existing data base information
-export function updateTaskSetFromDb(id, editedObj){
+export function updateTaskSetFromDb(id, editedObj, callback){
   axios.post("/api/updateTaskSet", {
     id: id,
     message: JSON.stringify(editedObj)
-  }).then(data => {console.log("after updating set", data)});
+  }).then(data => {
+        console.log("after updating set", data);
+        callback();
+      });
 };
 
-export function deleteTaskSetFromDb(idTodelete){
+export function deleteTaskSetFromDb(idTodelete, callback){
   axios.post("/api/deleteTaskSet", {
       id: idTodelete
-  }).then(response => {console.log("after deleting set", response)});
+  }).then(response => {
+    console.log("after deleting set", response);
+    callback();
+  });
 };
 
 export function addTaskToTaskSetDb(setID, questionID){

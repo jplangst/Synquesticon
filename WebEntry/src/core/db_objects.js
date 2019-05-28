@@ -26,9 +26,10 @@ export class TaskObject{
 
 export class TaskSetObject{
   constructor(){
-      this.taskSetName = "";
+      this.name = "";
       this.tags = [];
-      this.tasks = [];
+      this.taskIds = [];
+      this.counterbalancingOrder = [];
   }
 
   addTask(task){

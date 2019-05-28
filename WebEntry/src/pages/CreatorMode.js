@@ -9,14 +9,13 @@ import SearchBar from '../components/SearchBar';
 import TaskListComponent from '../components/TaskList/TaskListComponent';
 
 //Asset Editor components
-import EditTaskComponent from '../components/AssetEditorComponents/EditTaskComponent'
+import EditTaskComponent from '../components/AssetEditorComponents/EditTaskComponent';
+import EditSetComponent from '../components/AssetEditorComponents/EditSetComponent';
 
-import {FilterList, AddCircleOutline, Search} from '@material-ui/icons';
+import {FilterList, AddCircleOutline} from '@material-ui/icons';
 
 import './CreatorMode.css';
 import * as dbFunctions from '../core/db_helper.js';
-
-import store from '../core/store';
 
 class CreatorMode extends Component {
   constructor(props) {
@@ -88,11 +87,14 @@ class CreatorMode extends Component {
       key={this.assetEditorCompKey}
     />;
 
-    this.setState(state => ({selectedTask: task, assetEditorObject: assetObject}));
+    this.setState(state => ({selectedTaskSet:null, selectedTask: task, assetEditorObject: assetObject}));
   }
 
   selectTaskSet(taskSet) {
-    this.setState({selectedTaskSet: taskSet, editing: true});
+    this.assetEditorCompKey += 1;
+    this.setState({selectedTask: null, selectedTaskSet:taskSet, assetEditorObject: <EditSetComponent isEditing={true}
+      setObject={taskSet} closeSetCallback={this.assetEditorObjectClosed.bind(this)}
+      key={this.assetEditorCompKey}/>});
   }
 
   assetEditorObjectClosed(dbChanged, editedObject){
@@ -105,7 +107,7 @@ class CreatorMode extends Component {
   }
 
   clearAssetEditorObject(){
-    this.setState({selectedTask: null, assetEditorContext: "empty", assetEditorObject: null});
+    this.setState({selectedTask: null, assetEditorContext: "empty", assetEditorObject: null, selectedTaskSet: null});
   }
 
   removeTaskSet(taskSet) {
@@ -151,7 +153,11 @@ class CreatorMode extends Component {
   }
 
   addSetCallback(){
-    //this.setState({assetEditorObject: <EditTaskSetComponent isEditing={false}/>});
+    this.assetEditorCompKey += 1;
+    this.clearAssetEditorObject();
+    this.setState({assetEditorObject: <EditSetComponent isEditing={false}
+      closeSetCallback={this.assetEditorObjectClosed.bind(this)}
+      key={this.assetEditorCompKey} />});
   }
 
   filterTasksCallback(){
@@ -169,12 +175,14 @@ class CreatorMode extends Component {
   render() {
     var collapsableTaskHeaderButtons =
     <div className="collapsableHeaderBtnsContainer">
-      <SearchBar classes ={{search: "searchContainer"}} onChange={this.taskSearchCallback} searchID="taskSearch"/>
+      <div className="searchWrapperDiv"><SearchBar onChange={this.taskSearchCallback} searchID="taskSearch"/></div>
       <div className="collapsableBtns">
-        <Button className="collapsableHeaderBtns" size="small" onClick={this.addTaskCallback.bind(this)} >
+        <Button style={{width: '50%', height: '100%', minWidth: '30px', minHeight: '30px'}}
+        className="collapsableHeaderBtns" size="small" onClick={this.addTaskCallback.bind(this)} >
           <AddCircleOutline fontSize="large" className="addItemsIcon" />
         </Button>
-        <Button className="collapsableHeaderBtns" size="small" onClick={this.filterTasksCallback.bind(this)} >
+        <Button style={{width: '50%', height: '100%', minWidth: '30px', minHeight: '30px'}}
+        className="collapsableHeaderBtns" size="small" onClick={this.filterTasksCallback.bind(this)} >
           <FilterList fontSize="large" className="addItemsIcon" />
         </Button>
       </div>
@@ -182,12 +190,14 @@ class CreatorMode extends Component {
 
     var collapsableSetHeaderButtons =
     <div className="collapsableHeaderBtnsContainer">
-      <SearchBar classes ={{search: "searchContainer"}} onChange={this.taskSetSearchCallback} searchID="taskSetSearch"/>
+      <div className="searchWrapperDiv"><SearchBar onChange={this.taskSetSearchCallback} searchID="taskSetSearch"/></div>
       <div className="collapsableBtns">
-        <Button className="collapsableHeaderBtns" size="small" onClick={this.addSetCallback.bind(this)} >
+        <Button style={{width: '50%', height: '100%', minWidth: '30px', minHeight: '30px'}}
+        className="collapsableHeaderBtns" size="small" onClick={this.addSetCallback.bind(this)} >
           <AddCircleOutline fontSize="large" className="addItemsIcon" />
         </Button>
-        <Button className="collapsableHeaderBtns" size="small" onClick={this.filterSetsCallback.bind(this)} >
+        <Button style={{width: '50%', height: '100%', minWidth: '30px', minHeight: '30px'}}
+        className="collapsableHeaderBtns" size="small" onClick={this.filterSetsCallback.bind(this)} >
           <FilterList fontSize="large" className="addItemsIcon" />
         </Button>
       </div>
@@ -197,18 +207,20 @@ class CreatorMode extends Component {
     <div className = "Background">
       <div className = "AssetViewer">
         <div className="AssetViewerTitle">Asset viewer</div>
+        <div className="AssetViewerContent">
           <CollapsableContainer classNames="ContainerSeperator" style={{height: "5%"}} headerTitle="Tasks" headerComponents={collapsableTaskHeaderButtons}>
               < TaskListComponent reorderDisabled={true} placeholderName="TaskPlaceholder" reorderID="tasksReorder" taskList={ this.state.taskList }
                 selectTask={ this.selectTask.bind(this) } selectedTask={this.state.selectedTask} startDragCallback={this.startDragCallback.bind(this)}/ >
           </CollapsableContainer>
           <CollapsableContainer classNames="ContainerSeperator" headerTitle="Sets" headerComponents={collapsableSetHeaderButtons}>
               < TaskListComponent selectedTask={this.state.selectedTaskSet} reorderDisabled={false} placeholderName="TaskSetPlaceholder" reorderID="taskSetsReorder"
-                taskList={ this.state.taskSetList } selectTask={ this.selectTaskSet.bind(this) }/ >
+                taskList={ this.state.taskSetList } selectTask={ this.selectTaskSet.bind(this) } startDragCallback={this.startDragCallback.bind(this)}/ >
           </CollapsableContainer>
           <CollapsableContainer classNames="ContainerSeperator TaskSetContainer" headerTitle="Images">
           </CollapsableContainer>
           <CollapsableContainer classNames="ContainerSeperator TaskSetContainer" headerTitle="Templates">
           </CollapsableContainer>
+        </div>
       </div>
 
       <div className = "AssetEditor">

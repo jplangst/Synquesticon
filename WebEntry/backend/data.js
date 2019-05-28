@@ -25,7 +25,7 @@ const TaskSchema = new Schema(
 
 const TaskSetSchema = new Schema({
   id: String, //The id of the TaskSet
-  name: String, //The name fo the TaskSet
+  name: String, //The name for the TaskSet
   tags: [String], //A list of searchable tags
   taskIds: [String], //list of the task ids referenced by this set
   counterbalancingOrder: [Number] //List of the order the tasks should be played
