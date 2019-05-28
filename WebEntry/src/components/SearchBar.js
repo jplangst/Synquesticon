@@ -31,10 +31,11 @@ const styles = theme => ({
       backgroundColor: fade(theme.palette.common.white, 0.25),
     },
     marginLeft: 0,
-    //width: '100%',
+    width: '100%',
+    height: '100%',
     [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing.unit,
-      //width: 'auto',
+      marginLeft: 0,
+      width: 'auto',
     },
   },
   searchIcon: {

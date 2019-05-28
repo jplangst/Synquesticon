@@ -5,10 +5,6 @@ import * as dbObjects from '../../core/db_objects';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
 
 import TaskListComponent from '../TaskList/TaskListComponent';
 
@@ -134,16 +130,17 @@ class EditSetComponent extends Component {
         </Button>;
     }
 
-    console.log(this.state.taskList);
-
     return(
       <div className="componentContainer">
         <form className="formRoot" autoComplete="off" id="formRootId">
             {setContent}
         </form>
 
-        < TaskListComponent reorderDisabled={false} placeholderName="TaskPlaceholder"
-          reorderID="setsReorder" taskList={ this.state.taskList } / >
+        <div className="setTaskListContainer">
+          Set Tasks:
+          < TaskListComponent reorderDisabled={false} placeholderName="TaskPlaceholder"
+            reorderID="setsReorder" taskList={ this.state.taskList } / >
+        </div>
 
         <Button onClick={this.closeSetComponent.bind(this, false)} color="primary">
           Cancel

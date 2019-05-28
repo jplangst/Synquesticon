@@ -1,18 +1,3 @@
-/* TODO use this to give a fixed size to the buttons and the title and let the search bar occupy remaining space
-.container {
-    display: flex;
-}
-
-.left {
-    width: 180px;
-}
-
-.right {
-    flex-grow: 1;
-}
-*/
-
-
 .collpasedContainer{
   position: absolute;
   width: 100%;
