@@ -74,7 +74,7 @@ class EditSetComponent extends Component {
     response = response.filter(Boolean); //Remove empty values
 
     if(target==="Tags"){
-      this.task.tags = response;
+      this.set.tags = response;
     }
 
     console.log(response);
