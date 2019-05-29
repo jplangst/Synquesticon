@@ -233,30 +233,33 @@ export function deleteTaskSetFromDb(idTodelete, callback){
   });
 };
 
-export function addTaskToTaskSetDb(setID, questionID){
-  axios.post("/api/addTaskToTaskSet", {
+//when we add a child to a set, we need two fields: childId and childType (Task or TaskSet)
+export function addChildToTaskSetDb(setID, childObj){
+  axios.post("/api/addChildToTaskSet", {
     setId: setID,
-    questionId: questionID
-  }).then(data => {console.log("after adding task to set", data)});
+    childObj: childObj
+  }).then(data => {console.log("after adding child to set", data)});
 }
 
-export function removeTaskFromTaskSetDb(setID, questionID){
-  axios.post("/api/removeTaskFromTaskSet", {
+//childId is enough for removing it from its set
+export function removeChildFromTaskSetDb(setID, childId){
+  axios.post("/api/removeChildFromTaskSet", {
     setId: setID,
-    questionId: questionID
-  }).then(data => {console.log("after remove task from set", data)});
+    childId: childId
+  }).then(data => {console.log("after remove child from set", data)});
 }
 
 export function deleteAllTaskSetsFromDb(){
   axios.delete("api/deleteAllTaskSets");
 };
 
-export function getTasksWithIDs(taskIDs, callback) {
-  axios.post("/api/getTasksWithIDs", {
-      ids: taskIDs
+//the ids can be either task or taskset, the database will do recursive query to query them all
+export function getTasksOrTaskSetsWithIDs(objIds, callback) {
+  axios.post("/api/getTasksOrTaskSetsWithIDs", {
+      ids: objIds
   }).then(response => {
-    console.log("after get all tasks from set", response);
-    callback(response.data.tasks);
+    console.log("after get all tasks or tasksets from set", response);
+    callback(response.data.objs);
   });
 };
 

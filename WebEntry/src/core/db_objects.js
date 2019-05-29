@@ -17,6 +17,7 @@ export class TaskObject{
       this.responses = [];
       this.correctResponses = [];
       this.responseUnit = "";
+      this.objType = "Task";
   }
 
   setQuestion(question){
@@ -30,9 +31,10 @@ export class TaskSetObject{
       this.tags = [];
       this.taskIds = [];
       this.counterbalancingOrder = [];
+      this.objType = "TaskSet";
   }
 
   addTask(task){
-    this.tasks.add(task);
+    this.taskIds.push(task);
   }
 }

@@ -27,9 +27,12 @@ class PlayerMode extends Component {
     this.handleGazeLocUpdate = this.updateCursorLocation.bind(this);
   }
 
-  componentWillMount() {
-    //this.timer = setInterval(this.handleGazeLocUpdate, 4.5); //Update the gaze cursor location every 2ms
-    // wamp.startStopTask(store.getState().taskList[this.state.currentQuestion]);
+  componentDidMount() {
+    this.timer = setInterval(this.handleGazeLocUpdate, 4.5); //Update the gaze cursor location every 2ms
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
   }
 
   broadcastStartEvent() {
@@ -59,13 +62,9 @@ class PlayerMode extends Component {
                 timestamp,
                 dt.getTime() - this.startTimestamp,
                 answerObj.answer,
-                answerObj.isCorrect];
+                answerObj.isCorrect,
+                this.currentTask.aois];
     wamp.broadcastEvents(info);
-  }
-
-  componentDidMount() {
-
-    //clearInterval(this.timer);
   }
 
   updateCursorLocation(){
@@ -74,8 +73,8 @@ class PlayerMode extends Component {
       this.currentTask.aois.map((item, index) => {
         if (gazeLoc.locX > item.boundingbox[0][0] && gazeLoc.locX < item.boundingbox[1][0]
           && gazeLoc.locY > item.boundingbox[0][1] && gazeLoc.locY < item.boundingbox[3][1]
-          && item.checked !== true) {
-          item.checked = true;
+          && item["checked"] === undefined) {
+          item["checked"] = true;
         }
       });
     } catch (err) {
@@ -102,7 +101,7 @@ class PlayerMode extends Component {
     });
     var answerObj = {
       answer: answer,
-      isCorrect: true//this.currentTask.correctResponses.includes(answer)
+      isCorrect: this.currentTask.correctResponses.includes(answer)
     };
     this.broadcastAnswerEvent(answerObj);
   }

@@ -75,17 +75,6 @@ router.post("/getTaskWithID", (req, res) => {
   });
 });
 
-router.post("/getTasksWithIDs", (req, res) => {
-  const { ids } = req.body;
-  count = 0;
-  len = ids.length;
-  Tasks.find({
-      '_id': { $in: ids}
-  }, function(err, objs){
-       return res.json({success: true, tasks: objs});
-  });
-});
-
 router.post("/getAllTasksContaining", (req, res) => {
   const { queryCollection, queryString } = req.body;
 
@@ -144,7 +133,7 @@ router.post("/updateTask", (req, res) => {
 router.post("/deleteTask", (req, res) => {
   const { id } = req.body;
 
-  TaskSets.updateMany({ }, { $pull: {taskIds: id}}, err => {
+  TaskSets.updateMany({ }, { $pull: {childIds: {Id: id}}}, err => {
 
   })
   Tasks.findOneAndDelete({_id: id}, err => {
@@ -207,22 +196,6 @@ router.post("/updateTaskSet", (req, res) => {
   });
 });
 
-router.post("/addTaskToTaskSet", (req, res) => {
-  const { setId, questionId} = req.body;
-  TaskSets.updateOne({_id: setId}, { $addToSet: {taskIds: questionId}}, err => {
-    if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true });
-  });
-});
-
-router.post("/removeTaskFromTaskSet", (req, res) => {
-  const { setId, questionId } = req.body;
-  TaskSets.updateOne({_id: setId}, { $pull: {taskIds: questionId}}, err => {
-    if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true });
-  })
-});
-
 // this method deletes existing question in our database
 router.post("/deleteTaskSet", (req, res) => {
   const { id } = req.body;
@@ -232,6 +205,22 @@ router.post("/deleteTaskSet", (req, res) => {
   });
 });
 
+router.post("/addChildToTaskSet", (req, res) => {
+  const { setId, childObj} = req.body;
+  TaskSets.updateOne({_id: setId}, { $addToSet: {childIds: childObj}}, err => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true });
+  });
+});
+
+router.post("/removeChildFromTaskSetDb", (req, res) => {
+  const { setId, childId } = req.body;
+  TaskSets.updateOne({_id: setId}, { $pull: {childIds: {Id: childId}}}, err => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true });
+  })
+});
+
 router.delete("/deleteAllTaskSets", (req, res) => {
   TaskSets.deleteMany({}, err => {
     if (err) return res.send(err);
@@ -239,6 +228,39 @@ router.delete("/deleteAllTaskSets", (req, res) => {
   });
 });
 
+router.post("/getTasksOrTaskSetsWithIDs", (req, res) => {
+  const { ids } = req.body;
+  count = 0;
+  len = ids.length;
+
+  var recursion = function(target) {
+    if (target.objType === "Task") {
+      Tasks.findOne({_id: target.Id}, (err, obj) => {
+        target.data = obj;
+      });
+    }
+    else if (target.objType === "TaskSet") {
+      var childs = [];
+      TaskSets.findOne({_id: target.Id}, (err, obj) => {
+        target.data = obj;
+        obj.childIds.map((item, index) => {
+          recursive(item);
+        })
+      });
+    }
+  }
+  var data = [];
+  ids.map((item, index) => {
+    data.push(recursive(item));
+  });
+
+  return res.json({ success: true, data: data });
+  // Tasks.find({
+  //     '_id': { $in: ids}
+  // }, function(err, objs){
+  //      return res.json({success: true, tasks: objs});
+  // });
+});
 //---------------------PARTICIPANTS---------------------
 router.get("/getAllParticipants", (req, res) => {
   Participants.find((err, data) => {
@@ -307,7 +329,7 @@ router.post("/addAnswerToParticipant", (req, res) => {
 router.post("/deleteParticipant", (req, res) => {
   const { id } = req.body;
 
-  Experiments.updateOne({ taskIds: id }, { $pull: {taskIds: id}}, err => {
+  Experiments.updateOne({ childIds: id }, { $pull: {childIds: id}}, err => {
 
   })
   Participants.findOneAndDelete({_id: id}, err => {

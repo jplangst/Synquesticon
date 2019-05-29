@@ -46,11 +46,9 @@ class PlayerMode extends Component {
 
   dbTaskSetCallbackFunction(dbQueryResult) {
     console.log(dbQueryResult);
-    //5ce55a585ed92d33d4c33a32
-    //5ce7a7d4b3258d5910a303c5
-    //5ce7a7fdb3258d5910a303c9
-    //5ce7a812b3258d5910a303cd
-
+    //5ced2f329ea4482e00e63c11
+    //5ced2f599ea4482e00e63c12
+    //5ced2f969ea4482e00e63c13
     //set: 5ce55a645ed92d33d4c33a36
     this.setState({taskSets: dbQueryResult});
   }
@@ -78,7 +76,7 @@ class PlayerMode extends Component {
 
   //bottom button handler
   onPlayButtonClick() {
-    dbFunctions.getTasksWithIDs(this.state.selectedTaskSet.taskIds, this.dbTasksCallback);
+    dbFunctions.getTasksOrTaskSetsWithIDs(this.state.selectedTaskSet.taskIds, this.dbTasksCallback);
   }
 
   render() {

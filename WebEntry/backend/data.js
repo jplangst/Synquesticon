@@ -2,6 +2,10 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+/*
+objType: Task, TaskSet
+*/
+
 // this will be our data base's data structure
 const TaskSchema = new Schema(
   {
@@ -18,6 +22,7 @@ const TaskSchema = new Schema(
     correctResponses: [String], //The correct response
     responseUnit: String, //The unit of the response e.g. "%", "RPM"
     refSets: [String], //list of sets that reference to this questions
+    objType: String
   }, {
     collection: 'Tasks'
   }
@@ -27,8 +32,12 @@ const TaskSetSchema = new Schema({
   id: String, //The id of the TaskSet
   name: String, //The name for the TaskSet
   tags: [String], //A list of searchable tags
-  taskIds: [String], //list of the task ids referenced by this set
-  counterbalancingOrder: [Number] //List of the order the tasks should be played
+  childIds: [{
+    Id: String,
+    objType: String
+  }], //list of the task ids referenced by this set
+  counterbalancingOrder: [Number], //List of the order the tasks should be played
+  objType: String
 }, {
   collection: 'TaskSets'
 });

@@ -36,10 +36,19 @@ class ViewerMode extends Component {
         }
         break;
       case "ANSWER":
-       //Event type (0), experimentID (1), participantID (2), question (3), answerTimestamp (4), responsetime (5), answer (6), is it correct (7)
+       //Event type (0), experimentID (1), participantID (2), question (3), answerTimestamp (4),
+       //responsetime (5), answer (6), is it correct (7)
+       //aois (8)
         var answerStatus = args[7] ? "Correct" : "Incorrect";
         displayText = "Experiment " + args[1] + "- Participant " + args[2] + ": " + args[3] + " - Answer at: " + args[4]
-                      + " Response time: " + args[5] + "- The answer is: " + args[6] + answerStatus;
+                      + " Response time: " + args[5]/1000 + "ms- The answer is: " + args[6] + " - " + answerStatus + "\n";
+        var aoisList = "";
+
+        args[8].map((item, index) => {
+          console.log(index, item);
+          aoisList += "\t" + item["name"] + ":" + (item["checked"] !== undefined ? "checked" : "unchecked");
+        });
+        displayText += aoisList;
         break;
 
       default:

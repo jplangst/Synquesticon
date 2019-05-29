@@ -58,7 +58,6 @@ class CreateTaskDialog extends Component {
   }
 
   onDBCallback(questionDBID){
-    console.log("Question saved: ", questionDBID);
     this.props.closeTaskDialog(questionDBID, true);
   }
 
@@ -70,7 +69,6 @@ class CreateTaskDialog extends Component {
       //dbFunctions.addQuestionToDb(this.task, this.handleQuestionCallback);
     }
     else{
-      console.log(this.task);
       dbFunctions.addTaskToDb(this.task, this.handleQuestionCallback);
     }
   }
@@ -96,15 +94,15 @@ class CreateTaskDialog extends Component {
 
       this.task.aois = [{
           name: "window1",
-          boundingbox: [[0.07234043, 0.156989247], [0.07234043, 0.56774193], [0.440425545, 0.56774193], [0.440425545, 0.156989247]]
+          boundingbox: [[0.440425545, 0.156989247], [0.07234043, 0.156989247], [0.07234043, 0.56774193], [0.440425545, 0.56774193]]
         },
         {
           name: "window2",
-          boundingbox: [[0.6, 0.156989247], [0.6, 0.688172042], [0.976595759, 0.688172042], [0.976595759, 0.156989247]]
+          boundingbox: [[0.6, 0.156989247], [0.976595759, 0.156989247], [0.976595759, 0.688172042], [0.6, 0.688172042]]
         },
         {
           name: "fish",
-          boundingbox: [[0.385106385, 0.677419364], [0.385106385, 0.8731183], [0.568085134, 0.8731183], [0.568085134, 0.677419364]]
+          boundingbox: [[0.385106385, 0.677419364], [0.568085134, 0.677419364], [0.568085134, 0.8731183], [0.385106385, 0.8731183]]
         }
       ];
     }
