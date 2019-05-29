@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { getEmptyImage } from 'react-dnd-html5-backend'
 import Button from '@material-ui/core/Button';
 import DragIcon from '@material-ui/icons/ControlCamera';
 
@@ -35,6 +36,16 @@ function collect(connect, monitor) {
 }
 
 class TaskItemComponent extends Component {
+
+  componentDidMount(){
+    const { connectDragPreview } = this.props
+    if(connectDragPreview){
+      connectDragPreview(getEmptyImage(),{
+        captureDraggingState: true,
+      });
+    }
+  }
+
   render() {
 
     const { isDragging, connectDragSource, connectDragPreview} = this.props;
@@ -58,11 +69,7 @@ class TaskItemComponent extends Component {
           </div>)}
         </div>;
 
-
-
-    return connectDragPreview(
-      content
-    );
+    return( content );
   }
 }
 
