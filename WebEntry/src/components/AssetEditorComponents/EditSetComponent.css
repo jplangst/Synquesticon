@@ -1,0 +1,43 @@
+.setFormRoot{
+  position: absolute;
+  width: 100%;
+  height: 20%;
+}
+.setTaskListContainer{
+  position:absolute;
+  width: 100%;
+  height: 50%;
+  top: 20%;
+}
+.setTaskListTitle{
+  padding: 0px 15px 0px 15px;
+  font-size: large;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: bold;
+  color: #999;
+
+  position: absolute;
+  width: auto;
+  height: 5%;
+
+  border-style: solid;
+  border-bottom-style: none;
+  border-width: thin;
+  border-color: #BBB;
+}
+.setTaskListViewer{
+  position: absolute;
+  top: 5%;
+  height: 95%;
+  width: 100%;
+
+  border-style: solid;
+  border-width: thin;
+  border-color: #303f9f;
+  border-color: #BBB;
+}
+.editSetComponentButtons{
+  position: absolute;
+  top: 70%;
+  width: 100%;
+}

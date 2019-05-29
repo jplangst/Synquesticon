@@ -51,7 +51,7 @@ class EditSetComponent extends Component {
     console.log("Set saved: ", setDBID);
 
     //TODO close and reopen as editing instead. Highlight the set in the left menu
-    this.closeTaskComponent(true);
+    this.closeSetComponent(true);
   }
 
   onChangeSetSettings(){
@@ -132,23 +132,28 @@ class EditSetComponent extends Component {
 
     return(
       <div className="componentContainer">
-        <form className="formRoot" autoComplete="off" id="formRootId">
+
+        <form className="setFormRoot" autoComplete="off" id="formRootId">
             {setContent}
         </form>
 
         <div className="setTaskListContainer">
-          Set Tasks:
-          < TaskListComponent reorderDisabled={false} placeholderName="TaskPlaceholder"
-            reorderID="setsReorder" taskList={ this.state.taskList } / >
+          <div className="setTaskListTitle">Set Tasks</div>
+          <div className="setTaskListViewer">
+            < TaskListComponent reorderDisabled={false} placeholderName="TaskPlaceholder"
+            reorderID="setsReorder" taskList={ this.state.taskList } reactDND={true}/ >
+          </div>
         </div>
 
-        <Button onClick={this.closeSetComponent.bind(this, false)} color="primary">
-          Cancel
-        </Button>
-        {deleteTaskBtn}
-        <Button onClick={this.onChangeSetSettings.bind(this)} color="primary">
-          {this.props.isEditing ? "Edit" : "Create"}
-        </Button>
+        <div className="editSetComponentButtons">
+          <Button onClick={this.closeSetComponent.bind(this, false)} color="primary">
+            Cancel
+          </Button>
+          {deleteTaskBtn}
+          <Button onClick={this.onChangeSetSettings.bind(this)} color="primary">
+            {this.props.isEditing ? "Edit" : "Create"}
+          </Button>
+        </div>
       </div>
     );
   }

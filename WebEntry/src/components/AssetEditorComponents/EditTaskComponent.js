@@ -278,13 +278,13 @@ class EditTaskComponent extends Component {
             {instructionTypeContent}
 
         </form>
-        <Button onClick={this.closeTaskComponent.bind(this, false)} color="primary">
-          Cancel
-        </Button>
-        {deleteTaskBtn}
-        <Button onClick={this.onChangeTaskSettings.bind(this)} color="primary">
-          {this.props.isEditing ? "Edit" : "Create"}
-        </Button>
+          <Button onClick={this.closeTaskComponent.bind(this, false)} color="primary">
+            Cancel
+          </Button>
+          {deleteTaskBtn}
+          <Button onClick={this.onChangeTaskSettings.bind(this)} color="primary">
+            {this.props.isEditing ? "Edit" : "Create"}
+          </Button>
       </div>
     );
   }

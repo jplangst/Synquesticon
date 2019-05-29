@@ -168,8 +168,10 @@ class CreatorMode extends Component {
 
   }
 
-  startDragCallback(dragableItem){
+  //Called after a dragable item has been dropped
+  onDragDropCallback(dragableItem){
     console.log("start drag");
+    console.log(dragableItem);
   }
 
   render() {
@@ -210,11 +212,13 @@ class CreatorMode extends Component {
         <div className="AssetViewerContent">
           <CollapsableContainer classNames="ContainerSeperator" style={{height: "5%"}} headerTitle="Tasks" headerComponents={collapsableTaskHeaderButtons}>
               < TaskListComponent reorderDisabled={true} placeholderName="TaskPlaceholder" reorderID="tasksReorder" taskList={ this.state.taskList }
-                selectTask={ this.selectTask.bind(this) } selectedTask={this.state.selectedTask} startDragCallback={this.startDragCallback.bind(this)}/ >
+                selectTask={ this.selectTask.bind(this) } selectedTask={this.state.selectedTask} dragDropCallback={this.onDragDropCallback.bind(this)}
+                reactDND={false} itemType="Task"/ >
           </CollapsableContainer>
           <CollapsableContainer classNames="ContainerSeperator" headerTitle="Sets" headerComponents={collapsableSetHeaderButtons}>
               < TaskListComponent selectedTask={this.state.selectedTaskSet} reorderDisabled={false} placeholderName="TaskSetPlaceholder" reorderID="taskSetsReorder"
-                taskList={ this.state.taskSetList } selectTask={ this.selectTaskSet.bind(this) } startDragCallback={this.startDragCallback.bind(this)}/ >
+                taskList={ this.state.taskSetList } selectTask={ this.selectTaskSet.bind(this) } dragDropCallback={this.onDragDropCallback.bind(this)}
+                reactDND={false} itemType="Set"/ >
           </CollapsableContainer>
           <CollapsableContainer classNames="ContainerSeperator TaskSetContainer" headerTitle="Images">
           </CollapsableContainer>

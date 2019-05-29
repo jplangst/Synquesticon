@@ -53,6 +53,12 @@
 /**** Content ******/
 .collapsableContent{
   top: 55px;
-  width: 100%;
+  width: 90%;
   height: auto;
+  margin-left: 5%;
+}
+
+.collapsableContentSpacer{
+  padding-top: 20px;
+  padding-bottom: 20px;
 }

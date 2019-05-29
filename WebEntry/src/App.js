@@ -9,6 +9,9 @@ import PlayerMode from './pages/PlayerMode';
 import ViewerMode from './pages/ViewerMode';
 import RunTasksMode from './components/DisplayQuestionComponent';
 
+import HTML5Backend from 'react-dnd-html5-backend'
+import { DragDropContext } from 'react-dnd'
+
 import './App.css'
 
 //To make MaterialUI use the new variant of typography and avoid the deprecation warning
@@ -36,4 +39,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default DragDropContext(HTML5Backend)(App);
