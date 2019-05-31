@@ -133,7 +133,7 @@ router.post("/updateTask", (req, res) => {
 router.post("/deleteTask", (req, res) => {
   const { id } = req.body;
 
-  TaskSets.updateMany({ }, { $pull: {childIds: {Id: id}}}, err => {
+  TaskSets.updateMany({ }, { $pull: {childIds: {id: id}}}, err => {
 
   })
   Tasks.findOneAndDelete({_id: id}, err => {
@@ -215,7 +215,7 @@ router.post("/addChildToTaskSet", (req, res) => {
 
 router.post("/removeChildFromTaskSetDb", (req, res) => {
   const { setId, childId } = req.body;
-  TaskSets.updateOne({_id: setId}, { $pull: {childIds: {Id: childId}}}, err => {
+  TaskSets.updateOne({_id: setId}, { $pull: {childIds: {id: childId}}}, err => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
   })
@@ -228,33 +228,63 @@ router.delete("/deleteAllTaskSets", (req, res) => {
   });
 });
 
-router.post("/getTasksOrTaskSetsWithIDs", (req, res) => {
-  const { ids } = req.body;
+router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
+  const { objIds } = req.body;
+  const ids = JSON.parse(objIds);
+
   count = 0;
   len = ids.length;
 
-  var recursion = function(target) {
+  var recursionForArray = async function(targetArray) {
+    const childs = targetArray.map(async item => {
+      const dat = await recursion(item);
+      return dat;
+    });
+    const temp = await Promise.all(childs);
+    return temp;
+  }
+
+  var recursion = async function(target) {
     if (target.objType === "Task") {
-      Tasks.findOne({_id: target.Id}, (err, obj) => {
-        target.data = obj;
+      const fromDB = await Tasks.findOne({_id: target.id}, async (err, obj) => {
+        return obj;
       });
+      target.data = fromDB;
+      return target;
     }
     else if (target.objType === "TaskSet") {
-      var childs = [];
-      TaskSets.findOne({_id: target.Id}, (err, obj) => {
-        target.data = obj;
-        obj.childIds.map((item, index) => {
-          recursive(item);
-        })
+      const fromDB = await TaskSets.findOne({_id: target.id}, async (err, obj) => {
+        return obj;
       });
+      const childs = fromDB.childIds.map(async item => {
+        const task = await recursion(item);
+        return task;
+      });
+      const temp = await Promise.all(childs);
+      target.data = temp;
+      return target;
     }
-  }
-  var data = [];
-  ids.map((item, index) => {
-    data.push(recursive(item));
-  });
 
-  return res.json({ success: true, data: data });
+  }
+
+  // const fromDB = await TaskSets.findOne({_id: ids[1].id}, async (err, obj) => {
+  //   return obj;
+  // });
+  // console.log("fromDB", fromDB);
+  //
+  // const childs = fromDB.childIds.map(async item => {
+  //   const task = await Tasks.findOne({_id: item.id}, async (err, obj) => {
+  //     return obj;
+  //   });
+  //   return task;
+  // });
+  // const temp = await Promise.all(childs);
+  // console.log("temp", temp);
+
+  const results = await recursionForArray(ids);
+  console.log("results", results);
+  return res.json({success: true, data: results});
+
   // Tasks.find({
   //     '_id': { $in: ids}
   // }, function(err, objs){

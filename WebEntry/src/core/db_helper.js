@@ -256,7 +256,7 @@ export function deleteAllTaskSetsFromDb(){
 //the ids can be either task or taskset, the database will do recursive query to query them all
 export function getTasksOrTaskSetsWithIDs(objIds, callback) {
   axios.post("/api/getTasksOrTaskSetsWithIDs", {
-      ids: objIds
+      objIds: JSON.stringify(objIds)
   }).then(response => {
     console.log("after get all tasks or tasksets from set", response);
     callback(response.data.objs);

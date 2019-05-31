@@ -37,6 +37,20 @@ class PlayerMode extends Component {
   }
 
   componentWillMount() {
+    // dbFunctions.addChildToTaskSetDb("5cf103a5a7f0065b10287a95", {
+    //   id: "5ced2f329ea4482e00e63c11",
+    //   objType: "Task"
+    // });
+    //
+    // dbFunctions.addChildToTaskSetDb("5cf103a5a7f0065b10287a95", {
+    //   id: "5cee94ff222586569432db88",
+    //   objType: "TaskSet"
+    // });
+    //
+    // dbFunctions.addChildToTaskSetDb("5cf103a5a7f0065b10287a95", {
+    //   id: "5ced2f969ea4482e00e63c13",
+    //   objType: "Task"
+    // });
     dbFunctions.getAllTaskSetsFromDb(this.dbTaskSetCallback);
   }
 
@@ -54,20 +68,20 @@ class PlayerMode extends Component {
   }
 
   dbTasksCallbackFunction(dbQueryResult) {
-
+    console.log(dbQueryResult);
     //5cdc1bfbce788a06b852777e
-    var action = {
-      type: 'SET_EXPERIMENT_INFO',
-      experimentInfo: {
-        experimentId: this.state.experiment,
-        participantId: this.state.participant,
-        taskSet: dbQueryResult,
-        selectedTracker: this.state.selectedTracker
-      }
-    }
-    console.log("dispatch contain", action);
-    store.dispatch(action);
-    this.props.history.push('/RunTasksMode');
+    // var action = {
+    //   type: 'SET_EXPERIMENT_INFO',
+    //   experimentInfo: {
+    //     experimentId: this.state.experiment,
+    //     participantId: this.state.participant,
+    //     taskSet: dbQueryResult,
+    //     selectedTracker: this.state.selectedTracker
+    //   }
+    // }
+    // console.log("dispatch contain", action);
+    // store.dispatch(action);
+    // this.props.history.push('/RunTasksMode');
   }
 
   onSelectTaskSet(taskSet) {
@@ -76,7 +90,7 @@ class PlayerMode extends Component {
 
   //bottom button handler
   onPlayButtonClick() {
-    dbFunctions.getTasksOrTaskSetsWithIDs(this.state.selectedTaskSet.taskIds, this.dbTasksCallback);
+    dbFunctions.getTasksOrTaskSetsWithIDs(this.state.selectedTaskSet.childIds, this.dbTasksCallback);
   }
 
   render() {

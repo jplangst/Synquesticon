@@ -15,7 +15,8 @@ const TaskSchema = new Schema(
     responseType: String, //Determines the response type of the Task e.g. "Multiple choice", "Single choice"
     aois: [{
       name: String,
-      boundingbox: [[Number]]
+      boundingbox: [[Number]],
+      _id: false
     }], //A list of AOIs relevant to the task
     tags: [String], //A list of searchable tags
     responses: [String], //The possible responses to the task
@@ -33,8 +34,9 @@ const TaskSetSchema = new Schema({
   name: String, //The name for the TaskSet
   tags: [String], //A list of searchable tags
   childIds: [{
-    Id: String,
-    objType: String
+    id: String,
+    objType: String,
+    _id: false
   }], //list of the task ids referenced by this set
   counterbalancingOrder: [Number], //List of the order the tasks should be played
   objType: String
