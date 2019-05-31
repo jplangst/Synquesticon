@@ -12,7 +12,20 @@ const Types = {
 }
 const itemSource = {
  beginDrag(props) {
-   const item = { src: props.src, id: props.id };
+   var element = document.getElementsByClassName('listItem')[0];
+   var positionInfo = element.getBoundingClientRect();
+   var height = positionInfo.height;
+   var width = positionInfo.width;
+
+   var content = "";
+   if(props.task.question){
+     content = props.task.question;
+   }
+   else if(props.task.name){
+     content = props.task.name;
+   }
+
+   const item = { height: height, width: width, content:content };
    return item;
  },
  endDrag(props, monitor, component) {

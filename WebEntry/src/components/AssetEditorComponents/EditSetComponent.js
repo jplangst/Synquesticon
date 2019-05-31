@@ -132,10 +132,11 @@ class EditSetComponent extends Component {
 
     return(
       <div className="componentContainer">
-
-        <form className="setFormRoot" autoComplete="off" id="formRootId">
-            {setContent}
-        </form>
+        <div className="setFormContainer">
+          <form className="setFormRoot" autoComplete="off" id="formRootId">
+              {setContent}
+          </form>
+        </div>
 
         <div className="setTaskListContainer">
           <div className="setTaskListTitle">Set Tasks</div>

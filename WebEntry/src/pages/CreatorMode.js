@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 
 import CollapsableContainer from '../components/Containers/CollapsableContainer';
+import CustomDragLayer from '../components/Containers/CustomDragLayer';
 
 import Button from '@material-ui/core/Button';
 
@@ -207,6 +208,7 @@ class CreatorMode extends Component {
 
     return (
     <div className = "Background">
+    <CustomDragLayer />
       <div className = "AssetViewer">
         <div className="AssetViewerTitle">Asset viewer</div>
         <div className="AssetViewerContent">
