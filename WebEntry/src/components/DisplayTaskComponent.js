@@ -10,9 +10,9 @@ import NavigationIcon from '@material-ui/icons/NavigateNext';
 import wamp from '../core/wamp';
 import store from '../core/store';
 
-import './DisplayQuestionComponent.css';
+import './DisplayTaskComponent.css';
 
-class PlayerMode extends Component {
+class DisplayTaskComponent extends Component {
   constructor() {
     super();
     this.state = {
@@ -164,4 +164,4 @@ class PlayerMode extends Component {
   }
 }
 
-export default PlayerMode;
+export default DisplayTaskComponent;
