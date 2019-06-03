@@ -93,11 +93,13 @@ class CreatorMode extends Component {
 
   selectTaskSet(taskSet) {
     this.assetEditorCompKey += 1;
+    this.editSetComponentRef = React.createRef();
     this.setState({selectedTask: null, selectedTaskSet:taskSet, assetEditorObject: <EditSetComponent isEditing={true}
       setObject={taskSet} closeSetCallback={this.assetEditorObjectClosed.bind(this)}
-      key={this.assetEditorCompKey}/>});
+      key={this.assetEditorCompKey} setComponentKey={this.assetEditorCompKey} ref={this.editSetComponentRef}/>});
   }
 
+  //Callback from the asset editor object if an object has been changed that requires a refresh of the page
   assetEditorObjectClosed(dbChanged, editedObject){
     this.clearAssetEditorObject();
 
@@ -107,6 +109,7 @@ class CreatorMode extends Component {
     }
   }
 
+  //Closes the current objecy being viewed in the asset editor view
   clearAssetEditorObject(){
     this.setState({selectedTask: null, assetEditorContext: "empty", assetEditorObject: null, selectedTaskSet: null});
   }
@@ -169,10 +172,22 @@ class CreatorMode extends Component {
 
   }
 
-  //Called after a dragable item has been dropped
-  onDragDropCallback(dragableItem){
-    console.log("start drag");
-    console.log(dragableItem);
+  //Called after a dragable item has been dropped into the task list in the asset editor
+  onDragDropCallback(dragableItem, itemType){
+    this.editSetComponentRef.current.addTask(dragableItem, itemType);
+  }
+
+  //Get the current asset editorObject
+  getAssetEditorObject(){
+    var assetEditorObject =
+    <div className = "AssetEditor">
+      <div className="AssetEditorTitle">Asset editor</div>
+      <div className="AssetEditorContent">
+        {this.state.assetEditorObject}
+      </div>
+    </div>;
+
+    return assetEditorObject;
   }
 
   render() {
@@ -229,12 +244,8 @@ class CreatorMode extends Component {
         </div>
       </div>
 
-      <div className = "AssetEditor">
-        <div className="AssetEditorTitle">Asset editor</div>
-        <div className="AssetEditorContent">
-          {this.state.assetEditorObject}
-        </div>
-      </div>
+      {this.getAssetEditorObject()}
+
     < /div>);
   }
 }

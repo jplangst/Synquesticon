@@ -6,7 +6,7 @@ import * as dbObjects from '../../core/db_objects';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-import TaskListComponent from '../TaskList/TaskListComponent';
+import EditSetListComponent from '../TaskList/EditSetListComponent';
 
 import './EditSetComponent.css';
 
@@ -23,25 +23,15 @@ class EditSetComponent extends Component {
     super(props);
 
     //If we got a taskObject passed as a prop we use it, otherwise we init with a default constructed object
-    this.set = this.props.isEditing ? this.props.setObject : new dbObjects.TaskSetObject();
+    //Clone the array via JSON. Otherwise we would operate directly on the original objects which we do now want
+    this.set = this.props.isEditing ? JSON.parse(JSON.stringify(this.props.setObject)) : new dbObjects.TaskSetObject();
 
     //We keep these fields in the state as they affect how the component is rendered
     this.state = {
-      taskList: [],
+      taskList: this.props.setObject.childIds ? this.props.setObject.childIds : [],
     };
 
-    /*this.state = {
-      showMenu: false,
-      taskList: [],
-      taskSetList: [],
-      allowRegex: false,
-      showCreateTaskDialog: false,
-      showCreateTaskSetDialog: false,
-      assetEditorContext: "empty",
-      assetEditorObject: null,
-    };*/
-
-    console.log(this.state.taskList);
+    this.removeTaskFromListCallback = this.removeTask.bind(this);
 
     this.responseHandler = this.onResponsesChanged;
     this.handleDBCallback = this.onDBCallback.bind(this);
@@ -80,11 +70,61 @@ class EditSetComponent extends Component {
     console.log(response);
   }
 
+  //TODO extend to check for circular dependency
+  //Returns true if the list already contains the specified id
+  listContainsID(ID){
+    //Check if we are trying to add the set to itself
+    if(this.set._id === ID){
+      return true;
+    }
+
+    //Check if we already have the item in the list
+    for(var i = 0; i < this.state.taskList.length; i++){
+      if(this.state.taskList[i].id === ID){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  //Add a task to the list of tasks in the set
+  addTask(task, taskType){
+    console.log(taskType);
+    console.log(task);
+
+    //Check if we already have the item in the list, if we do we do nothing
+    if(!this.listContainsID(task._id)){
+      var content = taskType==="Task" ? task.question : task.name;
+      var newTasks = [];
+      newTasks.push({id:task._id, objType:taskType});
+
+      var updatedTaskList = this.state.taskList.concat(newTasks);
+      this.set.childIds = updatedTaskList;
+
+      this.setState({taskList:updatedTaskList});
+    }
+  }
+
+  //Remove a task from the list of tasks in the set
+  removeTask(taskId){
+    var newList = this.state.taskList;
+    for( var i = 0; i < newList.length; i++){
+      if ( newList[i].id === taskId) {
+       newList.splice(i, 1);
+       return;
+      }
+    }
+    this.set.childIds = newList;
+    this.setState({taskList:newList});
+  }
+
+  //Removes the selected set from the database
   removeSet() {
     //TODO Dialog prompt "Are you sure you want to delete "Set", it will also be removed from the data base...
     dbFunctions.deleteTaskSetFromDb(this.state.task._id, this.handleDBCallback);
   }
 
+  //Calls the provided callback function that handles the closing of this component
   closeSetComponent(componentChanged){
     this.props.closeSetCallback(componentChanged);
   }
@@ -130,6 +170,8 @@ class EditSetComponent extends Component {
         </Button>;
     }
 
+    console.log(this.props.setObject.childIds);
+
     return(
       <div className="componentContainer">
         <div className="setFormContainer">
@@ -141,8 +183,8 @@ class EditSetComponent extends Component {
         <div className="setTaskListContainer">
           <div className="setTaskListTitle">Set Tasks</div>
           <div className="setTaskListViewer">
-            < TaskListComponent reorderDisabled={false} placeholderName="TaskPlaceholder"
-            reorderID="setsReorder" taskList={ this.state.taskList } reactDND={true}/ >
+            < EditSetListComponent reorderDisabled={false} taskList={ this.state.taskList } reactDND={true}
+              removeTaskCallback={this.removeTaskFromListCallback} key={this.props.setComponentKey}/ >
           </div>
         </div>
 

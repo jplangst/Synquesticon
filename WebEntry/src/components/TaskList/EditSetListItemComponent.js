@@ -33,9 +33,12 @@ const itemSource = {
    if(dropResult){
      console.log("DROPPED");
      console.log(dropResult);
-     return props.handleDrop(props.task, props.itemType);
+
+     //TODO handle sorting here
+     //return props.handleDrop(props.task, props.itemType);
    }
    else{
+     props.removeCallback(props.task.id);
      return
    }
  }
@@ -48,7 +51,7 @@ function collect(connect, monitor) {
  }
 }
 
-class TaskItemComponent extends Component {
+class EditSetListItemComponent extends Component {
 
   componentDidMount(){
     const { connectDragPreview } = this.props
@@ -60,23 +63,20 @@ class TaskItemComponent extends Component {
   }
 
   render() {
-
     const { isDragging, connectDragSource, connectDragPreview} = this.props;
 
     const opacityValue = isDragging ? 0.8 : 1;
-    var content = <div  className={"listItem "} onClick={()=>this.props.onSelectedCallback(this.props.task)}>
+
+    var content = <div  className={"listItem "} >
           <div className={"listItemTextContainer " +this.props.highlight}>
             <div className="listItemText dotLongText">
-              {this.props.task.question}
-              {this.props.task.name}
+              {this.props.task.id}
             </div>
           </div>
           {connectDragSource(
           <div className="listItemDragBtnContainer">
             <Button style={{width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
-              className="listItemDragBtn" size="small" fullWidth onClick={()=>{
-                this.props.startDragCallback(this.props.task);
-              }}>
+              className="listItemDragBtn" size="small" fullWidth>
               <DragIcon className="dragBtnIcon"/>
             </Button>
           </div>)}
@@ -86,4 +86,4 @@ class TaskItemComponent extends Component {
   }
 }
 
-export default DragSource(Types.ITEM, itemSource, collect)(TaskItemComponent);
+export default DragSource(Types.ITEM, itemSource, collect)(EditSetListItemComponent);
