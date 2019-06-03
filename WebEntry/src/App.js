@@ -7,7 +7,7 @@ import CreatorMode from './pages/CreatorMode';
 import IntroductionScreen from './pages/IntroductionScreen';
 import PlayerMode from './pages/PlayerMode';
 import ViewerMode from './pages/ViewerMode';
-import RunTasksMode from './components/DisplayQuestionComponent';
+import RunTasksMode from './components/DisplayTaskComponent';
 
 import HTML5Backend from 'react-dnd-html5-backend'
 import { DragDropContext } from 'react-dnd'

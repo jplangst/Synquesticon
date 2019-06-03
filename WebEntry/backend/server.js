@@ -246,21 +246,25 @@ router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
 
   var recursion = async function(target) {
     if (target.objType === "Task") {
-      const fromDB = await Tasks.findOne({_id: target.id}, async (err, obj) => {
-        return obj;
+      const taskFromDb = await Tasks.findOne({_id: target.id}, async (err, task) => {
+        return task;
       });
-      target.data = fromDB;
+      target.data = taskFromDb;
       return target;
     }
     else if (target.objType === "TaskSet") {
-      const fromDB = await TaskSets.findOne({_id: target.id}, async (err, obj) => {
+      const fromDB = await TaskSets.findOne({_id: ids[1].id}, async (err, obj) => {
         return obj;
       });
+
       const childs = fromDB.childIds.map(async item => {
-        const task = await recursion(item);
+        const task = await Tasks.findOne({_id: item.id}, async (err, obj) => {
+          return obj;
+        });
         return task;
       });
       const temp = await Promise.all(childs);
+
       target.data = temp;
       return target;
     }
@@ -280,6 +284,7 @@ router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
   // });
   // const temp = await Promise.all(childs);
   // console.log("temp", temp);
+  // return res.json({success: true, data: temp});
 
   const results = await recursionForArray(ids);
   console.log("results", results);
