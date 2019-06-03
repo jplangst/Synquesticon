@@ -74,9 +74,7 @@ class TaskItemComponent extends Component {
           {connectDragSource(
           <div className="listItemDragBtnContainer">
             <Button style={{width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
-              className="listItemDragBtn" size="small" fullWidth onClick={()=>{
-                this.props.startDragCallback(this.props.task);
-              }}>
+              className="listItemDragBtn" size="small" fullWidth >
               <DragIcon className="dragBtnIcon"/>
             </Button>
           </div>)}

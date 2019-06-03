@@ -96,7 +96,7 @@ class CreatorMode extends Component {
     this.editSetComponentRef = React.createRef();
     this.setState({selectedTask: null, selectedTaskSet:taskSet, assetEditorObject: <EditSetComponent isEditing={true}
       setObject={taskSet} closeSetCallback={this.assetEditorObjectClosed.bind(this)}
-      key={this.assetEditorCompKey} setComponentKey={this.assetEditorCompKey} ref={this.editSetComponentRef}/>});
+      key={this.assetEditorCompKey} ref={this.editSetComponentRef}/>});
   }
 
   //Callback from the asset editor object if an object has been changed that requires a refresh of the page

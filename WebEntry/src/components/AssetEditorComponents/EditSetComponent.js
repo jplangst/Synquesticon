@@ -28,7 +28,7 @@ class EditSetComponent extends Component {
 
     //We keep these fields in the state as they affect how the component is rendered
     this.state = {
-      taskList: this.props.setObject.childIds ? this.props.setObject.childIds : [],
+      taskList: this.set.childIds ? this.set.childIds : [],
     };
 
     this.removeTaskFromListCallback = this.removeTask.bind(this);
@@ -184,7 +184,7 @@ class EditSetComponent extends Component {
           <div className="setTaskListTitle">Set Tasks</div>
           <div className="setTaskListViewer">
             < EditSetListComponent reorderDisabled={false} taskList={ this.state.taskList } reactDND={true}
-              removeTaskCallback={this.removeTaskFromListCallback} key={this.props.setComponentKey}/ >
+              removeTaskCallback={this.removeTaskFromListCallback} / >
           </div>
         </div>
 
