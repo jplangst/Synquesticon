@@ -11,7 +11,9 @@ const TaskSchema = new Schema(
   {
     id: String, //The id of the Task
     taskType: String, //The type of the task
-    question: String, //Used if the task type is "Question"
+    question: String, //Used if the task type is "Question" //it's the body
+    instruction: String,
+    image: String, //filepath
     responseType: String, //Determines the response type of the Task e.g. "Multiple choice", "Single choice"
     aois: [{
       name: String,

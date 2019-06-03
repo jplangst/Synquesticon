@@ -11,6 +11,8 @@ export class TaskObject{
   constructor(){
       this.taskType = "Question";
       this.question = "";
+      this.instruction = "";
+      this.image = "";
       this.responseType = "Single Choice";
       this.aois = [];
       this.tags = [];
