@@ -29,17 +29,26 @@ class EditSetComponent extends Component {
     //We keep these fields in the state as they affect how the component is rendered
     this.state = {
       taskList: this.set.childIds ? this.set.childIds : [],
+      taskListObjects: [],
     };
 
     this.removeTaskFromListCallback = this.removeTask.bind(this);
 
     this.responseHandler = this.onResponsesChanged;
     this.handleDBCallback = this.onDBCallback.bind(this);
+    this.handleRetrieveSetChildTasks = this.onRetrievedSetChildTasks.bind(this);
+
+    if(this.state.taskList && this.state.taskList.length > 0){
+      dbFunctions.getTasksOrTaskSetsWithIDs(this.state.taskList, this.handleRetrieveSetChildTasks);
+    }
+  }
+
+  onRetrievedSetChildTasks(retrievedObjects){
+    this.setState({taskListObjects: retrievedObjects});
   }
 
   onDBCallback(setDBID){
     console.log("Set saved: ", setDBID);
-
     //TODO close and reopen as editing instead. Highlight the set in the left menu
     this.closeSetComponent(true);
   }
@@ -89,12 +98,8 @@ class EditSetComponent extends Component {
 
   //Add a task to the list of tasks in the set
   addTask(task, taskType){
-    console.log(taskType);
-    console.log(task);
-
     //Check if we already have the item in the list, if we do we do nothing
     if(!this.listContainsID(task._id)){
-      var content = taskType==="Task" ? task.question : task.name;
       var newTasks = [];
       newTasks.push({id:task._id, objType:taskType});
 
@@ -121,7 +126,7 @@ class EditSetComponent extends Component {
   //Removes the selected set from the database
   removeSet() {
     //TODO Dialog prompt "Are you sure you want to delete "Set", it will also be removed from the data base...
-    dbFunctions.deleteTaskSetFromDb(this.state.task._id, this.handleDBCallback);
+    dbFunctions.deleteTaskSetFromDb(this.set._id, this.handleDBCallback);
   }
 
   //Calls the provided callback function that handles the closing of this component
@@ -166,11 +171,9 @@ class EditSetComponent extends Component {
     var deleteTaskBtn = null;
     if(this.props.isEditing){
       deleteTaskBtn = <Button onClick={this.removeSet.bind(this)} color="primary">
-        Delete Task
+        Delete Set
         </Button>;
     }
-
-    console.log(this.props.setObject.childIds);
 
     return(
       <div className="componentContainer">
@@ -183,7 +186,7 @@ class EditSetComponent extends Component {
         <div className="setTaskListContainer">
           <div className="setTaskListTitle">Set Tasks</div>
           <div className="setTaskListViewer">
-            < EditSetListComponent reorderDisabled={false} taskList={ this.state.taskList } reactDND={true}
+            < EditSetListComponent reorderDisabled={false} taskList={ this.state.taskListObjects } reactDND={true}
               removeTaskCallback={this.removeTaskFromListCallback} / >
           </div>
         </div>

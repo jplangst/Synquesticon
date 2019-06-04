@@ -42,11 +42,11 @@ class EditSetListComponent extends Component {
       <div className="taskListComponentContainer">
         {
           this.taskList.map((item, index) => {
+            console.log(item);
             return <div key={index}><EditSetListItemComponent task={item} itemType={this.props.itemType}
             handleDrop={this.props.dragDropCallback} removeCallback={this.props.removeTaskCallback}/></div>
           })
         }
-
       </div>
     );
   }

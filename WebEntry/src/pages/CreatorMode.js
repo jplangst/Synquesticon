@@ -58,12 +58,10 @@ class CreatorMode extends Component {
   }
 
   dbTaskCallbackFunction(dbQueryResult) {
-    console.log(dbQueryResult);
     this.setState({taskList: dbQueryResult});
   }
 
   dbTaskSetCallbackFunction(dbQueryResult) {
-    console.log(dbQueryResult);
     this.setState({taskSetList: dbQueryResult});
   }
 
@@ -71,8 +69,6 @@ class CreatorMode extends Component {
     if(queryTasks){
       this.setState({taskList: result.tasks});
     }
-    console.log(queryTasks);
-    console.log(result);
   }
 
   assetViewerQueryDatabase() {
@@ -159,9 +155,10 @@ class CreatorMode extends Component {
   addSetCallback(){
     this.assetEditorCompKey += 1;
     this.clearAssetEditorObject();
+    this.editSetComponentRef = React.createRef();
     this.setState({assetEditorObject: <EditSetComponent isEditing={false}
       closeSetCallback={this.assetEditorObjectClosed.bind(this)}
-      key={this.assetEditorCompKey} />});
+      key={this.assetEditorCompKey} ref={this.editSetComponentRef}/>});
   }
 
   filterTasksCallback(){
@@ -235,7 +232,7 @@ class CreatorMode extends Component {
           <CollapsableContainer classNames="ContainerSeperator" headerTitle="Sets" headerComponents={collapsableSetHeaderButtons}>
               < TaskListComponent selectedTask={this.state.selectedTaskSet} reorderDisabled={false} placeholderName="TaskSetPlaceholder" reorderID="taskSetsReorder"
                 taskList={ this.state.taskSetList } selectTask={ this.selectTaskSet.bind(this) } dragDropCallback={this.onDragDropCallback.bind(this)}
-                reactDND={false} itemType="Set"/ >
+                reactDND={false} itemType="TaskSet"/ >
           </CollapsableContainer>
           <CollapsableContainer classNames="ContainerSeperator TaskSetContainer" headerTitle="Images">
           </CollapsableContainer>

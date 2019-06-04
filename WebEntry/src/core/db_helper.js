@@ -259,7 +259,7 @@ export function getTasksOrTaskSetsWithIDs(objIds, callback) {
       objIds: JSON.stringify(objIds)
   }).then(response => {
     console.log("after get all tasks or tasksets from set", response);
-    callback(response.data.objs);
+    callback(response.data.data);
   });
 };
 
