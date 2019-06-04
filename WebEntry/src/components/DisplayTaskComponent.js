@@ -7,18 +7,24 @@ import Button from '@material-ui/core/Button';
 import CancelIcon from '@material-ui/icons/Cancel';
 import NavigationIcon from '@material-ui/icons/NavigateNext';
 
+//view components
+import InstructionViewComponent from './Views/InstructionViewComponent';
+import QuestionViewComponent from './Views/QuestionViewComponent';
+import ImageViewComponent from './Views/ImageViewComponent';
+
 import wamp from '../core/wamp';
 import store from '../core/store';
 
 import './DisplayTaskComponent.css';
 
-class DisplayTaskComponent extends Component {
+class DisplayTaskHelper extends React.Component { //for the fking sake of recursion
   constructor() {
     super();
     this.state = {
       currentTaskIndex: 0,
       answerItem: null,
-      hasBeenAnswered: false
+      hasBeenAnswered: false,
+      complexStep: 0 //for complex tasks only
     }
 
     this.currentTask = null;
@@ -36,7 +42,6 @@ class DisplayTaskComponent extends Component {
   }
 
   broadcastStartEvent() {
-    console.log("broadcastStartEvent", this.currentTask);
     var dt = new Date();
     this.startTimestamp = dt.getTime();
     var timestamp = dt.toUTCString();
@@ -83,11 +88,19 @@ class DisplayTaskComponent extends Component {
   }
 
   onClickNext(e) {
-    this.setState({
-      hasBeenAnswered: false,
-      answerItem: null,
-      currentTaskIndex: (this.state.currentTaskIndex + 1)
-    });
+    // if (this.currentTask.taskType === "Complex" && this.state.complexStep < 2) {
+    //   this.setState({
+    //     complexStep: (this.state.complexStep + 1)
+    //   })
+    // }
+    // else {
+      this.setState({
+        hasBeenAnswered: false,
+        answerItem: null,
+        currentTaskIndex: (this.state.currentTaskIndex + 1),
+        complexStep: 0
+      });
+    // }
   }
 
   onClickCancel(e) {
@@ -107,59 +120,74 @@ class DisplayTaskComponent extends Component {
   }
 
   render() {
-    if(store.getState().experimentInfo.taskSet.length > 0 && this.state.currentTaskIndex < store.getState().experimentInfo.taskSet.length) {
-      this.currentTask = store.getState().experimentInfo.taskSet[this.state.currentTaskIndex];
-    }
-    else {
-      this.currentTask = null;
-    }
+    console.log("render", this.state.currentTaskIndex, this.props.taskSet, this.props.taskSet[this.state.currentTaskIndex]);
+    if(this.props.taskSet.length > 0 && this.state.currentTaskIndex < this.props.taskSet.length) {
+      if (this.props.taskSet[this.state.currentTaskIndex].objType === "Task") {
+        this.currentTask = this.props.taskSet[this.state.currentTaskIndex].data;
+        if (!this.state.hasBeenAnswered) {
+          this.broadcastStartEvent();
+        }
 
-    if (!this.state.hasBeenAnswered) {
-      this.broadcastStartEvent();
-    }
-
-    var getDisplayedQuestion = () => {
-      if(this.currentTask){
-        return (
-        <div className="mainDisplay">
-          <div className="questionDisplay">
-            {this.currentTask.question}
-          </div>
-          <div className="responsesButtons">
-          {
-            this.currentTask.responses.map((item, index)=>{
-              if (item === this.state.answerItem) {
-                return (
-                  <Button variant="contained" className="picked" disabled={this.state.hasBeenAnswered} onClick={() => this.onAnswer(item)}>{item}</Button>)
+        var getDisplayedContent = () => {
+          if(this.currentTask){
+            if((this.currentTask.taskType === "Instruction") ||
+                  (this.currentTask.taskType === "Complex" && this.state.complexStep === 0)) {
+                return <InstructionViewComponent task={this.currentTask}/>;
               }
-              return (<Button variant="contained" className="picked" disabled={this.state.hasBeenAnswered} onClick={() => this.onAnswer(item)}>{item}</Button>);
-            })
+            if((this.currentTask.taskType === "Question") ||
+                  (this.currentTask.taskType === "Complex" && this.state.complexStep === 2)) {
+                return <QuestionViewComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} hasBeenAnswered={this.state.hasBeenAnswered}/>;
+              }
+            if((this.currentTask.taskType === "Image") ||
+                  (this.currentTask.taskType === "Complex" && this.state.complexStep === 1)) {
+                    return <ImageViewComponent task={this.currentTask}/>;
+              }
+          } else {
+            return <div/>;
           }
-          </div>
-        </div>);
-      }
-    };
+        };
 
-    var getNextButton = () => {
-      if (this.state.currentTaskIndex < (store.getState().experimentInfo.taskSet.length) - 1){
-        return (  <Button className="nextButton" onClick={this.onClickNext.bind(this)}>
-                    <NavigationIcon />
-                  </Button>);
+        var getNextButton = () => {
+          if (this.state.currentTaskIndex < (this.props.taskSet.length) - 1){
+            return (  <Button className="nextButton" onClick={this.onClickNext.bind(this)}>
+                        <NavigationIcon />
+                      </Button>);
+          }
+        }
+
+        return (
+          <div className="page">
+            <div className="mainDisplay">
+              {getDisplayedContent()}
+            </div>
+            <div className="footer">
+              <Link to="/" >
+                <Button className="cancelButton" onClick={this.onClickCancel.bind(this)}>
+                  <CancelIcon />
+                </Button>
+              </Link>
+              {getNextButton()}
+            </div>
+          </div>
+          );
+      }
+      else if (this.props.taskSet[this.state.currentTaskIndex].objType === "TaskSet") {
+
+        return <DisplayTaskHelper taskSet={this.props.taskSet[this.state.currentTaskIndex].data} />
       }
     }
+    else { //TODO: end of set
+      return (<div/>);
+    }
 
+
+  }
+}
+
+class DisplayTaskComponent extends Component {
+  render() {
     return (
-      <div className="page">
-       {getDisplayedQuestion()}
-        <div className="footer">
-          <Link to="/" >
-            <Button className="cancelButton" onClick={this.onClickCancel.bind(this)}>
-              <CancelIcon />
-            </Button>
-          </Link>
-          {getNextButton()}
-        </div>
-      </div>
+      <DisplayTaskHelper taskSet={store.getState().experimentInfo.taskSet}/>
       );
   }
 }
