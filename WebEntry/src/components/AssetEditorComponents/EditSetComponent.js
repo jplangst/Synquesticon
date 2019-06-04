@@ -38,9 +38,7 @@ class EditSetComponent extends Component {
     this.handleDBCallback = this.onDBCallback.bind(this);
     this.handleRetrieveSetChildTasks = this.onRetrievedSetChildTasks.bind(this);
 
-    if(this.state.taskList && this.state.taskList.length > 0){
-      dbFunctions.getTasksOrTaskSetsWithIDs(this.state.taskList, this.handleRetrieveSetChildTasks);
-    }
+    this.refreshSetChildList();
   }
 
   onRetrievedSetChildTasks(retrievedObjects){
@@ -107,20 +105,33 @@ class EditSetComponent extends Component {
       this.set.childIds = updatedTaskList;
 
       this.setState({taskList:updatedTaskList});
+      this.refreshSetChildList();
     }
   }
 
   //Remove a task from the list of tasks in the set
   removeTask(taskId){
+
     var newList = this.state.taskList;
     for( var i = 0; i < newList.length; i++){
       if ( newList[i].id === taskId) {
        newList.splice(i, 1);
-       return;
+       break;
       }
     }
     this.set.childIds = newList;
+
     this.setState({taskList:newList});
+    this.refreshSetChildList();
+  }
+
+  refreshSetChildList(){
+    if(this.state.taskList && this.state.taskList.length > 0){
+      dbFunctions.getTasksOrTaskSetsWithIDs(this.state.taskList, this.handleRetrieveSetChildTasks);
+    }
+    else{ //If the list is empty we clear the list in the state
+      this.setState({taskListObjects: []});
+    }
   }
 
   //Removes the selected set from the database

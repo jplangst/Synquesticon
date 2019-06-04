@@ -42,8 +42,20 @@ class EditSetListComponent extends Component {
       <div className="taskListComponentContainer">
         {
           this.taskListObjects.map((item, index) => {
-            console.log(item);
-            return <div key={index}><EditSetListItemComponent task={item} itemType={this.props.itemType}
+            var content = null;
+            if(item.objType === "Task"){
+              if(item.data.taskType === "Question" || item.data.taskType === "Complex"){
+                content = item.data.question;
+              }
+              else if(item.data.taskType === "Instruction"){
+                content = item.data.instruction;
+              }
+            }
+            else if(item.objType === "TaskSet"){
+              content = item.data.name;
+            }
+
+            return <div key={index}><EditSetListItemComponent item={item} content={content} componentDepth={0}
             handleDrop={this.props.dragDropCallback} removeCallback={this.props.removeTaskCallback}/></div>
           })
         }

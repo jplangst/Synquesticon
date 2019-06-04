@@ -253,7 +253,7 @@ router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
       return target;
     }
     else if (target.objType === "TaskSet") {
-      const fromDB = await TaskSets.findOne({_id: ids[1].id}, async (err, obj) => {
+      const fromDB = await TaskSets.findOne({_id: target.id}, async (err, obj) => {
         return obj;
       });
 

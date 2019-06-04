@@ -23,12 +23,14 @@ class CollapsableContainer extends Component {
 
   render() {
     var buttonIcon = this.state.open ? <ArrowDropDown fontSize="large" className="collapsableIcon"/> : <ArrowDropUp fontSize="large" className="collapsableIcon rotateIcon"/>;
-    var headerComponents = this.state.open ? this.props.headerComponents : null;
+    var headerComponents = this.props.hideHeaderComponents ?
+                              this.state.open ? this.props.headerComponents : null
+                              :this.props.headerComponents;
 
     return (
 
       <div className={this.props.classNames+" collpasedContainer"}>
-        <div className="containerHeader">
+        <div className={this.props.headerClassNames+" containerHeader"}>
           <div className="leftHeaderContent">
             <div className="collapseBtnContainer">
               <Button className="collapseBtn" size="small" onClick={this.onCollapseExpand.bind(this)} >
@@ -43,7 +45,7 @@ class CollapsableContainer extends Component {
             {headerComponents}
           </div>
         </div>
-        <div className="collapsableContent">
+        <div className={this.props.contentClassNames+" collapsableContent"}>
           <Collapse in={this.state.open} timeout="auto" unmountOnExit >
             <div className="collapsableContentSpacer">
               {this.props.children}
