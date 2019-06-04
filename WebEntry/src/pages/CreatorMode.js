@@ -58,12 +58,10 @@ class CreatorMode extends Component {
   }
 
   dbTaskCallbackFunction(dbQueryResult) {
-    console.log(dbQueryResult);
     this.setState({taskList: dbQueryResult});
   }
 
   dbTaskSetCallbackFunction(dbQueryResult) {
-    console.log(dbQueryResult);
     this.setState({taskSetList: dbQueryResult});
   }
 
@@ -71,8 +69,6 @@ class CreatorMode extends Component {
     if(queryTasks){
       this.setState({taskList: result.tasks});
     }
-    console.log(queryTasks);
-    console.log(result);
   }
 
   assetViewerQueryDatabase() {
@@ -93,11 +89,13 @@ class CreatorMode extends Component {
 
   selectTaskSet(taskSet) {
     this.assetEditorCompKey += 1;
+    this.editSetComponentRef = React.createRef();
     this.setState({selectedTask: null, selectedTaskSet:taskSet, assetEditorObject: <EditSetComponent isEditing={true}
       setObject={taskSet} closeSetCallback={this.assetEditorObjectClosed.bind(this)}
-      key={this.assetEditorCompKey}/>});
+      key={this.assetEditorCompKey} ref={this.editSetComponentRef}/>});
   }
 
+  //Callback from the asset editor object if an object has been changed that requires a refresh of the page
   assetEditorObjectClosed(dbChanged, editedObject){
     this.clearAssetEditorObject();
 
@@ -107,6 +105,7 @@ class CreatorMode extends Component {
     }
   }
 
+  //Closes the current objecy being viewed in the asset editor view
   clearAssetEditorObject(){
     this.setState({selectedTask: null, assetEditorContext: "empty", assetEditorObject: null, selectedTaskSet: null});
   }
@@ -156,9 +155,10 @@ class CreatorMode extends Component {
   addSetCallback(){
     this.assetEditorCompKey += 1;
     this.clearAssetEditorObject();
+    this.editSetComponentRef = React.createRef();
     this.setState({assetEditorObject: <EditSetComponent isEditing={false}
       closeSetCallback={this.assetEditorObjectClosed.bind(this)}
-      key={this.assetEditorCompKey} />});
+      key={this.assetEditorCompKey} ref={this.editSetComponentRef}/>});
   }
 
   filterTasksCallback(){
@@ -169,10 +169,22 @@ class CreatorMode extends Component {
 
   }
 
-  //Called after a dragable item has been dropped
-  onDragDropCallback(dragableItem){
-    console.log("start drag");
-    console.log(dragableItem);
+  //Called after a dragable item has been dropped into the task list in the asset editor
+  onDragDropCallback(dragableItem, itemType){
+    this.editSetComponentRef.current.addTask(dragableItem, itemType);
+  }
+
+  //Get the current asset editorObject
+  getAssetEditorObject(){
+    var assetEditorObject =
+    <div className = "AssetEditor">
+      <div className="AssetEditorTitle">Asset editor</div>
+      <div className="AssetEditorContent">
+        {this.state.assetEditorObject}
+      </div>
+    </div>;
+
+    return assetEditorObject;
   }
 
   render() {
@@ -220,7 +232,7 @@ class CreatorMode extends Component {
           <CollapsableContainer classNames="ContainerSeperator" headerTitle="Sets" headerComponents={collapsableSetHeaderButtons}>
               < TaskListComponent selectedTask={this.state.selectedTaskSet} reorderDisabled={false} placeholderName="TaskSetPlaceholder" reorderID="taskSetsReorder"
                 taskList={ this.state.taskSetList } selectTask={ this.selectTaskSet.bind(this) } dragDropCallback={this.onDragDropCallback.bind(this)}
-                reactDND={false} itemType="Set"/ >
+                reactDND={false} itemType="TaskSet"/ >
           </CollapsableContainer>
           <CollapsableContainer classNames="ContainerSeperator TaskSetContainer" headerTitle="Images">
           </CollapsableContainer>
@@ -229,12 +241,8 @@ class CreatorMode extends Component {
         </div>
       </div>
 
-      <div className = "AssetEditor">
-        <div className="AssetEditorTitle">Asset editor</div>
-        <div className="AssetEditorContent">
-          {this.state.assetEditorObject}
-        </div>
-      </div>
+      {this.getAssetEditorObject()}
+
     < /div>);
   }
 }
