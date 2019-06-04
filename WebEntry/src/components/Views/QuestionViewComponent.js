@@ -1,20 +1,24 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
-
-//icons
-import CancelIcon from '@material-ui/icons/Cancel';
-import NavigationIcon from '@material-ui/icons/NavigateNext';
-
-import wamp from '../core/wamp';
-import store from '../core/store';
 
 import './QuestionViewComponent.css';
 
 class QuestionViewComponent extends Component {
   constructor() {
     super();
+    this.state = {
+      answerItem : "",
+      hasBeenAnswered: false
+    }
+  }
+
+  onAnswer(response) {
+    this.setState({
+      answerItem: response,
+      hasBeenAnswered: true
+    });
+    this.props.answerCallback(response);
   }
 
   render() {
@@ -26,11 +30,11 @@ class QuestionViewComponent extends Component {
         <div className="responsesButtons">
           {
             this.props.task.responses.map((item, index)=>{
-              if (item === this.state.answerItem) {
+              if (item === this.props.answerItem) {
                 return (
-                  <Button variant="contained" className="picked" disabled={this.state.hasBeenAnswered} onClick={() => this.onAnswer(item)}>{item}</Button>)
+                  <Button variant="contained" className="picked" disabled={this.props.hasBeenAnswered} onClick={() => this.onAnswer(item)}>{item}</Button>)
               }
-              return (<Button variant="contained" className="picked" disabled={this.state.hasBeenAnswered} onClick={() => this.onAnswer(item)}>{item}</Button>);
+              return (<Button variant="contained" className="picked" disabled={this.props.hasBeenAnswered} onClick={() => this.onAnswer(item)}>{item}</Button>);
             })
           }
         </div>

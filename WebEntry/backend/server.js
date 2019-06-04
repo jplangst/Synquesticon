@@ -259,8 +259,11 @@ router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
 
       const childs = fromDB.childIds.map(async item => {
         const task = await Tasks.findOne({_id: item.id}, async (err, obj) => {
+          item.data = task;
+          console.log("item", item);
           return obj;
         });
+
         return task;
       });
       const temp = await Promise.all(childs);
@@ -287,7 +290,7 @@ router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
   // return res.json({success: true, data: temp});
 
   const results = await recursionForArray(ids);
-  console.log("results", results);
+  //console.log("results", results);
   return res.json({success: true, data: results});
 
   // Tasks.find({

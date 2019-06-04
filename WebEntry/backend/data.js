@@ -6,6 +6,10 @@ const Schema = mongoose.Schema;
 objType: Task, TaskSet
 */
 
+/*
+taskType: Instruction, Question, Image, Complex
+*/
+
 // this will be our data base's data structure
 const TaskSchema = new Schema(
   {

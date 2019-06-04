@@ -59,7 +59,7 @@ class PlayerMode extends Component {
   };
 
   dbTaskSetCallbackFunction(dbQueryResult) {
-    console.log(dbQueryResult);
+    //console.log(dbQueryResult);
     //5ced2f329ea4482e00e63c11
     //5ced2f599ea4482e00e63c12
     //5ced2f969ea4482e00e63c13
@@ -70,18 +70,18 @@ class PlayerMode extends Component {
   dbTasksCallbackFunction(dbQueryResult) {
     console.log(dbQueryResult);
     //5cdc1bfbce788a06b852777e
-    // var action = {
-    //   type: 'SET_EXPERIMENT_INFO',
-    //   experimentInfo: {
-    //     experimentId: this.state.experiment,
-    //     participantId: this.state.participant,
-    //     taskSet: dbQueryResult,
-    //     selectedTracker: this.state.selectedTracker
-    //   }
-    // }
-    // console.log("dispatch contain", action);
-    // store.dispatch(action);
-    // this.props.history.push('/RunTasksMode');
+    var action = {
+      type: 'SET_EXPERIMENT_INFO',
+      experimentInfo: {
+        experimentId: this.state.experiment,
+        participantId: this.state.participant,
+        taskSet: dbQueryResult,
+        selectedTracker: this.state.selectedTracker
+      }
+    }
+    console.log("dispatch contain", action);
+    store.dispatch(action);
+    this.props.history.push('/RunTasksMode');
   }
 
   onSelectTaskSet(taskSet) {
