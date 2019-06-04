@@ -59,15 +59,29 @@ class TaskListComponent extends Component {
 
     return connectDropTarget(
       <div className="taskListComponentContainer">
-
         {
           this.taskList.map((item, index) => {
             var highlightBG = "";
             if(item === this.props.selectedTask){
               highlightBG = "highlightBG";
             }
+
+            var content = null;
+            console.log(item);
+            if(item.objType === "Task"){
+              if(item.taskType === "Question" || item.taskType === "Complex"){
+                content = item.question;
+              }
+              else if(item.taskType === "Instruction"){
+                content = item.instruction;
+              }
+            }
+            else if(item.objType === "TaskSet"){
+              content = item.name;
+            }
+
             return <div key={index}><TaskItemComponent highlight={highlightBG} placeholder={false} task={item} itemType={this.props.itemType}
-            handleDrop={this.props.dragDropCallback} onSelectedCallback={this.onSelectTask.bind(this)}/></div>
+            handleDrop={this.props.dragDropCallback} onSelectedCallback={this.onSelectTask.bind(this)} content={content} /></div>
           })
         }
 

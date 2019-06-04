@@ -17,15 +17,7 @@ const itemSource = {
    var height = positionInfo.height;
    var width = positionInfo.width;
 
-   var content = "";
-   if(props.task.question){
-     content = props.task.question;
-   }
-   else if(props.task.name){
-     content = props.task.name;
-   }
-
-   const item = { height: height, width: width, content:content };
+   const item = { height: height, width: width, content: props.content };
    return item;
  },
  endDrag(props, monitor, component) {
@@ -67,8 +59,7 @@ class TaskItemComponent extends Component {
     var content = <div  className={"listItem "} onClick={()=>this.props.onSelectedCallback(this.props.task)}>
           <div className={"listItemTextContainer " +this.props.highlight}>
             <div className="listItemText dotLongText">
-              {this.props.task.question}
-              {this.props.task.name}
+              {this.props.content}
             </div>
           </div>
           {connectDragSource(
