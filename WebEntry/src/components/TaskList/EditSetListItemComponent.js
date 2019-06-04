@@ -63,9 +63,9 @@ class EditSetListItemComponent extends Component {
   }
 
   render() {
-    const { isDragging, connectDragSource, connectDragPreview} = this.props;
+    const {  connectDragSource } = this.props; //isDragging, connectDragPreview
 
-    const opacityValue = isDragging ? 0.8 : 1;
+    //const opacityValue = isDragging ? 0.8 : 1;
 
     var content = <div  className={"listItem "} >
           <div className={"listItemTextContainer " +this.props.highlight}>

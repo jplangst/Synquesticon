@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Reorder, {reorderImmutable, reorderFromToImmutable} from 'react-reorder'; //TODO decide if using this or only using the new drag and drop version
+//import Reorder, {reorderImmutable, reorderFromToImmutable} from 'react-reorder'; //TODO decide if using this or only using the new drag and drop version
 
 import EditSetListItemComponent from './EditSetListItemComponent';
 import './EditSetListComponent.css';
@@ -31,17 +31,17 @@ function collect(connect, monitor) {
 class EditSetListComponent extends Component {
   constructor(props) {
     super(props);
-    this.taskList = props.taskList;
+    this.taskListObjects = props.taskListObjects;
   }
 
   render() {
-    this.taskList = this.props.taskList;
-    const { connectDropTarget, canDrop } = this.props
+    this.taskListObjects = this.props.taskListObjects;
+    const { connectDropTarget } = this.props //, canDrop
 
     return connectDropTarget(
       <div className="taskListComponentContainer">
         {
-          this.taskList.map((item, index) => {
+          this.taskListObjects.map((item, index) => {
             console.log(item);
             return <div key={index}><EditSetListItemComponent task={item} itemType={this.props.itemType}
             handleDrop={this.props.dragDropCallback} removeCallback={this.props.removeTaskCallback}/></div>

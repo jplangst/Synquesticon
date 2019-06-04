@@ -53,9 +53,9 @@ class TaskItemComponent extends Component {
 
   render() {
 
-    const { isDragging, connectDragSource, connectDragPreview} = this.props;
+    const { connectDragSource} = this.props; //connectDragPreview, isDragging
 
-    const opacityValue = isDragging ? 0.8 : 1;
+    //const opacityValue = isDragging ? 0.8 : 1;
     var content = <div  className={"listItem "} onClick={()=>this.props.onSelectedCallback(this.props.task)}>
           <div className={"listItemTextContainer " +this.props.highlight}>
             <div className="listItemText dotLongText">

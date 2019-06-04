@@ -32,8 +32,6 @@ class EditTaskComponent extends Component {
     //If we got a taskObject passed as a prop we use it, otherwise we init with a default constructed object
     this.task = this.props.isEditing ? this.props.taskObject : new dbObjects.TaskObject();
 
-    console.log(this.task);
-
     var taskType = "Question";
     var responseType = "Single Choice";
     if(this.props.taskObject){
@@ -127,8 +125,6 @@ class EditTaskComponent extends Component {
   render() {
     var questionTypeContent = null;
     var questionResponseType = null;
-
-    console.log(this.state.taskType);
 
     if(this.state.taskType === "Question" || this.state.taskType === "Complex"){
       questionResponseType =
