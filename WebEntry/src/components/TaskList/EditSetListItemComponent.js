@@ -3,6 +3,7 @@ import { findDOMNode } from 'react-dom';
 import { getEmptyImage } from 'react-dnd-html5-backend'
 import Button from '@material-ui/core/Button';
 import DragIcon from '@material-ui/icons/ControlCamera';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import CollapsableContainer from '../Containers/CollapsableContainer';
 
@@ -23,18 +24,7 @@ const itemSource = {
    var height = positionInfo.height;
    var width = positionInfo.width;
 
-   var content = "";
-
-   if(this.props){
-     if(props.task.question){
-       content = props.task.question;
-     }
-     else if(props.task.name){
-       content = props.task.name;
-     }
-   }
-
-   const item = { height: height, width: width, content:content, index: props.index, taskId: props.id?props.id:props.item.id};
+   const item = { height: height, width: width, content:props.content, index: props.index, taskId: props.id?props.id:props.item.id};
    return item;
  },
  endDrag(props, monitor, component) {
@@ -43,9 +33,9 @@ const itemSource = {
 
    }
    else{
-     const item = monitor.getItem();
-     console.log(item);
-     props.removeCallback(item.taskId);
+     //const item = monitor.getItem();
+     //console.log(item);
+     //props.removeCallback(item.taskId);
    }
 
    return
@@ -106,12 +96,13 @@ function collect(connect, monitor) {
  return {
    connectDragSource: connect.dragSource(),
    isDragging: monitor.isDragging(),
+   monitorTest: monitor,
    connectDragPreview: connect.dragPreview(),
  }
 }
 
-function targetConnect(connect){
-  return{connectDropTarget: connect.dropTarget()};
+function targetConnect(connect, monitor){
+  return{connectDropTarget: connect.dropTarget(), isOver: monitor.isOver(),};
 }
 
 class EditSetListItemComponent extends Component {
@@ -125,9 +116,22 @@ class EditSetListItemComponent extends Component {
     }
   }
 
+  removeTask(){
+    var id = this.props.id?this.props.id:this.props.item.id;
+    this.props.removeCallback(id);
+  }
+
   render() {
-    const {  connectDragSource, connectDropTarget, isDragging } = this.props; //isDragging, connectDragPreview
-    const opacity = 1; //isDragging ? 0.5 : 1;
+    const {  connectDragSource, connectDropTarget, isDragging, isOver } = this.props; //isDragging, connectDragPreview
+
+    var opacity = 1;
+    if(isOver){
+      //console.log(this.props.index + ' ' + this.props.monitorTest.getItem().index);
+
+      //if(this.props.index === this.props.monitorTest.getItem().index){
+        opacity = 0.5;
+      //}
+    }
 
     if(this.props.item.objType === "Task"){ //Task is a leaf node
       if(this.props.componentDepth === 0){
@@ -137,13 +141,21 @@ class EditSetListItemComponent extends Component {
                   {this.props.content}
                 </div>
               </div>
+              <div className="editListItemDelBtnContainer">
+                <Button style={{cursor:'pointer',width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
+                  className="editListItemDragBtn" size="small" fullWidth onClick={this.removeTask.bind(this)}>
+                  <DeleteIcon className="delBtnIcon"/>
+                </Button>
+              </div>
               {connectDragSource(
-              <div className="editListItemDragBtnContainer">
+                <div className="editListItemDragBtnContainer">
                 <Button style={{cursor:'move',width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
                   className="editListItemDragBtn" size="small" fullWidth >
                   <DragIcon className="dragBtnIcon"/>
                 </Button>
               </div>)}
+
+
             </div>));
       }
       else{
@@ -181,15 +193,24 @@ class EditSetListItemComponent extends Component {
 
       var dragSource = null;
       if(this.props.componentDepth === 0){
-        dragSource = connectDragSource(
+        dragSource =
+        <div>
+        <div className="editListItemDelBtnContainer">
+          <Button style={{cursor:'pointer',width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
+            className="editListItemDragBtn" size="small" fullWidth onClick={this.removeTask.bind(this)} >
+            <DeleteIcon className="delBtnIcon"/>
+          </Button>
+        </div>
+        {connectDragSource(
         <div className="editListItemDragBtnContainer">
           <Button style={{cursor:'move', width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
             className="editListItemDragBtn" size="small" fullWidth>
             <DragIcon className="dragBtnIcon"/>
           </Button>
-        </div>);
+        </div>)}
+        </div>;
 
-        return (connectDropTarget(<div style={{opacity:opacity }}><CollapsableContainer classNames="editSetCompContainer" contentClassNames="editSetCompContent" headerComponents={dragSource} open={false}
+        return (connectDropTarget(<div style={{opacity:opacity }}><CollapsableContainer content={this.props.content} classNames="editSetCompContainer" contentClassNames="editSetCompContent" headerComponents={dragSource} open={false}
           headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={"MISSING from DB " + this.props.item.data.name}>
           {collapsableContent}
         </CollapsableContainer></div>));

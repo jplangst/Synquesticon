@@ -10,6 +10,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 
+import FileSelector from '../../core/fileSelector';
+
 import './EditTaskComponent.css';
 
 const taskTypeOptions = [
@@ -47,10 +49,12 @@ class EditTaskComponent extends Component {
       taskType: taskType,
       responseType: responseType,
       task: this.task,
+      selectedImage: this.props.taskObject ? this.props.taskObject.image : "",
     };
 
     this.responseHandler = this.onResponsesChanged;
     this.handleQuestionCallback = this.onDBCallback.bind(this);
+    this.handleImageSelectedCallback = this.onImageFileSelected.bind(this);
   }
 
   handleChange = event => {
@@ -111,6 +115,13 @@ class EditTaskComponent extends Component {
     else if(target==="Answers"){
       this.task.correctResponses = response;
     }
+  }
+
+  onImageFileSelected(selectedFile){
+    console.log(selectedFile);
+    this.task.image = selectedFile.name;
+
+    this.setState({selectedImage: this.task.image});
   }
 
   removeTask() {
@@ -258,6 +269,22 @@ class EditTaskComponent extends Component {
       </div>;
     }
 
+    FileSelector
+    var imageTypeContent = null;
+    if(this.state.taskType === "Image" || this.state.taskType === "Complex"){
+      var previewImage = null;
+      if(this.task.image && this.task.image !== ""){
+        previewImage = <img src={"Images/"+this.task.image} alt="Task Image" />;
+      }
+
+      imageTypeContent =
+      <div className="imageTypeContainer">
+        <div className="imageContainer">{previewImage}</div>
+        <div className="fileSelectorContainer"><FileSelector handleSelectionCallback={this.handleImageSelectedCallback}/></div>
+      </div>;
+    }
+    //TODO add image preview here
+
     var deleteTaskBtn = null;
     if(this.props.isEditing){
       deleteTaskBtn = <Button onClick={this.removeTask.bind(this)} color="primary">
@@ -288,6 +315,7 @@ class EditTaskComponent extends Component {
             </FormControl>
 
             {instructionTypeContent}
+            {imageTypeContent}
             {questionTypeContent}
 
         </form>
