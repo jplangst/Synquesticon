@@ -49,6 +49,7 @@ class EditTaskComponent extends Component {
       taskType: taskType,
       responseType: responseType,
       task: this.task,
+      selectedImage: this.props.taskObject ? this.props.taskObject.image : "",
     };
 
     this.responseHandler = this.onResponsesChanged;
@@ -119,6 +120,8 @@ class EditTaskComponent extends Component {
   onImageFileSelected(selectedFile){
     console.log(selectedFile);
     this.task.image = selectedFile.name;
+
+    this.setState({selectedImage: this.task.image});
   }
 
   removeTask() {
@@ -269,9 +272,15 @@ class EditTaskComponent extends Component {
     FileSelector
     var imageTypeContent = null;
     if(this.state.taskType === "Image" || this.state.taskType === "Complex"){
+      var previewImage = null;
+      if(this.task.image && this.task.image !== ""){
+        previewImage = <img src={"Images/"+this.task.image} alt="Task Image" />;
+      }
+
       imageTypeContent =
-      <div>
-        <FileSelector handleSelectionCallback={this.handleImageSelectedCallback}/>
+      <div className="imageTypeContainer">
+        <div className="imageContainer">{previewImage}</div>
+        <div className="fileSelectorContainer"><FileSelector handleSelectionCallback={this.handleImageSelectedCallback}/></div>
       </div>;
     }
     //TODO add image preview here
