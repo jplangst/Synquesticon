@@ -24,18 +24,7 @@ const itemSource = {
    var height = positionInfo.height;
    var width = positionInfo.width;
 
-   var content = "";
-
-   if(this.props){
-     if(props.task.question){
-       content = props.task.question;
-     }
-     else if(props.task.name){
-       content = props.task.name;
-     }
-   }
-
-   const item = { height: height, width: width, content:content, index: props.index, taskId: props.id?props.id:props.item.id};
+   const item = { height: height, width: width, content:props.content, index: props.index, taskId: props.id?props.id:props.item.id};
    return item;
  },
  endDrag(props, monitor, component) {
@@ -212,7 +201,7 @@ class EditSetListItemComponent extends Component {
         </div>)}
         </div>;
 
-        return (connectDropTarget(<div style={{opacity:opacity }}><CollapsableContainer classNames="editSetCompContainer" contentClassNames="editSetCompContent" headerComponents={dragSource} open={false}
+        return (connectDropTarget(<div style={{opacity:opacity }}><CollapsableContainer content={this.props.content} classNames="editSetCompContainer" contentClassNames="editSetCompContent" headerComponents={dragSource} open={false}
           headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={"MISSING from DB " + this.props.item.data.name}>
           {collapsableContent}
         </CollapsableContainer></div>));

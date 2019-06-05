@@ -3,7 +3,8 @@ import { DragLayer } from 'react-dnd'
 import TaskItemComponentPreview from './TaskItemComponentPreview';
 
 const Types = {
- ITEM: 'taskItemComp'
+ ITEM: 'taskItemComp',
+ REORDER: 'taskReorder',
 }
 const layerStyles = {
   position: 'fixed',
@@ -34,6 +35,9 @@ const CustomDragLayer = props => {
   function renderItem() {
     switch (itemType) {
       case Types.ITEM:
+        return <TaskItemComponentPreview item={item}/>
+      case Types.REORDER:
+        console.log(item)
         return <TaskItemComponentPreview item={item}/>
       default:
         return null
