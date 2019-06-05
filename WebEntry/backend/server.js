@@ -300,7 +300,16 @@ router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
 });
 
 router.post("/getImage", (req, res) => {
-
+  const { file } = req.body;
+  var filepath = "../public/Images/" + file;
+  console.log("received request for image:", filepath);
+  fs.readFile(filepath, (err, data) => {
+    if (err) {
+      return res.json({ success: false, error: err});
+    }
+    res.contentType('json');
+    return res.send(data);
+  })
 });
 
 //---------------------PARTICIPANTS---------------------
