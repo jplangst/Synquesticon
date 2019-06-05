@@ -3,6 +3,7 @@ import { findDOMNode } from 'react-dom';
 import { getEmptyImage } from 'react-dnd-html5-backend'
 import Button from '@material-ui/core/Button';
 import DragIcon from '@material-ui/icons/ControlCamera';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import CollapsableContainer from '../Containers/CollapsableContainer';
 
@@ -43,9 +44,9 @@ const itemSource = {
 
    }
    else{
-     const item = monitor.getItem();
-     console.log(item);
-     props.removeCallback(item.taskId);
+     //const item = monitor.getItem();
+     //console.log(item);
+     //props.removeCallback(item.taskId);
    }
 
    return
@@ -125,6 +126,11 @@ class EditSetListItemComponent extends Component {
     }
   }
 
+  removeTask(){
+    var id = this.props.id?this.props.id:this.props.item.id;
+    this.props.removeCallback(id);
+  }
+
   render() {
     const {  connectDragSource, connectDropTarget, isDragging } = this.props; //isDragging, connectDragPreview
     const opacity = 1; //isDragging ? 0.5 : 1;
@@ -137,13 +143,21 @@ class EditSetListItemComponent extends Component {
                   {this.props.content}
                 </div>
               </div>
+              <div className="editListItemDelBtnContainer">
+                <Button style={{cursor:'pointer',width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
+                  className="editListItemDragBtn" size="small" fullWidth onClick={this.removeTask.bind(this)}>
+                  <DeleteIcon className="delBtnIcon"/>
+                </Button>
+              </div>
               {connectDragSource(
-              <div className="editListItemDragBtnContainer">
+                <div className="editListItemDragBtnContainer">
                 <Button style={{cursor:'move',width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
                   className="editListItemDragBtn" size="small" fullWidth >
                   <DragIcon className="dragBtnIcon"/>
                 </Button>
               </div>)}
+
+
             </div>));
       }
       else{
@@ -181,13 +195,22 @@ class EditSetListItemComponent extends Component {
 
       var dragSource = null;
       if(this.props.componentDepth === 0){
-        dragSource = connectDragSource(
+        dragSource =
+        <div>
+        <div className="editListItemDelBtnContainer">
+          <Button style={{cursor:'pointer',width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
+            className="editListItemDragBtn" size="small" fullWidth onClick={this.removeTask.bind(this)} >
+            <DeleteIcon className="delBtnIcon"/>
+          </Button>
+        </div>
+        {connectDragSource(
         <div className="editListItemDragBtnContainer">
           <Button style={{cursor:'move', width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
             className="editListItemDragBtn" size="small" fullWidth>
             <DragIcon className="dragBtnIcon"/>
           </Button>
-        </div>);
+        </div>)}
+        </div>;
 
         return (connectDropTarget(<div style={{opacity:opacity }}><CollapsableContainer classNames="editSetCompContainer" contentClassNames="editSetCompContent" headerComponents={dragSource} open={false}
           headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={"MISSING from DB " + this.props.item.data.name}>
