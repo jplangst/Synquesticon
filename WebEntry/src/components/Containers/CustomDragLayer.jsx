@@ -37,7 +37,6 @@ const CustomDragLayer = props => {
       case Types.ITEM:
         return <TaskItemComponentPreview item={item}/>
       case Types.REORDER:
-        console.log(item)
         return <TaskItemComponentPreview item={item}/>
       default:
         return null

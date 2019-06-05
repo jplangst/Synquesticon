@@ -96,12 +96,13 @@ function collect(connect, monitor) {
  return {
    connectDragSource: connect.dragSource(),
    isDragging: monitor.isDragging(),
+   monitorTest: monitor,
    connectDragPreview: connect.dragPreview(),
  }
 }
 
-function targetConnect(connect){
-  return{connectDropTarget: connect.dropTarget()};
+function targetConnect(connect, monitor){
+  return{connectDropTarget: connect.dropTarget(), isOver: monitor.isOver(),};
 }
 
 class EditSetListItemComponent extends Component {
@@ -121,8 +122,16 @@ class EditSetListItemComponent extends Component {
   }
 
   render() {
-    const {  connectDragSource, connectDropTarget, isDragging } = this.props; //isDragging, connectDragPreview
-    const opacity = 1; //isDragging ? 0.5 : 1;
+    const {  connectDragSource, connectDropTarget, isDragging, isOver } = this.props; //isDragging, connectDragPreview
+
+    var opacity = 1;
+    if(isOver){
+      //console.log(this.props.index + ' ' + this.props.monitorTest.getItem().index);
+
+      //if(this.props.index === this.props.monitorTest.getItem().index){
+        opacity = 0.5;
+      //}
+    }
 
     if(this.props.item.objType === "Task"){ //Task is a leaf node
       if(this.props.componentDepth === 0){
