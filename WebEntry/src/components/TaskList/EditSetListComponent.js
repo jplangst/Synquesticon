@@ -55,8 +55,8 @@ class EditSetListComponent extends Component {
               content = item.data.name;
             }
 
-            return <div key={index}><EditSetListItemComponent item={item} content={content} componentDepth={0}
-            handleDrop={this.props.dragDropCallback} removeCallback={this.props.removeTaskCallback}/></div>
+            return <div key={index}><EditSetListItemComponent index={index} item={item} content={content} componentDepth={0}
+            handleDrop={this.props.dragDropCallback} removeCallback={this.props.removeTaskCallback} moveTaskCallback={this.props.moveTaskCallback}/></div>
           })
         }
       </div>

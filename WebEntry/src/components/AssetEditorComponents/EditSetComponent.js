@@ -8,6 +8,8 @@ import TextField from '@material-ui/core/TextField';
 
 import EditSetListComponent from '../TaskList/EditSetListComponent';
 
+import update from 'immutability-helper'
+
 import './EditSetComponent.css';
 
 /*
@@ -33,6 +35,7 @@ class EditSetComponent extends Component {
     };
 
     this.removeTaskFromListCallback = this.removeTask.bind(this);
+    this.moveTaskCallback = this.moveTask.bind(this);
 
     this.responseHandler = this.onResponsesChanged;
     this.handleDBCallback = this.onDBCallback.bind(this);
@@ -125,6 +128,29 @@ class EditSetComponent extends Component {
     this.refreshSetChildList();
   }
 
+  moveTask(dragIndex, hoverIndex) {
+
+    console.log("MOVING");
+    console.log(dragIndex);
+    console.log(hoverIndex);
+
+    const tasks = this.state.taskList;
+    const dragTask = tasks[dragIndex];
+    console.log(dragTask);
+
+    this.setState(update(this.state, {
+      taskList: {
+        $splice: [
+          [dragIndex, 1],
+          [hoverIndex, 0, dragTask]
+        ]
+      }
+    }));
+    this.set.childIds = this.state.taskList;
+
+    this.refreshSetChildList();
+  }
+
   refreshSetChildList(){
     if(this.state.taskList && this.state.taskList.length > 0){
       dbFunctions.getTasksOrTaskSetsWithIDs(this.state.taskList, this.handleRetrieveSetChildTasks);
@@ -198,7 +224,7 @@ class EditSetComponent extends Component {
           <div className="setTaskListTitle">Set Tasks</div>
           <div className="setTaskListViewer">
             < EditSetListComponent reorderDisabled={false} taskListObjects={ this.state.taskListObjects } reactDND={true}
-              removeTaskCallback={this.removeTaskFromListCallback} / >
+              removeTaskCallback={this.removeTaskFromListCallback} moveTaskCallback={this.moveTaskCallback} / >
           </div>
         </div>
 

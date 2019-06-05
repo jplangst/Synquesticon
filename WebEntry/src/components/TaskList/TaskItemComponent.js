@@ -64,7 +64,7 @@ class TaskItemComponent extends Component {
           </div>
           {connectDragSource(
           <div className="listItemDragBtnContainer">
-            <Button style={{width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
+            <Button style={{cursor:'move',width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
               className="listItemDragBtn" size="small" fullWidth >
               <DragIcon className="dragBtnIcon"/>
             </Button>

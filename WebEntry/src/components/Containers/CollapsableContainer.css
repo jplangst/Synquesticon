@@ -65,14 +65,14 @@
 
 .collapsableContentSpacer{
   padding-top: 4px;
-  padding-bottom: 4px;
+  /*padding-bottom: 4px;*/
 }
 
 
 /****** Overrides from Edit Set Component list *******/
 .editSetCompContainer{
   position: relative;
-  padding-bottom: 4px;
+  margin-bottom: 4px;
 }
 
 .editSetCompHeader{

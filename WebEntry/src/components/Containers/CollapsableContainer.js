@@ -13,7 +13,7 @@ class CollapsableContainer extends Component {
     super(props);
     this.childComponent = props.childComponent;
     this.state = {
-      open: true
+      open: props.open
     };
   }
 
