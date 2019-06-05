@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const express = require("express");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
+const fs = require("fs");
 //var ObjectID = require('mongodb').ObjectID;
 
 
@@ -259,11 +260,9 @@ router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
 
       const childs = fromDB.childIds.map(async item => {
         const task = await Tasks.findOne({_id: item.id}, async (err, obj) => {
-          item.data = task;
-          console.log("item", item);
           return obj;
         });
-
+        item.data = task;
         return task;
       });
       const temp = await Promise.all(childs);
@@ -299,6 +298,11 @@ router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
   //      return res.json({success: true, tasks: objs});
   // });
 });
+
+router.post("/getImage", (req, res) => {
+
+});
+
 //---------------------PARTICIPANTS---------------------
 router.get("/getAllParticipants", (req, res) => {
   Participants.find((err, data) => {
