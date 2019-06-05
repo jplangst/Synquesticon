@@ -159,7 +159,7 @@ class EditTaskComponent extends Component {
       </FormControl>;
 
       questionTypeContent =
-      <div>
+      <div className="questionTypeContainer">
         <TextField
           required
           autoFocus
@@ -250,7 +250,7 @@ class EditTaskComponent extends Component {
     var instructionTypeContent = null;
     if(this.state.taskType === "Instruction" || this.state.taskType === "Complex"){
       instructionTypeContent =
-      <div>
+      <div className="instructionTypeContainer">
         <TextField
           required
           autoFocus
@@ -272,18 +272,39 @@ class EditTaskComponent extends Component {
     FileSelector
     var imageTypeContent = null;
     if(this.state.taskType === "Image" || this.state.taskType === "Complex"){
-      var previewImage = null;
+      var previewImage = "No Image selected";
       if(this.task.image && this.task.image !== ""){
-        previewImage = <img src={"Images/"+this.task.image} alt="Task Image" />;
+        previewImage = <img className="imageContainer" src={"Images/"+this.task.image} alt="Task Image" />;
+      }
+
+      var imageTaskName = null;
+      if(this.state.taskType === "Image"){
+        imageTaskName = <TextField
+          required
+          autoFocus
+          margin="dense"
+          style={{width:"calc(96% + 10px)"}}
+          id="imageName"
+          defaultValue={this.task.question}
+          placeholder="Task Name"
+          label="Task Name"
+          ref="imageTextRef"
+          onChange={(e)=>{this.task.question = e.target.value}}
+        />;
       }
 
       imageTypeContent =
       <div className="imageTypeContainer">
-        <div className="imageContainer">{previewImage}</div>
-        <div className="fileSelectorContainer"><FileSelector handleSelectionCallback={this.handleImageSelectedCallback}/></div>
+        <div className="imageInputContainer">
+          Image Input
+          {imageTaskName}
+          <div className="fileSelectorContainer"><FileSelector handleSelectionCallback={this.handleImageSelectedCallback}/></div>
+        </div>
+        <div className="imagePreviewContainer">
+          <div className="imageContainer">{previewImage}</div>
+        </div>
       </div>;
     }
-    //TODO add image preview here
 
     var deleteTaskBtn = null;
     if(this.props.isEditing){
@@ -315,17 +336,19 @@ class EditTaskComponent extends Component {
             </FormControl>
 
             {instructionTypeContent}
-            {imageTypeContent}
             {questionTypeContent}
+            {imageTypeContent}
 
+            <div className="editTaskFormButtons">
+              <Button onClick={this.closeTaskComponent.bind(this, false)} color="primary">
+                Cancel
+              </Button>
+              {deleteTaskBtn}
+              <Button onClick={this.onChangeTaskSettings.bind(this)} color="primary">
+                {this.props.isEditing ? "Edit" : "Create"}
+              </Button>
+            </div>
         </form>
-          <Button onClick={this.closeTaskComponent.bind(this, false)} color="primary">
-            Cancel
-          </Button>
-          {deleteTaskBtn}
-          <Button onClick={this.onChangeTaskSettings.bind(this)} color="primary">
-            {this.props.isEditing ? "Edit" : "Create"}
-          </Button>
       </div>
     );
   }
