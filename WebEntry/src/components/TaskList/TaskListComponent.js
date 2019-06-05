@@ -74,6 +74,9 @@ class TaskListComponent extends Component {
               else if(item.taskType === "Instruction"){
                 content = item.instruction;
               }
+              else if(item.taskType === "Image"){
+                content = item.image;
+              }
             }
             else if(item.objType === "TaskSet"){
               content = item.name;
