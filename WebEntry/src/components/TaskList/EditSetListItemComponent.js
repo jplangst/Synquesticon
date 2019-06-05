@@ -211,12 +211,12 @@ class EditSetListItemComponent extends Component {
         </div>;
 
         return (connectDropTarget(<div style={{opacity:opacity }}><CollapsableContainer content={this.props.content} classNames="editSetCompContainer" contentClassNames="editSetCompContent" headerComponents={dragSource} open={false}
-          headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={"MISSING from DB " + this.props.item.data.name}>
+          headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={this.props.item.set.name}>
           {collapsableContent}
         </CollapsableContainer></div>));
       }
       return(<CollapsableContainer classNames="editSetCompContainer" contentClassNames="editSetCompContent" headerComponents={dragSource} open={false}
-        headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={"MISSING from DB " + this.props.item.data.name}>
+        headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={this.props.item.set.name}>
         {collapsableContent}
       </CollapsableContainer>);
     }

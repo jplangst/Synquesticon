@@ -51,7 +51,7 @@ class EditSetListComponent extends Component {
                 content = item.data.instruction;
               }
               else if(item.data.taskType === "Image"){
-                content = item.data.image;
+                content = item.data.question;
               }
             }
             else if(item.objType === "TaskSet"){
