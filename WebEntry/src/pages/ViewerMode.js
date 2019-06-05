@@ -50,7 +50,9 @@ class ViewerMode extends Component {
         });
         displayText += aoisList;
         break;
-
+      case "END":
+        displayText = "Experiment " + args[1] + "- Participant " + args[2] + " finished at " + args[3];
+        break;
       default:
 
     }
