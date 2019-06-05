@@ -296,7 +296,6 @@ class EditTaskComponent extends Component {
       imageTypeContent =
       <div className="imageTypeContainer">
         <div className="imageInputContainer">
-          Image Input
           {imageTaskName}
           <div className="fileSelectorContainer"><FileSelector handleSelectionCallback={this.handleImageSelectedCallback}/></div>
         </div>

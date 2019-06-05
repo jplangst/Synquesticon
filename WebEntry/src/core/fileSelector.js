@@ -18,7 +18,7 @@ export class FileSelector extends React.Component<undefined, undefined>
     render ()
     {
         return <div>
-            <input type="file"  accept="image/gif, image/jpeg, image/png" onChange={ (e) => this.handleChange(e.target.files) } />
+            <input type="file" filename="testing" accept="image/gif, image/jpeg, image/png" onChange={ (e) => this.handleChange(e.target.files) } />
         </div>;
     }
 }
