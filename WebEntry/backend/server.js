@@ -257,7 +257,7 @@ router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
       const fromDB = await TaskSets.findOne({_id: target.id}, async (err, obj) => {
         return obj;
       });
-
+      target.set = fromDB;
       const childs = fromDB.childIds.map(async item => {
         const task = await Tasks.findOne({_id: item.id}, async (err, obj) => {
           return obj;
@@ -268,6 +268,7 @@ router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
       const temp = await Promise.all(childs);
 
       target.data = temp;
+
       return target;
     }
 
@@ -307,8 +308,18 @@ router.post("/getImage", (req, res) => {
     if (err) {
       return res.json({ success: false, error: err});
     }
-    res.contentType('json');
-    return res.send(data);
+
+    //get image file extension name
+    let extensionName = file.split('.')[1];
+
+    //convert image file to base64-encoded string
+    let base64Image = new Buffer(data, 'binary').toString('base64');
+
+    //combine all strings
+    let imgSrcString = `data:image/${extensionName};base64,${base64Image}`;
+
+    // res.contentType('json');
+    return res.json({ success: true, data: imgSrcString});
   })
 });
 
