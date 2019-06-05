@@ -224,12 +224,15 @@ class CreatorMode extends Component {
       <div className = "AssetViewer">
         <div className="AssetViewerTitle">Asset viewer</div>
         <div className="AssetViewerContent">
-          <CollapsableContainer classNames="ContainerSeperator" style={{height: "5%"}} headerTitle="Tasks" headerComponents={collapsableTaskHeaderButtons}>
+          <CollapsableContainer classNames="ContainerSeperator" style={{height: "5%"}} headerTitle="Tasks"
+          headerComponents={collapsableTaskHeaderButtons} hideHeaderComponents={true} open={true}>
               < TaskListComponent reorderDisabled={true} placeholderName="TaskPlaceholder" reorderID="tasksReorder" taskList={ this.state.taskList }
                 selectTask={ this.selectTask.bind(this) } selectedTask={this.state.selectedTask} dragDropCallback={this.onDragDropCallback.bind(this)}
                 reactDND={false} itemType="Task"/ >
           </CollapsableContainer>
-          <CollapsableContainer classNames="ContainerSeperator" headerTitle="Sets" headerComponents={collapsableSetHeaderButtons}>
+          <CollapsableContainer classNames="ContainerSeperator" headerTitle="Sets"
+          headerComponents={collapsableSetHeaderButtons} hideHeaderComponents={true}
+          open={true}>
               < TaskListComponent selectedTask={this.state.selectedTaskSet} reorderDisabled={false} placeholderName="TaskSetPlaceholder" reorderID="taskSetsReorder"
                 taskList={ this.state.taskSetList } selectTask={ this.selectTaskSet.bind(this) } dragDropCallback={this.onDragDropCallback.bind(this)}
                 reactDND={false} itemType="TaskSet"/ >

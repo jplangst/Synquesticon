@@ -36,10 +36,16 @@
   left: 65px;
   width: calc(100% - 65px);
   height: 100%;
+
+  display:flex;
+  align-items: center; /* Vertical center alignment */
 }
 .dropdownTitle{
   font-size: large;
   font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .customHeaderComponents{
@@ -52,13 +58,30 @@
 
 /**** Content ******/
 .collapsableContent{
-  top: 55px;
   width: 90%;
   height: auto;
   margin-left: 5%;
 }
 
 .collapsableContentSpacer{
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 4px;
+  /*padding-bottom: 4px;*/
+}
+
+
+/****** Overrides from Edit Set Component list *******/
+.editSetCompContainer{
+  position: relative;
+  margin-bottom: 4px;
+}
+
+.editSetCompHeader{
+  background-color: #F5F5F5;
+  border: 1px solid #BDBDBD;
+  min-height: 40px;
+  height: 40px;
+}
+
+.editSetCompContent{
+  width: 95%;
 }

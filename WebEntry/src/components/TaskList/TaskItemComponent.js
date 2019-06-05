@@ -17,15 +17,7 @@ const itemSource = {
    var height = positionInfo.height;
    var width = positionInfo.width;
 
-   var content = "";
-   if(props.task.question){
-     content = props.task.question;
-   }
-   else if(props.task.name){
-     content = props.task.name;
-   }
-
-   const item = { height: height, width: width, content:content };
+   const item = { height: height, width: width, content: props.content };
    return item;
  },
  endDrag(props, monitor, component) {
@@ -61,19 +53,18 @@ class TaskItemComponent extends Component {
 
   render() {
 
-    const { isDragging, connectDragSource, connectDragPreview} = this.props;
+    const { connectDragSource} = this.props; //connectDragPreview, isDragging
 
-    const opacityValue = isDragging ? 0.8 : 1;
+    //const opacityValue = isDragging ? 0.8 : 1;
     var content = <div  className={"listItem "} onClick={()=>this.props.onSelectedCallback(this.props.task)}>
           <div className={"listItemTextContainer " +this.props.highlight}>
             <div className="listItemText dotLongText">
-              {this.props.task.question}
-              {this.props.task.name}
+              {this.props.content}
             </div>
           </div>
           {connectDragSource(
           <div className="listItemDragBtnContainer">
-            <Button style={{width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
+            <Button style={{cursor:'move',width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
               className="listItemDragBtn" size="small" fullWidth >
               <DragIcon className="dragBtnIcon"/>
             </Button>

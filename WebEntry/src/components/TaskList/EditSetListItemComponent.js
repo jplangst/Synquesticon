@@ -1,15 +1,21 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import { findDOMNode } from 'react-dom';
 import { getEmptyImage } from 'react-dnd-html5-backend'
 import Button from '@material-ui/core/Button';
 import DragIcon from '@material-ui/icons/ControlCamera';
 
-import './TaskItemComponent.css';
+import CollapsableContainer from '../Containers/CollapsableContainer';
 
-import { DragSource } from 'react-dnd'
+import './EditSetListItemComponent.css';
+
+import { DragSource, DropTarget } from 'react-dnd'
+
+import flow from 'lodash/flow';
 
 const Types = {
- ITEM: 'taskItemComp'
-}
+ ITEM: 'taskItemComp',
+ REORDER: 'taskReorder'
+};
 const itemSource = {
  beginDrag(props) {
    var element = document.getElementsByClassName('listItem')[0];
@@ -18,37 +24,94 @@ const itemSource = {
    var width = positionInfo.width;
 
    var content = "";
-   if(props.task.question){
-     content = props.task.question;
-   }
-   else if(props.task.name){
-     content = props.task.name;
+
+   if(this.props){
+     if(props.task.question){
+       content = props.task.question;
+     }
+     else if(props.task.name){
+       content = props.task.name;
+     }
    }
 
-   const item = { height: height, width: width, content:content };
+   const item = { height: height, width: width, content:content, index: props.index, taskId: props.id?props.id:props.item.id};
    return item;
  },
  endDrag(props, monitor, component) {
    const dropResult = monitor.getDropResult()
    if(dropResult){
-     console.log("DROPPED");
-     console.log(dropResult);
 
-     //TODO handle sorting here
-     //return props.handleDrop(props.task, props.itemType);
    }
    else{
-     props.removeCallback(props.task.id);
-     return
+     const item = monitor.getItem();
+     console.log(item);
+     props.removeCallback(item.taskId);
    }
+
+   return
  }
-}
+};
+
+const itemTarget = {
+	hover(props, monitor, component) {
+		const dragIndex = monitor.getItem().index;
+		const hoverIndex = props.index;
+
+		// Don't replace items with themselves
+		if (dragIndex === hoverIndex) {
+			return;
+		}
+
+		// Determine rectangle on screen
+		const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
+
+		// Get vertical middle
+		const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+
+		// Determine mouse position
+		const clientOffset = monitor.getClientOffset();
+
+		// Get pixels to the top
+		const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+
+		// Only perform the move when the mouse has crossed half of the items height
+		// When dragging downwards, only move when the cursor is below 50%
+		// When dragging upwards, only move when the cursor is above 50%
+
+		// Dragging downwards
+		if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+			return;
+		}
+
+		// Dragging upwards
+		if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+			return;
+		}
+
+		// Time to actually perform the action
+		//if ( props.listId === sourceListId ) {
+
+			props.moveTaskCallback(dragIndex, hoverIndex);
+
+			// Note: we're mutating the monitor item here!
+			// Generally it's better to avoid mutations,
+			// but it's good here for the sake of performance
+			// to avoid expensive index searches.
+			monitor.getItem().index = hoverIndex;
+		//}
+	}
+};
+
 function collect(connect, monitor) {
  return {
    connectDragSource: connect.dragSource(),
    isDragging: monitor.isDragging(),
    connectDragPreview: connect.dragPreview(),
  }
+}
+
+function targetConnect(connect){
+  return{connectDropTarget: connect.dropTarget()};
 }
 
 class EditSetListItemComponent extends Component {
@@ -63,27 +126,82 @@ class EditSetListItemComponent extends Component {
   }
 
   render() {
-    const { isDragging, connectDragSource, connectDragPreview} = this.props;
+    const {  connectDragSource, connectDropTarget, isDragging } = this.props; //isDragging, connectDragPreview
+    const opacity = 1; //isDragging ? 0.5 : 1;
 
-    const opacityValue = isDragging ? 0.8 : 1;
+    if(this.props.item.objType === "Task"){ //Task is a leaf node
+      if(this.props.componentDepth === 0){
+        return(connectDropTarget(<div  style={{opacity:opacity }} className={"editListItem "} >
+              <div className={"editListItemTextContainer " +this.props.highlight}>
+                <div className="editListItemText dotLongText">
+                  {this.props.content}
+                </div>
+              </div>
+              {connectDragSource(
+              <div className="editListItemDragBtnContainer">
+                <Button style={{cursor:'move',width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
+                  className="editListItemDragBtn" size="small" fullWidth >
+                  <DragIcon className="dragBtnIcon"/>
+                </Button>
+              </div>)}
+            </div>));
+      }
+      else{
+        return(<div  className={"editListItem "} >
+              <div className={"editListItemTextContainer " +this.props.highlight}>
+                <div className="editListItemText dotLongText">
+                  {this.props.content}
+                </div>
+              </div>
 
-    var content = <div  className={"listItem "} >
-          <div className={"listItemTextContainer " +this.props.highlight}>
-            <div className="listItemText dotLongText">
-              {this.props.task.id}
-            </div>
-          </div>
-          {connectDragSource(
-          <div className="listItemDragBtnContainer">
-            <Button style={{width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
-              className="listItemDragBtn" size="small" fullWidth>
-              <DragIcon className="dragBtnIcon"/>
-            </Button>
-          </div>)}
-        </div>;
+            </div>);
+      }
+    }
+    else if(this.props.item.objType === "TaskSet"){ //Is a node with children
+      var newDepth = this.props.componentDepth + 1;
+      var collapsableContent = this.props.item.data.map((data, index) =>
+        {
+          var content = null;
+          if(data.objType === "Task"){
+            if(data.taskType === "Question" || data.taskType === "Complex"){
+              content = data.question;
+            }
+            else if(data.taskType === "Instruction"){
+              content = data.instruction;
+            }
+          }
+          else if(data.objType === "TaskSet"){
+            content = data.name;
+          }
+          return <EditSetListItemComponent key={index} removeCallback={this.props.removeTaskCallback} item={data} content={content} componentDepth={newDepth} />
+        }
+      );
 
-    return( content );
+      collapsableContent = <div className="collapsedItemListWrapper">{collapsableContent}</div>;
+
+      var dragSource = null;
+      if(this.props.componentDepth === 0){
+        dragSource = connectDragSource(
+        <div className="editListItemDragBtnContainer">
+          <Button style={{cursor:'move', width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
+            className="editListItemDragBtn" size="small" fullWidth>
+            <DragIcon className="dragBtnIcon"/>
+          </Button>
+        </div>);
+
+        return (connectDropTarget(<div style={{opacity:opacity }}><CollapsableContainer classNames="editSetCompContainer" contentClassNames="editSetCompContent" headerComponents={dragSource} open={false}
+          headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={"MISSING from DB " + this.props.item.data.name}>
+          {collapsableContent}
+        </CollapsableContainer></div>));
+      }
+      return(<CollapsableContainer classNames="editSetCompContainer" contentClassNames="editSetCompContent" headerComponents={dragSource} open={false}
+        headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={"MISSING from DB " + this.props.item.data.name}>
+        {collapsableContent}
+      </CollapsableContainer>);
+    }
+
+    return null;
   }
 }
 
-export default DragSource(Types.ITEM, itemSource, collect)(EditSetListItemComponent);
+export default flow( DropTarget(Types.REORDER, itemTarget, targetConnect), DragSource(Types.REORDER, itemSource, collect))(EditSetListItemComponent);

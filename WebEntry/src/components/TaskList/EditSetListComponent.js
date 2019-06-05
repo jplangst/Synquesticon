@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Reorder, {reorderImmutable, reorderFromToImmutable} from 'react-reorder'; //TODO decide if using this or only using the new drag and drop version
+//import Reorder, {reorderImmutable, reorderFromToImmutable} from 'react-reorder'; //TODO decide if using this or only using the new drag and drop version
 
 import EditSetListItemComponent from './EditSetListItemComponent';
 import './EditSetListComponent.css';
@@ -31,20 +31,32 @@ function collect(connect, monitor) {
 class EditSetListComponent extends Component {
   constructor(props) {
     super(props);
-    this.taskList = props.taskList;
+    this.taskListObjects = props.taskListObjects;
   }
 
   render() {
-    this.taskList = this.props.taskList;
-    const { connectDropTarget, canDrop } = this.props
+    this.taskListObjects = this.props.taskListObjects;
+    const { connectDropTarget } = this.props //, canDrop
 
     return connectDropTarget(
       <div className="taskListComponentContainer">
         {
-          this.taskList.map((item, index) => {
-            console.log(item);
-            return <div key={index}><EditSetListItemComponent task={item} itemType={this.props.itemType}
-            handleDrop={this.props.dragDropCallback} removeCallback={this.props.removeTaskCallback}/></div>
+          this.taskListObjects.map((item, index) => {
+            var content = null;
+            if(item.objType === "Task"){
+              if(item.data.taskType === "Question" || item.data.taskType === "Complex"){
+                content = item.data.question;
+              }
+              else if(item.data.taskType === "Instruction"){
+                content = item.data.instruction;
+              }
+            }
+            else if(item.objType === "TaskSet"){
+              content = item.data.name;
+            }
+
+            return <div key={index}><EditSetListItemComponent index={index} item={item} content={content} componentDepth={0}
+            handleDrop={this.props.dragDropCallback} removeCallback={this.props.removeTaskCallback} moveTaskCallback={this.props.moveTaskCallback}/></div>
           })
         }
       </div>

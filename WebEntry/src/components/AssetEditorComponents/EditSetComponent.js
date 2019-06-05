@@ -8,6 +8,8 @@ import TextField from '@material-ui/core/TextField';
 
 import EditSetListComponent from '../TaskList/EditSetListComponent';
 
+import update from 'immutability-helper'
+
 import './EditSetComponent.css';
 
 /*
@@ -33,14 +35,13 @@ class EditSetComponent extends Component {
     };
 
     this.removeTaskFromListCallback = this.removeTask.bind(this);
+    this.moveTaskCallback = this.moveTask.bind(this);
 
     this.responseHandler = this.onResponsesChanged;
     this.handleDBCallback = this.onDBCallback.bind(this);
     this.handleRetrieveSetChildTasks = this.onRetrievedSetChildTasks.bind(this);
 
-    if(this.state.taskList && this.state.taskList.length > 0){
-      dbFunctions.getTasksOrTaskSetsWithIDs(this.state.taskList, this.handleRetrieveSetChildTasks);
-    }
+    this.refreshSetChildList();
   }
 
   onRetrievedSetChildTasks(retrievedObjects){
@@ -107,20 +108,50 @@ class EditSetComponent extends Component {
       this.set.childIds = updatedTaskList;
 
       this.setState({taskList:updatedTaskList});
+      this.refreshSetChildList();
     }
   }
 
   //Remove a task from the list of tasks in the set
   removeTask(taskId){
+
     var newList = this.state.taskList;
     for( var i = 0; i < newList.length; i++){
       if ( newList[i].id === taskId) {
        newList.splice(i, 1);
-       return;
+       break;
       }
     }
     this.set.childIds = newList;
+
     this.setState({taskList:newList});
+    this.refreshSetChildList();
+  }
+
+  moveTask(dragIndex, hoverIndex) {
+    const tasks = this.state.taskList;
+    const dragTask = tasks[dragIndex];
+
+    this.setState(update(this.state, {
+      taskList: {
+        $splice: [
+          [dragIndex, 1],
+          [hoverIndex, 0, dragTask]
+        ]
+      }
+    }));
+    this.set.childIds = this.state.taskList;
+
+    this.refreshSetChildList();
+  }
+
+  refreshSetChildList(){
+    if(this.state.taskList && this.state.taskList.length > 0){
+      dbFunctions.getTasksOrTaskSetsWithIDs(this.state.taskList, this.handleRetrieveSetChildTasks);
+    }
+    else{ //If the list is empty we clear the list in the state
+      this.setState({taskListObjects: []});
+    }
   }
 
   //Removes the selected set from the database
@@ -186,8 +217,8 @@ class EditSetComponent extends Component {
         <div className="setTaskListContainer">
           <div className="setTaskListTitle">Set Tasks</div>
           <div className="setTaskListViewer">
-            < EditSetListComponent reorderDisabled={false} taskList={ this.state.taskListObjects } reactDND={true}
-              removeTaskCallback={this.removeTaskFromListCallback} / >
+            < EditSetListComponent reorderDisabled={false} taskListObjects={ this.state.taskListObjects } reactDND={true}
+              removeTaskCallback={this.removeTaskFromListCallback} moveTaskCallback={this.moveTaskCallback} / >
           </div>
         </div>
 

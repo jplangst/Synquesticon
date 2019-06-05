@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Reorder, {reorderImmutable, reorderFromToImmutable} from 'react-reorder'; //{reorder, reorderFromTo}
+//import Reorder, {reorderImmutable, reorderFromToImmutable} from 'react-reorder'; //{reorder, reorderFromTo}
 
 import TaskItemComponent from './TaskItemComponent';
 import './TaskListComponent.css';
@@ -31,9 +31,9 @@ function collect(connect, monitor) {
 
 //------------------------------------------------------------------------------
 //TODO define a helper function instead, this gives a warning as native should not be extended like this
-Array.prototype.move = function (from, to) {
+/*Array.prototype.move = function (from, to) {
   this.splice(to, 0, this.splice(from, 1)[0]);
-};
+};*/
 
 class TaskListComponent extends Component {
   constructor(props) {
@@ -55,19 +55,32 @@ class TaskListComponent extends Component {
 
   render() {
     this.taskList = this.props.taskList;
-    const { connectDropTarget, canDrop } = this.props
+    const { connectDropTarget } = this.props; //, canDrop
 
     return connectDropTarget(
       <div className="taskListComponentContainer">
-
         {
           this.taskList.map((item, index) => {
             var highlightBG = "";
             if(item === this.props.selectedTask){
               highlightBG = "highlightBG";
             }
+
+            var content = null;
+            if(item.objType === "Task"){
+              if(item.taskType === "Question" || item.taskType === "Complex"){
+                content = item.question;
+              }
+              else if(item.taskType === "Instruction"){
+                content = item.instruction;
+              }
+            }
+            else if(item.objType === "TaskSet"){
+              content = item.name;
+            }
+
             return <div key={index}><TaskItemComponent highlight={highlightBG} placeholder={false} task={item} itemType={this.props.itemType}
-            handleDrop={this.props.dragDropCallback} onSelectedCallback={this.onSelectTask.bind(this)}/></div>
+            handleDrop={this.props.dragDropCallback} onSelectedCallback={this.onSelectTask.bind(this)} content={content} /></div>
           })
         }
 

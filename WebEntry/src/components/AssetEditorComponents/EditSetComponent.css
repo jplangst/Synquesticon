@@ -41,6 +41,9 @@
   border-width: thin;
   border-color: #303f9f;
   border-color: #BBB;
+
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .editSetComponentButtons{

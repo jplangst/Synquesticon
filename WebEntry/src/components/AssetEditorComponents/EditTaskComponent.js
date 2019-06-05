@@ -15,6 +15,8 @@ import './EditTaskComponent.css';
 const taskTypeOptions = [
   'Instruction',
   'Question',
+  'Image',
+  'Complex'
 ];
 
 const responseTypeOptions = [
@@ -32,12 +34,12 @@ class EditTaskComponent extends Component {
 
     var taskType = "Question";
     var responseType = "Single Choice";
-    if(this.props.task){
-      if(this.props.task.taskType){
-        taskType = this.props.task.taskType;
+    if(this.props.taskObject){
+      if(this.props.taskObject.taskType){
+        taskType = this.props.taskObject.taskType;
       }
-      if(this.props.task.responseType){
-        responseType = this.props.task.responseType;
+      if(this.props.taskObject.responseType){
+        responseType = this.props.taskObject.responseType;
       }
     }
 
@@ -55,21 +57,13 @@ class EditTaskComponent extends Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  componentWillMount() {
-
-  }
-
-  componentWillUnmount() {
-  }
-
   onDBCallback(questionDBID){
-    //this.props.closeTaskDialog(questionDBID, true);
     //TODO close and reopen as editing instead. Highlight the task in the left menu
     this.closeTaskComponent(true);
   }
 
   onChangeTaskSettings(){
-    this.task.taskType = this.state.taskType; //TODO this looks weird
+    this.task.taskType = this.state.taskType;
     this.task.responseType = this.state.responseType;
 
     if(this.props.isEditing){
@@ -132,24 +126,45 @@ class EditTaskComponent extends Component {
     var questionTypeContent = null;
     var questionResponseType = null;
 
-    if(this.state.taskType === "Question"){
+    if(this.state.taskType === "Question" || this.state.taskType === "Complex"){
+      questionResponseType =
+      <FormControl className="formControl">
+        <InputLabel htmlFor="ResponseType">Response Type</InputLabel>
+        <Select
+          value={this.state.responseType}
+          onChange={this.handleChange}
+          fullWidth
+          inputProps={{
+            name: "responseType",
+            id: "ResponseType"
+          }}
+        >
+        {
+          responseTypeOptions.map((responseTypeOption) => {
+            return <MenuItem key={responseTypeOption} value={responseTypeOption}>{responseTypeOption}</MenuItem>
+          })
+        }
+        </Select>
+      </FormControl>;
+
       questionTypeContent =
       <div>
         <TextField
           required
           autoFocus
           margin="dense"
-          style={{width:"calc(96% + 10px)"}}
+          fullWidth
           id="questionText"
           defaultValue={this.task.question}
           placeholder="What is your favorite colour? What is thy quest? What is the air speed velocity of a Swallow? What do you mean? Is it an African Swallow or a European Swallow?"
           label="Question"
           ref="questionTextRef"
-          fullWidth
           multiline
           rows="3"
           onChange={(e)=>{this.task.question = e.target.value}}
         />
+
+        {questionResponseType}
 
         <TextField
           required
@@ -218,30 +233,29 @@ class EditTaskComponent extends Component {
         />
         </div>;
 
-        questionResponseType =
-        <FormControl className="formControl">
-          <InputLabel htmlFor="ResponseType">Response Type</InputLabel>
-          <Select
-            value={this.state.responseType}
-            onChange={this.handleChange}
-            style={{width:"96%"}}
-            inputProps={{
-              name: "responseType",
-              id: "ResponseType"
-            }}
-          >
-          {
-            responseTypeOptions.map((responseTypeOption) => {
-              return <MenuItem key={responseTypeOption} value={responseTypeOption}>{responseTypeOption}</MenuItem>
-            })
-          }
-          </Select>
-        </FormControl>;
+
     }
 
     var instructionTypeContent = null;
-    if(this.state.taskType === "Instruction"){
-
+    if(this.state.taskType === "Instruction" || this.state.taskType === "Complex"){
+      instructionTypeContent =
+      <div>
+        <TextField
+          required
+          autoFocus
+          margin="dense"
+          style={{width:"calc(96% + 10px)"}}
+          id="instructionText"
+          defaultValue={this.task.instruction}
+          placeholder="What is your favorite colour? What is thy quest? What is the air speed velocity of a Swallow? What do you mean? Is it an African Swallow or a European Swallow?"
+          label="Instructions"
+          ref="instructionTextRef"
+          fullWidth
+          multiline
+          rows="3"
+          onChange={(e)=>{this.task.instruction = e.target.value}}
+        />
+      </div>;
     }
 
     var deleteTaskBtn = null;
@@ -273,9 +287,8 @@ class EditTaskComponent extends Component {
               </Select>
             </FormControl>
 
-            {questionResponseType}
-            {questionTypeContent}
             {instructionTypeContent}
+            {questionTypeContent}
 
         </form>
           <Button onClick={this.closeTaskComponent.bind(this, false)} color="primary">
