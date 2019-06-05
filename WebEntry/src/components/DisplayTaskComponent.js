@@ -87,7 +87,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
     }
   }
 
-  onClickNext(e) {
+  onClickNext() {
     // if (this.currentTask.taskType === "Complex" && this.state.complexStep < 2) {
     //   this.setState({
     //     complexStep: (this.state.complexStep + 1)
@@ -119,11 +119,23 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
     this.broadcastAnswerEvent(answerObj);
   }
 
+  onFinishedRecursion() {
+    console.log("callback from recursion", this.state.currentTaskIndex, this.props.taskSet);
+    this.onClickNext();
+  }
+
   render() {
-    console.log("render", this.state.currentTaskIndex, this.props.taskSet, this.props.taskSet[this.state.currentTaskIndex]);
     if(this.props.taskSet.length > 0 && this.state.currentTaskIndex < this.props.taskSet.length) {
-      if (this.props.taskSet[this.state.currentTaskIndex].objType === "Task") {
+      if (this.props.taskSet[this.state.currentTaskIndex].objType === "TaskSet") {
+        return <DisplayTaskHelper taskSet={this.props.taskSet[this.state.currentTaskIndex].data} onFinished={this.onFinishedRecursion.bind(this)}/>
+      }
+      //TODO: this is a go around solution, please fix it to make it solid
+      else {//if (this.props.taskSet[this.state.currentTaskIndex].objType === "Task" || ) {
         this.currentTask = this.props.taskSet[this.state.currentTaskIndex].data;
+        if (this.currentTask === undefined) {
+          //console.log("bug in the database, set the task to the correct data");
+          this.currentTask = this.props.taskSet[this.state.currentTaskIndex];
+        }
         if (!this.state.hasBeenAnswered) {
           this.broadcastStartEvent();
         }
@@ -143,16 +155,17 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
                     return <ImageViewComponent task={this.currentTask}/>;
               }
           } else {
+
             return <div/>;
           }
         };
 
         var getNextButton = () => {
-          if (this.state.currentTaskIndex < (this.props.taskSet.length) - 1){
+          // if (this.state.currentTaskIndex < (this.props.taskSet.length) - 1){
             return (  <Button className="nextButton" onClick={this.onClickNext.bind(this)}>
                         <NavigationIcon />
                       </Button>);
-          }
+          // }
         }
 
         return (
@@ -171,12 +184,11 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
           </div>
           );
       }
-      else if (this.props.taskSet[this.state.currentTaskIndex].objType === "TaskSet") {
 
-        return <DisplayTaskHelper taskSet={this.props.taskSet[this.state.currentTaskIndex].data} />
-      }
     }
     else { //TODO: end of set
+      this.props.onFinished();
+      console.log("end of set");
       return (<div/>);
     }
 
@@ -185,9 +197,14 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 }
 
 class DisplayTaskComponent extends Component {
+  onFinished() {
+    this.props.history.push("PlayerMode");
+    alert("finished!");
+  }
+
   render() {
     return (
-      <DisplayTaskHelper taskSet={store.getState().experimentInfo.taskSet}/>
+      <DisplayTaskHelper taskSet={store.getState().experimentInfo.taskSet} onFinished={this.onFinished.bind(this)}/>
       );
   }
 }
