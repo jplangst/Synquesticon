@@ -129,14 +129,8 @@ class EditSetComponent extends Component {
   }
 
   moveTask(dragIndex, hoverIndex) {
-
-    console.log("MOVING");
-    console.log(dragIndex);
-    console.log(hoverIndex);
-
     const tasks = this.state.taskList;
     const dragTask = tasks[dragIndex];
-    console.log(dragTask);
 
     this.setState(update(this.state, {
       taskList: {

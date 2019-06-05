@@ -40,8 +40,7 @@ const itemSource = {
  endDrag(props, monitor, component) {
    const dropResult = monitor.getDropResult()
    if(dropResult){
-     console.log("DROPPED");
-     console.log(dropResult);
+
    }
    else{
      const item = monitor.getItem();
@@ -127,11 +126,12 @@ class EditSetListItemComponent extends Component {
   }
 
   render() {
-    const {  connectDragSource, connectDropTarget } = this.props; //isDragging, connectDragPreview
+    const {  connectDragSource, connectDropTarget, isDragging } = this.props; //isDragging, connectDragPreview
+    const opacity = 1; //isDragging ? 0.5 : 1;
 
     if(this.props.item.objType === "Task"){ //Task is a leaf node
       if(this.props.componentDepth === 0){
-        return(connectDropTarget(<div  className={"editListItem "} >
+        return(connectDropTarget(<div  style={{opacity:opacity }} className={"editListItem "} >
               <div className={"editListItemTextContainer " +this.props.highlight}>
                 <div className="editListItemText dotLongText">
                   {this.props.content}
@@ -189,7 +189,7 @@ class EditSetListItemComponent extends Component {
           </Button>
         </div>);
 
-        return (connectDropTarget(<div><CollapsableContainer classNames="editSetCompContainer" contentClassNames="editSetCompContent" headerComponents={dragSource} open={false}
+        return (connectDropTarget(<div style={{opacity:opacity }}><CollapsableContainer classNames="editSetCompContainer" contentClassNames="editSetCompContent" headerComponents={dragSource} open={false}
           headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={"MISSING from DB " + this.props.item.data.name}>
           {collapsableContent}
         </CollapsableContainer></div>));
