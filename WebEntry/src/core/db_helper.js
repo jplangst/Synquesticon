@@ -263,6 +263,15 @@ export function getTasksOrTaskSetsWithIDs(objIds, callback) {
   });
 };
 
+export function getImage(filepath, callback){
+  axios.post("/api/getImage", {
+    file: filepath
+  }).then(data => {
+    //console.log("receive image from db", data);
+    callback(data.data);
+  });
+}
+
 //----------------------experiments-----------------------
 export function getAllExperimentsFromDb(callback){
   fetch("/api/getAllExperiments")
