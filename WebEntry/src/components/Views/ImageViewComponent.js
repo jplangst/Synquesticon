@@ -14,11 +14,10 @@ class ImageViewComponent extends Component {
     }
   }
   componentDidMount() {
-    //dbFunctions.getImage(this.props.task.image, this.onReceivedImage.bind(this));
-    dbFunctions.getImage("window.png", this.onReceivedImage.bind(this));
+    dbFunctions.getImage(this.props.task.image, this.onReceivedImage.bind(this));
   }
+
   onReceivedImage(img) {
-    console.log("image from db", img);
     this.setState({
       imageSrc: img
     });

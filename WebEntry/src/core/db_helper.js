@@ -268,7 +268,7 @@ export function getImage(filepath, callback){
     file: filepath
   }).then(data => {
     //console.log("receive image from db", data);
-    callback(data.data);
+    callback(data.data.data);
   });
 }
 

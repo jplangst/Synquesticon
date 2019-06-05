@@ -88,19 +88,19 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
   }
 
   onClickNext() {
-    // if (this.currentTask.taskType === "Complex" && this.state.complexStep < 2) {
-    //   this.setState({
-    //     complexStep: (this.state.complexStep + 1)
-    //   })
-    // }
-    // else {
+    if (this.currentTask.taskType === "Complex" && this.state.complexStep < 2) {
+      this.setState({
+        complexStep: (this.state.complexStep + 1)
+      })
+    }
+    else {
       this.setState({
         hasBeenAnswered: false,
         answerItem: null,
         currentTaskIndex: (this.state.currentTaskIndex + 1),
         complexStep: 0
       });
-    // }
+    }
   }
 
   onClickCancel(e) {
