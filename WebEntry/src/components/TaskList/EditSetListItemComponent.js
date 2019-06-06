@@ -19,12 +19,14 @@ const Types = {
 };
 const itemSource = {
  beginDrag(props) {
-   var element = document.getElementsByClassName('listItem')[0];
+   var element = document.getElementsByClassName('editSetListItem')[0];
    var positionInfo = element.getBoundingClientRect();
    var height = positionInfo.height;
    var width = positionInfo.width;
 
-   const item = { height: height, width: width, content:props.content, index: props.index, taskId: props.id?props.id:props.item.id};
+   var content = props.content ? props.content : props.item.set.name; //TODO should figure out how to pass this correctly when we have time
+
+   const item = { height: height, width: width, content:content, index: props.index, taskId: props.id?props.id:props.item.id};
    return item;
  },
  endDrag(props, monitor, component) {
@@ -52,31 +54,31 @@ const itemTarget = {
 			return;
 		}
 
-		// Determine rectangle on screen
-		const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
+		/*// Determine rectangle on screen
+		//const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
 
 		// Get vertical middle
-		const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+		//const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2; //Was 2
 
 		// Determine mouse position
-		const clientOffset = monitor.getClientOffset();
+		//const clientOffset = monitor.getClientOffset();
 
 		// Get pixels to the top
-		const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+		//const hoverClientY = clientOffset.y - hoverBoundingRect.top;
 
 		// Only perform the move when the mouse has crossed half of the items height
 		// When dragging downwards, only move when the cursor is below 50%
 		// When dragging upwards, only move when the cursor is above 50%
 
 		// Dragging downwards
-		if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-			return;
-		}
+		//if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+			//return;
+		//}
 
 		// Dragging upwards
-		if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-			return;
-		}
+		//if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+			//return;
+		//}*/
 
 		// Time to actually perform the action
 		//if ( props.listId === sourceListId ) {
@@ -126,11 +128,7 @@ class EditSetListItemComponent extends Component {
 
     var opacity = 1;
     if(isOver){
-      //console.log(this.props.index + ' ' + this.props.monitorTest.getItem().index);
-
-      //if(this.props.index === this.props.monitorTest.getItem().index){
-        opacity = 0.5;
-      //}
+        opacity = 0;
     }
 
     if(this.props.item.objType === "Task"){ //Task is a leaf node
@@ -210,7 +208,7 @@ class EditSetListItemComponent extends Component {
         </div>)}
         </div>;
 
-        return (connectDropTarget(<div style={{opacity:opacity }}><CollapsableContainer content={this.props.content} classNames="editSetCompContainer" contentClassNames="editSetCompContent" headerComponents={dragSource} open={false}
+        return (connectDropTarget(<div content={this.props.content} style={{opacity:opacity }}><CollapsableContainer content={this.props.content} classNames="editSetCompContainer" contentClassNames="editSetCompContent" headerComponents={dragSource} open={false}
           headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={this.props.item.set.name}>
           {collapsableContent}
         </CollapsableContainer></div>));

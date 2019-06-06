@@ -220,9 +220,9 @@ class CreatorMode extends Component {
 
     return (
     <div className = "Background">
-    <CustomDragLayer />
+      <CustomDragLayer />
       <div className = "AssetViewer">
-        <div className="AssetViewerTitle">Asset viewer</div>
+        <div className="AssetViewerTitle"><div className="AssetViewerTitleText">Asset viewer</div></div>
         <div className="AssetViewerContent">
           <CollapsableContainer classNames="ContainerSeperator" style={{height: "5%"}} headerTitle="Tasks"
           headerComponents={collapsableTaskHeaderButtons} hideHeaderComponents={true} open={true}>

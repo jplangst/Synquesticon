@@ -1,7 +1,7 @@
 import React from 'react'
 import { DragLayer } from 'react-dnd'
 import TaskItemComponentPreview from './TaskItemComponentPreview';
-
+import EditTaskItemComponentPreview from './EditTaskItemComponentPreview';
 const Types = {
  ITEM: 'taskItemComp',
  REORDER: 'taskReorder',
@@ -16,13 +16,15 @@ const layerStyles = {
   height: '100%',
 }
 function getItemStyles(props) {
-  const { initialOffset, currentOffset } = props
-  if (!initialOffset || !currentOffset) {
+  const { otherOffset, initialOffset, currentOffset } = props
+  if (!otherOffset || !initialOffset || !currentOffset) {
     return {
       display: 'none',
     }
   }
+
   let { x, y } = currentOffset
+  x = x-props.item.width + otherOffset.x - initialOffset.x;
 
   const transform = `translate(${x}px, ${y}px)`
   return {
@@ -37,7 +39,7 @@ const CustomDragLayer = props => {
       case Types.ITEM:
         return <TaskItemComponentPreview item={item}/>
       case Types.REORDER:
-        return <TaskItemComponentPreview item={item}/>
+        return <EditTaskItemComponentPreview item={item}/>
       default:
         return null
     }
@@ -55,6 +57,7 @@ export default DragLayer(monitor => ({
   item: monitor.getItem(),
   itemType: monitor.getItemType(),
   initialOffset: monitor.getInitialSourceClientOffset(),
+  otherOffset: monitor.getInitialClientOffset(),
   currentOffset: monitor.getSourceClientOffset(),
   isDragging: monitor.isDragging(),
 }))(CustomDragLayer)
