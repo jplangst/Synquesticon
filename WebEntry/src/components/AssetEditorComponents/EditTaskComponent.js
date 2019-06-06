@@ -125,7 +125,7 @@ class EditTaskComponent extends Component {
   }
 
   removeTask() {
-    //TODO Dialog prompt "Are you sure you want to delte "Task", it will also be removed from the data base...
+    //TODO Dialog prompt "Are you sure you want to delete "Task", it will also be removed from the data base...
     dbFunctions.deleteTaskFromDb(this.state.task._id, this.handleQuestionCallback);
   }
 

@@ -129,20 +129,28 @@ class EditSetComponent extends Component {
   }
 
   moveTask(dragIndex, hoverIndex) {
-    const tasks = this.state.taskList;
-    const dragTask = tasks[dragIndex];
+    const dragTask = this.state.taskList[dragIndex];
+    const taskObject = this.state.taskListObjects[dragIndex]; 
 
+    //Update the state with the new positions of the tasks
     this.setState(update(this.state, {
       taskList: {
         $splice: [
           [dragIndex, 1],
           [hoverIndex, 0, dragTask]
         ]
+      },
+      taskListObjects: {
+        $splice: [
+          [dragIndex, 1],
+          [hoverIndex, 0, taskObject]
+        ]
       }
     }));
+
     this.set.childIds = this.state.taskList;
 
-    this.refreshSetChildList();
+    //this.refreshSetChildList();
   }
 
   refreshSetChildList(){
