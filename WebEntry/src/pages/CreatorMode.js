@@ -69,6 +69,9 @@ class CreatorMode extends Component {
     if(queryTasks){
       this.setState({taskList: result.tasks});
     }
+    else{
+      this.setState({taskSetList: result.tasks});
+    }
   }
 
   assetViewerQueryDatabase() {
@@ -134,8 +137,7 @@ class CreatorMode extends Component {
   onTaskSetSearchInputChanged(e){
     var searchString = "";
     if(typeof(e)==='object'){
-      searchString = this.escapeRegExp(e.target.value);
-
+      searchString = e.target.value;
       if(!this.state.allowRegex){
         searchString = this.escapeRegExp(searchString);
       }

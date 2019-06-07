@@ -125,6 +125,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
   }
 
   render() {
+
     if(this.props.taskSet.length > 0 && this.state.currentTaskIndex < this.props.taskSet.length) {
       if (this.props.taskSet[this.state.currentTaskIndex].objType === "TaskSet") {
         return <DisplayTaskHelper taskSet={this.props.taskSet[this.state.currentTaskIndex].data} onFinished={this.onFinishedRecursion.bind(this)}/>
@@ -139,7 +140,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
         if (!this.state.hasBeenAnswered) {
           this.broadcastStartEvent();
         }
-
+            console.log("check", this.props.taskSet, this.currentTask);
         var getDisplayedContent = () => {
           if(this.currentTask){
             if((this.currentTask.taskType === "Instruction") ||
