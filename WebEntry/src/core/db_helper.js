@@ -69,8 +69,6 @@ export function getAllTasksFromDb(callback){
 };
 
 export function queryTasksFromDb(queryTasks, queryString,callback){
-  console.log("Finding tasks containing ", queryString);
-
   var queryCollection = queryTasks ? 'Tasks' : 'TaskSets';
 
   axios.post("/api/getAllTasksContaining", {

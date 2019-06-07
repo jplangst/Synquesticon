@@ -88,6 +88,7 @@ router.post("/getAllTasksContaining", (req, res) => {
   }
 
   collection.find( {$or:[{'question': {"$regex" : queryString, "$options":"i"}},
+  {'name': {"$regex" : queryString, "$options":"i"}},
   {'tags': {"$regex" : queryString, "$options":"i"}}]}, (err, data) => {
     if (err) {
       console.log(err);
