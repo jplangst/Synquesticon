@@ -21,8 +21,7 @@
 }
 
 .imageTypeContainer{
-  margin-left: 10%;
-  width: 80%;
+  width: 100%;
   height: auto;
 }
 
@@ -32,7 +31,8 @@
 }
 
 .imagePreviewContainer{
-  width: 100%;
+  margin-left: 25%;
+  width: 50%;
   height: 80%;
 }
 
