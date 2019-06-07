@@ -45,11 +45,24 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
     var dt = new Date();
     this.startTimestamp = dt.getTime();
     var timestamp = dt.toUTCString();
+    var message = "";
+    if (this.currentTask.taskType === "Instruction") {
+      message = "Instruction: " + this.currentTask.instruction;
+    }
+    else if (this.currentTask.taskType  === "Question") {
+      message = "Question: " + this.currentTask.question;
+    }
+    else if (this.currentTask.taskType  === "Image") {
+      message = "Display Image: " + this.currentTask.image;
+    }
+    else if (this.currentTask.taskType === "Complex") {
+      message = "Complex Task: " + this.currentTask.instruction;
+    }
     //displayText = "Experiment " + args[1] + "- Participant " + args[2] + ": " + args[3] + ". Start at: " + args[4];
     var info = ["START",
                 store.getState().experimentInfo.experimentId,
                 store.getState().experimentInfo.participantId,
-                this.currentTask.question,
+                message,
                 timestamp,
                 store.getState().experimentInfo.selectedTracker];
     wamp.broadcastEvents(info);
@@ -137,7 +150,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
           //console.log("bug in the database, set the task to the correct data");
           this.currentTask = this.props.taskSet[this.state.currentTaskIndex];
         }
-        if (!this.state.hasBeenAnswered) {
+        if (!this.state.hasBeenAnswered && this.state.complexStep === 0) {
           this.broadcastStartEvent();
         }
             console.log("check", this.props.taskSet, this.currentTask);
@@ -198,7 +211,19 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 }
 
 class DisplayTaskComponent extends Component {
+  broadcastEndEvent() {
+    var dt = new Date();
+    var timestamp = dt.toUTCString();
+
+    var info = ["END",
+                store.getState().experimentInfo.experimentId,
+                store.getState().experimentInfo.participantId,
+                timestamp]
+    wamp.broadcastEvents(info);
+  }
+
   onFinished() {
+    this.broadcastEndEvent();
     this.props.history.push("PlayerMode");
     alert("finished!");
   }

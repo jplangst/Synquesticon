@@ -7,7 +7,7 @@ import './InstructionViewComponent.css';
 class InstructionViewComponent extends Component {
   render() {
     return (
-      <div className="instructionDisplay">
+      <div className="questionDisplay">
         {this.props.task.instruction}
       </div>
     );
