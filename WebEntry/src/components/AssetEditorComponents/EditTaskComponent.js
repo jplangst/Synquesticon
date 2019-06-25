@@ -14,6 +14,9 @@ import FileSelector from '../../core/fileSelector';
 
 import InstructionComponent from './TaskComponents/InstructionComponent';
 import SelectImageComponent from './TaskComponents/SelectImageComponent';
+import TextEntryComponent from './TaskComponents/TextEntryComponent';
+import SingleChoiceComponent from './TaskComponents/SingleChoiceComponent';
+import MultipleChoiceComponent from './TaskComponents/MultipleChoiceComponent';
 
 import './EditTaskComponent.css';
 
@@ -135,7 +138,16 @@ class EditTaskComponent extends Component {
     var questionTypeContent = null;
     var questionResponseType = null;
 
-    if(this.state.taskType === "Question" || this.state.taskType === "Complex"){
+    if(this.state.taskType === "Single Choice"){
+      questionTypeContent = <SingleChoiceComponent task={this.task} />;
+    }
+    else if(this.state.taskType === "Multiple Choice"){
+      questionTypeContent = <MultipleChoiceComponent task={this.task} />;
+    }
+    else if(this.state.taskType === "Text Entry"){
+      questionTypeContent = <TextEntryComponent task={this.task} />;
+    }
+    else if(this.state.taskType === "Question" || this.state.taskType === "Complex"){
       questionResponseType =
       <FormControl className="formControl">
         <InputLabel htmlFor="ResponseType">Response Type</InputLabel>

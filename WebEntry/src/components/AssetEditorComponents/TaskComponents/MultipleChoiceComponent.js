@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
 
-class SingleChoiceComponent extends Component {
+class MultipleChoiceComponent extends Component {
   constructor(props){
     super(props);
 
@@ -40,13 +40,13 @@ class SingleChoiceComponent extends Component {
         }
       ];
     }
-    else if(target==="Correct Response"){
+    else if(target==="Correct Responses"){
       this.props.task.correctResponses = response;
     }
   }
 
   render() {
-    var singleChoiceContent =
+    var multipleChoiceContent =
       <div className="questionTypeContainer">
         <TextField label="Question"
           required
@@ -68,22 +68,22 @@ class SingleChoiceComponent extends Component {
           style={{marginRight:"10px", width:"calc(50% - 5px)"}}
           id="responses"
           defaultValue={this.props.task.responses.join(',')}
-          placeholder="Response A, Response B"
+          placeholder="Response A, Response B, ResponseC"
           helperText="Question responses seperated by a comma"
           ref="responsesRef"
           onChange={(e)=> this.responseHandler(e, e.target.value, "Responses")}
         />
-        <TextField label="Correct Response"
+        <TextField label="Correct Responses"
           required
           autoFocus
           margin="dense"
           style={{width:"calc(50% - 5px)"}}
           id="tags"
           defaultValue={this.props.task.correctResponses.join(',')}
-          placeholder="Response A"
-          helperText="The correct response to the question"
+          placeholder="Response A, Response C"
+          helperText="The correct responses to the question"
           ref="correctResponseRef"
-          onChange={(e)=> this.responseHandler(e, e.target.value, "Correct Response")}
+          onChange={(e)=> this.responseHandler(e, e.target.value, "Correct Responses")}
         />
         <TextField label="Unit"
           autoFocus
@@ -122,9 +122,9 @@ class SingleChoiceComponent extends Component {
       </div>;
 
     return(
-      singleChoiceContent
+      multipleChoiceContent
     );
   }
 }
 
-export default SingleChoiceComponent;
+export default MultipleChoiceComponent;
