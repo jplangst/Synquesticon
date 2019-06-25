@@ -23,7 +23,7 @@ class SelectImageComponent extends Component {
   render() {
     var previewImage = "No Image selected";
     if(this.props.task.image && this.props.task.image !== ""){
-      previewImage = <img className="imageContainer" src={"Images/"+this.props.task.image} alt="Task Image" />;
+      previewImage = <img className="imageContainer" src={"Images/"+this.props.task.image} alt="Task" />;
     }
 
     var imageTaskName =

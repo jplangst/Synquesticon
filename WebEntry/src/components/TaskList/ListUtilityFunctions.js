@@ -1,8 +1,6 @@
 export function getTaskContent(task){
   var content = null;
 
-  console.log(task);
-
   if(task.objType === "Task"){
     //The set list has a different data structure
     if(task.data){

@@ -10,8 +10,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 
-import FileSelector from '../../core/fileSelector';
-
 import InstructionComponent from './TaskComponents/InstructionComponent';
 import SelectImageComponent from './TaskComponents/SelectImageComponent';
 import TextEntryComponent from './TaskComponents/TextEntryComponent';

@@ -1,5 +1,4 @@
-import React, { Component, Fragment } from 'react';
-import { findDOMNode } from 'react-dom';
+import React, { Component } from 'react';
 import { getEmptyImage } from 'react-dnd-html5-backend'
 import Button from '@material-ui/core/Button';
 import DragIcon from '@material-ui/icons/ControlCamera';
@@ -126,7 +125,7 @@ class EditSetListItemComponent extends Component {
   }
 
   render() {
-    const {  connectDragSource, connectDropTarget, isDragging, isOver } = this.props; //isDragging, connectDragPreview
+    const {  connectDragSource, connectDropTarget, isOver } = this.props; //isDragging, connectDragPreview
 
     var opacity = 1;
     if(isOver){
