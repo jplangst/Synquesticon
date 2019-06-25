@@ -12,10 +12,16 @@ import Select from "@material-ui/core/Select";
 
 import FileSelector from '../../core/fileSelector';
 
+import InstructionComponent from './TaskComponents/InstructionComponent';
+import SelectImageComponent from './TaskComponents/SelectImageComponent';
+
 import './EditTaskComponent.css';
 
 const taskTypeOptions = [
   'Instruction',
+  'Single Choice',
+  'Multiple Choice',
+  'Text Entry',
   'Question',
   'Image',
   'Complex'
@@ -54,7 +60,6 @@ class EditTaskComponent extends Component {
 
     this.responseHandler = this.onResponsesChanged;
     this.handleQuestionCallback = this.onDBCallback.bind(this);
-    this.handleImageSelectedCallback = this.onImageFileSelected.bind(this);
   }
 
   handleChange = event => {
@@ -115,13 +120,6 @@ class EditTaskComponent extends Component {
     else if(target==="Answers"){
       this.task.correctResponses = response;
     }
-  }
-
-  onImageFileSelected(selectedFile){
-    console.log(selectedFile);
-    this.task.image = selectedFile.name;
-
-    this.setState({selectedImage: this.task.image});
   }
 
   removeTask() {
@@ -202,7 +200,6 @@ class EditTaskComponent extends Component {
           ref="unitRef"
           onChange={(e)=> this.task.responseUnit = e.target.value}
         />
-
         <TextField
           required
           autoFocus
@@ -243,69 +240,13 @@ class EditTaskComponent extends Component {
           onChange={(e)=> this.responseHandler(e, e.target.value, "AOIs")}
         />
         </div>;
-
-
     }
 
-    var instructionTypeContent = null;
-    if(this.state.taskType === "Instruction" || this.state.taskType === "Complex"){
-      instructionTypeContent =
-      <div className="instructionTypeContainer">
-        <TextField
-          required
-          autoFocus
-          margin="dense"
-          style={{width:"calc(96% + 10px)"}}
-          id="instructionText"
-          defaultValue={this.task.instruction}
-          placeholder="What is your favorite colour? What is thy quest? What is the air speed velocity of a Swallow? What do you mean? Is it an African Swallow or a European Swallow?"
-          label="Instructions"
-          ref="instructionTextRef"
-          fullWidth
-          multiline
-          rows="3"
-          onChange={(e)=>{this.task.instruction = e.target.value}}
-        />
-      </div>;
-    }
+    var instructionTypeContent = (this.state.taskType === "Instruction" || this.state.taskType === "Complex") ?
+                                    <InstructionComponent task={this.task}/> : null;
 
-    FileSelector
-    var imageTypeContent = null;
-    if(this.state.taskType === "Image" || this.state.taskType === "Complex"){
-      var previewImage = "No Image selected";
-      if(this.task.image && this.task.image !== ""){
-        previewImage = <img className="imageContainer" src={"Images/"+this.task.image} alt="Task Image" />;
-      }
-
-      var imageTaskName = null;
-      if(this.state.taskType === "Image"){
-        imageTaskName = <TextField
-          required
-          autoFocus
-          margin="dense"
-          style={{width:"calc(96% + 10px)"}}
-          id="imageName"
-          defaultValue={this.task.question}
-          placeholder="Task Name"
-          label="Task Name"
-          ref="imageTextRef"
-          onChange={(e)=>{this.task.question = e.target.value}}
-        />;
-      }
-
-      imageTypeContent =
-      <div className="imageTypeContainer">
-        <div className="imageInputContainer">
-          {imageTaskName}
-        </div>
-        <div className="imagePreviewContainer">
-          <div className="imageContainer">{previewImage}</div>
-        </div>
-        <div className="fileSelectorContainer">
-          <FileSelector handleSelectionCallback={this.handleImageSelectedCallback}/>
-          </div>
-      </div>;
-    }
+    var imageTypeContent = (this.state.taskType === "Image" || this.state.taskType === "Complex") ?
+                                    <SelectImageComponent task={this.task} /> : null;
 
     var deleteTaskBtn = null;
     if(this.props.isEditing){
