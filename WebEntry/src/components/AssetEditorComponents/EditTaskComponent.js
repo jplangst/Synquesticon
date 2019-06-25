@@ -25,7 +25,6 @@ const taskTypeOptions = [
   'Single Choice',
   'Multiple Choice',
   'Text Entry',
-  'Question',
   'Image',
   'Complex'
 ];
@@ -147,7 +146,7 @@ class EditTaskComponent extends Component {
     else if(this.state.taskType === "Text Entry"){
       questionTypeContent = <TextEntryComponent task={this.task} />;
     }
-    else if(this.state.taskType === "Question" || this.state.taskType === "Complex"){
+    else if(this.state.taskType === "Complex"){ //TODO remove the Complex type and add an option to add image to the other tasks
       questionResponseType =
       <FormControl className="formControl">
         <InputLabel htmlFor="ResponseType">Response Type</InputLabel>

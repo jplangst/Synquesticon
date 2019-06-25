@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
-//import Reorder, {reorderImmutable, reorderFromToImmutable} from 'react-reorder'; //{reorder, reorderFromTo}
 
 import TaskItemComponent from './TaskItemComponent';
+
+import * as listUtils from './ListUtilityFunctions';
+
 import './TaskListComponent.css';
 
+//================ Define the drop target behaviour ================
 import { DropTarget } from 'react-dnd'
 const Types = {
  ITEM: 'taskItemComp'
 }
-
 const taskListTarget = {
-
   drop(props, monitor, component){
     return props;
   },
@@ -19,7 +20,6 @@ const taskListTarget = {
     return props.reactDND;
   }
 };
-
 function collect(connect, monitor) {
  return {
    canDrop: monitor.canDrop(),
@@ -27,14 +27,7 @@ function collect(connect, monitor) {
  }
 }
 
-
-
-//------------------------------------------------------------------------------
-//TODO define a helper function instead, this gives a warning as native should not be extended like this
-/*Array.prototype.move = function (from, to) {
-  this.splice(to, 0, this.splice(from, 1)[0]);
-};*/
-
+//================ React component ================
 class TaskListComponent extends Component {
   constructor(props) {
     super(props);
@@ -66,21 +59,7 @@ class TaskListComponent extends Component {
               highlightBG = "highlightBG";
             }
 
-            var content = null;
-            if(item.objType === "Task"){
-              if(item.taskType === "Question" || item.taskType === "Complex"){
-                content = item.question;
-              }
-              else if(item.taskType === "Instruction"){
-                content = item.instruction;
-              }
-              else if(item.taskType === "Image"){
-                content = item.question;
-              }
-            }
-            else if(item.objType === "TaskSet"){
-              content = item.name;
-            }
+            var content = listUtils.getTaskContent(item);
 
             return <div key={index}><TaskItemComponent highlight={highlightBG} placeholder={false} task={item} itemType={this.props.itemType}
             handleDrop={this.props.dragDropCallback} onSelectedCallback={this.onSelectTask.bind(this)} content={content} /></div>
@@ -92,4 +71,5 @@ class TaskListComponent extends Component {
   }
 }
 
+//====================== Export with Drop Target behaviour ====================
 export default DropTarget(Types.ITEM, taskListTarget, collect)(TaskListComponent);

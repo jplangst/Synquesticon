@@ -5,6 +5,8 @@ import Button from '@material-ui/core/Button';
 import DragIcon from '@material-ui/icons/ControlCamera';
 import DeleteIcon from '@material-ui/icons/Delete';
 
+import * as listUtils from './ListUtilityFunctions';
+
 import CollapsableContainer from '../Containers/CollapsableContainer';
 
 import './EditSetListItemComponent.css';
@@ -171,18 +173,7 @@ class EditSetListItemComponent extends Component {
       var newDepth = this.props.componentDepth + 1;
       var collapsableContent = this.props.item.data.map((data, index) =>
         {
-          var content = null;
-          if(data.objType === "Task"){
-            if(data.taskType === "Question" || data.taskType === "Complex"){
-              content = data.question;
-            }
-            else if(data.taskType === "Instruction"){
-              content = data.instruction;
-            }
-          }
-          else if(data.objType === "TaskSet"){
-            content = data.name;
-          }
+          var content = listUtils.getTaskContent(data);
           return <EditSetListItemComponent key={index} removeCallback={this.props.removeTaskCallback} item={data} content={content} componentDepth={newDepth} />
         }
       );

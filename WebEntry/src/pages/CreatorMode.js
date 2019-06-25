@@ -239,10 +239,6 @@ class CreatorMode extends Component {
                 taskList={ this.state.taskSetList } selectTask={ this.selectTaskSet.bind(this) } dragDropCallback={this.onDragDropCallback.bind(this)}
                 reactDND={false} itemType="TaskSet"/ >
           </CollapsableContainer>
-          <CollapsableContainer classNames="ContainerSeperator TaskSetContainer" headerTitle="Images">
-          </CollapsableContainer>
-          <CollapsableContainer classNames="ContainerSeperator TaskSetContainer" headerTitle="Templates">
-          </CollapsableContainer>
         </div>
       </div>
 
@@ -251,4 +247,10 @@ class CreatorMode extends Component {
     < /div>);
   }
 }
+
+/*<CollapsableContainer classNames="ContainerSeperator TaskSetContainer" headerTitle="Images">
+</CollapsableContainer>
+<CollapsableContainer classNames="ContainerSeperator TaskSetContainer" headerTitle="Templates">
+</CollapsableContainer>*/
+
 export default CreatorMode;
