@@ -55,6 +55,17 @@ class TextEntryComponent extends Component {
           rows="3"
           onChange={(e)=>{this.props.task.question = e.target.value}}
         />
+        <TextField label="Text Entry Rows"
+          required
+          autoFocus
+          margin="dense"
+          fullWidth
+          id="freeTextRows"
+          defaultValue={this.props.task.freeTextRows}
+          placeholder="Enter how many rows you want the text entry to be"
+          ref="entryRowsRef"
+          onChange={(e)=>{this.props.task.freeTextRows = e.target.value}}
+        />
         <TextField label="AOIs"
           autoFocus
           margin="dense"
