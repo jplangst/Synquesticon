@@ -7,7 +7,7 @@ objType: Task, TaskSet
 */
 
 /*
-taskType: Instruction, Question, Image, Complex
+taskType: Instruction, Text Entry, Single Choice, Multiple Choice, Image, Complex
 */
 
 // this will be our data base's data structure
@@ -44,6 +44,7 @@ const TaskSetSchema = new Schema({
     objType: String,
     _id: false
   }], //list of the task ids referenced by this set
+  setTaskOrder: String,
   counterbalancingOrder: [Number], //List of the order the tasks should be played
   objType: String
 }, {

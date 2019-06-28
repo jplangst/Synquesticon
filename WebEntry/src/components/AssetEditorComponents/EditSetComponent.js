@@ -6,6 +6,12 @@ import * as dbObjects from '../../core/db_objects';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+
+//import FormControl from '@material-ui/core/FormControl';
+//import FormLabel from '@material-ui/core/FormLabel';
+
 import EditSetListComponent from '../TaskList/EditSetListComponent';
 
 import update from 'immutability-helper'
@@ -32,6 +38,7 @@ class EditSetComponent extends Component {
     this.state = {
       taskList: this.set.childIds ? this.set.childIds : [],
       taskListObjects: [],
+      randomizeSet: this.set.setTaskOrder === "Random" ? true : false,
     };
 
     this.removeTaskFromListCallback = this.removeTask.bind(this);
@@ -41,10 +48,13 @@ class EditSetComponent extends Component {
     this.handleDBCallback = this.onDBCallback.bind(this);
     this.handleRetrieveSetChildTasks = this.onRetrievedSetChildTasks.bind(this);
 
+    this.handleSetTaskOrderChange = this.onSetTaskOrderChanged.bind(this);
+
     this.refreshSetChildList();
   }
 
   onRetrievedSetChildTasks(retrievedObjects){
+    console.log(retrievedObjects);
     this.setState({taskListObjects: retrievedObjects});
   }
 
@@ -59,7 +69,6 @@ class EditSetComponent extends Component {
       dbFunctions.updateTaskSetFromDb(this.set._id, this.set, this.handleDBCallback);
     }
     else{
-      console.log(this.task);
       dbFunctions.addTaskSetToDb(this.set, this.handleDBCallback);
     }
   }
@@ -76,45 +85,69 @@ class EditSetComponent extends Component {
     if(target==="Tags"){
       this.set.tags = response;
     }
-
-    console.log(response);
   }
 
-  //TODO extend to check for circular dependency
-  //Returns true if the list already contains the specified id
-  listContainsID(ID){
-    //Check if we are trying to add the set to itself
-    if(this.set._id === ID){
-      return true;
-    }
+  onSetTaskOrderChanged(e, checked){
+    this.set.setTaskOrder = checked ? "Random" : "InOrder";
+    this.setState({
+      randomizeSet: checked
+    });
+  }
 
-    //Check if we already have the item in the list
-    for(var i = 0; i < this.state.taskList.length; i++){
-      if(this.state.taskList[i].id === ID){
-        return true;
+  //Returns true if the list contains a circular reference
+  willCauseCircularReference(taskID){
+    var outerList = this.state.taskListObjects;
+    //First we iterate over the most outer list
+    for(var i = 0; i < outerList.length; i++){
+      //If it is a set we need to get all the sets referenced by the set
+      if(outerList[i].objType === "TaskSet")
+      {
+        var childSets = this.getChildSetIDs(outerList[i], []);
+        if(childSets.length > 0 && childSets.includes(taskID)) {
+          console.log("Circular dependency detected!");
+          return true;
+        }
       }
     }
+
+    //No circular refeence detected
     return false;
   }
 
+  getChildSetIDs(setObject, childSets){
+    //Add the object to the list
+    childSets.push(setObject._id);
+    //Iterate over the sets children
+    console.log(setObject);
+    for(var i = 0; i<setObject.data.length; i++){
+      if(setObject.data[i].objType === "TaskSet"){
+        this.getChildIDs(setObject.data[i], childSets)
+      }
+    }
+    return childSets;
+  }
+
   //Add a task to the list of tasks in the set
-  addTask(task, taskType){
-    //Check if we already have the item in the list, if we do we do nothing
-    if(!this.listContainsID(task._id)){
+  addTask(task, objType){
+    if(this.set._id === task._id){
+      console.log("Can't add set to itself. It would result in a circular reference");
+      //TODO give a toast warning that this would result in an infinite experiment
+      return true;
+    }
+
+    //if(objType==="Task" || !this.willCauseCircularReference(task._id)){
       var newTasks = [];
-      newTasks.push({id:task._id, objType:taskType});
-
+      newTasks.push({id:task._id, objType:objType});
       var updatedTaskList = this.state.taskList.concat(newTasks);
-      this.set.childIds = updatedTaskList;
 
+      this.set.childIds = updatedTaskList;
       this.setState({taskList:updatedTaskList});
       this.refreshSetChildList();
-    }
+    //}
   }
 
   //Remove a task from the list of tasks in the set
   removeTask(taskId){
-
     var newList = this.state.taskList;
     for( var i = 0; i < newList.length; i++){
       if ( newList[i].id === taskId) {
@@ -155,6 +188,7 @@ class EditSetComponent extends Component {
 
   refreshSetChildList(){
     if(this.state.taskList && this.state.taskList.length > 0){
+      //dbFunctions.getTaskSetObject(this.set._id, this.handleRetrieveSetChildTasks);
       dbFunctions.getTasksOrTaskSetsWithIDs(this.state.taskList, this.handleRetrieveSetChildTasks);
     }
     else{ //If the list is empty we clear the list in the state
@@ -176,12 +210,10 @@ class EditSetComponent extends Component {
   render() {
     var setContent =
       <div>
-        <TextField
+        <TextField id="questionText"
           required
           autoFocus
           margin="dense"
-          style={{width:"calc(96% + 10px)"}}
-          id="questionText"
           defaultValue={this.set.name}
           placeholder="Valve questions"
           label="Set Name"
@@ -191,21 +223,26 @@ class EditSetComponent extends Component {
           rows="3"
           onChange={(e)=>{this.set.name = e.target.value}}
         />
-
-        <TextField
+        <TextField id="tags"
           required
           autoFocus
           margin="dense"
-          style={{width:"48%"}}
-          id="tags"
           defaultValue={this.set.tags.join(',')}
           placeholder="SillyWalks, Swallows"
           helperText="Tags seperated by a comma"
           label="Tags"
+          fullWidth
           ref="tagsRef"
           onChange={(e)=> this.responseHandler(e, e.target.value, "Tags")}
         />
-        </div>;
+        <FormControlLabel label="Randomize Set Order"
+          value="start"
+          checked={this.state.randomizeSet}
+          control={<Checkbox color="primary" />}
+          onChange={this.handleSetTaskOrderChange}
+          labelPlacement="start"
+        />
+      </div>;
 
     var deleteTaskBtn = null;
     if(this.props.isEditing){
