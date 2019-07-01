@@ -23,8 +23,6 @@ const itemSource = {
  endDrag(props, monitor, component) {
    const dropResult = monitor.getDropResult()
    if(dropResult){
-     console.log("DROPPED");
-     console.log(dropResult);
      return props.handleDrop(props.task, props.itemType);
    }
    else{

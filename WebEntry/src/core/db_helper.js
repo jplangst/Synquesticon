@@ -219,9 +219,21 @@ export function getTasksOrTaskSetsWithIDs(objIds, callback) {
   axios.post("/api/getTasksOrTaskSetsWithIDs", {
       objIds: JSON.stringify(objIds)
   }).then(response => {
-    console.log("after get all tasks or tasksets from set", response);
     callback(response.data.data);
   });
+};
+
+//Async version that can be called in a synch manner using await 
+export async function getTasksOrTaskSetsWithIDsPromise(objIds) {
+    return new Promise((resolve, reject) => {
+      axios.post("/api/getTasksOrTaskSetsWithIDs", {
+        objIds: JSON.stringify(objIds)
+      }).then(response => {
+          resolve(response.data.data);
+      }, (errorResponse) => {
+        reject(errorResponse);
+      });
+  })
 };
 
 export function getImage(filepath, callback){

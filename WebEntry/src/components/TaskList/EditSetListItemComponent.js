@@ -120,7 +120,7 @@ class EditSetListItemComponent extends Component {
   }
 
   removeTask(){
-    var id = this.props.id?this.props.id:this.props.item.id;
+    var id = this.props._id?this.props._id:this.props.item._id;
     this.props.removeCallback(id);
   }
 

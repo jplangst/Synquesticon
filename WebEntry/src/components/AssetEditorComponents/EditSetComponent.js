@@ -9,22 +9,11 @@ import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-//import FormControl from '@material-ui/core/FormControl';
-//import FormLabel from '@material-ui/core/FormLabel';
-
 import EditSetListComponent from '../TaskList/EditSetListComponent';
 
 import update from 'immutability-helper'
 
 import './EditSetComponent.css';
-
-/*
-id: String, //The id of the TaskSet
-name: String, //The name for the TaskSet
-tags: [String], //A list of searchable tags
-taskIds: [String], //list of the task ids referenced by this set
-counterbalancingOrder: [Number] //List of the order the tasks should be played
-*/
 
 class EditSetComponent extends Component {
   constructor(props){
@@ -54,7 +43,6 @@ class EditSetComponent extends Component {
   }
 
   onRetrievedSetChildTasks(retrievedObjects){
-    console.log(retrievedObjects);
     this.setState({taskListObjects: retrievedObjects});
   }
 
@@ -94,34 +82,68 @@ class EditSetComponent extends Component {
     });
   }
 
-  //Returns true if the list contains a circular reference
-  willCauseCircularReference(taskID){
-    var outerList = this.state.taskListObjects;
-    //First we iterate over the most outer list
-    for(var i = 0; i < outerList.length; i++){
-      //If it is a set we need to get all the sets referenced by the set
-      if(outerList[i].objType === "TaskSet")
-      {
-        var childSets = this.getChildSetIDs(outerList[i], []);
-        if(childSets.length > 0 && childSets.includes(taskID)) {
-          console.log("Circular dependency detected!");
-          return true;
-        }
-      }
-    }
+  //Returns true if adding the task will result in a circular reference
+  willCauseCircularReference(task){
+    //We only need to check if the task we are adding is a TaskSet
+    if(task.objType === "TaskSet"){
+      //Try to get the data contained in the task set we are trying to add as we need this information to check for a circular reference
+      var query = {id: task._id, objType: task.objType};
+      var queryList = [];
+      queryList.push(query);
+      dbFunctions.getTasksOrTaskSetsWithIDsPromise(queryList).then(result =>{
+        //If the query was successful
+        if(result){
+          //Extract the child set ids of the set we are trying to add as well as the set id
+          var addingTaskChildSets = this.getChildSetIDs(result[0],[result[0]._id]);
 
-    //No circular refeence detected
-    return false;
+          //Check that we are not adding a set containing the set we are editing now
+          if(addingTaskChildSets.includes(this.set._id)){
+            //If we are it would cause a circular reference
+            this.handleAddTaskAllowed(false, task);
+            return;
+          }
+
+          //Get the task set list that is currently being edited
+          var outerList = this.state.taskListObjects;
+
+          //Iterate over the task set being edited and examine all child sets
+          for(var i = 0; i < outerList.legnth; i++){
+            //Only need to check if it is a set
+            if(outerList[i].objType === "TaskSet"){
+              //Extract the child set ids of the set we are trying to add as well as the set id
+              var taskSetChildrenSets = this.getChildSetIDs(outerList[i], []);
+
+              //Check if the set we are adding already references any of these sets
+              for(var z = 0; z < taskSetChildrenSets.length; z++){
+                if(addingTaskChildSets.includes(taskSetChildrenSets[z])){
+                  this.handleAddTaskAllowed(false, task);
+                  return;
+                }
+              }
+            }
+          }
+          //No circular reference detected
+          this.handleAddTaskAllowed(true, task);
+        }
+        //Otherwise we do not add as we don't know if it will be ok
+        else{
+          console.log("Did not add, unable to query the database");
+          this.handleAddTaskAllowed(false, task);
+        }
+      });
+    }
+    else{
+      this.handleAddTaskAllowed(true, task);
+    }
   }
 
   getChildSetIDs(setObject, childSets){
     //Add the object to the list
     childSets.push(setObject._id);
     //Iterate over the sets children
-    console.log(setObject);
     for(var i = 0; i<setObject.data.length; i++){
       if(setObject.data[i].objType === "TaskSet"){
-        this.getChildIDs(setObject.data[i], childSets)
+        this.getChildSetIDs(setObject.data[i], childSets)
       }
     }
     return childSets;
@@ -131,19 +153,25 @@ class EditSetComponent extends Component {
   addTask(task, objType){
     if(this.set._id === task._id){
       console.log("Can't add set to itself. It would result in a circular reference");
-      //TODO give a toast warning that this would result in an infinite experiment
-      return true;
     }
+    //perform a deeper check for circular references. This will in turn add the task if it is ok to do so.
+    this.willCauseCircularReference(task);
+  }
 
-    //if(objType==="Task" || !this.willCauseCircularReference(task._id)){
+  handleAddTaskAllowed(allowed, task){
+    if(allowed){
       var newTasks = [];
-      newTasks.push({id:task._id, objType:objType});
+      newTasks.push({id:task._id, objType:task.objType});
       var updatedTaskList = this.state.taskList.concat(newTasks);
 
       this.set.childIds = updatedTaskList;
       this.setState({taskList:updatedTaskList});
       this.refreshSetChildList();
-    //}
+    }
+    else{
+      //TODO give a toast warning that this would result in an infinite experiment
+      console.log("Not allowed to add task!");
+    }
   }
 
   //Remove a task from the list of tasks in the set
@@ -188,7 +216,6 @@ class EditSetComponent extends Component {
 
   refreshSetChildList(){
     if(this.state.taskList && this.state.taskList.length > 0){
-      //dbFunctions.getTaskSetObject(this.set._id, this.handleRetrieveSetChildTasks);
       dbFunctions.getTasksOrTaskSetsWithIDs(this.state.taskList, this.handleRetrieveSetChildTasks);
     }
     else{ //If the list is empty we clear the list in the state
@@ -262,7 +289,7 @@ class EditSetComponent extends Component {
         <div className="setTaskListContainer">
           <div className="setTaskListTitle"><div className="setTaskListTitleText"> Set Tasks </div></div>
           <div className="setTaskListViewer">
-            < EditSetListComponent reorderDisabled={false} taskListObjects={ this.state.taskListObjects } reactDND={true}
+            < EditSetListComponent removeCallback={this.removeTaskFromListCallback} taskListObjects={this.state.taskListObjects} reactDND={true}
               removeTaskCallback={this.removeTaskFromListCallback} moveTaskCallback={this.moveTaskCallback} / >
           </div>
         </div>
