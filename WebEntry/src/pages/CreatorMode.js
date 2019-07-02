@@ -54,6 +54,7 @@ class CreatorMode extends Component {
 
   //---------------------------component functions------------------------------
   componentWillMount() {
+    //dbFunctions.deleteAllTaskSetsFromDb();
     this.assetViewerQueryDatabase();
   }
 

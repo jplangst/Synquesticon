@@ -56,7 +56,7 @@ class GazeCursor extends React.Component {
   updateCursorLocation(){
     try {
       let gazeLoc = store.getState().gazeData[this.props.tracker];
-
+      console.log("gazeCursor", gazeLoc);
       //Only draw the cursor if it is visible
       if(this.state.visible && this.frameDiv){
         var cursorDiv = document.getElementById("gazeCursorDiv" + this.props.id);

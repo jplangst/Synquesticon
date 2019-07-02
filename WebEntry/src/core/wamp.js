@@ -39,27 +39,27 @@ function startWAMP(config) {
         let gazeRadius = store.default.getState().gazeCursorRadius;
 
         let gazeData = args[1];
-        let gazeX = 0;
-        let gazeY = 0;
+        let gazeX = gazeData[12];
+        let gazeY = gazeData[13];
 
         //Both eyes valid
-        if(!(gazeData[0] < Number.EPSILON) && !(gazeData[3] < Number.EPSILON)){
-          gazeX = (gazeData[1] + gazeData[4])/2;
-          gazeY = (gazeData[2] + gazeData[5])/2;
-        }
-        //Left eye validity
-        else if(!(gazeData[0] < Number.EPSILON)){
-          gazeX = gazeData[1];
-          gazeY = gazeData[2];
-        }
-        //Right eye validity
-        else if(!(gazeData[3] < Number.EPSILON)){
-          gazeX = gazeData[4];
-          gazeY = gazeData[5];
-        }
-        else{
-          return;
-        }
+        // if(!(gazeData[0] < Number.EPSILON) && !(gazeData[3] < Number.EPSILON)){
+        //   gazeX = (gazeData[1] + gazeData[4])/2;
+        //   gazeY = (gazeData[2] + gazeData[5])/2;
+        // }
+        // //Left eye validity
+        // else if(!(gazeData[0] < Number.EPSILON)){
+        //   gazeX = gazeData[1];
+        //   gazeY = gazeData[2];
+        // }
+        // //Right eye validity
+        // else if(!(gazeData[3] < Number.EPSILON)){
+        //   gazeX = gazeData[4];
+        //   gazeY = gazeData[5];
+        // }
+        // else{
+        //   return;
+        // }
 
         let gazeAction = {
           type: 'SET_GAZE_DATA',

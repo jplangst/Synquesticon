@@ -37,34 +37,16 @@ class PlayerMode extends Component {
   }
 
   componentWillMount() {
-    // dbFunctions.addChildToTaskSetDb("5cf103a5a7f0065b10287a95", {
-    //   id: "5ced2f329ea4482e00e63c11",
-    //   objType: "Task"
-    // });
-    //
-    // dbFunctions.addChildToTaskSetDb("5cf103a5a7f0065b10287a95", {
-    //   id: "5cee94ff222586569432db88",
-    //   objType: "TaskSet"
-    // });
-    //
-    // dbFunctions.addChildToTaskSetDb("5cf103a5a7f0065b10287a95", {
-    //   id: "5ced2f969ea4482e00e63c13",
-    //   objType: "Task"
-    // });
-    dbFunctions.getAllTaskSetsFromDb(this.dbTaskSetCallback);
+    dbFunctions.queryTasksFromDb(false, "experiment", this.dbTaskSetCallback);
+    //dbFunctions.getAllTaskSetsFromDb(this.dbTaskSetCallback);
   }
 
   handleChange = name => event => {
     this.setState({ [name]: event.target.value });
   };
 
-  dbTaskSetCallbackFunction(dbQueryResult) {
-    //console.log(dbQueryResult);
-    //5ced2f329ea4482e00e63c11
-    //5ced2f599ea4482e00e63c12
-    //5ced2f969ea4482e00e63c13
-    //set: 5ce55a645ed92d33d4c33a36
-    this.setState({taskSets: dbQueryResult});
+  dbTaskSetCallbackFunction(queryTasks, data) {
+    this.setState({taskSets: data.tasks});
   }
 
   dbTasksCallbackFunction(dbQueryResult) {
@@ -93,27 +75,56 @@ class PlayerMode extends Component {
     dbFunctions.getTasksOrTaskSetsWithIDs(this.state.selectedTaskSet.childIds, this.dbTasksCallback);
   }
 
+  // render() {
+  //   return (
+  //     <div className="page">
+  //       <div className="textinput">
+  //         <TextField
+  //           id="experiment-name"
+  //           label="Experiment"
+  //           value={this.state.experiment}
+  //           onChange={this.handleChange('experiment')}
+  //           margin="normal"
+  //         />
+  //       </div>
+  //       <div className="textinput">
+  //         <TextField
+  //           id="participant-code"
+  //           label="Participant"
+  //           value={this.state.participant}
+  //           onChange={this.handleChange('participant')}
+  //           margin="normal"
+  //         />
+  //       </div>
+  //       <FormControl className="textinput">
+  //         <InputLabel htmlFor="age-simple">Remote Eye Tracker</InputLabel>
+  //         <Select
+  //           value={this.state.selectedTracker}
+  //           onChange={this.handleChange('selectedTracker')}
+  //           input={<FilledInput name="selectedTracker" id="selectedTracker-helper" />}
+  //         >
+  //           {
+  //             store.getState().remoteEyeTrackers.map((item, index) => {
+  //               return <MenuItem value={item} id={index}>{item}</MenuItem>
+  //             })
+  //           }
+  //         </Select>
+  //       </FormControl>
+  //       < TaskListComponent selectedTask={this.state.selectedTaskSet} reorderDisabled={true} reorderID="tasksReorder" taskList={ this.state.taskSets } selectTask={ this.onSelectTaskSet.bind(this) } editable={false}/ >
+  //       <div className="playButtonWrapper">
+  //         <Button onClick={this.onPlayButtonClick.bind(this)}
+  //                 className="playButton" disabled={(!this.state.experiment)||(!this.state.participant)||(!this.state.selectedTaskSet)}>
+  //           <NavigationIcon fontSize="large"/>
+  //         </Button>
+  //       </div>
+  //       <div className="footer">
+  //       </div>
+  //     </div>
+  //     );
+  // }
   render() {
     return (
       <div className="page">
-        <div className="textinput">
-          <TextField
-            id="experiment-name"
-            label="Experiment"
-            value={this.state.experiment}
-            onChange={this.handleChange('experiment')}
-            margin="normal"
-          />
-        </div>
-        <div className="textinput">
-          <TextField
-            id="participant-code"
-            label="Participant"
-            value={this.state.participant}
-            onChange={this.handleChange('participant')}
-            margin="normal"
-          />
-        </div>
         <FormControl className="textinput">
           <InputLabel htmlFor="age-simple">Remote Eye Tracker</InputLabel>
           <Select
@@ -131,7 +142,7 @@ class PlayerMode extends Component {
         < TaskListComponent selectedTask={this.state.selectedTaskSet} reorderDisabled={true} reorderID="tasksReorder" taskList={ this.state.taskSets } selectTask={ this.onSelectTaskSet.bind(this) } editable={false}/ >
         <div className="playButtonWrapper">
           <Button onClick={this.onPlayButtonClick.bind(this)}
-                  className="playButton" disabled={(!this.state.experiment)||(!this.state.participant)||(!this.state.selectedTaskSet)}>
+                  className="playButton" disabled={(!this.state.selectedTaskSet)}>
             <NavigationIcon fontSize="large"/>
           </Button>
         </div>
