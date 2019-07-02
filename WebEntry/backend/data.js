@@ -44,7 +44,7 @@ const TaskSetSchema = new Schema({
     objType: String,
     _id: false
   }], //list of the task ids referenced by this set
-  setTaskOrder: String,
+  setTaskOrder: String, //In Order, Random
   counterbalancingOrder: [Number], //List of the order the tasks should be played
   objType: String
 }, {
