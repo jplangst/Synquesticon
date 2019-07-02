@@ -58,8 +58,8 @@ const ParticipantSchema = new Schema(
     answers: [{
       taskId: String,
       question: String,
-      response: String,
-      correctResponse: String,
+      response: [String],
+      correctResponse: [String],
       startTimestamp: Number, //The start timestamp
       answerTimestamp: Number, //The end timestamp
       aois: [{
