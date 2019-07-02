@@ -13,14 +13,12 @@ import Select from "@material-ui/core/Select";
 import InstructionComponent from './TaskComponents/InstructionComponent';
 import SelectImageComponent from './TaskComponents/SelectImageComponent';
 import TextEntryComponent from './TaskComponents/TextEntryComponent';
-import SingleChoiceComponent from './TaskComponents/SingleChoiceComponent';
 import MultipleChoiceComponent from './TaskComponents/MultipleChoiceComponent';
 
 import './EditTaskComponent.css';
 
 const taskTypeOptions = [
   'Instruction',
-  'Single Choice',
   'Multiple Choice',
   'Text Entry',
   'Image',
@@ -38,7 +36,9 @@ class EditTaskComponent extends Component {
     super(props);
 
     //If we got a taskObject passed as a prop we use it, otherwise we init with a default constructed object
-    this.task = this.props.isEditing ? this.props.taskObject : new dbObjects.TaskObject();
+    this.task = this.props.isEditing ? {...(new dbObjects.TaskObject()), ...this.props.taskObject} : new dbObjects.TaskObject();
+
+    console.log(this.task);
 
     var taskType = "Question";
     var responseType = "Single Choice";
@@ -135,10 +135,7 @@ class EditTaskComponent extends Component {
     var questionTypeContent = null;
     var questionResponseType = null;
 
-    if(this.state.taskType === "Single Choice"){
-      questionTypeContent = <SingleChoiceComponent task={this.task} />;
-    }
-    else if(this.state.taskType === "Multiple Choice"){
+    if(this.state.taskType === "Multiple Choice" || this.state.taskType === "Multiple Choice"){
       questionTypeContent = <MultipleChoiceComponent task={this.task} />;
     }
     else if(this.state.taskType === "Text Entry"){

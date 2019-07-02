@@ -1,11 +1,26 @@
 import React, { Component } from 'react';
+
 import TextField from '@material-ui/core/TextField';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 class MultipleChoiceComponent extends Component {
   constructor(props){
     super(props);
 
+    this.state = {
+      singleChoice: props.task.singleChoice,
+    };
+
     this.responseHandler = this.onResponsesChanged;
+    this.handleSingleChoiceChanged = this.onSingleChoiceChanged.bind(this);
+  }
+
+  onSingleChoiceChanged(e, checked){
+    this.props.task.singleChoice = checked;
+    this.setState({
+      singleChoice: checked,
+    });
   }
 
   onResponsesChanged(e, response, target){
@@ -46,7 +61,7 @@ class MultipleChoiceComponent extends Component {
   }
 
   render() {
-    var multipleChoiceContent =
+    var objectiveResponseContent =
       <div className="questionTypeContainer">
         <TextField label="Question"
           required
@@ -65,7 +80,7 @@ class MultipleChoiceComponent extends Component {
           required
           autoFocus
           margin="dense"
-          style={{marginRight:"10px", width:"calc(50% - 5px)"}}
+          style={{marginRight:"10px", width:"calc(40% - 15px)"}}
           id="responses"
           defaultValue={this.props.task.responses.join(',')}
           placeholder="Response A, Response B, ResponseC"
@@ -77,13 +92,22 @@ class MultipleChoiceComponent extends Component {
           required
           autoFocus
           margin="dense"
-          style={{width:"calc(50% - 5px)"}}
+          style={{marginRight:"10px", width:"calc(40% - 15px)"}}
           id="tags"
           defaultValue={this.props.task.correctResponses.join(',')}
           placeholder="Response A, Response C"
           helperText="The correct responses to the question"
           ref="correctResponseRef"
           onChange={(e)=> this.responseHandler(e, e.target.value, "Correct Responses")}
+        />
+        <FormControlLabel label="Single Choice"
+          value="end"
+          margin="dense"
+          style={{width:"20%"}}
+          checked={this.state.singleChoice}
+          control={<Checkbox style={{width:"50%"}} color="primary" />}
+          onChange={this.handleSingleChoiceChanged}
+          labelPlacement="end"
         />
         <TextField label="Unit"
           autoFocus
@@ -122,7 +146,7 @@ class MultipleChoiceComponent extends Component {
       </div>;
 
     return(
-      multipleChoiceContent
+      objectiveResponseContent
     );
   }
 }
