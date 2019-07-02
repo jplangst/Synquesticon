@@ -1,52 +1,5 @@
 import axios from 'axios';
 
-/////// Examples of database function calls
-
-//dbFunctions.getAllQuestionsFromDb(this.handleAllQuestion);
-
-//this.deleteAllQuestionsFromDb();
-
-// var x = Date();
-// this.addQuestionToDb({
-//   question: "Test question: " + x,
-//   aois: [],
-//   tags: [],
-//   responses: ["first answer", "second answer", "third answer"],
-//   startTimestamp: null,
-//   stopTimestamp: null
-// });
-
-//this.getQuestionWithID("5c49ba4459299152240536c5", () => {});
-
-// this.updateQuestionFromDb("5c49ba4459299152240536c5", {
-//   aois: ["1", "2", "3", "4", "5"]
-// });
-
-//this.deleteQuestionFromDb("5c49ba4659299152240536c6");
-
-// this.addSetToDb({
-//   name: "Third set",
-//   question: []
-// }, (id) => {});
-
-//dbFunctions.getAllSetsFromDb(() => {});
-
-//this.getSetWithID("5c49c48197031d4984fea65c", () => {});
-
-//this.deleteAllSetsFromDb();
-
-// this.updateSetFromDb("5c49c49097031d4984fea65d", {
-//   questions: []
-// });
-
-//this.addQuestionToSetDb("5c49c49097031d4984fea65d", "5c49ba4659299152240536c6");
-
-//this.removeQuestionFromSetDb("5c49c47897031d4984fea65b", "5c49ba4159299152240536c4");
-
-//this.deleteSetFromDb("5c49c48197031d4984fea65c");
-
-//////// END EXAMPLES
-
 // fetch data from our data base
 export function getAllTasksFromDb(callback){
   fetch("/api/getAllTasks")
@@ -252,13 +205,35 @@ export function deleteAllTaskSetsFromDb(){
 };
 
 //the ids can be either task or taskset, the database will do recursive query to query them all
+export function getTaskSetObject(taskSetID, callback) {
+  axios.post("/api/getCompleteTaskSetObject", {
+      objId: JSON.stringify(taskSetID)
+  }).then(response => {
+    console.log("after get task set object", response);
+    callback(response.data.data);
+  });
+};
+
+//the ids can be either task or taskset, the database will do recursive query to query them all
 export function getTasksOrTaskSetsWithIDs(objIds, callback) {
   axios.post("/api/getTasksOrTaskSetsWithIDs", {
       objIds: JSON.stringify(objIds)
   }).then(response => {
-    console.log("after get all tasks or tasksets from set", response);
     callback(response.data.data);
   });
+};
+
+//Async version that can be called in a synch manner using await 
+export async function getTasksOrTaskSetsWithIDsPromise(objIds) {
+    return new Promise((resolve, reject) => {
+      axios.post("/api/getTasksOrTaskSetsWithIDs", {
+        objIds: JSON.stringify(objIds)
+      }).then(response => {
+          resolve(response.data.data);
+      }, (errorResponse) => {
+        reject(errorResponse);
+      });
+  })
 };
 
 export function getImage(filepath, callback){

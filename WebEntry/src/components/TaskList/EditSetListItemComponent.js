@@ -1,9 +1,10 @@
-import React, { Component, Fragment } from 'react';
-import { findDOMNode } from 'react-dom';
+import React, { Component } from 'react';
 import { getEmptyImage } from 'react-dnd-html5-backend'
 import Button from '@material-ui/core/Button';
 import DragIcon from '@material-ui/icons/ControlCamera';
 import DeleteIcon from '@material-ui/icons/Delete';
+
+import * as listUtils from './ListUtilityFunctions';
 
 import CollapsableContainer from '../Containers/CollapsableContainer';
 
@@ -119,12 +120,12 @@ class EditSetListItemComponent extends Component {
   }
 
   removeTask(){
-    var id = this.props.id?this.props.id:this.props.item.id;
+    var id = this.props._id?this.props._id:this.props.item._id;
     this.props.removeCallback(id);
   }
 
   render() {
-    const {  connectDragSource, connectDropTarget, isDragging, isOver } = this.props; //isDragging, connectDragPreview
+    const {  connectDragSource, connectDropTarget, isOver } = this.props; //isDragging, connectDragPreview
 
     var opacity = 1;
     if(isOver){
@@ -171,18 +172,7 @@ class EditSetListItemComponent extends Component {
       var newDepth = this.props.componentDepth + 1;
       var collapsableContent = this.props.item.data.map((data, index) =>
         {
-          var content = null;
-          if(data.objType === "Task"){
-            if(data.taskType === "Question" || data.taskType === "Complex"){
-              content = data.question;
-            }
-            else if(data.taskType === "Instruction"){
-              content = data.instruction;
-            }
-          }
-          else if(data.objType === "TaskSet"){
-            content = data.name;
-          }
+          var content = listUtils.getTaskContent(data);
           return <EditSetListItemComponent key={index} removeCallback={this.props.removeTaskCallback} item={data} content={content} componentDepth={newDepth} />
         }
       );
@@ -209,12 +199,12 @@ class EditSetListItemComponent extends Component {
         </div>;
 
         return (connectDropTarget(<div content={this.props.content} style={{opacity:opacity }}><CollapsableContainer content={this.props.content} classNames="editSetCompContainer" contentClassNames="editSetCompContent" headerComponents={dragSource} open={false}
-          headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={this.props.item.set.name}>
+          headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={this.props.item.name}>
           {collapsableContent}
         </CollapsableContainer></div>));
       }
       return(<CollapsableContainer classNames="editSetCompContainer" contentClassNames="editSetCompContent" headerComponents={dragSource} open={false}
-        headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={this.props.item.set.name}>
+        headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={this.props.item.name}>
         {collapsableContent}
       </CollapsableContainer>);
     }

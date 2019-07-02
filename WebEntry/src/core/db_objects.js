@@ -19,6 +19,7 @@ export class TaskSetObject{
       this.name = "";
       this.tags = [];
       this.childIds = [];
+      this.setTaskOrder = "InOrder";
       this.counterbalancingOrder = [];
       this.objType = "TaskSet";
   }

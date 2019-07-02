@@ -105,13 +105,6 @@ router.post("/addTask", (req, res) => {
   var obj = JSON.parse(message);
   console.log("received obj", obj);
   let task = new Tasks(obj);
-  // let question = new Tasks({
-  //   question: obj.question,
-  //   aois: obj.aois,
-  //   tags: obj.tags,
-  //   responses: obj.responses,
-  //   refSets: []
-  // });
 
   task.save((err, q) => {
     if (err) {
@@ -230,12 +223,94 @@ router.delete("/deleteAllTaskSets", (req, res) => {
   });
 });
 
+router.post("/getCompleteTaskSetObject", async (req, res) => {
+  const { objId } = req.body;
+  const id = JSON.parse(objId);
+
+  var recursion = async function(target) {
+    if (target.objType === "Task") {
+      var taskFromDb = await Tasks.findOne({_id: target.id}, async (err, task) => {
+        return task;
+      });
+
+      return taskFromDb;
+    }
+    else if (target.objType === "TaskSet") {
+      var setData = await TaskSets.findOne({_id: target.id}, async (err, obj) => {
+        return obj;
+      });
+
+      var childs = setData.childIds.map(async item => {
+        var data = await recursion(item);
+        return data;
+      });
+
+      var childrenData = await Promise.all(childs);
+
+      //For some reason the resulting javascript object has a lot of unecessary information so I only extract what we need
+      var setCleanedData = setData._doc;
+      setCleanedData.data = childrenData;
+      return setCleanedData;
+    }
+  }
+
+  var target = {objType: "TaskSet", id: id};
+  const result = await recursion(target);
+  return res.json({success: true, data: result});
+});
+
 router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
   const { objIds } = req.body;
   const ids = JSON.parse(objIds);
 
-  count = 0;
-  len = ids.length;
+  console.log(ids);
+
+  var recursionForArray = async function(targetArray) {
+    const childs = targetArray.map(async item => {
+      const dat = await recursion(item);
+      return dat;
+    });
+    const temp = await Promise.all(childs);
+    return temp;
+  }
+
+  var recursion = async function(target) {
+    if (target.objType === "Task") {
+      var taskFromDb = await Tasks.findOne({_id: target.id}, async (err, task) => {
+        return task;
+      });
+
+      return taskFromDb;
+    }
+    else if (target.objType === "TaskSet") {
+      var setData = await TaskSets.findOne({_id: target.id}, async (err, obj) => {
+        return obj;
+      });
+
+      var childs = setData.childIds.map(async item => {
+        var data = await recursion(item);
+        return data;
+      });
+
+      var childrenData = await Promise.all(childs);
+
+      //For some reason the resulting javascript object has a lot of unecessary information so I only extract what we need
+      var setCleanedData = setData._doc;
+      setCleanedData.data = childrenData;
+      return setCleanedData;
+    }
+  }
+
+  const results = await recursionForArray(ids);
+  return res.json({success: true, data: results});
+});
+
+/* HOAs version
+router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
+  const { objIds } = req.body;
+  const ids = JSON.parse(objIds);
+
+  console.log(ids);
 
   var recursionForArray = async function(targetArray) {
     const childs = targetArray.map(async item => {
@@ -260,46 +335,18 @@ router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
       });
       target.set = fromDB;
       const childs = fromDB.childIds.map(async item => {
-        const task = await Tasks.findOne({_id: item.id}, async (err, obj) => {
-          return obj;
-        });
-        item.data = task;
-        return task;
+        const data = await recursion(item);
+        return data;
       });
       const temp = await Promise.all(childs);
-
       target.data = temp;
-
       return target;
     }
-
   }
 
-  // const fromDB = await TaskSets.findOne({_id: ids[1].id}, async (err, obj) => {
-  //   return obj;
-  // });
-  // console.log("fromDB", fromDB);
-  //
-  // const childs = fromDB.childIds.map(async item => {
-  //   const task = await Tasks.findOne({_id: item.id}, async (err, obj) => {
-  //     return obj;
-  //   });
-  //   return task;
-  // });
-  // const temp = await Promise.all(childs);
-  // console.log("temp", temp);
-  // return res.json({success: true, data: temp});
-
-  const results = await recursionForArray(ids);
-  //console.log("results", results);
+  const results = await Promise.resolve(recursionForArray(ids));
   return res.json({success: true, data: results});
-
-  // Tasks.find({
-  //     '_id': { $in: ids}
-  // }, function(err, objs){
-  //      return res.json({success: true, tasks: objs});
-  // });
-});
+});*/
 
 router.post("/getImage", (req, res) => {
   const { file } = req.body;

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-//import Reorder, {reorderImmutable, reorderFromToImmutable} from 'react-reorder'; //TODO decide if using this or only using the new drag and drop version
 
 import EditSetListItemComponent from './EditSetListItemComponent';
+import * as listUtils from './ListUtilityFunctions';
+
 import './EditSetListComponent.css';
 
 import { DropTarget } from 'react-dnd'
@@ -42,21 +43,7 @@ class EditSetListComponent extends Component {
       <div className="taskListComponentContainer">
         {
           this.taskListObjects.map((item, index) => {
-            var content = null;
-            if(item.objType === "Task"){
-              if(item.data.taskType === "Question" || item.data.taskType === "Complex"){
-                content = item.data.question;
-              }
-              else if(item.data.taskType === "Instruction"){
-                content = item.data.instruction;
-              }
-              else if(item.data.taskType === "Image"){
-                content = item.data.question;
-              }
-            }
-            else if(item.objType === "TaskSet"){
-              content = item.data.name;
-            }
+            var content = listUtils.getTaskContent(item);
 
             return <div className={"editSetListItem "} key={index}><EditSetListItemComponent index={index} item={item} content={content} componentDepth={0}
             handleDrop={this.props.dragDropCallback} removeCallback={this.props.removeTaskCallback} moveTaskCallback={this.props.moveTaskCallback}/></div>
