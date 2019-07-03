@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import * as dbFunctions from '../../core/db_helper';
 import * as dbObjects from '../../core/db_objects';
 
+//Material UI imports
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import InputLabel from "@material-ui/core/InputLabel";
@@ -10,6 +11,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 
+//Component imports
 import InstructionComponent from './TaskComponents/InstructionComponent';
 import SelectImageComponent from './TaskComponents/SelectImageComponent';
 import TextEntryComponent from './TaskComponents/TextEntryComponent';
@@ -24,12 +26,6 @@ const taskTypeOptions = [
   'Image',
 ];
 
-const responseTypeOptions = [
-  'Free text',
-  'Single Choice',
-  'Numerical',
-];
-
 class EditTaskComponent extends Component {
   constructor(props){
     super(props);
@@ -37,15 +33,8 @@ class EditTaskComponent extends Component {
     //If we got a taskObject passed as a prop we use it, otherwise we init with a default constructed object
     this.task = this.props.isEditing ? {...(new dbObjects.TaskObject()), ...this.props.taskObject} : new dbObjects.TaskObject();
 
-    var taskType = "Multiple Choice";
-    if(this.props.taskObject){
-      if(this.props.taskObject.taskType){
-        taskType = this.props.taskObject.taskType;
-      }
-    }
-
     this.state = { //We keep these fields in the state as they affect how the component is rendered
-      taskType: taskType,
+      taskType: this.task.taskType,//taskType,
       task: this.task,
       selectedImage: this.props.taskObject ? this.props.taskObject.image : "",
     };
