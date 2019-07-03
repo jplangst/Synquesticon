@@ -4,12 +4,11 @@ export function getTaskContent(task){
   if(task.objType === "Task"){
     //The set list has a different data structure
     if(task.data){
-
       task = task.data;
     }
 
-    if(task.taskType === "Single Choice" || task.taskType === "Multiple Choice"
-      || task.taskType === "Text Entry" || task.taskType === "Complex"){
+    if(task.taskType === "Multiple Choice" || task.taskType === "Text Entry"
+      || task.taskType === "Single Choice"){
         content = task.question;
     }
     else if(task.taskType === "Instruction"){

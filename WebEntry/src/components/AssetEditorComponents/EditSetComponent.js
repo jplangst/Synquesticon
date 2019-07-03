@@ -9,6 +9,8 @@ import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
+import Snackbar from '@material-ui/core/Snackbar';
+
 import EditSetListComponent from '../TaskList/EditSetListComponent';
 
 import update from 'immutability-helper'
@@ -28,6 +30,7 @@ class EditSetComponent extends Component {
       taskList: this.set.childIds ? this.set.childIds : [],
       taskListObjects: [],
       randomizeSet: this.set.setTaskOrder === "Random" ? true : false,
+      snackbarOpen: false,
     };
 
     this.removeTaskFromListCallback = this.removeTask.bind(this);
@@ -153,9 +156,14 @@ class EditSetComponent extends Component {
   addTask(task, objType){
     if(this.set._id === task._id){
       console.log("Can't add set to itself. It would result in a circular reference");
+      this.setState({
+        snackbarOpen: true
+      });
     }
-    //perform a deeper check for circular references. This will in turn add the task if it is ok to do so.
-    this.willCauseCircularReference(task);
+    else{
+      //perform a deeper check for circular references. This will in turn add the task if it is ok to do so.
+      this.willCauseCircularReference(task);
+    }
   }
 
   handleAddTaskAllowed(allowed, task){
@@ -169,9 +177,18 @@ class EditSetComponent extends Component {
       this.refreshSetChildList();
     }
     else{
+      this.setState({
+        snackbarOpen: true
+      });
       //TODO give a toast warning that this would result in an infinite experiment
       console.log("Not allowed to add task!");
     }
+  }
+
+  handleCloseSnackbar(event, reason) {
+    this.setState({
+      snackbarOpen: false
+    });
   }
 
   //Remove a task from the list of tasks in the set
@@ -303,6 +320,21 @@ class EditSetComponent extends Component {
             {this.props.isEditing ? "Edit" : "Create"}
           </Button>
         </div>
+
+        <Snackbar
+        style = {{bottom: 120}}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        open={this.state.snackbarOpen}
+        onClose={this.handleCloseSnackbar.bind(this)}
+        autoHideDuration={2000}
+        ContentProps={{
+          'aria-describedby': 'message-id',
+        }}
+        message={<span id="message-id">Illegal Action: Adding set would cause a circular reference!</span>}
+      />
       </div>
     );
   }
