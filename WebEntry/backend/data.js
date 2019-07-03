@@ -16,10 +16,10 @@ const TaskSchema = new Schema(
     id: String, //The id of the Task
     taskType: String, //The type of the task
     question: String, //Used if the task type is "Text Entry" and "Choice" //it's the body
-    singleChoice: Boolean, //Used if the task type is "Choice/Objective Response"
+    //singleChoice: Boolean, //Used if the task type is "Choice/Objective Response"
     instruction: String,
     image: String, //filepath
-    responseType: String, //Determines the response type of the Task e.g. "Multiple choice", "Single choice"
+    //responseType: String, //Determines the response type of the Task e.g. "Multiple choice", "Single choice"
     aois: [{
       name: String,
       boundingbox: [[Number]],

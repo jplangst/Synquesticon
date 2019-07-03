@@ -21,6 +21,7 @@ class MultipleChoiceComponent extends Component {
     this.setState({
       singleChoice: checked,
     });
+    this.props.singleChoiceCallback(checked);
   }
 
   onResponsesChanged(e, response, target){

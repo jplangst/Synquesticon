@@ -8,7 +8,7 @@ export function getTaskContent(task){
     }
 
     if(task.taskType === "Multiple Choice" || task.taskType === "Text Entry"
-      || task.taskType === "Complex"){
+      || task.taskType === "Single Choice"){
         content = task.question;
     }
     else if(task.taskType === "Instruction"){

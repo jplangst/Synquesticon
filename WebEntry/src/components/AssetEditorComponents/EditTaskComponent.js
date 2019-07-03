@@ -22,7 +22,6 @@ const taskTypeOptions = [
   'Multiple Choice',
   'Text Entry',
   'Image',
-  'Complex'
 ];
 
 const responseTypeOptions = [
@@ -38,22 +37,15 @@ class EditTaskComponent extends Component {
     //If we got a taskObject passed as a prop we use it, otherwise we init with a default constructed object
     this.task = this.props.isEditing ? {...(new dbObjects.TaskObject()), ...this.props.taskObject} : new dbObjects.TaskObject();
 
-    console.log(this.task);
-
-    var taskType = "Question";
-    var responseType = "Single Choice";
+    var taskType = "Multiple Choice";
     if(this.props.taskObject){
       if(this.props.taskObject.taskType){
         taskType = this.props.taskObject.taskType;
-      }
-      if(this.props.taskObject.responseType){
-        responseType = this.props.taskObject.responseType;
       }
     }
 
     this.state = { //We keep these fields in the state as they affect how the component is rendered
       taskType: taskType,
-      responseType: responseType,
       task: this.task,
       selectedImage: this.props.taskObject ? this.props.taskObject.image : "",
     };
@@ -73,7 +65,6 @@ class EditTaskComponent extends Component {
 
   onChangeTaskSettings(){
     this.task.taskType = this.state.taskType;
-    this.task.responseType = this.state.responseType;
 
     if(this.props.isEditing){
       dbFunctions.updateTaskFromDb(this.task._id, this.task, this.handleQuestionCallback);
@@ -131,121 +122,20 @@ class EditTaskComponent extends Component {
     this.props.closeTaskCallback(componentChanged);
   }
 
+  //Called from the MultipleChoice component when the user interacts with the single choice checkbox //TODO this and the related changes are a hack. Not a good solution
+  onSingleChoiceChanged(singleChoice){
+    this.setState({
+      taskType: singleChoice ? "Single Choice" : "Multiple Choice",
+    });
+  }
+
   render() {
     var questionTypeContent = null;
-    var questionResponseType = null;
-
-    if(this.state.taskType === "Multiple Choice" || this.state.taskType === "Multiple Choice"){
-      questionTypeContent = <MultipleChoiceComponent task={this.task} />;
+    if(this.state.taskType === "Single Choice" || this.state.taskType === "Multiple Choice"){
+      questionTypeContent = <MultipleChoiceComponent singleChoiceCallback={this.onSingleChoiceChanged.bind(this)} task={this.task} />;
     }
     else if(this.state.taskType === "Text Entry"){
       questionTypeContent = <TextEntryComponent task={this.task} />;
-    }
-    else if(this.state.taskType === "Complex"){ //TODO remove the Complex type and add an option to add image to the other tasks
-      questionResponseType =
-      <FormControl className="formControl">
-        <InputLabel htmlFor="ResponseType">Response Type</InputLabel>
-        <Select
-          value={this.state.responseType}
-          onChange={this.handleChange}
-          fullWidth
-          inputProps={{
-            name: "responseType",
-            id: "ResponseType"
-          }}
-        >
-        {
-          responseTypeOptions.map((responseTypeOption) => {
-            return <MenuItem key={responseTypeOption} value={responseTypeOption}>{responseTypeOption}</MenuItem>
-          })
-        }
-        </Select>
-      </FormControl>;
-
-      questionTypeContent =
-      <div className="questionTypeContainer">
-        <TextField
-          required
-          autoFocus
-          margin="dense"
-          fullWidth
-          id="questionText"
-          defaultValue={this.task.question}
-          placeholder="What is your favorite colour? What is thy quest? What is the air speed velocity of a Swallow? What do you mean? Is it an African Swallow or a European Swallow?"
-          label="Question"
-          ref="questionTextRef"
-          multiline
-          rows="3"
-          onChange={(e)=>{this.task.question = e.target.value}}
-        />
-
-        {questionResponseType}
-
-        <TextField
-          required
-          autoFocus
-          margin="dense"
-          style={{marginRight:"10px", width:"48%"}}
-          id="responses"
-          defaultValue={this.task.responses.join(',')}
-          placeholder="Arrrrrghhhhh, Castle Arrrrrghhh"
-          helperText="Question responses seperated by a comma"
-          label="Responses"
-          ref="responsesRef"
-          onChange={(e)=> this.responseHandler(e, e.target.value, "Responses")}
-        />
-        <TextField
-          autoFocus
-          margin="dense"
-          style={{width:"48%"}}
-          id="unit"
-          defaultValue={this.task.responseUnit}
-          placeholder="%"
-          helperText="The unit of the responses if they are numerical"
-          label="Unit"
-          ref="unitRef"
-          onChange={(e)=> this.task.responseUnit = e.target.value}
-        />
-        <TextField
-          required
-          autoFocus
-          margin="dense"
-          style={{marginRight:"10px", width:"48%"}}
-          id="tags"
-          defaultValue={this.task.correctResponses.join(',')}
-          placeholder="What do you mean? Is it an African swallow or a European swallow?"
-          helperText="The correct answer to the question"
-          label="Correct Answers"
-          ref="answerRef"
-          onChange={(e)=> this.responseHandler(e, e.target.value, "Answers")}
-        />
-        <TextField
-          required
-          autoFocus
-          margin="dense"
-          style={{width:"48%"}}
-          id="tags"
-          defaultValue={this.task.tags.join(',')}
-          placeholder="SillyWalks, Swallows"
-          helperText="Tags seperated by a comma"
-          label="Tags"
-          ref="tagsRef"
-          onChange={(e)=> this.responseHandler(e, e.target.value, "Tags")}
-        />
-        <TextField
-          autoFocus
-          margin="dense"
-          style={{width:"calc(96% + 10px)"}}
-          id="aoisText"
-          defaultValue={this.task.aois.join(',')}
-          placeholder="Screen A, Screen B"
-          helperText="AOIs seperated by a comma"
-          label="AOIs"
-          ref="aoisTextRef"
-          fullWidth
-          onChange={(e)=> this.responseHandler(e, e.target.value, "AOIs")}
-        />
-        </div>;
     }
 
     var instructionTypeContent = (this.state.taskType === "Instruction" || this.state.taskType === "Complex") ?
@@ -254,12 +144,10 @@ class EditTaskComponent extends Component {
     var imageTypeContent = (this.state.taskType === "Image" || this.state.taskType === "Complex") ?
                                     <SelectImageComponent task={this.task} /> : null;
 
-    var deleteTaskBtn = null;
-    if(this.props.isEditing){
-      deleteTaskBtn = <Button onClick={this.removeTask.bind(this)} color="primary">
-        Delete Task
-        </Button>;
-    }
+    var deleteTaskBtn = this.props.isEditing ?
+      <Button onClick={this.removeTask.bind(this)} color="primary">Delete Task </Button> : null;
+
+    var value = this.state.taskType === "Single Choice" ? "Multiple Choice" : this.state.taskType;
 
     return(
       <div className="componentContainer">
@@ -267,7 +155,7 @@ class EditTaskComponent extends Component {
             <FormControl className="formControl">
               <InputLabel htmlFor="TaskType">Task Type</InputLabel>
               <Select
-                value={this.state.taskType}
+                value={value}
                 onChange={this.handleChange}
                 style={{width:"96%",marginRight:"10px"}}
                 inputProps={{
