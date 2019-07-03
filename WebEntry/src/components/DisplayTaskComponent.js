@@ -9,7 +9,9 @@ import NavigationIcon from '@material-ui/icons/NavigateNext';
 
 //view components
 import InstructionViewComponent from './Views/InstructionViewComponent';
-import QuestionViewComponent from './Views/QuestionViewComponent';
+import TextEntryComponent from './Views/TextEntryComponent';
+import SingleChoiceComponent from './Views/SingleChoiceComponent';
+import MultipleChoiceComponent from './Views/MultipleChoiceComponent';
 import ImageViewComponent from './Views/ImageViewComponent';
 
 import wamp from '../core/wamp';
@@ -160,9 +162,15 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
                   (this.currentTask.taskType === "Complex" && this.state.complexStep === 0)) {
                 return <InstructionViewComponent task={this.currentTask}/>;
               }
-            if((this.currentTask.taskType === "Question") ||
+            if((this.currentTask.taskType === "Text Entry") {
+                return <TextEntryComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} hasBeenAnswered={this.state.hasBeenAnswered}/>;
+              }
+            if((this.currentTask.taskType === "Single Choice") {
+                return <SingleChoiceComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} hasBeenAnswered={this.state.hasBeenAnswered}/>;
+              }
+            if((this.currentTask.taskType === "Multiple Choice") ||
                   (this.currentTask.taskType === "Complex" && this.state.complexStep === 2)) {
-                return <QuestionViewComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} hasBeenAnswered={this.state.hasBeenAnswered}/>;
+                return <MultipleChoiceComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} hasBeenAnswered={this.state.hasBeenAnswered}/>;
               }
             if((this.currentTask.taskType === "Image") ||
                   (this.currentTask.taskType === "Complex" && this.state.complexStep === 1)) {

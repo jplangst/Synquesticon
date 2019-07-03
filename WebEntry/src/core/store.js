@@ -4,6 +4,8 @@ const initialState = {
   remoteEyeTrackers: [],
   gazeCursorRadius: 0,
   gazeData: {},
+  showHeader: true,
+  showFooter: true,
   experimentInfo: null
   // experimentId: this.state.experiment,
   // partiticipantId: this.state.participant,
@@ -25,6 +27,9 @@ const store = createStore ((state = initialState, action) => {
     }
     case 'SET_EXPERIMENT_INFO': {
       return { ...state, experimentInfo: action.experimentInfo}
+    }
+    case 'SET_SHOW_HEADER_FOOTER': {
+      return { ...state, showHeader: action.showHeader, showFooter: action.showFooter}
     }
     default:
       return state;

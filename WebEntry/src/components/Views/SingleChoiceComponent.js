@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 
 import Button from '@material-ui/core/Button';
 
-import './QuestionViewComponent.css';
+import './SingleChoiceComponent.css';
 
-class QuestionViewComponent extends Component {
+class SingleChoiceComponent extends Component {
   constructor() {
     super();
     this.state = {
@@ -43,4 +43,4 @@ class QuestionViewComponent extends Component {
   }
 }
 
-export default QuestionViewComponent;
+export default SingleChoiceComponent;
