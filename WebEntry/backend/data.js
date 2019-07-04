@@ -7,7 +7,7 @@ objType: Task, TaskSet
 */
 
 /*
-taskType: Instruction, Text Entry, Multiple Choice, Image, Complex
+taskType: Instruction, Text Entry, Multiple Choice, Image
 */
 
 // this will be our data base's data structure
@@ -16,10 +16,9 @@ const TaskSchema = new Schema(
     id: String, //The id of the Task
     taskType: String, //The type of the task
     question: String, //Used if the task type is "Text Entry" and "Choice" //it's the body
-    //singleChoice: Boolean, //Used if the task type is "Choice/Objective Response"
+    globalVariable: Boolean, //If true the response of the task should be stored as a global var in the participant DB object
     instruction: String,
     image: String, //filepath
-    //responseType: String, //Determines the response type of the Task e.g. "Multiple choice", "Single choice"
     aois: [{
       name: String,
       boundingbox: [[Number]],

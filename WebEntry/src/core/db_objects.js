@@ -2,10 +2,9 @@ export class TaskObject{
   constructor(){
       this.taskType = "Multiple Choice";
       this.question = "";
-      this.singleChoice = false;
+      this.globalVariable = false;
       this.instruction = "";
       this.image = "";
-      //this.responseType = "Single Choice";
       this.aois = [];
       this.tags = [];
       this.responses = [];

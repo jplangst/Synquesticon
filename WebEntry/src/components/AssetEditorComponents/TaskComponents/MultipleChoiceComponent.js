@@ -10,10 +10,12 @@ class MultipleChoiceComponent extends Component {
 
     this.state = {
       singleChoice: props.task.singleChoice,
+      globalVariable: props.task.globalVariable,
     };
 
     this.responseHandler = this.onResponsesChanged;
     this.handleSingleChoiceChanged = this.onSingleChoiceChanged.bind(this);
+    this.handleGlobalVariableChanged = this.onGlobalVariableChanged.bind(this);
   }
 
   onSingleChoiceChanged(e, checked){
@@ -22,6 +24,13 @@ class MultipleChoiceComponent extends Component {
       singleChoice: checked,
     });
     this.props.singleChoiceCallback(checked);
+  }
+
+  onGlobalVariableChanged(e, checked){
+    this.props.task.globalVariable = checked;
+    this.setState({
+      globalVariable: checked,
+    });
   }
 
   onResponsesChanged(e, response, target){
@@ -143,6 +152,15 @@ class MultipleChoiceComponent extends Component {
           ref="aoisTextRef"
           fullWidth
           onChange={(e)=> this.responseHandler(e, e.target.value, "AOIs")}
+        />
+        <FormControlLabel label="Treat Response as Global Variable"
+          value="end"
+          margin="dense"
+          style={{width:"50%"}}
+          checked={this.state.globalVariable}
+          control={<Checkbox style={{width:"50px"}} color="primary" />}
+          onChange={this.handleGlobalVariableChanged}
+          labelPlacement="end"
         />
       </div>;
 

@@ -1,11 +1,27 @@
 import React, { Component } from 'react';
+
 import TextField from '@material-ui/core/TextField';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 class TextEntryComponent extends Component {
   constructor(props){
     super(props);
 
+    this.state = {
+      globalVariable: props.task.globalVariable,
+    };
+
     this.responseHandler = this.onResponsesChanged;
+
+    this.handleGlobalVariableChanged = this.onGlobalVariableChanged.bind(this);
+  }
+
+  onGlobalVariableChanged(e, checked){
+    this.props.task.globalVariable = checked;
+    this.setState({
+      globalVariable: checked,
+    });
   }
 
   onResponsesChanged(e, response, target){
@@ -88,6 +104,15 @@ class TextEntryComponent extends Component {
           helperText="Tags seperated by a comma"
           ref="tagsRef"
           onChange={(e)=> this.responseHandler(e, e.target.value, "Tags")}
+        />
+        <FormControlLabel label="Treat Response as Global Variable"
+          value="end"
+          margin="dense"
+          style={{width:"50%"}}
+          checked={this.state.globalVariable}
+          control={<Checkbox style={{width:"50px"}} color="primary" />}
+          onChange={this.handleGlobalVariableChanged}
+          labelPlacement="end"
         />
       </div>;
 
