@@ -52,21 +52,48 @@ const TaskSetSchema = new Schema({
 });
 
 const ParticipantSchema = new Schema(
-  {
+{
     readableId: String,
-    taskSetId: String,
+    mainTaskSetId: String,
     eyeData: String,
-    answers: [{
+    linesOfData: [{
+      taskSetNames: [String],
       taskId: String,
       question: String,
-      response: [String],
-      correctResponse: [String],
+      responses: [String],
+      correctResponses: [String],
+      /* correctlyAnswered:
+      1. If the participant answers correctly, we log it as “correct”.
+      2. If the participant answers incorrectly, we log it as “incorrect”.
+      3. If no correct answer was provided (i.e. the field “correct answer” in the editor is empty), we log it as “notApplicable”.
+      4. If the participant clicked “skip”, we log it as “skipped”, regardless of (3).
+      */
+      correctlyAnswered: String,
+
       startTimestamp: Number, //The start timestamp
-      answerTimestamp: Number, //The end timestamp
-      aois: [{
+      /*
+      raw timestamp for every response
+      */
+      firstResponseTimestamp: Number, //The end timestamp
+      /* timeToFirstAnswer
+      time from when the question was presented to first input
+      - for buttons: to when first button is pressed
+      - for text entry: to when first letter is entered ("oninput")
+      */
+      timeToFirstAnswer: Number,
+      /* timeToCompletion
+      time from when the question was presented to clicking "next"
+      In case of "skipped", we leave (1) empty and log (2) as time to pressing "skip".
+      */
+      timeToCompletion: Number,
+      aoiCheckedList: [{
         label: String,
         checked: Boolean
       }]
+    }],
+    globalVariables: [{
+      label: String,
+      value: [String]
     }]
   }, {
     collection: 'Participants'

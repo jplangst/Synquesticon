@@ -9,26 +9,36 @@ import './TextEntryComponent.css';
 class TextEntryComponent extends Component {
   constructor() {
     super();
-    this.state = {
-      answerItem : "",
-      hasBeenAnswered: false,
-      textEntry: ""
+    this.textEntry = "";
+  }
+
+  reset() {
+    if (!this.props.hasBeenAnswered) {
+      this.textEntry = "";
     }
   }
 
-  onAnswer(response) {
-    this.setState({
-      answerItem: response,
-      hasBeenAnswered: true
-    });
-    this.props.answerCallback(response);
+  checkAnswer() {
+    if (this.props.task.correctResponses === undefined || this.props.task.correctResponses.length == 0) {
+      return "notApplicable";
+    }
+
+    if (this.props.task.correctResponses.includes(this.textEntry)) {
+      return "correct";
+    }
+    return "incorrect";
   }
 
-  onHandleChange() {
-
+  onAnswer() {
+    var answerObj = {
+      responses: [this.textEntry],
+      correctlyAnswered: this.checkAnswer()
+    }
+    this.props.answerCallback(answerObj);
   }
 
   render() {
+    this.reset();
     return (
       <div>
         <div className="questionDisplay">
@@ -37,10 +47,12 @@ class TextEntryComponent extends Component {
         <div className="responsesButtons">
         <TextField
           id="outlined-name"
-          label="Name"
           className="textField"
-          value={this.state.textEntry}
-          onChange={this.onHandleChange.bind(this)}
+          value={this.textEntry}
+          onChange={(e)=>{
+            this.textEntry = e.target.value;
+            this.onAnswer();
+          }}
           margin="normal"
           variant="outlined"
         />

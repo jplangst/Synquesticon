@@ -7,21 +7,37 @@ import './SingleChoiceComponent.css';
 class SingleChoiceComponent extends Component {
   constructor() {
     super();
-    this.state = {
-      answerItem : "",
-      hasBeenAnswered: false
+    this.pickedItem = null;
+  }
+
+  reset() {
+    if (!this.props.hasBeenAnswered) {
+      this.pickedItem = null;
     }
   }
 
+  checkAnswer() {
+    if (this.props.task.correctResponses === undefined || this.props.task.correctResponses.length == 0) {
+      return "notApplicable";
+    }
+
+    if (this.props.task.correctResponses.includes(this.pickedItem)) {
+      return "correct";
+    }
+    return "incorrect";
+  }
+
   onAnswer(response) {
-    this.setState({
-      answerItem: response,
-      hasBeenAnswered: true
-    });
-    this.props.answerCallback(response);
+    this.pickedItem = response;
+    var answerObj = {
+      responses: [this.pickedItem],
+      correctlyAnswered: this.checkAnswer()
+    }
+    this.props.answerCallback(answerObj);
   }
 
   render() {
+    this.reset();
     return (
       <div>
         <div className="questionDisplay">
@@ -30,9 +46,9 @@ class SingleChoiceComponent extends Component {
         <div className="responsesButtons">
           {
             this.props.task.responses.map((item, index)=>{
-              if (item === this.props.answerItem) {
+              if (item === this.pickedItem) {
                 return (
-                  <Button variant="contained" className="picked" disabled={this.props.hasBeenAnswered} onClick={() => this.onAnswer(item)}>{item}</Button>)
+                  <Button variant="contained" className="picked" color="primary" disabled={this.props.hasBeenAnswered} onClick={() => this.onAnswer(item)}>{item}</Button>)
               }
               return (<Button variant="contained" className="picked" disabled={this.props.hasBeenAnswered} onClick={() => this.onAnswer(item)}>{item}</Button>);
             })

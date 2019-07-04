@@ -1,5 +1,9 @@
 import axios from 'axios';
 
+/******************************************************
+                      TASK FUNCTIONS
+*******************************************************/
+
 // fetch data from our data base
 export function getAllTasksFromDb(callback){
   fetch("/api/getAllTasks")
@@ -110,6 +114,9 @@ export function deleteAllTasksFromDb(){
   axios.delete("/api/deleteAllTasks");
 };
 
+/******************************************************
+                    TASK SET FUNCTIONS
+*******************************************************/
 export function getAllTaskSetsFromDb(callback){
   fetch("/api/getAllTaskSets")
     .then((response) => {
@@ -223,7 +230,7 @@ export function getTasksOrTaskSetsWithIDs(objIds, callback) {
   });
 };
 
-//Async version that can be called in a synch manner using await 
+//Async version that can be called in a synch manner using await
 export async function getTasksOrTaskSetsWithIDsPromise(objIds) {
     return new Promise((resolve, reject) => {
       axios.post("/api/getTasksOrTaskSetsWithIDs", {
@@ -245,7 +252,9 @@ export function getImage(filepath, callback){
   });
 }
 
-//----------------------experiments-----------------------
+/******************************************************
+                  EXPERIMENT FUNCTIONS
+*******************************************************/
 export function getAllExperimentsFromDb(callback){
   fetch("/api/getAllExperiments")
     .then((response) => {
@@ -265,7 +274,9 @@ export function getAllExperimentsFromDb(callback){
     });
 };
 
-//---------------------participants-----------------------
+/******************************************************
+      PARTICIPANT FUNCTIONS (OR LOGGING FUNCTIONS)
+*******************************************************/
 export function getAllParticipantsFromDb(callback){
   fetch("/api/getAllParticipants")
     .then((response) => {
@@ -283,4 +294,33 @@ export function getAllParticipantsFromDb(callback){
     .catch((error) => {
       console.log(error)
     });
+};
+
+export function addParticipantToDb(obj, callback){
+  axios.post("/api/addParticipant", {
+    message: JSON.stringify(obj)
+  })
+  .then((response) => {
+    if(response.status === 200) {
+      callback(response.data._id);
+    }
+    else {
+      alert("Something's wrong! Cannot log the current run into database.");
+      throw new Error("Cannot log data");
+    }
+  });
+};
+
+export function addNewLineToParticipantDB(participantId, newLineJSON){
+  axios.post("/api/addNewLineToParticipant", {
+    participantId: participantId,
+    newLineJSON: newLineJSON //please stringify before calling this function
+  }).then(data => {console.log("after adding new line to set", data)});
+};
+
+export function addNewGlobalVariableToParticipantDB(participantId, globalVariableJSON){
+  axios.post("/api/addNewGlobalVariableToParticipant", {
+    participantId: participantId,
+    globalVariableJSON: globalVariableJSON //please stringify before calling this function
+  }).then(data => {console.log("after adding new line to set", data)});
 };

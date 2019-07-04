@@ -305,49 +305,6 @@ router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
   return res.json({success: true, data: results});
 });
 
-/* HOAs version
-router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
-  const { objIds } = req.body;
-  const ids = JSON.parse(objIds);
-
-  console.log(ids);
-
-  var recursionForArray = async function(targetArray) {
-    const childs = targetArray.map(async item => {
-      const dat = await recursion(item);
-      return dat;
-    });
-    const temp = await Promise.all(childs);
-    return temp;
-  }
-
-  var recursion = async function(target) {
-    if (target.objType === "Task") {
-      const taskFromDb = await Tasks.findOne({_id: target.id}, async (err, task) => {
-        return task;
-      });
-      target.data = taskFromDb;
-      return target;
-    }
-    else if (target.objType === "TaskSet") {
-      const fromDB = await TaskSets.findOne({_id: target.id}, async (err, obj) => {
-        return obj;
-      });
-      target.set = fromDB;
-      const childs = fromDB.childIds.map(async item => {
-        const data = await recursion(item);
-        return data;
-      });
-      const temp = await Promise.all(childs);
-      target.data = temp;
-      return target;
-    }
-  }
-
-  const results = await Promise.resolve(recursionForArray(ids));
-  return res.json({success: true, data: results});
-});*/
-
 router.post("/getImage", (req, res) => {
   const { file } = req.body;
   var filepath = "../public/Images/" + file;
@@ -403,7 +360,7 @@ router.post("/getParticipantsWithIDs", (req, res) => {
   });
 });
 
-// this method adds new question in our database
+// this method adds new participant (or log a new run) into our database
 router.post("/addParticipant", (req, res) => {
   const { message } = req.body;
   var obj = JSON.parse(message);
@@ -417,7 +374,6 @@ router.post("/addParticipant", (req, res) => {
   });
 });
 
-// this method modifies existing question in our database
 router.post("/updateParticipant", (req, res) => {
   const { id, message } = req.body;
   var obj = JSON.parse(message);
@@ -427,15 +383,24 @@ router.post("/updateParticipant", (req, res) => {
   });
 });
 
-router.post("/addAnswerToParticipant", (req, res) => {
-  const { participantId, answer} = req.body;
-  Participants.updateOne({_id: participantId}, { $addToSet: {answers: answer}}, err => {
+router.post("/addNewLineToParticipant", (req, res) => {
+  const { participantId, newLineJSON} = req.body;
+  var newLine = JSON.parse(newLineJSON);
+  Participants.updateOne({_id: participantId}, { $addToSet: {linesOfData: newLine}}, err => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
   });
 });
 
-// this method deletes existing question in our database
+router.post("/addNewGlobalVariableToParticipant", (req, res) => {
+  const { participantId, globalVariableJSON} = req.body;
+  var globalVariable = JSON.parse(globalVariableJSON);
+  Participants.updateOne({_id: participantId}, { $addToSet: {globalVariables: globalVariable}}, err => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true });
+  });
+});
+
 router.post("/deleteParticipant", (req, res) => {
   const { id } = req.body;
 
@@ -446,9 +411,6 @@ router.post("/deleteParticipant", (req, res) => {
     if (err) return res.send(err);
     return res.json({ success: true });
   });
-
-  //remove this question from all sets
-
 });
 
 router.delete("/deleteAllParticipants", (req, res) => {
@@ -491,7 +453,6 @@ router.post("/addExperiment", (req, res) => {
   });
 });
 
-// this method modifies existing question in our database
 router.post("/updateExperiment", (req, res) => {
   const { id, message } = req.body;
   var obj = JSON.parse(message);
@@ -517,7 +478,6 @@ router.post("/removeParticipantFromExperiment", (req, res) => {
   })
 });
 
-// this method deletes existing question in our database
 router.post("/deleteExperiment", (req, res) => {
   const { id } = req.body;
   Experiments.findOneAndDelete({_id: id}, err => {

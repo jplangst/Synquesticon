@@ -16,21 +16,73 @@ import ImageViewComponent from './Views/ImageViewComponent';
 
 import wamp from '../core/wamp';
 import store from '../core/store';
+import shuffle from '../core/shuffle';
+
+import * as dbFunctions from '../core/db_helper';
+import * as dbObjects from '../core/db_objects';
 
 import './DisplayTaskComponent.css';
+
+function getCurrentTime() {
+  var dt = new Date();
+  return dt.getTime();
+}
+
+function stringifyWAMPMessage(obj, timestamp, type) {
+  if (type == "START") {
+    var message = "";
+    if (obj.taskType === "Instruction") {
+      message = "Instruction: " + obj.instruction;
+    }
+    else if (obj.taskType  === "Multiple Choice")  {
+      message = "Multiple Choice Question: " + obj.question;
+    }
+    else if (obj.taskType === "Single Choice") {
+      message = "Single Choice Question: " + obj.question;
+    }
+    else if (obj.taskType  === "Image") {
+      message = "Display Image: " + obj.image;
+    }
+    else if (obj.taskType === "Complex") {
+      message = "Complex Task: " + obj.instruction;
+    }
+    //displayText = "Experiment " + args[1] + "- Participant " + args[2] + ": " + args[3] + ". Start at: " + args[4];
+    return ["START",
+                message,
+                timestamp,
+                store.getState().experimentInfo.selectedTracker];
+  }
+  else if (type == "NEXT") {
+    // displayText = "Experiment " + args[1] + "- Participant " + args[2] + ": " + args[3] + " - Answer at: " + args[4]
+    //               + " Response time: " + args[5] + ". " + answerStatus;
+    return ["ANSWERED",
+                obj.question,
+                obj.firstResponseTimestamp,
+                obj.timeToFirstAnswer,
+                obj.timeToCompletion,
+                obj.responses,
+                obj.correctlyAnswered,
+                obj.aoiCheckedList];
+  }
+  else if (type == "SKIP") {
+    return ["SKIPPED",
+                obj.question,
+                obj.timeToCompletion];
+  }
+  return null;
+}
 
 class DisplayTaskHelper extends React.Component { //for the fking sake of recursion
   constructor() {
     super();
     this.state = {
       currentTaskIndex: 0,
-      answerItem: null,
       hasBeenAnswered: false,
       complexStep: 0 //for complex tasks only
     }
 
     this.currentTask = null;
-    this.startTimestamp = 0;
+    this.currentLineOfData = null;
 
     this.handleGazeLocUpdate = this.updateCursorLocation.bind(this);
   }
@@ -41,57 +93,22 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 
   componentWillUnmount() {
     clearInterval(this.timer);
-    var layourAction = {
-      type: 'SET_SHOW_HEADER_FOOTER',
+    var layoutAction = {
+      type: 'SET_SHOW_HEADER',
       showHeader: true,
       showFooter: true
     }
 
-    store.dispatch(layourAction);
+    store.dispatch(layoutAction);
   }
 
-  broadcastStartEvent() {
-    var dt = new Date();
-    this.startTimestamp = dt.getTime();
-    var timestamp = dt.toUTCString();
-    var message = "";
-    if (this.currentTask.taskType === "Instruction") {
-      message = "Instruction: " + this.currentTask.instruction;
-    }
-    else if (this.currentTask.taskType  === "Question") {
-      message = "Question: " + this.currentTask.question;
-    }
-    else if (this.currentTask.taskType  === "Image") {
-      message = "Display Image: " + this.currentTask.image;
-    }
-    else if (this.currentTask.taskType === "Complex") {
-      message = "Complex Task: " + this.currentTask.instruction;
-    }
-    //displayText = "Experiment " + args[1] + "- Participant " + args[2] + ": " + args[3] + ". Start at: " + args[4];
-    var info = ["START",
-                store.getState().experimentInfo.experimentId,
-                store.getState().experimentInfo.participantId,
-                message,
-                timestamp,
-                store.getState().experimentInfo.selectedTracker];
-    wamp.broadcastEvents(info);
-  }
+  logStartOfTask() {
+    var startTimestamp = getCurrentTime();
+    this.currentLineOfData = new dbObjects.LineOfData(this.props.taskSetNames,
+                                                      startTimestamp,
+                                                      this.currentTask);
 
-  broadcastAnswerEvent(answerObj) {
-    var dt = new Date();
-    var timestamp = dt.toUTCString();
-    // displayText = "Experiment " + args[1] + "- Participant " + args[2] + ": " + args[3] + " - Answer at: " + args[4]
-    //               + " Response time: " + args[5] + ". " + answerStatus;
-    var info = ["ANSWER",
-                store.getState().experimentInfo.experimentId,
-                store.getState().experimentInfo.participantId,
-                this.currentTask.question,
-                timestamp,
-                dt.getTime() - this.startTimestamp,
-                answerObj.answer,
-                answerObj.isCorrect,
-                this.currentTask.aois];
-    wamp.broadcastEvents(info);
+    wamp.broadcastEvents(stringifyWAMPMessage(this.currentTask, startTimestamp, "START"));
   }
 
   updateCursorLocation(){
@@ -116,41 +133,65 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
       })
     }
     else {
+      if (this.currentLineOfData) {
+        if (!this.currentTask.globalVariable) {
+          this.currentLineOfData.timeToCompletion = getCurrentTime();
+          dbFunctions.addNewLineToParticipantDB(store.getState().experimentInfo.participantId, JSON.stringify(this.currentLineOfData));
+        }
+        else {
+          var globalVariableObj = {
+            label: this.currentTask.question,
+            value: this.currentLineOfData.responses
+          };
+          dbFunctions.addNewGlobalVariableToParticipantDB(store.getState().experimentInfo.participantId,
+                                                          JSON.stringify(globalVariableObj));
+        }
+
+        wamp.broadcastEvents(stringifyWAMPMessage(this.currentLineOfData,
+                                                  this.state.hasBeenAnswered ? "NEXT" : "SKIP"));
+      }
+
+      //reset
       this.setState({
         hasBeenAnswered: false,
         answerItem: null,
         currentTaskIndex: (this.state.currentTaskIndex + 1),
         complexStep: 0
       });
+      this.currentLineOfData = null;
     }
   }
 
-  onClickCancel(e) {
-
-  }
-
   onAnswer(answer) {
+    if (!this.state.hasBeenAnswered) {
+      this.currentLineOfData.firstResponseTimestamp = getCurrentTime();
+      this.currentLineOfData.timeToFirstAnswer = this.currentLineOfData.firstResponseTimestamp - this.currentLineOfData.startTimestamp;
+    }
     this.setState({
-      hasBeenAnswered: true,
-      answerItem: answer
+      hasBeenAnswered: true
     });
-    var answerObj = {
-      answer: answer,
-      isCorrect: this.currentTask.correctResponses.includes(answer)
-    };
-    this.broadcastAnswerEvent(answerObj);
+    this.currentLineOfData.responses = answer.responses;
+    this.currentLineOfData.correctlyAnswered = answer.correctlyAnswered;
   }
 
   onFinishedRecursion() {
-    console.log("callback from recursion", this.state.currentTaskIndex, this.props.taskSet);
     this.onClickNext();
   }
 
   render() {
-
-    //if(this.props.taskSet.length > 0 && this.state.currentTaskIndex < this.props.taskSet.length) {
+    //check if we should enter a new level or leave
+    if(this.props.taskSet.length > 0 && this.state.currentTaskIndex < this.props.taskSet.length) {
       if (this.props.taskSet[this.state.currentTaskIndex].objType === "TaskSet") {
-        return <DisplayTaskHelper taskSet={this.props.taskSet[this.state.currentTaskIndex].data} onFinished={this.onFinishedRecursion.bind(this)}/>
+        //shuffle set if set was marked as "Random"
+        var runThisTaskSet = this.props.taskSet[this.state.currentTaskIndex].data;
+        if (this.props.taskSet[this.state.currentTaskIndex].setTaskOrder === "Random") {
+          runThisTaskSet = shuffle(runThisTaskSet);
+        }
+
+        let trackingTaskSetNames = this.props.taskSetNames;
+        trackingTaskSetNames.push(this.props.taskSet[this.state.currentTaskIndex].name);
+        //recursion
+        return <DisplayTaskHelper taskSetNames={trackingTaskSetNames} taskSet={runThisTaskSet} onFinished={this.onFinishedRecursion.bind(this)}/>
       }
       //TODO: this is a go around solution, please fix it to make it solid
       else {//if (this.props.taskSet[this.state.currentTaskIndex].objType === "Task" || ) {
@@ -159,10 +200,12 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
           //console.log("bug in the database, set the task to the correct data");
           this.currentTask = this.props.taskSet[this.state.currentTaskIndex];
         }
+
+        //log the start
         if (!this.state.hasBeenAnswered && this.state.complexStep === 0) {
-          this.broadcastStartEvent();
+          this.logStartOfTask();
         }
-            console.log("check", this.props.taskSet, this.currentTask);
+
         var getDisplayedContent = () => {
           if(this.currentTask){
             if((this.currentTask.taskType === "Instruction") ||
@@ -205,14 +248,12 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
           );
       }
 
-    // }
-    // else { //TODO: end of set
-    //   this.props.onFinished();
-    //   console.log("end of set");
-    //   return (<div/>);
-    // }
-
-
+    }
+    else { //TODO: end of set
+      this.props.onFinished();
+      // console.log("end of set");
+      return (<div/>);
+    }
   }
 }
 
@@ -221,9 +262,8 @@ class DisplayTaskComponent extends Component {
     var dt = new Date();
     var timestamp = dt.toUTCString();
 
-    var info = ["END",
-                store.getState().experimentInfo.experimentId,
-                store.getState().experimentInfo.participantId,
+    var info = ["FINISHED",
+                store.getState().experimentInfo.mainTaskSetId,
                 timestamp]
     wamp.broadcastEvents(info);
   }
@@ -234,9 +274,16 @@ class DisplayTaskComponent extends Component {
     alert("finished!");
   }
 
+  componentWillUnmount() {
+    //save data into DB before closing
+    dbFunctions.getAllParticipantsFromDb((participants) => {
+      console.log("all participants", participants);
+    });
+  }
+
   render() {
     return (
-      <DisplayTaskHelper taskSet={store.getState().experimentInfo.taskSet} onFinished={this.onFinished.bind(this)}/>
+      <DisplayTaskHelper taskSetNames={[store.getState().experimentInfo.mainTaskSetId]} taskSet={store.getState().experimentInfo.taskSet} onFinished={this.onFinished.bind(this)}/>
       );
   }
 }

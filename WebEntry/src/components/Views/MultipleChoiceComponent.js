@@ -7,21 +7,38 @@ import './MultipleChoiceComponent.css';
 class MultipleChoiceComponent extends Component {
   constructor() {
     super();
-    this.state = {
-      answerItem : "",
-      hasBeenAnswered: false
+    this.pickedItems = [];
+  }
+
+  reset() {
+    if (!this.props.hasBeenAnswered) {
+      this.pickedItems = [];
     }
   }
 
-  onAnswer(response) {
-    this.setState({
-      answerItem: response,
-      hasBeenAnswered: true
-    });
-    this.props.answerCallback(response);
+  checkAnswer() {
+    if (this.props.task.correctResponses === undefined || this.props.task.correctResponses.length == 0) {
+      return "notApplicable";
+    }
+    for (var i = 0; i < this.props.task.correctResponses.length; i++) {
+        if (!this.pickedItems.includes(this.props.task.correctResponses[i])) {
+          return "incorrect";
+        }
+    }
+    return "correct";
+  }
+
+  onAnswer(item) {
+    this.pickedItems.push(item);
+    var answerObj = {
+      responses: this.pickedItems,
+      correctlyAnswered: this.checkAnswer()
+    }
+    this.props.answerCallback(answerObj);
   }
 
   render() {
+    this.reset();
     return (
       <div>
         <div className="questionDisplay">
@@ -30,11 +47,11 @@ class MultipleChoiceComponent extends Component {
         <div className="responsesButtons">
           {
             this.props.task.responses.map((item, index)=>{
-              if (item === this.props.answerItem) {
+              if (this.pickedItems.includes(item)) {
                 return (
-                  <Button variant="contained" className="picked" disabled={this.props.hasBeenAnswered} onClick={() => this.onAnswer(item)}>{item}</Button>)
+                  <Button variant="contained" className="picked" color="primary" disabled={true} onClick={() => this.onAnswer(item)}>{item}</Button>)
               }
-              return (<Button variant="contained" className="picked" disabled={this.props.hasBeenAnswered} onClick={() => this.onAnswer(item)}>{item}</Button>);
+              return (<Button variant="contained" className="picked" onClick={() => this.onAnswer(item)}>{item}</Button>);
             })
           }
         </div>
