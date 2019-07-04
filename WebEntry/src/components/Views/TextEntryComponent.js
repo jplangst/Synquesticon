@@ -11,7 +11,8 @@ class TextEntryComponent extends Component {
     super();
     this.state = {
       answerItem : "",
-      hasBeenAnswered: false
+      hasBeenAnswered: false,
+      textEntry: ""
     }
   }
 
@@ -21,6 +22,10 @@ class TextEntryComponent extends Component {
       hasBeenAnswered: true
     });
     this.props.answerCallback(response);
+  }
+
+  onHandleChange() {
+
   }
 
   render() {
@@ -34,8 +39,8 @@ class TextEntryComponent extends Component {
           id="outlined-name"
           label="Name"
           className="textField"
-          value={values.name}
-          onChange={handleChange('name')}
+          value={this.state.textEntry}
+          onChange={this.onHandleChange.bind(this)}
           margin="normal"
           variant="outlined"
         />

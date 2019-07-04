@@ -20,6 +20,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Settings from '@material-ui/icons/Settings';
 import BackArrowNavigation from '@material-ui/icons/ChevronLeft';
 
+import store from '../../core/store';
+
 class Header extends Component {
   constructor(props) {
     super(props);
@@ -114,44 +116,49 @@ class Header extends Component {
   }
 
   render() {
-    return(
-      <AppBar position="sticky" style={{width:"100%", height:"6%"}}>
-         <Toolbar variant="dense" position="absolute">
-           <Button size="small" style={{width:"10px", height:"90%"}} onClick={this.handleBackwardsNavigation.bind(this)} >
-             <BackArrowNavigation fontSize="large" className="headerIcon"/>
-           </Button>
-           <div className="spacer"/>
-          <Button style={{width:"10px", height:"90%"}} onClick={this.openSettingsMenu.bind(this)} >
-            <Settings fontSize="large" className="headerIcon"/>
-          </Button>
-        </Toolbar>
+    if (store.getState().showHeader) {
+      return(
+        <AppBar position="sticky" style={{width:"100%", height:"6%"}}>
+           <Toolbar variant="dense" position="absolute">
+             <Button size="small" style={{width:"10px", height:"90%"}} onClick={this.handleBackwardsNavigation.bind(this)} >
+               <BackArrowNavigation fontSize="large" className="headerIcon"/>
+             </Button>
+             <div className="spacer"/>
+            <Button style={{width:"10px", height:"90%"}} onClick={this.openSettingsMenu.bind(this)} >
+              <Settings fontSize="large" className="headerIcon"/>
+            </Button>
+          </Toolbar>
 
-        <Drawer anchor="right" open={this.state.showMenu} onClose={this.closeSettingsMenu.bind(this)}>
-          <div
-            tabIndex={0}
-            role="button"
-            onClick={this.openSettingsMenu.bind(this)}
-          >
-            <List>
-              <ListItem button key="Crossbar Settings" onClick={this.onOpenCrossbarSettings.bind(this)}>
-                <ListItemText primary="Crossbar Settings" />
-              </ListItem>
-              <ListItem button key="Speech Settings" onClick={this.onOpenSpeechSettings.bind(this)}>
-                <ListItemText primary="Speech Settings" />
-              </ListItem>
-            </List>
-            <Divider />
-            <List>
-              <ListItem button key="Fullscreen" onClick={this.onFullscreen.bind(this)}>
-                <ListItemText primary="Fullscreen" />
-              </ListItem>
-            </List>
-          </div>
-        </Drawer>
-        <CrossbarDialog openCrossbarSettings={this.state.openCrossbarSettings} closeCrossbarSettings={this.closeCrossbarSettings}/>
-        <SpeechDialog openSpeechSettings={this.state.openSpeechSettings} closeSpeechSettings={this.closeSpeechSettings}/>
-      </AppBar>
-    );
+          <Drawer anchor="right" open={this.state.showMenu} onClose={this.closeSettingsMenu.bind(this)}>
+            <div
+              tabIndex={0}
+              role="button"
+              onClick={this.openSettingsMenu.bind(this)}
+            >
+              <List>
+                <ListItem button key="Crossbar Settings" onClick={this.onOpenCrossbarSettings.bind(this)}>
+                  <ListItemText primary="Crossbar Settings" />
+                </ListItem>
+                <ListItem button key="Speech Settings" onClick={this.onOpenSpeechSettings.bind(this)}>
+                  <ListItemText primary="Speech Settings" />
+                </ListItem>
+              </List>
+              <Divider />
+              <List>
+                <ListItem button key="Fullscreen" onClick={this.onFullscreen.bind(this)}>
+                  <ListItemText primary="Fullscreen" />
+                </ListItem>
+              </List>
+            </div>
+          </Drawer>
+          <CrossbarDialog openCrossbarSettings={this.state.openCrossbarSettings} closeCrossbarSettings={this.closeCrossbarSettings}/>
+          <SpeechDialog openSpeechSettings={this.state.openSpeechSettings} closeSpeechSettings={this.closeSpeechSettings}/>
+        </AppBar>
+      );
+    }
+    else {
+      return <div />;
+    }
   }
 }
 export default Header;

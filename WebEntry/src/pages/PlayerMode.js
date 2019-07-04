@@ -61,8 +61,16 @@ class PlayerMode extends Component {
         selectedTracker: this.state.selectedTracker
       }
     }
-    console.log("dispatch contain", action);
+
     store.dispatch(action);
+
+    var layourAction = {
+      type: 'SET_SHOW_HEADER',
+      showHeader: false
+    }
+
+    store.dispatch(layourAction);
+
     this.props.history.push('/RunTasksMode');
   }
 

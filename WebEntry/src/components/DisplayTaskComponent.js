@@ -41,6 +41,13 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 
   componentWillUnmount() {
     clearInterval(this.timer);
+    var layourAction = {
+      type: 'SET_SHOW_HEADER_FOOTER',
+      showHeader: true,
+      showFooter: true
+    }
+
+    store.dispatch(layourAction);
   }
 
   broadcastStartEvent() {
@@ -141,7 +148,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 
   render() {
 
-    if(this.props.taskSet.length > 0 && this.state.currentTaskIndex < this.props.taskSet.length) {
+    //if(this.props.taskSet.length > 0 && this.state.currentTaskIndex < this.props.taskSet.length) {
       if (this.props.taskSet[this.state.currentTaskIndex].objType === "TaskSet") {
         return <DisplayTaskHelper taskSet={this.props.taskSet[this.state.currentTaskIndex].data} onFinished={this.onFinishedRecursion.bind(this)}/>
       }
@@ -162,10 +169,10 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
                   (this.currentTask.taskType === "Complex" && this.state.complexStep === 0)) {
                 return <InstructionViewComponent task={this.currentTask}/>;
               }
-            if((this.currentTask.taskType === "Text Entry") {
+            if(this.currentTask.taskType === "Text Entry") {
                 return <TextEntryComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} hasBeenAnswered={this.state.hasBeenAnswered}/>;
               }
-            if((this.currentTask.taskType === "Single Choice") {
+            if(this.currentTask.taskType === "Single Choice") {
                 return <SingleChoiceComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} hasBeenAnswered={this.state.hasBeenAnswered}/>;
               }
             if((this.currentTask.taskType === "Multiple Choice") ||
@@ -182,37 +189,28 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
           }
         };
 
-        var getNextButton = () => {
-          // if (this.state.currentTaskIndex < (this.props.taskSet.length) - 1){
-            return (  <Button className="nextButton" onClick={this.onClickNext.bind(this)}>
-                        <NavigationIcon />
-                      </Button>);
-          // }
-        }
+        var nextButtonText = this.state.hasBeenAnswered ? "Next" : "Skip";
 
         return (
           <div className="page">
             <div className="mainDisplay">
               {getDisplayedContent()}
             </div>
-            <div className="footer">
-              <Link to="/" >
-                <Button className="cancelButton" onClick={this.onClickCancel.bind(this)}>
-                  <CancelIcon />
-                </Button>
-              </Link>
-              {getNextButton()}
+            <div className="nextButton">
+              <Button className="nextButton" variant="outlined" onClick={this.onClickNext.bind(this)}>
+                {nextButtonText}
+              </Button>
             </div>
           </div>
           );
       }
 
-    }
-    else { //TODO: end of set
-      this.props.onFinished();
-      console.log("end of set");
-      return (<div/>);
-    }
+    // }
+    // else { //TODO: end of set
+    //   this.props.onFinished();
+    //   console.log("end of set");
+    //   return (<div/>);
+    // }
 
 
   }
