@@ -28,14 +28,15 @@ class SingleChoiceComponent extends Component {
   }
 
   onAnswer(response) {
-    this.pickedItem = response;
-    var answerObj = {
-      responses: [this.pickedItem],
-      correctlyAnswered: this.checkAnswer()
+    if (!this.props.hasBeenAnswered) {
+      this.pickedItem = response;
+      var answerObj = {
+        responses: [this.pickedItem],
+        correctlyAnswered: this.checkAnswer()
+      }
+      this.props.answerCallback(answerObj);
     }
-    this.props.answerCallback(answerObj);
   }
-
   render() {
     this.reset();
     return (
@@ -48,9 +49,9 @@ class SingleChoiceComponent extends Component {
             this.props.task.responses.map((item, index)=>{
               if (item === this.pickedItem) {
                 return (
-                  <Button variant="contained" className="picked" color="primary" disabled={this.props.hasBeenAnswered} onClick={() => this.onAnswer(item)}>{item}</Button>)
+                  <Button variant="contained"  disabled={this.props.hasBeenAnswered} onClick={() => this.onAnswer(item)}>{item}</Button>)
               }
-              return (<Button variant="contained" className="picked" disabled={this.props.hasBeenAnswered} onClick={() => this.onAnswer(item)}>{item}</Button>);
+              return (<Button variant="contained" onClick={() => this.onAnswer(item)}>{item}</Button>);
             })
           }
         </div>

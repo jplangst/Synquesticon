@@ -6,15 +6,42 @@ import Button from '@material-ui/core/Button';
 
 import './TextEntryComponent.css';
 
+const keyboard = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, '.', '<--']
+
 class TextEntryComponent extends Component {
+
   constructor() {
     super();
     this.textEntry = "";
+    this.keyboardPressed = this.onMyKeyboardPressed.bind(this);
+    this.decimalWasPressed = false;
+  }
+
+  onMyKeyboardPressed(key) {
+
+    if (key === "<--") {
+      var lastChar = this.textEntry[this.textEntry.length -1];
+      if (lastChar === '.') {
+        this.decimalWasPressed = false;
+      }
+      this.textEntry = this.textEntry.substring(0, this.textEntry.length-1);
+    }
+    else if (key === ".") {
+      if (!this.decimalWasPressed) {
+        this.textEntry += key;
+        this.decimalWasPressed = true;
+      }
+    }
+    else {
+      this.textEntry = parseFloat(this.textEntry + key) + "";
+    }
+    this.onAnswer();
   }
 
   reset() {
     if (!this.props.hasBeenAnswered) {
       this.textEntry = "";
+      this.decimalWasPressed = false;
     }
   }
 
@@ -31,7 +58,7 @@ class TextEntryComponent extends Component {
 
   onAnswer() {
     var answerObj = {
-      responses: [this.textEntry],
+      responses: [parseFloat(this.textEntry)],
       correctlyAnswered: this.checkAnswer()
     }
     this.props.answerCallback(answerObj);
@@ -49,13 +76,19 @@ class TextEntryComponent extends Component {
           id="outlined-name"
           className="textField"
           value={this.textEntry}
-          onChange={(e)=>{
-            this.textEntry = e.target.value;
-            this.onAnswer();
-          }}
+          InputProps={{
+                    readOnly: true,
+                  }}
           margin="normal"
           variant="outlined"
         />
+        <div>
+          {
+            keyboard.map((item, index) => {
+              return <Button variant="contained" onClick={() => this.keyboardPressed(item)}>{item}</Button>
+            })
+          }
+        </div>
         </div>
       </div>
     );
