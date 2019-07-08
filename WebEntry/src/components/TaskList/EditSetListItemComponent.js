@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import DragIcon from '@material-ui/icons/ControlCamera';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-import * as listUtils from './ListUtilityFunctions';
+import * as listUtils from '../../core/db_objects_utility_functions';
 
 import CollapsableContainer from '../Containers/CollapsableContainer';
 

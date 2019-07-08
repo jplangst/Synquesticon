@@ -3,10 +3,10 @@ import React, { Component } from 'react';
 
 import Header from './components/Header/Header'
 //import EditScreen from './pages/EditScreen';
-import CreatorMode from './pages/CreatorMode';
+import EditorMode from './pages/EditorMode';
 import IntroductionScreen from './pages/IntroductionScreen';
 import PlayerMode from './pages/PlayerMode';
-import ViewerMode from './pages/ViewerMode';
+import ObserverMode from './pages/ObserverMode';
 import RunTasksMode from './components/DisplayTaskComponent';
 
 import HTML5Backend from 'react-dnd-html5-backend'
@@ -27,9 +27,9 @@ class App extends Component {
           <div className="MainContent">
             <Switch>
               <Route exact path="/" component={IntroductionScreen} />
-              <Route path="/CreatorMode" component={CreatorMode} />
+              <Route path="/EditorMode" component={EditorMode} />
               <Route path="/PlayerMode" component={PlayerMode} />
-              <Route path="/ViewerMode" component={ViewerMode} />
+              <Route path="/ObserverMode" component={ObserverMode} />
               <Route path="/RunTasksMode" component={RunTasksMode}/>} />
             </Switch>
           </div>

@@ -94,7 +94,7 @@ router.post("/getAllTasksContaining", (req, res) => {
       console.log(err);
       return res.json({success: false, error: err});
     }
-    console.log("Data retrieved ", err, data);
+
     return res.json({success: true, tasks: data});
   });
 });
@@ -163,7 +163,7 @@ router.post("/getTaskSetWithID", (req, res) => {
     if (err) {
       return res.json({success: false, error: err});
     }
-    console.log(err, obj);
+
     return res.json({success: true, set: obj});
   });
 });
@@ -263,8 +263,6 @@ router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
   const { objIds } = req.body;
   const ids = JSON.parse(objIds);
 
-  console.log(ids);
-
   var recursionForArray = async function(targetArray) {
     const childs = targetArray.map(async item => {
       const dat = await recursion(item);
@@ -344,7 +342,7 @@ router.post("/getParticipantWithID", (req, res) => {
     if (err) {
       return res.json({success: false, error: err});
     }
-    console.log(err, obj);
+
     return res.json({success: true, participant: obj});
   });
 });
@@ -395,6 +393,7 @@ router.post("/addNewLineToParticipant", (req, res) => {
 router.post("/addNewGlobalVariableToParticipant", (req, res) => {
   const { participantId, globalVariableJSON} = req.body;
   var globalVariable = JSON.parse(globalVariableJSON);
+
   Participants.updateOne({_id: participantId}, { $addToSet: {globalVariables: globalVariable}}, err => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });

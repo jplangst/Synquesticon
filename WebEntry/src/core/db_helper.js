@@ -322,5 +322,9 @@ export function addNewGlobalVariableToParticipantDB(participantId, globalVariabl
   axios.post("/api/addNewGlobalVariableToParticipant", {
     participantId: participantId,
     globalVariableJSON: globalVariableJSON //please stringify before calling this function
-  }).then(data => {console.log("after adding new line to set", data)});
+  }).then(data => {console.log("after adding new globalVariable to set", data)});
 };
+
+export function deleteAllParticipantsFromDb() {
+  axios.delete("/api/deleteAllParticipants");
+}

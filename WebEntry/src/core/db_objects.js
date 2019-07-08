@@ -37,12 +37,12 @@ export class ParticipantObject {
 }
 
 export class LineOfData {
-  constructor(parentSets, currentTime, task) {
-    this.taskSetNames = parentSets;
-    this.taskId = task._id;
-    this.question = "";
+  constructor(currentTime, taskId, familyTree, taskContent, taskCorrectResponses) {
+    this.tasksFamilyTree = familyTree;
+    this.taskId = taskId;
+    this.taskContent = taskContent;
     this.responses = [];
-    this.correctResponses = task.correctResponses;
+    this.correctResponses = taskCorrectResponses;
     /* correctlyAnswered:
     1. If the participant answers correctly, we log it as “correct”.
     2. If the participant answers incorrectly, we log it as “incorrect”.

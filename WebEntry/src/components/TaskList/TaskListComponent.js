@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import TaskItemComponent from './TaskItemComponent';
 
-import * as listUtils from './ListUtilityFunctions';
+import * as listUtils from '../../core/db_objects_utility_functions';
 
 import './TaskListComponent.css';
 

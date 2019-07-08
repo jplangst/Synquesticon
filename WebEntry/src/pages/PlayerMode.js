@@ -37,6 +37,11 @@ class PlayerMode extends Component {
   }
 
   componentWillMount() {
+    //dbFunctions.deleteAllParticipantsFromDb();
+    //save data into DB before closing
+    dbFunctions.getAllParticipantsFromDb((participants) => {
+      console.log("all participants", participants);
+    });
     dbFunctions.queryTasksFromDb(false, "experiment", this.dbTaskSetCallback);
   }
 
@@ -46,19 +51,19 @@ class PlayerMode extends Component {
   }
 
   dbTasksCallbackFunction(dbQueryResult) {
-    console.log("get all tasks from set", dbQueryResult);
+    console.log("db returned", dbQueryResult);
     var runThisTaskSet = dbQueryResult;
     if (this.state.selectedTaskSet.setTaskOrder === "Random") {
       runThisTaskSet = shuffle(runThisTaskSet);
     }
 
-    dbFunctions.addParticipantToDb(new dbObjects.ParticipantObject(this.state.selectedTaskSet), (returnedIdFromDB)=> {
+    dbFunctions.addParticipantToDb(new dbObjects.ParticipantObject(this.state.selectedTaskSet._id), (returnedIdFromDB)=> {
       var action = {
         type: 'SET_EXPERIMENT_INFO',
         experimentInfo: {
           experimentId: "",
           participantId: returnedIdFromDB,
-          mainTaskSetId: this.state.selectedTaskSet,
+          mainTaskSetId: this.state.selectedTaskSet.name,
           taskSet: runThisTaskSet,
           selectedTracker: this.state.selectedTracker
         }
@@ -83,6 +88,7 @@ class PlayerMode extends Component {
 
   //bottom button handler
   onPlayButtonClick() {
+    console.log("call db on this list", this.state.selectedTaskSet.childIds);
     dbFunctions.getTasksOrTaskSetsWithIDs(this.state.selectedTaskSet.childIds, this.dbTasksCallback);
   }
 

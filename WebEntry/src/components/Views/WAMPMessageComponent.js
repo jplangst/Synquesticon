@@ -11,7 +11,7 @@ class WAMPMessageComponent extends React.Component {
         </div>
         <div className="messages">
           {this.props.messages.map((item, index) => {
-            return (<div>{item}</div>);
+            return (<div>{item}<br /></div>);
           })}
         </div>
       </div>);

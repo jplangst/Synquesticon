@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import EditSetListItemComponent from './EditSetListItemComponent';
-import * as listUtils from './ListUtilityFunctions';
+import * as listUtils from '../../core/db_objects_utility_functions';
 
 import './EditSetListComponent.css';
 

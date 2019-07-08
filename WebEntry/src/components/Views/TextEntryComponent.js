@@ -85,7 +85,7 @@ class TextEntryComponent extends Component {
         <div>
           {
             keyboard.map((item, index) => {
-              return <Button variant="contained" onClick={() => this.keyboardPressed(item)}>{item}</Button>
+              return <Button key={index} variant="contained" onClick={() => this.keyboardPressed(item)}>{item}</Button>
             })
           }
         </div>

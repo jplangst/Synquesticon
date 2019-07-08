@@ -30,13 +30,13 @@ class IntroductionScreen extends Component {
   render() {
     return(
       <div >
-        <Button className="createTaskSetsBtn" onClick={(e) => this.gotoPage(e,"CreatorMode")} >
+        <Button className="createTaskSetsBtn" onClick={(e) => this.gotoPage(e,"EditorMode")} >
           <p>Editor</p>
         </Button>
         <Button className="createTaskButton" onClick={(e) => this.gotoPage(e,"PlayerMode")} >
           <p>Player</p>
         </Button>
-        <Button className="createTaskButton" onClick={(e) => this.gotoPage(e,"ViewerMode")} >
+        <Button className="createTaskButton" onClick={(e) => this.gotoPage(e,"ObserverMode")} >
           <p>Observer</p>
         </Button>
       </div>

@@ -49,9 +49,9 @@ class MultipleChoiceComponent extends Component {
             this.props.task.responses.map((item, index)=>{
               if (this.pickedItems.includes(item)) {
                 return (
-                  <Button variant="contained" className="picked" color="primary" disabled={true} onClick={() => this.onAnswer(item)}>{item}</Button>)
+                  <Button key={index} variant="contained" className="picked" color="primary" disabled={true} onClick={() => this.onAnswer(item)}>{item}</Button>)
               }
-              return (<Button variant="contained" className="picked" onClick={() => this.onAnswer(item)}>{item}</Button>);
+              return (<Button key={index} variant="contained" className="picked" onClick={() => this.onAnswer(item)}>{item}</Button>);
             })
           }
         </div>

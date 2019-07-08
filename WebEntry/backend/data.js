@@ -57,9 +57,9 @@ const ParticipantSchema = new Schema(
     mainTaskSetId: String,
     eyeData: String,
     linesOfData: [{
-      taskSetNames: [String],
+      tasksFamilyTree: [String],
       taskId: String,
-      question: String,
+      taskContent: String,
       responses: [String],
       correctResponses: [String],
       /* correctlyAnswered:
@@ -88,12 +88,15 @@ const ParticipantSchema = new Schema(
       timeToCompletion: Number,
       aoiCheckedList: [{
         label: String,
-        checked: Boolean
-      }]
+        checked: Boolean,
+        _id: false
+      }],
+      _id: false
     }],
     globalVariables: [{
       label: String,
-      value: [String]
+      value: [String],
+      _id: false
     }]
   }, {
     collection: 'Participants'
