@@ -11,23 +11,23 @@
   border: 1px solid black;
   box-sizing: border-box;
   position: relative;
-  height: 90%;
+  height: 96%;
   width: calc(90vh*0.5);
   background-color: white;
   float: left;
   left: 2%;
-  top: 2%;
+  top: 10%;
 }
 
 .frame {
   border: 1px solid black;
   box-sizing: border-box;
-  height: 90%;
+  height: 85%;
   width: 100%;
 }
 
 .title {
   box-sizing: border-box;
-  height: 10%;
+  height: 15%;
   padding: 5px;
 }

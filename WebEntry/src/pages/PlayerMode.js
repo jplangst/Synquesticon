@@ -18,6 +18,7 @@ import TaskListComponent from '../components/TaskList/TaskListComponent';
 
 import store from '../core/store';
 import shuffle from '../core/shuffle';
+import wampStore from '../core/wampStore';
 
 import * as dbFunctions from '../core/db_helper.js';
 import * as dbObjects from '../core/db_objects';
@@ -29,6 +30,7 @@ class PlayerMode extends Component {
 
     this.state = {
       selectedTracker: '',
+      remoteEyeTrackers: [],
       taskSets: []
     }
 
@@ -40,12 +42,29 @@ class PlayerMode extends Component {
   }
 
   componentWillMount() {
+    wampStore.addNewRemoteTrackerListener(this.onNewRemoteTracker.bind(this));
+
     //dbFunctions.deleteAllParticipantsFromDb();
     //save data into DB before closing
     dbFunctions.getAllParticipantsFromDb((participants) => {
       console.log("all participants", participants);
     });
     dbFunctions.queryTasksFromDb(false, "experiment", this.dbTaskSetCallback);
+  }
+
+  componentWillUnmount() {
+    wampStore.removeNewRemoteTrackerListener(this.onNewRemoteTracker.bind(this));
+  }
+
+  onNewRemoteTracker() {
+    console.log("new tracker coming in", wampStore.getCurrentRemoteTracker());
+
+    if (!this.state.remoteEyeTrackers.includes(wampStore.getCurrentRemoteTracker())) {
+      wampStore.confirmRecevingRemoteTracker();
+      this.state.remoteEyeTrackers.push(wampStore.getCurrentRemoteTracker());
+
+      this.forceUpdate();
+    }
   }
 
   //query all tasksets with experiment tag
@@ -91,32 +110,14 @@ class PlayerMode extends Component {
     dbFunctions.getTasksOrTaskSetsWithIDs(this.selectedTaskSet.childIds, this.dbTasksCallback);
   }
 
+  onSelectRemoteTracker(e) {
+    this.setState({
+      selectedTracker: e.target.value
+    });
+  }
+
   render() {
     return (
-      // <div className="page">
-      //   <FormControl className="textinput">
-      //     <InputLabel htmlFor="age-simple">Remote Eye Tracker</InputLabel>
-      //     <Select
-      //       value={this.state.selectedTracker}
-      //       input={<FilledInput name="selectedTracker" id="selectedTracker-helper" />}
-      //     >
-      //       {
-      //         store.getState().remoteEyeTrackers.map((item, index) => {
-      //           return <MenuItem value={item} id={index}>{item}</MenuItem>
-      //         })
-      //       }
-      //     </Select>
-      //   </FormControl>
-      //   < TaskListComponent selectedTask={this.state.selectedTaskSet} reorderDisabled={true} reorderID="tasksReorder" taskList={ this.state.taskSets } selectTask={ this.onSelectTaskSet.bind(this) } editable={false}/ >
-      //   <div className="playButtonWrapper">
-      //     <Button onClick={this.onPlayButtonClick.bind(this)}
-      //             className="playButton" disabled={(!this.state.selectedTaskSet)}>
-      //       <NavigationIcon fontSize="large"/>
-      //     </Button>
-      //   </div>
-      //   <div className="footer">
-      //   </div>
-      // </div>
       <div className="AssetViewerContent">
         <div className="ContainerSeperator TaskSetContainer">
           < PlayableSetListComponent
@@ -128,11 +129,12 @@ class PlayerMode extends Component {
             <InputLabel htmlFor="age-simple">Remote Eye Tracker</InputLabel>
             <Select
               value={this.state.selectedTracker}
+              onChange={this.onSelectRemoteTracker.bind(this)}
               input={<FilledInput name="selectedTracker" id="selectedTracker-helper" />}
             >
               {
-                store.getState().remoteEyeTrackers.map((item, index) => {
-                  return <MenuItem value={item} id={index}>{item}</MenuItem>
+                this.state.remoteEyeTrackers.map((item, index) => {
+                  return <MenuItem key={index} value={item} id={index}>{item}</MenuItem>
                 })
               }
             </Select>

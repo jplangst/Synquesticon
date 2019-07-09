@@ -2,11 +2,14 @@ const EventEmitter = require('events');
 
 const NEW_MESSAGE_EVENT = "WAMPEvent";
 const NEW_PARTICIPANT_EVENT = "ParticipantEvent";
+const NEW_REMOTE_TRACKER_EVENT = "NewRemoteTrackerEvent";
 
 class CWampStore extends EventEmitter {
   constructor() {
 	  super();
 		this.currentMessage = [];
+    this.currentRemoteTracker = null;
+    this.receivedRemoteTrackers = [];
   }
 
 	addEventListener(callback) {
@@ -29,12 +32,36 @@ class CWampStore extends EventEmitter {
     this.emit(NEW_PARTICIPANT_EVENT);
   }
 
+  addNewRemoteTrackerListener(callback) {
+    this.addListener(NEW_REMOTE_TRACKER_EVENT, callback);
+  }
+
+  removeNewRemoteTrackerListener(callback) {
+    this.removeListener(NEW_REMOTE_TRACKER_EVENT, callback);
+  }
+
+  emitNewRemoteTrackerListener() {
+    if (!this.receivedRemoteTrackers.includes(this.currentRemoteTracker)) {
+      this.emit(NEW_REMOTE_TRACKER_EVENT);
+    }
+  }
+
 	getCurrentMessage(){
 		return this.currentMessage;
 	}
 	setCurrentMessage(args){
 		this.currentMessage = args;
 	}
+
+  getCurrentRemoteTracker(){
+    return this.currentRemoteTracker;
+  }
+  setCurrentRemoteTracker(tracker){
+    this.currentRemoteTracker = tracker;
+  }
+  confirmRecevingRemoteTracker() {
+    this.receivedRemoteTrackers.push(this.currentRemoteTracker);
+  }
 }
 
 let WampStore = new CWampStore();

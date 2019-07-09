@@ -22,6 +22,10 @@ class ObserverMode extends Component {
     wampStore.addEventListener(this.handleNewWAMPEvent);
   }
 
+  componentWillUnmount() {
+    wampStore.removeEventListener(this.handleNewWAMPEvent);
+  }
+
   onNewWAMPEvent() {
     var args = wampStore.getCurrentMessage();
 
