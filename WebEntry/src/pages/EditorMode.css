@@ -23,7 +23,7 @@ dark: "#303f9f"
   border-width: thin;
   border-style: solid;
   border-color: #303f9f;
-  border-radius: 11px;
+  /* border-radius: 11px; */
 }
 
 .collapsableHeaderBtnsContainer{
@@ -95,7 +95,7 @@ dark: "#303f9f"
   border-width: thin;
   border-style: solid;
   border-color: #303f9f;
-  border-radius: 11px;
+  /* border-radius: 11px; */
 }
 .AssetEditorTitle{
   font-size: large;

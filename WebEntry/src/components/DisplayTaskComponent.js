@@ -275,7 +275,7 @@ class DisplayTaskComponent extends Component {
 
   onFinished() {
     this.broadcastEndEvent();
-    this.props.history.push("PlayerMode");
+    this.props.history.push("./");
     alert("finished!");
   }
 

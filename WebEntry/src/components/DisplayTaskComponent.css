@@ -13,13 +13,14 @@
   right: 20px;
 }
 .mainDisplay{
-  margin: auto;
   position: fixed;
-  width: 50%;
+  width: 60%;
   height: auto;
+
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+
   font-size: 1em;
 }
 
@@ -36,4 +37,5 @@
 
 .picked {
   background-color: green;
+  margin: 5px;
 }

@@ -118,12 +118,12 @@ class ObserverMode extends Component {
 
   render() {
     return (
-      <div className="ViewerContainer">
-        <div className="SelectedTaskContainer">
+      <div className="AssetViewerContent">
+        <div className="ContainerSeperator SelectedTaskContainer">
           <WAMPMessageComponent messages={this.state.messages}/>
         </div>
 
-        <div className="ViewerGaze">
+        <div className="ContainerSeperator ViewerGaze">
           { Object.entries(this.state.participants).map((pair, index) => {
               return <GazeCursor tracker={pair[1]} id={index} participant={pair[0]}/>;
             })

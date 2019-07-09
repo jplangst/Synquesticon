@@ -49,9 +49,9 @@ class SingleChoiceComponent extends Component {
             this.props.task.responses.map((item, index)=>{
               if (item === this.pickedItem) {
                 return (
-                  <Button key={index} variant="contained"  disabled={this.props.hasBeenAnswered} onClick={() => this.onAnswer(item)}>{item}</Button>)
+                  <span className="inputButton"><Button key={index} variant="contained"  disabled={this.props.hasBeenAnswered} onClick={() => this.onAnswer(item)}>{item}</Button></span>)
               }
-              return (<Button key={index} variant="contained" onClick={() => this.onAnswer(item)}>{item}</Button>);
+              return (<span className="inputButton"><Button key={index} variant="contained" onClick={() => this.onAnswer(item)}>{item}</Button></span>);
             })
           }
         </div>

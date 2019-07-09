@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 
-import TextField from '@material-ui/core/TextField';
+//import TextField from '@material-ui/core/TextField';
+import InputBase from '@material-ui/core/InputBase';
 
 import Button from '@material-ui/core/Button';
 
 import './TextEntryComponent.css';
 
-const keyboard = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, '.', '<--']
+const first_line_keyboard = [0, 1, 2, 3, 4]
+const second_line_keyboard = [5, 6, 7, 8, 9]
+const third_line_keyboard = ['.', '<--']
 
 class TextEntryComponent extends Component {
 
@@ -65,31 +68,49 @@ class TextEntryComponent extends Component {
   }
 
   render() {
+    /* SAVE FOR LATER
+    <TextField
+      id="outlined-name"
+      className="textField"
+      value={this.textEntry}
+      InputProps={{
+                readOnly: true
+              }}
+      margin="normal"
+      variant="outlined"
+      onClick={(e)=>{e.preventDefault(); e.stopPropagation()}}
+    />
+
+    */
+
+
     this.reset();
+
+    var getKeyboardLine = (keyboard, css) => {
+      return (<div className={css}>
+              {keyboard.map((item, index) => {
+                  return <span className="inputButton">
+                            <Button key={index} variant="contained" onClick={() => this.keyboardPressed(item)}>
+                              {item}
+                            </Button>
+                         </span>
+                  }
+                )
+              }
+              </div>);
+    }
+
     return (
-      <div>
+      <div className="TextEntry">
         <div className="questionDisplay">
           {this.props.task.question}
         </div>
-        <div className="responsesButtons">
-        <TextField
-          id="outlined-name"
-          className="textField"
-          value={this.textEntry}
-          InputProps={{
-                    readOnly: true,
-                  }}
-          margin="normal"
-          variant="outlined"
-        />
-        <div>
-          {
-            keyboard.map((item, index) => {
-              return <Button key={index} variant="contained" onClick={() => this.keyboardPressed(item)}>{item}</Button>
-            })
-          }
+        <div className="inputField">
+          {this.textEntry}
         </div>
-        </div>
+        {getKeyboardLine(first_line_keyboard, "firstLine")}
+        {getKeyboardLine(second_line_keyboard, "firstLine")}
+        {getKeyboardLine(third_line_keyboard, "firstLine")}
       </div>
     );
   }

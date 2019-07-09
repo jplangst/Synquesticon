@@ -112,7 +112,7 @@ class Header extends Component {
   }
 
   handleBackwardsNavigation(){
-    this.props.history.goBack();
+    this.props.history.push("/");
   }
 
   render() {
@@ -123,7 +123,7 @@ class Header extends Component {
              <Button size="small" style={{width:"10px", height:"90%"}} onClick={this.handleBackwardsNavigation.bind(this)} >
                <BackArrowNavigation fontSize="large" className="headerIcon"/>
              </Button>
-             <div className="spacer"/>
+             <div className="AppName">Synquesticon</div>
             <Button style={{width:"10px", height:"90%"}} onClick={this.openSettingsMenu.bind(this)} >
               <Settings fontSize="large" className="headerIcon"/>
             </Button>

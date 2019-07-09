@@ -6,3 +6,12 @@
 .headerIcon{
   position: absolute;
 }
+
+.AppName {
+  align-self: center;
+  font-weight: bold;
+  flex-grow: 1;
+  text-align: center;
+  font-size: 1.2em;
+  font-family: Arial;
+}

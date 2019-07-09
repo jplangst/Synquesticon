@@ -1,3 +1,42 @@
-.textField {
-  color: black;
+.TextEntry {
+  width: 100%;
+  height: 100%;
+}
+
+.inputField {
+  background-color: white;
+
+  border-radius: 5px;
+  border: 1px solid gray;
+
+  width: 350px;
+  height: 40px;
+
+  text-align: left;
+  font-size: 1.25em;
+
+  padding-left: 10px;
+  line-height: 40px;
+
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.inputButton {
+  margin: 5px;
+}
+
+.firstLine {
+  width: fit-content;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 10px 0px 10px 0px;
+}
+
+.secondLine {
+}
+
+.thirdLine {
 }
