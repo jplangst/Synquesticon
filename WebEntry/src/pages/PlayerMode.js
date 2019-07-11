@@ -73,7 +73,6 @@ class PlayerMode extends Component {
   }
 
   dbTasksCallbackFunction(dbQueryResult) {
-    console.log("db returned", dbQueryResult);
     var runThisTaskSet = dbQueryResult;
     if (this.selectedTaskSet.setTaskOrder === "Random") {
       runThisTaskSet = shuffle(runThisTaskSet);

@@ -3,6 +3,9 @@ import React, { Component } from 'react';
 import * as dbFunctions from '../../core/db_helper';
 import * as dbObjects from '../../core/db_objects';
 
+import shuffle from '../../core/shuffle';
+import store from '../../core/store';
+
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
@@ -83,6 +86,35 @@ class EditSetComponent extends Component {
     this.setState({
       randomizeSet: checked
     });
+  }
+
+  onPlaySet() {
+    var runThisTaskSet = this.state.taskListObjects.slice();
+    if (this.state.randomizeSet === "Random") {
+      runThisTaskSet = shuffle(runThisTaskSet);
+    }
+
+    var action = {
+      type: 'SET_EXPERIMENT_INFO',
+      experimentInfo: {
+        experimentId: "",
+        participantId: "TESTING",
+        mainTaskSetId: this.set.name,
+        taskSet: this.state.taskListObjects,
+        selectedTracker: ""
+      }
+    }
+
+    store.dispatch(action);
+
+    var layourAction = {
+      type: 'SET_SHOW_HEADER',
+      showHeader: false
+    }
+
+    store.dispatch(layourAction);
+
+    this.props.runTestSet();
   }
 
   //Returns true if adding the task will result in a circular reference
@@ -289,9 +321,13 @@ class EditSetComponent extends Component {
       </div>;
 
     var deleteTaskBtn = null;
+    var playTaskBtn = null;
     if(this.props.isEditing){
       deleteTaskBtn = <Button onClick={this.removeSet.bind(this)} color="primary">
         Delete Set
+        </Button>;
+      playTaskBtn = <Button onClick={this.onPlaySet.bind(this)} color="primary">
+        Play
         </Button>;
     }
 
@@ -317,8 +353,9 @@ class EditSetComponent extends Component {
           </Button>
           {deleteTaskBtn}
           <Button onClick={this.onChangeSetSettings.bind(this)} color="primary">
-            {this.props.isEditing ? "Edit" : "Create"}
+            {this.props.isEditing ? "Save" : "Create"}
           </Button>
+          {playTaskBtn}
         </div>
 
         <Snackbar

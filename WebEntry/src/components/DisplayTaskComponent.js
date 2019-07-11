@@ -117,30 +117,32 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 
   onClickNext() {
 
-    if (this.currentTask.taskType === "Complex" && this.state.complexStep < 2) {
+    if (this.currentTask && this.currentTask.taskType === "Complex" && this.state.complexStep < 2) {
       this.setState({
         complexStep: (this.state.complexStep + 1)
       })
     }
     else {
-      if (this.currentLineOfData) {
-        if (!this.currentTask.globalVariable) {
-          //complete line of data before saving to DB
-          this.currentLineOfData.timeToCompletion = getCurrentTime() - this.currentLineOfData.startTimestamp;
-          dbFunctions.addNewLineToParticipantDB(store.getState().experimentInfo.participantId,
-                                                JSON.stringify(this.currentLineOfData));
-        }
-        else {
-          var globalVariableObj = {
-            label: this.currentTask.question,
-            value: this.currentLineOfData.responses
-          };
-          dbFunctions.addNewGlobalVariableToParticipantDB(store.getState().experimentInfo.participantId,
-                                                          JSON.stringify(globalVariableObj));
-        }
+      if (!(store.getState().experimentInfo.participantId === "TESTING")) {
+        if (this.currentLineOfData) {
+          if (!this.currentTask.globalVariable) {
+            //complete line of data before saving to DB
+            this.currentLineOfData.timeToCompletion = getCurrentTime() - this.currentLineOfData.startTimestamp;
+            dbFunctions.addNewLineToParticipantDB(store.getState().experimentInfo.participantId,
+                                                  JSON.stringify(this.currentLineOfData));
+          }
+          else {
+            var globalVariableObj = {
+              label: this.currentTask.question,
+              value: this.currentLineOfData.responses
+            };
+            dbFunctions.addNewGlobalVariableToParticipantDB(store.getState().experimentInfo.participantId,
+                                                            JSON.stringify(globalVariableObj));
+          }
 
-        wamp.broadcastEvents(stringifyWAMPMessage(this.currentLineOfData, null,
-                                                  this.state.hasBeenAnswered ? "NEXT" : "SKIP"));
+          wamp.broadcastEvents(stringifyWAMPMessage(this.currentLineOfData, null,
+                                                    this.state.hasBeenAnswered ? "NEXT" : "SKIP"));
+        }
       }
 
       //reset
@@ -156,14 +158,18 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 
   onAnswer(answer) {
     if (!this.state.hasBeenAnswered) {
-      this.currentLineOfData.firstResponseTimestamp = getCurrentTime();
-      this.currentLineOfData.timeToFirstAnswer = this.currentLineOfData.firstResponseTimestamp - this.currentLineOfData.startTimestamp;
+      if (!(store.getState().experimentInfo.participantId === "TESTING")) {
+        this.currentLineOfData.firstResponseTimestamp = getCurrentTime();
+        this.currentLineOfData.timeToFirstAnswer = this.currentLineOfData.firstResponseTimestamp - this.currentLineOfData.startTimestamp;
+      }
     }
     this.setState({
       hasBeenAnswered: true
     });
-    this.currentLineOfData.responses = answer.responses;
-    this.currentLineOfData.correctlyAnswered = answer.correctlyAnswered;
+    if (!(store.getState().experimentInfo.participantId === "TESTING")) {
+      this.currentLineOfData.responses = answer.responses;
+      this.currentLineOfData.correctlyAnswered = answer.correctlyAnswered;
+    }
   }
 
   onFinishedRecursion() {
@@ -180,7 +186,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
           runThisTaskSet = shuffle(runThisTaskSet);
         }
 
-        let trackingTaskSetNames = this.props.tasksFamilyTree.slice();
+        let trackingTaskSetNames = this.props.tasksFamilyTree.slice(); //clone array, since javascript passes by reference, we need to keep the orgin familyTree untouched
         trackingTaskSetNames.push(this.props.taskSet[this.state.currentTaskIndex].name);
         //recursion
         return <DisplayTaskHelper tasksFamilyTree={trackingTaskSetNames} taskSet={runThisTaskSet} onFinished={this.onFinishedRecursion.bind(this)}/>
@@ -194,7 +200,8 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
         }
 
         //log the start
-        if (!this.state.hasBeenAnswered && this.state.complexStep === 0) {
+        if (!this.state.hasBeenAnswered && this.state.complexStep === 0
+              && !(store.getState().experimentInfo.participantId === "TESTING")) {
           this.logTheStartOfTask();
         }
 
@@ -202,7 +209,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
           if(this.currentTask){
             if((this.currentTask.taskType === "Instruction") ||
                   (this.currentTask.taskType === "Complex" && this.state.complexStep === 0)) {
-                return <InstructionViewComponent task={this.currentTask}/>;
+                return <InstructionViewComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)}/>;
               }
             if(this.currentTask.taskType === "Text Entry") {
                 return <TextEntryComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} hasBeenAnswered={this.state.hasBeenAnswered}/>;
@@ -275,7 +282,7 @@ class DisplayTaskComponent extends Component {
 
   onFinished() {
     this.broadcastEndEvent();
-    this.props.history.push("./");
+    this.props.history.goBack();
     alert("finished!");
   }
 
