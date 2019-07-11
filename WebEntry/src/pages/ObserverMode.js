@@ -128,10 +128,7 @@ class ObserverMode extends Component {
         </div>
 
         <div className="ContainerSeperator ViewerGaze">
-          { Object.entries(this.state.participants).map((pair, index) => {
-              return <GazeCursor tracker={pair[1]} id={index} participant={pair[0]}/>;
-            })
-          }
+          
         </div>
       </div>
       );

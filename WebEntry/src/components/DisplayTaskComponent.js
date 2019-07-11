@@ -116,7 +116,6 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
   }
 
   onClickNext() {
-
     if (this.currentTask && this.currentTask.taskType === "Complex" && this.state.complexStep < 2) {
       this.setState({
         complexStep: (this.state.complexStep + 1)

@@ -8,6 +8,15 @@ import store from './core/store';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
+var doubleTouchStartTimestamp = 0;
+document.addEventListener("touchstart", function(event){
+    var now = +(new Date());
+    if (doubleTouchStartTimestamp + 500 > now){
+        event.preventDefault();
+    };
+    doubleTouchStartTimestamp = now;
+});
+
 ReactDOM.render(
   <Provider store={store} >
     <App />
