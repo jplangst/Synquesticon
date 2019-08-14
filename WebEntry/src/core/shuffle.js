@@ -1,9 +1,15 @@
+
+/**
+ * shuffle - Shuffles an array.
+ *
+ * @param  {array} array The array to shuffle.
+ * @return {array}       The shuffled array. 
+ */
 export default function shuffle(array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
 
   // While there remain elements to shuffle...
   while (0 !== currentIndex) {
-
     // Pick a remaining element...
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex -= 1;

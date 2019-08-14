@@ -18,7 +18,7 @@ import wamp from '../core/wamp';
 import store from '../core/store';
 import shuffle from '../core/shuffle';
 
-import * as dbFunctions from '../core/db_helper';
+import db_helper from '../core/db_helper';
 import * as dbObjects from '../core/db_objects';
 import * as dbObjectsUtilityFunctions from '../core/db_objects_utility_functions';
 
@@ -127,7 +127,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
           if (!this.currentTask.globalVariable) {
             //complete line of data before saving to DB
             this.currentLineOfData.timeToCompletion = getCurrentTime() - this.currentLineOfData.startTimestamp;
-            dbFunctions.addNewLineToParticipantDB(store.getState().experimentInfo.participantId,
+            db_helper.addNewLineToParticipantDB(store.getState().experimentInfo.participantId,
                                                   JSON.stringify(this.currentLineOfData));
           }
           else {
@@ -135,7 +135,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
               label: this.currentTask.question,
               value: this.currentLineOfData.responses
             };
-            dbFunctions.addNewGlobalVariableToParticipantDB(store.getState().experimentInfo.participantId,
+            db_helper.addNewGlobalVariableToParticipantDB(store.getState().experimentInfo.participantId,
                                                             JSON.stringify(globalVariableObj));
           }
 

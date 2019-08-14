@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import * as dbFunctions from '../../core/db_helper';
+import db_helper from '../../core/db_helper';
 import * as dbObjects from '../../core/db_objects';
 
 //Material UI imports
@@ -56,11 +56,11 @@ class EditTaskComponent extends Component {
     this.task.taskType = this.state.taskType;
 
     if(this.props.isEditing){
-      dbFunctions.updateTaskFromDb(this.task._id, this.task, this.handleQuestionCallback);
+      db_helper.updateTaskFromDb(this.task._id, this.task, this.handleQuestionCallback);
     }
     else{
       console.log(this.task);
-      dbFunctions.addTaskToDb(this.task, this.handleQuestionCallback);
+      db_helper.addTaskToDb(this.task, this.handleQuestionCallback);
     }
   }
 
@@ -104,7 +104,7 @@ class EditTaskComponent extends Component {
 
   removeTask() {
     //TODO Dialog prompt "Are you sure you want to delete "Task", it will also be removed from the data base...
-    dbFunctions.deleteTaskFromDb(this.state.task._id, this.handleQuestionCallback);
+    db_helper.deleteTaskFromDb(this.state.task._id, this.handleQuestionCallback);
   }
 
   closeTaskComponent(componentChanged){

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import * as dbFunctions from '../../core/db_helper';
+import db_helper from '../../core/db_helper';
 import * as dbObjects from '../../core/db_objects';
 
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -56,10 +56,10 @@ class CreateTaskSetDialog extends Component {
 
   onChangeTaskSettings(){
     if(this.props.isEditing){ //Need the question ID here, should pass as prop when editing
-      //dbFunctions.addQuestionToDb(this.task, this.handleQuestionCallback);
+      //db_helper.addQuestionToDb(this.task, this.handleQuestionCallback);
     }
     else{
-      dbFunctions.addTaskSetToDb(this.taskSet, this.handleTaskSetCallback);
+      db_helper.addTaskSetToDb(this.taskSet, this.handleTaskSetCallback);
     }
   }
 

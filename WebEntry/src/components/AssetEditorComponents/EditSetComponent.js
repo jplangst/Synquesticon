@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 
-import * as dbFunctions from '../../core/db_helper';
+import db_helper from '../../core/db_helper';
+
+
 import * as dbObjects from '../../core/db_objects';
 
 import shuffle from '../../core/shuffle';
@@ -25,7 +27,7 @@ class EditSetComponent extends Component {
     super(props);
 
     //If we got a taskObject passed as a prop we use it, otherwise we init with a default constructed object
-    //Clone the array via JSON. Otherwise we would operate directly on the original objects which we do not want 
+    //Clone the array via JSON. Otherwise we would operate directly on the original objects which we do not want
     this.set = this.props.isEditing ? JSON.parse(JSON.stringify(this.props.setObject)) : new dbObjects.TaskSetObject();
 
     //We keep these fields in the state as they affect how the component is rendered
@@ -64,10 +66,10 @@ class EditSetComponent extends Component {
 
   onChangeSetSettings(){
     if(this.props.isEditing){
-      dbFunctions.updateTaskSetFromDb(this.set._id, this.set, this.handleDBCallback);
+      db_helper.updateTaskSetFromDb(this.set._id, this.set, this.handleDBCallback);
     }
     else{
-      dbFunctions.addTaskSetToDb(this.set, this.handleDBCallback);
+      db_helper.addTaskSetToDb(this.set, this.handleDBCallback);
     }
   }
 
@@ -142,7 +144,7 @@ class EditSetComponent extends Component {
       var query = {id: task._id, objType: task.objType};
       var queryList = [];
       queryList.push(query);
-      dbFunctions.getTasksOrTaskSetsWithIDsPromise(queryList).then(result =>{
+      db_helper.getTasksOrTaskSetsWithIDsPromise(queryList).then(result =>{
         //If the query was successful
         if(result){
           //Extract the child set ids of the set we are trying to add as well as the set id
@@ -280,7 +282,7 @@ class EditSetComponent extends Component {
 
   refreshSetChildList(){
     if(this.state.taskList && this.state.taskList.length > 0){
-      dbFunctions.getTasksOrTaskSetsWithIDs(this.state.taskList, this.handleRetrieveSetChildTasks);
+      db_helper.getTasksOrTaskSetsWithIDs(this.state.taskList, this.handleRetrieveSetChildTasks);
     }
     else{ //If the list is empty we clear the list in the state
       this.setState({taskListObjects: []});
@@ -290,7 +292,7 @@ class EditSetComponent extends Component {
   //Removes the selected set from the database
   removeSet() {
     //TODO Dialog prompt "Are you sure you want to delete "Set", it will also be removed from the data base...
-    dbFunctions.deleteTaskSetFromDb(this.set._id, this.handleDBCallback);
+    db_helper.deleteTaskSetFromDb(this.set._id, this.handleDBCallback);
   }
 
   //Calls the provided callback function that handles the closing of this component

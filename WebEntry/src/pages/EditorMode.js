@@ -16,7 +16,7 @@ import EditSetComponent from '../components/AssetEditorComponents/EditSetCompone
 import {FilterList, AddCircleOutline} from '@material-ui/icons';
 
 import './EditorMode.css';
-import * as dbFunctions from '../core/db_helper.js';
+import db_helper from '../core/db_helper.js';
 
 class EditorMode extends Component {
   constructor(props) {
@@ -32,6 +32,8 @@ class EditorMode extends Component {
       assetEditorContext: "empty",
       assetEditorObject: null,
     };
+
+
 
     //Database callbacks
     this.dbTaskCallback = this.dbTaskCallbackFunction.bind(this);
@@ -54,7 +56,7 @@ class EditorMode extends Component {
 
   //---------------------------component functions------------------------------
   componentWillMount() {
-    //dbFunctions.deleteAllTaskSetsFromDb();
+    //db_helper.deleteAllTaskSetsFromDb();
     this.assetViewerQueryDatabase();
   }
 
@@ -76,8 +78,8 @@ class EditorMode extends Component {
   }
 
   assetViewerQueryDatabase() {
-    dbFunctions.getAllTasksFromDb(this.dbTaskCallback);
-    dbFunctions.getAllTaskSetsFromDb(this.dbTaskSetCallback);
+    db_helper.getAllTasksFromDb(this.dbTaskCallback);
+    db_helper.getAllTaskSetsFromDb(this.dbTaskSetCallback);
   }
 
   //actions callbacks
@@ -105,8 +107,8 @@ class EditorMode extends Component {
     this.clearAssetEditorObject();
 
     if(dbChanged){
-      dbFunctions.getAllTasksFromDb(this.dbTaskCallback);
-      dbFunctions.getAllTaskSetsFromDb(this.dbTaskSetCallback);
+      db_helper.getAllTasksFromDb(this.dbTaskCallback);
+      db_helper.getAllTaskSetsFromDb(this.dbTaskSetCallback);
     }
   }
 
@@ -117,7 +119,7 @@ class EditorMode extends Component {
 
   removeTaskSet(taskSet) {
     console.log("deleteTaskSet", taskSet);
-    dbFunctions.deleteTaskSetFromDb(taskSet._id);
+    db_helper.deleteTaskSetFromDb(taskSet._id);
   }
 
   //Adds escape characters in fornt of all common regex symbols
@@ -134,7 +136,7 @@ class EditorMode extends Component {
       }
     }
 
-    dbFunctions.queryTasksFromDb(true, searchString, this.dbQueryCallback);
+    db_helper.queryTasksFromDb(true, searchString, this.dbQueryCallback);
   }
   onTaskSetSearchInputChanged(e){
     var searchString = "";
@@ -145,7 +147,7 @@ class EditorMode extends Component {
       }
     }
 
-    dbFunctions.queryTasksFromDb(false, searchString, this.dbQueryCallback);
+    db_helper.queryTasksFromDb(false, searchString, this.dbQueryCallback);
   }
 
   addTaskCallback(){

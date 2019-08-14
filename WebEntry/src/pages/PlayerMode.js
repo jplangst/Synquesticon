@@ -20,7 +20,7 @@ import store from '../core/store';
 import shuffle from '../core/shuffle';
 import wampStore from '../core/wampStore';
 
-import * as dbFunctions from '../core/db_helper.js';
+import db_helper from '../core/db_helper.js';
 import * as dbObjects from '../core/db_objects';
 import './PlayerMode.css';
 
@@ -44,12 +44,12 @@ class PlayerMode extends Component {
   componentWillMount() {
     wampStore.addNewRemoteTrackerListener(this.onNewRemoteTracker.bind(this));
 
-    //dbFunctions.deleteAllParticipantsFromDb();
+    //db_helper.deleteAllParticipantsFromDb();
     //save data into DB before closing
-    dbFunctions.getAllParticipantsFromDb((participants) => {
+    db_helper.getAllParticipantsFromDb((participants) => {
       console.log("all participants", participants);
     });
-    dbFunctions.queryTasksFromDb(false, "experiment", this.dbTaskSetCallback);
+    db_helper.queryTasksFromDb(false, "experiment", this.dbTaskSetCallback);
   }
 
   componentWillUnmount() {
@@ -78,7 +78,7 @@ class PlayerMode extends Component {
       runThisTaskSet = shuffle(runThisTaskSet);
     }
 
-    dbFunctions.addParticipantToDb(new dbObjects.ParticipantObject(this.selectedTaskSet._id), (returnedIdFromDB)=> {
+    db_helper.addParticipantToDb(new dbObjects.ParticipantObject(this.selectedTaskSet._id), (returnedIdFromDB)=> {
       var action = {
         type: 'SET_EXPERIMENT_INFO',
         experimentInfo: {
@@ -106,7 +106,7 @@ class PlayerMode extends Component {
   //bottom button handler
   onPlayButtonClick(taskSet) {
     this.selectedTaskSet = taskSet;
-    dbFunctions.getTasksOrTaskSetsWithIDs(this.selectedTaskSet.childIds, this.dbTasksCallback);
+    db_helper.getTasksOrTaskSetsWithIDs(this.selectedTaskSet.childIds, this.dbTasksCallback);
   }
 
   onSelectRemoteTracker(e) {

@@ -6,7 +6,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import ObserverMode from './ObserverMode';
 import PlayerMode from './PlayerMode';
 
-import * as dbFunctions from '../core/db_helper.js';
+import db_helper from '../core/db_helper.js';
 
 import './IntroductionScreen.css';
 import './ObserverMode.css';

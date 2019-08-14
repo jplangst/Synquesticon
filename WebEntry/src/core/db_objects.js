@@ -1,3 +1,7 @@
+
+/**
+ * The default object used for Tasks. New tasks should use this as the base.
+ */
 export class TaskObject {
   constructor(){
     this.taskType = "Multiple Choice";
@@ -14,6 +18,9 @@ export class TaskObject {
   }
 }
 
+/**
+ * The default object used for Sets. New sets should use this as the base.
+ */
 export class TaskSetObject {
   constructor(){
     this.name = "";
@@ -27,6 +34,10 @@ export class TaskSetObject {
   }
 }
 
+
+/**
+ *  The default object used for Participants. New participants should use this as the base.
+ */
 export class ParticipantObject {
   constructor(mainTaskSetId) {
     var dt = new Date();
@@ -38,6 +49,10 @@ export class ParticipantObject {
   }
 }
 
+
+/**
+ * The default object used for LineOfData. New lines of data should use this as the base.
+ */
 export class LineOfData {
   constructor(currentTime, taskId, familyTree, taskContent, taskCorrectResponses) {
     this.tasksFamilyTree = familyTree;

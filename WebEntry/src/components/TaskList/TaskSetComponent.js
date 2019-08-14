@@ -13,7 +13,7 @@ import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
 import SpeakerIcon from '@material-ui/icons/VolumeUp';
 
-import wamp from '../core/wamp.js';
+import wamp from '../../core/wamp.js';
 
 import './TaskSetComponent.css';
 

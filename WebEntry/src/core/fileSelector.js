@@ -1,5 +1,10 @@
 import * as React from "react";
 
+/**
+ * A file selector React component. Can be used to select files.
+ * Props should contain: handleSelectionCallback.
+ * The selected file is passed to the callback.
+ */
 export class FileSelector extends React.Component<undefined, undefined>
 {
     constructor(props: any)

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import Button from '@material-ui/core/Button';
 
-import * as dbFunctions from '../../core/db_helper.js';
+import db_helper from '../../core/db_helper.js';
 
 import './ImageViewComponent.css';
 
@@ -14,7 +14,7 @@ class ImageViewComponent extends Component {
     }
   }
   componentDidMount() {
-    dbFunctions.getImage(this.props.task.image, this.onReceivedImage.bind(this));
+    db_helper.getImage(this.props.task.image, this.onReceivedImage.bind(this));
   }
 
   onReceivedImage(img) {

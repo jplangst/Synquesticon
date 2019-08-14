@@ -8,10 +8,6 @@ const initialState = {
   gazeData: {},
   showHeader: true,
   experimentInfo: null
-  // experimentId: this.state.experiment,
-  // partiticipantId: this.state.participant,
-  // taskSet: dbQueryResult,
-  // selectedTracker: this.state.selectedTracker
 };
 
 const store = createStore ((state = initialState, action) => {

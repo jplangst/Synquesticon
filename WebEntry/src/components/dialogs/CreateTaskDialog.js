@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import * as dbFunctions from '../../core/db_helper';
+import db_helper from '../../core/db_helper';
 import * as dbObjects from '../../core/db_objects';
 
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -66,10 +66,10 @@ class CreateTaskDialog extends Component {
     this.task.responseType = this.state.responseType;
 
     if(this.props.isEditing){ //Need the question ID here, should pass as prop when editing
-      //dbFunctions.addQuestionToDb(this.task, this.handleQuestionCallback);
+      //db_helper.addQuestionToDb(this.task, this.handleQuestionCallback);
     }
     else{
-      dbFunctions.addTaskToDb(this.task, this.handleQuestionCallback);
+      db_helper.addTaskToDb(this.task, this.handleQuestionCallback);
     }
   }
 
