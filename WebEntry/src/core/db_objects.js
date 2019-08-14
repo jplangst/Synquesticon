@@ -34,7 +34,6 @@ export class TaskSetObject {
   }
 }
 
-
 /**
  *  The default object used for Participants. New participants should use this as the base.
  */
@@ -48,7 +47,6 @@ export class ParticipantObject {
     this.globalVariables = [];
   }
 }
-
 
 /**
  * The default object used for LineOfData. New lines of data should use this as the base.
