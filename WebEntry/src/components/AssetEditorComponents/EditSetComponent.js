@@ -25,7 +25,7 @@ class EditSetComponent extends Component {
     super(props);
 
     //If we got a taskObject passed as a prop we use it, otherwise we init with a default constructed object
-    //Clone the array via JSON. Otherwise we would operate directly on the original objects which we do now want
+    //Clone the array via JSON. Otherwise we would operate directly on the original objects which we do not want 
     this.set = this.props.isEditing ? JSON.parse(JSON.stringify(this.props.setObject)) : new dbObjects.TaskSetObject();
 
     //We keep these fields in the state as they affect how the component is rendered
@@ -85,6 +85,7 @@ class EditSetComponent extends Component {
     }
   }
 
+  //Callback from checkbox pressed
   onSetTaskOrderChanged(e, checked){
     this.set.setTaskOrder = checked ? "Random" : "InOrder";
     this.setState({
@@ -123,12 +124,12 @@ class EditSetComponent extends Component {
 
     store.dispatch(action);
 
-    var layourAction = {
+    var layoutAction = {
       type: 'SET_SHOW_HEADER',
       showHeader: false
     }
 
-    store.dispatch(layourAction);
+    store.dispatch(layoutAction);
 
     this.props.runTestSet();
   }

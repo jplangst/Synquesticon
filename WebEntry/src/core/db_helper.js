@@ -1,10 +1,18 @@
 import axios from 'axios';
 
-/******************************************************
-                      TASK FUNCTIONS
-*******************************************************/
+/*
+████████  █████  ███████ ██   ██     ███████ ██    ██ ███    ██  ██████ ████████ ██  ██████  ███    ██ ███████
+   ██    ██   ██ ██      ██  ██      ██      ██    ██ ████   ██ ██         ██    ██ ██    ██ ████   ██ ██
+   ██    ███████ ███████ █████       █████   ██    ██ ██ ██  ██ ██         ██    ██ ██    ██ ██ ██  ██ ███████
+   ██    ██   ██      ██ ██  ██      ██      ██    ██ ██  ██ ██ ██         ██    ██ ██    ██ ██  ██ ██      ██
+   ██    ██   ██ ███████ ██   ██     ██       ██████  ██   ████  ██████    ██    ██  ██████  ██   ████ ███████
+*/
 
-// fetch data from our data base
+/**
+ * getAllTasksFromDb - Asynch query the DB for all existing Tasks, the results are recieved via callback.
+ *
+ * @param  {function} callback This function will be called with the result of the query. The function should take one parameter.
+ */
 export function getAllTasksFromDb(callback){
   fetch("/api/getAllTasks")
     .then((response) => {
@@ -25,28 +33,12 @@ export function getAllTasksFromDb(callback){
     });
 };
 
-export function queryTasksFromDb(queryTasks, queryString,callback){
-  var queryCollection = queryTasks ? 'Tasks' : 'TaskSets';
-
-  axios.post("/api/getAllTasksContaining", {
-    queryCollection: queryCollection,
-    queryString: queryString,
-  }).then((response) => {
-    if(response.status === 200) {
-      console.log("Task received from database with id: ", queryString, response.data);
-      callback(queryTasks, response.data);
-    }
-    else {
-      alert("Cannot find tasks containing ", queryString);
-      throw new Error("Database connection failed");
-    }
-  })
-  .catch((error) => {
-    console.log(error)
-  });
-};
-
-//retrieve a task of an //ID
+/**
+ * getTaskWithID - Asynch query for a specific task. Takes a task id and returns the result of the query via the provided callback.
+ *
+ * @param  {string}   id       The MongoDB generated ID to query for.
+ * @param  {function} callback This function will be called with the result of the query. The function should take one parameter.
+ */
 export function getTaskWithID(id, callback){
   console.log("find ", id);
   axios.post("/api/getTaskWithID", {
@@ -66,7 +58,12 @@ export function getTaskWithID(id, callback){
   });
 };
 
-// to create new query into our data base
+/**
+ * addTaskToDb - Asynch add a new task to the DB.
+ *
+ * @param  {TaskObject} dbQuestionObject The task object to add to the DB. Should use TaskObject defined in db_objects.js.
+ * @param  {function}   callback         This function will be called with the MongoDB id assigned to the created task. The function should take one parameter.
+ */
 export function addTaskToDb(dbQuestionObject, callback){
   axios.post("/api/addTask", {
     message: JSON.stringify(dbQuestionObject)
@@ -88,7 +85,13 @@ export function addTaskToDb(dbQuestionObject, callback){
   });
 };
 
-// to overwrite existing data base information
+/**
+ * updateTaskFromDb - Asynch call to update an existing task in the DB.
+ *
+ * @param  {string}     id        The MongoDB id of the task to update.
+ * @param  {TaskObject} editedObj The task object to update in the DB. Should use TaskObject defined in db_objects.js.
+ * @param  {function}   callback  This function will be called with the MongoDB id of the updated task. The function should take one parameter.
+ */
 export function updateTaskFromDb(id, editedObj, callback){
   axios.post("/api/updateTask", {
     id: id,
@@ -100,7 +103,12 @@ export function updateTaskFromDb(id, editedObj, callback){
     });
 };
 
-// to remove existing database information
+/**
+ * deleteTaskFromDb - Asynch call to remove a specific task from the DB. Takes the id of the task and a callback function.
+ *
+ * @param  {string}   idTodelete The MongoDB id of the task to delete.
+ * @param  {function} callback   This function will be called when the task has been deleted from the DB. Use it to update the interface.
+ */
 export function deleteTaskFromDb(idTodelete, callback){
   axios.post("/api/deleteTask", {
       id: idTodelete
@@ -110,13 +118,27 @@ export function deleteTaskFromDb(idTodelete, callback){
   });
 };
 
+/**
+ * deleteAllTasksFromDb - Deletes all the tasks in the DB. Use with care.
+ *
+ */
 export function deleteAllTasksFromDb(){
   axios.delete("/api/deleteAllTasks");
 };
 
-/******************************************************
-                    TASK SET FUNCTIONS
-*******************************************************/
+/*
+████████  █████  ███████ ██   ██     ███████ ███████ ████████     ███████ ██    ██ ███    ██  ██████ ████████ ██  ██████  ███    ██ ███████
+   ██    ██   ██ ██      ██  ██      ██      ██         ██        ██      ██    ██ ████   ██ ██         ██    ██ ██    ██ ████   ██ ██
+   ██    ███████ ███████ █████       ███████ █████      ██        █████   ██    ██ ██ ██  ██ ██         ██    ██ ██    ██ ██ ██  ██ ███████
+   ██    ██   ██      ██ ██  ██           ██ ██         ██        ██      ██    ██ ██  ██ ██ ██         ██    ██ ██    ██ ██  ██ ██      ██
+   ██    ██   ██ ███████ ██   ██     ███████ ███████    ██        ██       ██████  ██   ████  ██████    ██    ██  ██████  ██   ████ ███████
+*/
+
+/**
+ * getAllTaskSetsFromDb - Asynch query the DB for all existing Sets, the results are recieved via callback.
+ *
+ * @param  {function} callback This function will be called with the result of the query. The function should take one parameter.
+ */
 export function getAllTaskSetsFromDb(callback){
   fetch("/api/getAllTaskSets")
     .then((response) => {
@@ -137,6 +159,12 @@ export function getAllTaskSetsFromDb(callback){
     });
 };
 
+/**
+ * getTaskSetWithID - Asynch query for a specific set. Takes a set id and returns the result of the query via the provided callback.
+ *
+ * @param  {string}   id       The MongoDB generated ID to query for.
+ * @param  {function} callback This function will be called with the result of the query. The function should take one parameter.
+ */
 export function getTaskSetWithID(id, callback){
   axios.post("/api/getTaskSetWithID", {
     id: id
@@ -155,9 +183,31 @@ export function getTaskSetWithID(id, callback){
   });
 }
 
-export function addTaskSetToDb(obj, callback){
+/**
+ * getTaskSetObject - Asynch Get the specified set's object from the DB. The callback is called with the set object once the query has finished.
+ *                    The object will contain all child objects as well.
+ *
+ * @param  {string}   taskSetID The MongoDB id of the set you want to retrieve.
+ * @param  {function} callback  This function will be called when the object has been retrieved. The function should take one parameter.
+ */
+export function getTaskSetObject(taskSetID, callback) {
+  axios.post("/api/getCompleteTaskSetObject", {
+      objId: JSON.stringify(taskSetID)
+  }).then(response => {
+    console.log("after get task set object", response);
+    callback(response.data.data);
+  });
+};
+
+/**
+ * addTaskSetToDb - Asynch add a new set to the DB.
+ *
+ * @param  {TaskSetObject} setObject The task object to add to the DB. Should use TaskObject defined in db_objects.js.
+ * @param  {function}      callback  This function will be called with the MongoDB id assigned to the created set. The function should take one parameter.
+ */
+export function addTaskSetToDb(setObject, callback){
   axios.post("/api/addTaskSet", {
-    message: JSON.stringify(obj)
+    message: JSON.stringify(setObject)
   })
   .then((response) => {
     if(response.status === 200) {
@@ -171,7 +221,13 @@ export function addTaskSetToDb(obj, callback){
   });
 };
 
-// to overwrite existing data base information
+/**
+ * updateTaskSetFromDb - Asynch call to update an existing set in the DB.
+ *
+ * @param  {string}     id        The MongoDB id of the set to update.
+ * @param  {TaskObject} editedObj The set object to update in the DB. Should use TaskSetObject defined in db_objects.js.
+ * @param  {function}   callback  This function will be called when the set has been updated. No parameters.
+ */
 export function updateTaskSetFromDb(id, editedObj, callback){
   axios.post("/api/updateTaskSet", {
     id: id,
@@ -182,6 +238,12 @@ export function updateTaskSetFromDb(id, editedObj, callback){
       });
 };
 
+/**
+ * deleteTaskSetFromDb - Asynch call to remove a specific set from the DB. Takes the id of the set and a callback function.
+ *
+ * @param  {string}   idTodelete The MongoDB id of the set to delete.
+ * @param  {function} callback   This function will be called when the set has been deleted from the DB. Use it to update the interface.
+ */
 export function deleteTaskSetFromDb(idTodelete, callback){
   axios.post("/api/deleteTaskSet", {
       id: idTodelete
@@ -191,7 +253,12 @@ export function deleteTaskSetFromDb(idTodelete, callback){
   });
 };
 
-//when we add a child to a set, we need two fields: childId and childType (Task or TaskSet)
+/**
+ * addChildToTaskSetDb - Add a child to the specified set. Takes the ID of the set and the child object to add.
+ *
+ * @param  {string}                   setID    The MongoDB id of the set to add the child to.
+ * @param  {TaskObject/TaskSetObject} childObj The javascript object with the child data to add.
+ */
 export function addChildToTaskSetDb(setID, childObj){
   axios.post("/api/addChildToTaskSet", {
     setId: setID,
@@ -199,7 +266,12 @@ export function addChildToTaskSetDb(setID, childObj){
   }).then(data => {console.log("after adding child to set", data)});
 }
 
-//childId is enough for removing it from its set
+/**
+ * removeChildFromTaskSetDb - Remove a child from a set.
+ *
+ * @param  {string} setID   The MongoDB id of the set.
+ * @param  {string} childId The MongoDB id of the child
+ */
 export function removeChildFromTaskSetDb(setID, childId){
   axios.post("/api/removeChildFromTaskSet", {
     setId: setID,
@@ -207,21 +279,72 @@ export function removeChildFromTaskSetDb(setID, childId){
   }).then(data => {console.log("after remove child from set", data)});
 }
 
+/**
+ * deleteAllTaskSetsFromDb - Deletes all the sets in the DB. Use with care.
+ *
+ */
 export function deleteAllTaskSetsFromDb(){
   axios.delete("api/deleteAllTaskSets");
 };
 
-//the ids can be either task or taskset, the database will do recursive query to query them all
-export function getTaskSetObject(taskSetID, callback) {
-  axios.post("/api/getCompleteTaskSetObject", {
-      objId: JSON.stringify(taskSetID)
-  }).then(response => {
-    console.log("after get task set object", response);
-    callback(response.data.data);
+/**
+ * getImage - Asynch load the image from the filepath.
+ *
+ * @param  {string}   filepath The filepath to load the image from.
+ * @param  {function} callback This function is called with the result. Should take one parameter.
+ */
+export function getImage(filepath, callback){
+  axios.post("/api/getImage", {
+    file: filepath
+  }).then(data => {
+    callback(data.data.data);
+  });
+}
+
+/*
+████████  █████  ███████ ██   ██      █████  ███    ██ ██████      ███████ ███████ ████████     ███████ ██    ██ ███    ██  ██████ ████████ ██  ██████  ███    ██ ███████
+   ██    ██   ██ ██      ██  ██      ██   ██ ████   ██ ██   ██     ██      ██         ██        ██      ██    ██ ████   ██ ██         ██    ██ ██    ██ ████   ██ ██
+   ██    ███████ ███████ █████       ███████ ██ ██  ██ ██   ██     ███████ █████      ██        █████   ██    ██ ██ ██  ██ ██         ██    ██ ██    ██ ██ ██  ██ ███████
+   ██    ██   ██      ██ ██  ██      ██   ██ ██  ██ ██ ██   ██          ██ ██         ██        ██      ██    ██ ██  ██ ██ ██         ██    ██ ██    ██ ██  ██ ██      ██
+   ██    ██   ██ ███████ ██   ██     ██   ██ ██   ████ ██████      ███████ ███████    ██        ██       ██████  ██   ████  ██████    ██    ██  ██████  ██   ████ ███████
+*/
+
+/**
+ * queryTasksFromDb - Asynch query of the Task or Set collection in the database.
+ * Takes a bool to decide the collection to query, and a string to use for the query.
+ *
+ * @param  {Boolean}  queryTasks  If true the Tasks collection is queried, otherwise the Set collection is queried.
+ * @param  {String}   queryString The string to use as the query.
+ * @param  {function} callback    This function will be called with the result of the query. The function should take two parameters.
+ *                                The first will be the queried collection, the second will be the result of the query
+ */
+export function queryTasksFromDb(queryTasks, queryString,callback){
+  var queryCollection = queryTasks ? 'Tasks' : 'TaskSets';
+
+  axios.post("/api/getAllTasksContaining", {
+    queryCollection: queryCollection,
+    queryString: queryString,
+  }).then((response) => {
+    if(response.status === 200) {
+      console.log("Task received from database with id: ", queryString, response.data);
+      callback(queryTasks, response.data);
+    }
+    else {
+      alert("Cannot find tasks containing ", queryString);
+      throw new Error("Database connection failed");
+    }
+  })
+  .catch((error) => {
+    console.log(error)
   });
 };
 
-//the ids can be either task or taskset, the database will do recursive query to query them all
+/**
+ * getTasksOrTaskSetsWithIDs - Asynch Get tasks or sets with the specified ids.
+ *
+ * @param  {string}   objIds   The ids to retrieve, should be in a list/array format.
+ * @param  {function} callback This function is called with the result of the query. Should take one parameter.
+ */
 export function getTasksOrTaskSetsWithIDs(objIds, callback) {
   axios.post("/api/getTasksOrTaskSetsWithIDs", {
       objIds: JSON.stringify(objIds)
@@ -230,7 +353,13 @@ export function getTasksOrTaskSetsWithIDs(objIds, callback) {
   });
 };
 
-//Async version that can be called in a synch manner using await
+/**
+ * getTasksOrTaskSetsWithIDsPromise - Async Get tasks or sets with the specified ids. Can be made Synchronous by using await.
+ *
+ * @param  {string}   objIds   The ids to retrieve, should be in a list/array format.
+ *
+ * @return {list} Returns a list of Task and Set objects.
+ */
 export async function getTasksOrTaskSetsWithIDsPromise(objIds) {
     return new Promise((resolve, reject) => {
       axios.post("/api/getTasksOrTaskSetsWithIDs", {
@@ -243,18 +372,20 @@ export async function getTasksOrTaskSetsWithIDsPromise(objIds) {
   })
 };
 
-export function getImage(filepath, callback){
-  axios.post("/api/getImage", {
-    file: filepath
-  }).then(data => {
-    //console.log("receive image from db", data);
-    callback(data.data.data);
-  });
-}
+/*
+███████ ██   ██ ██████  ███████ ██████  ██ ███    ███ ███████ ███    ██ ████████     ███████ ██    ██ ███    ██  ██████ ████████ ██  ██████  ███    ██ ███████
+██       ██ ██  ██   ██ ██      ██   ██ ██ ████  ████ ██      ████   ██    ██        ██      ██    ██ ████   ██ ██         ██    ██ ██    ██ ████   ██ ██
+█████     ███   ██████  █████   ██████  ██ ██ ████ ██ █████   ██ ██  ██    ██        █████   ██    ██ ██ ██  ██ ██         ██    ██ ██    ██ ██ ██  ██ ███████
+██       ██ ██  ██      ██      ██   ██ ██ ██  ██  ██ ██      ██  ██ ██    ██        ██      ██    ██ ██  ██ ██ ██         ██    ██ ██    ██ ██  ██ ██      ██
+███████ ██   ██ ██      ███████ ██   ██ ██ ██      ██ ███████ ██   ████    ██        ██       ██████  ██   ████  ██████    ██    ██  ██████  ██   ████ ███████
+*/
 
-/******************************************************
-                  EXPERIMENT FUNCTIONS
-*******************************************************/
+/**
+ * getAllExperimentsFromDb - Queries the DB for all sets tagged as experiments
+ *
+ * @param  {function} callback This function is called with the esult of the query. The function should take one parameter.
+ *                             A list of Set objects is passed.
+ */
 export function getAllExperimentsFromDb(callback){
   fetch("/api/getAllExperiments")
     .then((response) => {
@@ -274,9 +405,25 @@ export function getAllExperimentsFromDb(callback){
     });
 };
 
-/******************************************************
-      PARTICIPANT FUNCTIONS (OR LOGGING FUNCTIONS)
-*******************************************************/
+/*
+██████   █████  ██████  ████████ ██  ██████ ██ ██████   █████  ███    ██ ████████     ███████ ██    ██ ███    ██  ██████ ████████ ██  ██████  ███    ██ ███████
+██   ██ ██   ██ ██   ██    ██    ██ ██      ██ ██   ██ ██   ██ ████   ██    ██        ██      ██    ██ ████   ██ ██         ██    ██ ██    ██ ████   ██ ██
+██████  ███████ ██████     ██    ██ ██      ██ ██████  ███████ ██ ██  ██    ██        █████   ██    ██ ██ ██  ██ ██         ██    ██ ██    ██ ██ ██  ██ ███████
+██      ██   ██ ██   ██    ██    ██ ██      ██ ██      ██   ██ ██  ██ ██    ██        ██      ██    ██ ██  ██ ██ ██         ██    ██ ██    ██ ██  ██ ██      ██
+██      ██   ██ ██   ██    ██    ██  ██████ ██ ██      ██   ██ ██   ████    ██        ██       ██████  ██   ████  ██████    ██    ██  ██████  ██   ████ ███████
+
+ ██  ██████  ██████      ██       ██████   ██████   ██████  ██ ███    ██  ██████      ███████ ██    ██ ███    ██  ██████ ████████ ██  ██████  ███    ██ ███████ ██
+██  ██    ██ ██   ██     ██      ██    ██ ██       ██       ██ ████   ██ ██           ██      ██    ██ ████   ██ ██         ██    ██ ██    ██ ████   ██ ██       ██
+██  ██    ██ ██████      ██      ██    ██ ██   ███ ██   ███ ██ ██ ██  ██ ██   ███     █████   ██    ██ ██ ██  ██ ██         ██    ██ ██    ██ ██ ██  ██ ███████  ██
+██  ██    ██ ██   ██     ██      ██    ██ ██    ██ ██    ██ ██ ██  ██ ██ ██    ██     ██      ██    ██ ██  ██ ██ ██         ██    ██ ██    ██ ██  ██ ██      ██  ██
+ ██  ██████  ██   ██     ███████  ██████   ██████   ██████  ██ ██   ████  ██████      ██       ██████  ██   ████  ██████    ██    ██  ██████  ██   ████ ███████ ██
+*/
+
+/**
+ * getAllParticipantsFromDb - Asynch Query the DB for all participants. The result is passed to the callback function.
+ *
+ * @param  {function} callback This functiom will be called with the result of the query. The function should take one paramter.
+ */
 export function getAllParticipantsFromDb(callback){
   fetch("/api/getAllParticipants")
     .then((response) => {
@@ -296,6 +443,12 @@ export function getAllParticipantsFromDb(callback){
     });
 };
 
+/**
+ * addParticipantToDb - Asynch add a new participant to the DB.
+ *
+ * @param  {ParticipantObject} obj       The participant object to add to the DB. Should use ParticipantObject defined in db_objects.js.
+ * @param  {function}          callback  This function will be called with the MongoDB id assigned to the created participant. The function should take one parameter.
+ */
 export function addParticipantToDb(obj, callback){
   axios.post("/api/addParticipant", {
     message: JSON.stringify(obj)
@@ -311,13 +464,29 @@ export function addParticipantToDb(obj, callback){
   });
 };
 
+/**
+ * addNewLineToParticipantDB - Adds a new logging line to the specified participant.
+ * Takes the MongoDB of the participant, and the new line data to add. Note that the
+ * data should be stringified before calling this function.
+ *
+ * @param  {string}     participantId The MongoDB id of the participant
+ * @param  {LineOfData} newLineJSON   The data to add to the participant. Should use LineOfData object defined in db_objects.js.
+ */
 export function addNewLineToParticipantDB(participantId, newLineJSON){
   axios.post("/api/addNewLineToParticipant", {
     participantId: participantId,
-    newLineJSON: newLineJSON //please stringify before calling this function
+    newLineJSON: newLineJSON
   }).then(data => {console.log("after adding new line to set", data)});
 };
 
+/**
+ * addNewGlobalVariableToParticipantDB - Adds a new global variable to the specified participant.
+ * Takes the MongoDB of the participant, and the new global variable to add. Note that the
+ * data should be stringified before calling this function.
+ *
+ * @param  {string} participantId      The MongoDB id of the participant-
+ * @param  {type}   globalVariableJSON The global variable object.
+ */
 export function addNewGlobalVariableToParticipantDB(participantId, globalVariableJSON){
   axios.post("/api/addNewGlobalVariableToParticipant", {
     participantId: participantId,
@@ -325,6 +494,10 @@ export function addNewGlobalVariableToParticipantDB(participantId, globalVariabl
   }).then(data => {console.log("after adding new globalVariable to set", data)});
 };
 
+/**
+ * deleteAllParticipantsFromDb - Deletes all the participants from the DB. Use with care.
+ *
+ */
 export function deleteAllParticipantsFromDb() {
   axios.delete("/api/deleteAllParticipants");
 }
