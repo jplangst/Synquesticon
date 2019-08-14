@@ -33,6 +33,8 @@ class EditSetComponent extends Component {
       taskList: this.set.childIds ? this.set.childIds : [],
       taskListObjects: [],
       randomizeSet: this.set.setTaskOrder === "Random" ? true : false,
+      displayOnePage: this.set.displayOnePage,
+      logOneLine: this.set.logOneLine,
       snackbarOpen: false,
     };
 
@@ -44,6 +46,8 @@ class EditSetComponent extends Component {
     this.handleRetrieveSetChildTasks = this.onRetrievedSetChildTasks.bind(this);
 
     this.handleSetTaskOrderChange = this.onSetTaskOrderChanged.bind(this);
+    this.handleDisplayOnePageChange = this.onDisplayOnePageChanged.bind(this);
+    this.handleLogOneLineChange = this.onLogOneLineChanged.bind(this);
 
     this.refreshSetChildList();
   }
@@ -85,6 +89,18 @@ class EditSetComponent extends Component {
     this.set.setTaskOrder = checked ? "Random" : "InOrder";
     this.setState({
       randomizeSet: checked
+    });
+  }
+  onDisplayOnePageChanged(e, checked){
+    this.set.displayOnePage = checked;
+    this.setState({
+      displayOnePage: checked
+    });
+  }
+  onLogOneLineChanged(e, checked){
+    this.set.logOneLine = checked;
+    this.setState({
+      logOneLine: checked
     });
   }
 
@@ -212,8 +228,6 @@ class EditSetComponent extends Component {
       this.setState({
         snackbarOpen: true
       });
-      //TODO give a toast warning that this would result in an infinite experiment
-      console.log("Not allowed to add task!");
     }
   }
 
@@ -316,6 +330,20 @@ class EditSetComponent extends Component {
           checked={this.state.randomizeSet}
           control={<Checkbox color="primary" />}
           onChange={this.handleSetTaskOrderChange}
+          labelPlacement="start"
+        />
+        <FormControlLabel label="Display on one page"
+          value="start"
+          checked={this.state.displayOnePage}
+          control={<Checkbox color="primary" />}
+          onChange={this.handleDisplayOnePageChange}
+          labelPlacement="start"
+        />
+        <FormControlLabel label="Log on one line"
+          value="start"
+          checked={this.state.logOneLine}
+          control={<Checkbox color="primary" />}
+          onChange={this.handleLogOneLineChange}
           labelPlacement="start"
         />
       </div>;
