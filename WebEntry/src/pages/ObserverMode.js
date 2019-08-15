@@ -14,7 +14,6 @@ class ObserverMode extends Component {
       participants: {},
       messages: []
     }
-
     this.handleNewWAMPEvent = this.onNewWAMPEvent.bind(this);
   }
 
@@ -128,7 +127,7 @@ class ObserverMode extends Component {
         </div>
 
         <div className="ContainerSeperator ViewerGaze">
-          
+
         </div>
       </div>
       );

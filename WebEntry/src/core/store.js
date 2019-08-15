@@ -1,6 +1,9 @@
 import { createStore } from 'redux';
-
 import wampStore from './wampStore';
+
+/*
+* The store is responsible for storing data that needs to be shared between different parts of the application.
+*/
 
 const initialState = {
   remoteEyeTrackers: [],

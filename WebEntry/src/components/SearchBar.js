@@ -24,7 +24,6 @@ const styles = theme => ({
     },
   },
   search: {
-    //position: 'relative',
     borderRadius: theme.shape.borderRadius,
     backgroundColor: fade(theme.palette.common.white, 0.15),
     '&:hover': {
@@ -62,7 +61,6 @@ const styles = theme => ({
   },
   inputRoot: {
     color: 'inherit',
-    //backgroundColor: '#EEE',
     borderStyle: 'solid',
     borderWidth: 'thin',
     borderRadius: '15px',

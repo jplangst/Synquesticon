@@ -1,17 +1,10 @@
 import React, { Component } from 'react';
-import { getEmptyImage } from 'react-dnd-html5-backend'
 import Button from '@material-ui/core/Button';
 import EditIcon from '@material-ui/icons/Edit';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 
 import './TaskItemComponent.css';
 import './PlayableSetComponent.css';
-
-import { DragSource } from 'react-dnd'
-
-const Types = {
- ITEM: 'taskItemComp'
-}
 
 class PlayableSetComponent extends Component {
   render() {

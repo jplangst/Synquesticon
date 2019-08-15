@@ -31,16 +31,6 @@ const itemSource = {
    return item;
  },
  endDrag(props, monitor, component) {
-   const dropResult = monitor.getDropResult()
-   if(dropResult){
-
-   }
-   else{
-     //const item = monitor.getItem();
-     //console.log(item);
-     //props.removeCallback(item.taskId);
-   }
-
    return
  }
 };
@@ -50,51 +40,16 @@ const itemTarget = {
 		const dragIndex = monitor.getItem().index;
 		const hoverIndex = props.index;
 
-		// Don't replace items with themselves
 		if (dragIndex === hoverIndex) {
 			return;
 		}
 
-		/*// Determine rectangle on screen
-		//const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
-
-		// Get vertical middle
-		//const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2; //Was 2
-
-		// Determine mouse position
-		//const clientOffset = monitor.getClientOffset();
-
-		// Get pixels to the top
-		//const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-
-		// Only perform the move when the mouse has crossed half of the items height
-		// When dragging downwards, only move when the cursor is below 50%
-		// When dragging upwards, only move when the cursor is above 50%
-
-		// Dragging downwards
-		//if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-			//return;
-		//}
-
-		// Dragging upwards
-		//if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-			//return;
-		//}*/
-
-		// Time to actually perform the action
-		//if ( props.listId === sourceListId ) {
-
-			props.moveTaskCallback(dragIndex, hoverIndex);
-
-			// Note: we're mutating the monitor item here!
-			// Generally it's better to avoid mutations,
-			// but it's good here for the sake of performance
-			// to avoid expensive index searches.
-			monitor.getItem().index = hoverIndex;
-		//}
+		props.moveTaskCallback(dragIndex, hoverIndex);
+		monitor.getItem().index = hoverIndex;
 	}
 };
 
+//Makes these variables avaliable in the react components props
 function collect(connect, monitor) {
  return {
    connectDragSource: connect.dragSource(),
@@ -109,7 +64,6 @@ function targetConnect(connect, monitor){
 }
 
 class EditSetListItemComponent extends Component {
-
   componentDidMount(){
     const { connectDragPreview } = this.props
     if(connectDragPreview){
@@ -132,8 +86,8 @@ class EditSetListItemComponent extends Component {
         opacity = 0;
     }
 
-    if(this.props.item.objType === "Task"){ //Task is a leaf node
-      if(this.props.componentDepth === 0){
+    if(this.props.item.objType === "Task"){
+      if(this.props.componentDepth === 0){ //If it is a top level parent it should be dragable
         return(connectDropTarget(<div  style={{opacity:opacity }} className={"editListItem "} >
               <div className={"editListItemTextContainer " +this.props.highlight}>
                 <div className="editListItemText dotLongText">
@@ -153,18 +107,15 @@ class EditSetListItemComponent extends Component {
                   <DragIcon className="dragBtnIcon"/>
                 </Button>
               </div>)}
-
-
             </div>));
       }
-      else{
+      else{ //If it is a child we don't want it to be draggable
         return(<div  className={"editListItem "} >
               <div className={"editListItemTextContainer " +this.props.highlight}>
                 <div className="editListItemText dotLongText">
                   {this.props.content}
                 </div>
               </div>
-
             </div>);
       }
     }
