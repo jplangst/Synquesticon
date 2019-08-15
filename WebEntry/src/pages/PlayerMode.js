@@ -87,12 +87,12 @@ class PlayerMode extends Component {
 
       store.dispatch(action);
 
-      var layourAction = {
+      var layoutAction = {
         type: 'SET_SHOW_HEADER',
         showHeader: false
       }
 
-      store.dispatch(layourAction);
+      store.dispatch(layoutAction);
 
       this.props.gotoPage('/RunTasksMode');
     })

@@ -100,6 +100,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
     wamp.broadcastEvents(stringifyWAMPMessage(this.currentTask, startTimestamp, "START"));
   }
 
+  //Updates the location of the Gaze Cursor. And checks if any of the AOIs were looked at
   updateCursorLocation(){
     try {
       let gazeLoc = store.getState().gazeData[store.getState().experimentInfo.selectedTracker];
@@ -111,7 +112,6 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
         }
       });
     } catch (err) {
-
     }
   }
 
@@ -144,7 +144,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
         }
       }
 
-      //reset
+      //reset state
       this.setState({
         hasBeenAnswered: false,
         answerItem: null,
@@ -222,7 +222,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
               }
             if((this.currentTask.taskType === "Image") ||
                   (this.currentTask.taskType === "Complex" && this.state.complexStep === 1)) {
-                    return <ImageViewComponent task={this.currentTask}/>;
+                return <ImageViewComponent task={this.currentTask}/>;
               }
           } else {
 
