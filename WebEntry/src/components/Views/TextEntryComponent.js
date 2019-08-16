@@ -63,7 +63,8 @@ class TextEntryComponent extends Component {
     var answerObj = {
       responses: [parseFloat(this.textEntry)],
       correctlyAnswered: this.checkAnswer(),
-      questionID: this.props.task._id,
+      taskID: this.props.task._id,
+      mapID: this.props.mapID,
     }
     this.props.answerCallback(answerObj);
   }

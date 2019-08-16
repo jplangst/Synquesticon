@@ -32,7 +32,9 @@ class SingleChoiceComponent extends Component {
       this.pickedItem = response;
       var answerObj = {
         responses: [this.pickedItem],
-        correctlyAnswered: this.checkAnswer()
+        correctlyAnswered: this.checkAnswer(),
+        taskID: this.props.task._id,
+        mapID: this.props.mapID,
       }
       this.props.answerCallback(answerObj);
     }

@@ -43,6 +43,7 @@ class App extends Component {
   }
 }
 
+//Allow sus to use store state to update our react component
 function mapStateToProps(state, ownProps) {
     return {
         showHeader: state.showHeader

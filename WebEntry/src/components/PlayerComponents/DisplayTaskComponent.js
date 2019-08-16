@@ -147,6 +147,9 @@ class DisplayTaskHelper extends React.Component {
           runThisTaskSet = shuffle(runThisTaskSet);
         }
 
+        let updatedTaskSet = this.props.taskSet[this.state.currentTaskIndex];
+        updatedTaskSet.data = runThisTaskSet;
+
         let trackingTaskSetNames = this.props.tasksFamilyTree.slice(); //clone array, since javascript passes by reference, we need to keep the orgin familyTree untouched
         trackingTaskSetNames.push(this.props.taskSet[this.state.currentTaskIndex].name);
 
