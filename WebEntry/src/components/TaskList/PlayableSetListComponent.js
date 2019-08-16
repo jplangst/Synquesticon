@@ -31,5 +31,4 @@ class PlayableSetListComponent extends Component {
   }
 }
 
-//====================== Export with Drop Target behaviour ====================
 export default PlayableSetListComponent;

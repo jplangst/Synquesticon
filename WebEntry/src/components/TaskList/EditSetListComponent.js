@@ -11,11 +11,9 @@ const Types = {
 }
 
 const taskListTarget = {
-
   drop(props, monitor, component){
     return props;
   },
-
   canDrop(props, monitor) {
     return props.reactDND;
   }
@@ -28,7 +26,7 @@ function collect(connect, monitor) {
  }
 }
 
-//------------------------------------------------------------------------------
+
 class EditSetListComponent extends Component {
   constructor(props) {
     super(props);

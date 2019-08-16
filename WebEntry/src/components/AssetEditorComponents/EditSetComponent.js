@@ -120,6 +120,7 @@ class EditSetComponent extends Component {
         participantId: "TESTING",
         mainTaskSetId: this.set.name,
         taskSet: this.state.taskListObjects,
+        selectedTaskSetObject: this.set,
         selectedTracker: ""
       }
     }
@@ -276,8 +277,6 @@ class EditSetComponent extends Component {
     }));
 
     this.set.childIds = this.state.taskList;
-
-    //this.refreshSetChildList();
   }
 
   refreshSetChildList(){
@@ -299,6 +298,14 @@ class EditSetComponent extends Component {
   closeSetComponent(componentChanged){
     this.props.closeSetCallback(componentChanged);
   }
+
+  /*
+██████  ███████ ███    ██ ██████  ███████ ██████
+██   ██ ██      ████   ██ ██   ██ ██      ██   ██
+██████  █████   ██ ██  ██ ██   ██ █████   ██████
+██   ██ ██      ██  ██ ██ ██   ██ ██      ██   ██
+██   ██ ███████ ██   ████ ██████  ███████ ██   ██
+*/
 
   render() {
     var setContent =

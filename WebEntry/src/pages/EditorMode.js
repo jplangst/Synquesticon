@@ -1,22 +1,20 @@
 import React, {Component} from 'react';
 
-import CollapsableContainer from '../components/Containers/CollapsableContainer';
-import CustomDragLayer from '../components/Containers/CustomDragLayer';
-
 import Button from '@material-ui/core/Button';
+import {FilterList, AddCircleOutline} from '@material-ui/icons';
 
+//The custom drag layer let's us define the appearance of dragged elements.
+//Without this the default browser drag will be used, which looks bad in our case.
+import CustomDragLayer from '../components/Containers/CustomDragLayer';
 import SearchBar from '../components/SearchBar';
-
+import CollapsableContainer from '../components/Containers/CollapsableContainer';
 import TaskListComponent from '../components/TaskList/TaskListComponent';
-
-//Asset Editor components
 import EditTaskComponent from '../components/AssetEditorComponents/EditTaskComponent';
 import EditSetComponent from '../components/AssetEditorComponents/EditSetComponent';
 
-import {FilterList, AddCircleOutline} from '@material-ui/icons';
+import db_helper from '../core/db_helper.js';
 
 import './EditorMode.css';
-import db_helper from '../core/db_helper.js';
 
 class EditorMode extends Component {
   constructor(props) {
@@ -27,13 +25,9 @@ class EditorMode extends Component {
       taskList: [],
       taskSetList: [],
       allowRegex: false,
-      showCreateTaskDialog: false,
-      showCreateTaskSetDialog: false,
       assetEditorContext: "empty",
       assetEditorObject: null,
     };
-
-
 
     //Database callbacks
     this.dbTaskCallback = this.dbTaskCallbackFunction.bind(this);
@@ -56,7 +50,6 @@ class EditorMode extends Component {
 
   //---------------------------component functions------------------------------
   componentWillMount() {
-    //db_helper.deleteAllTaskSetsFromDb();
     this.assetViewerQueryDatabase();
   }
 
@@ -193,6 +186,14 @@ class EditorMode extends Component {
     return assetEditorObject;
   }
 
+  /*
+██████  ███████ ███    ██ ██████  ███████ ██████
+██   ██ ██      ████   ██ ██   ██ ██      ██   ██
+██████  █████   ██ ██  ██ ██   ██ █████   ██████
+██   ██ ██      ██  ██ ██ ██   ██ ██      ██   ██
+██   ██ ███████ ██   ████ ██████  ███████ ██   ██
+*/
+
   render() {
     var collapsableTaskHeaderButtons =
     <div className="collapsableHeaderBtnsContainer">
@@ -251,10 +252,5 @@ class EditorMode extends Component {
     < /div>);
   }
 }
-
-/*<CollapsableContainer classNames="ContainerSeperator TaskSetContainer" headerTitle="Images">
-</CollapsableContainer>
-<CollapsableContainer classNames="ContainerSeperator TaskSetContainer" headerTitle="Templates">
-</CollapsableContainer>*/
 
 export default EditorMode;

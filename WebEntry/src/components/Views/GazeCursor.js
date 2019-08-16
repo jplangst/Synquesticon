@@ -3,8 +3,6 @@ import './GazeCursor.css';
 
 import store from '../../core/store';
 
-//var key = require('keymaster');
-
 class GazeCursor extends React.Component {
   constructor(){
     super();
@@ -27,14 +25,11 @@ class GazeCursor extends React.Component {
   }
 
   componentDidMount() {
-    // key.setScope('stimuli');
-    // key('g', this.handleCursorVisibility);
     this.timer = setInterval(this.handleGazeLocUpdate, 4.5); //Update the gaze cursor location every 2ms
   }
 
   componentWillUnmount(){
     clearInterval(this.timer);
-    // key.unbind('g');
   }
 
   render() {

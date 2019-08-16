@@ -1,13 +1,15 @@
 import { BrowserRouter as Router, Route, Switch  } from 'react-router-dom';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
+import store from './core/store';
 
 import Header from './components/Header/Header'
-//import EditScreen from './pages/EditScreen';
 import EditorMode from './pages/EditorMode';
 import IntroductionScreen from './pages/IntroductionScreen';
 import PlayerMode from './pages/PlayerMode';
 import ObserverMode from './pages/ObserverMode';
-import RunTasksMode from './components/DisplayTaskComponent';
+import RunTasksMode from './components/PlayerComponents/DisplayTaskComponent';
 
 import HTML5Backend from 'react-dnd-html5-backend'
 import { DragDropContext } from 'react-dnd'
@@ -19,12 +21,14 @@ window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
 
 class App extends Component {
   render() {
-    //console.log("Router path: ", this);
+
+    var mainContentHeight = this.props.showHeader ? '94%' : '100%';
+
     return (
         <Router>
         <div className="App">
           <Route component={Header} />
-          <div className="MainContent">
+          <div className="MainContent" style={{height: mainContentHeight}}>
             <Switch>
               <Route exact path="/" component={IntroductionScreen} />
               <Route path="/EditorMode" component={EditorMode} />
@@ -39,4 +43,11 @@ class App extends Component {
   }
 }
 
-export default DragDropContext(HTML5Backend)(App);
+//Allow sus to use store state to update our react component
+function mapStateToProps(state, ownProps) {
+    return {
+        showHeader: state.showHeader
+    };
+}
+
+export default connect(mapStateToProps)(DragDropContext(HTML5Backend)(App));

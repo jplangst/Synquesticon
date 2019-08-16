@@ -118,6 +118,14 @@ class EditTaskComponent extends Component {
     });
   }
 
+  /*
+██████  ███████ ███    ██ ██████  ███████ ██████
+██   ██ ██      ████   ██ ██   ██ ██      ██   ██
+██████  █████   ██ ██  ██ ██   ██ █████   ██████
+██   ██ ██      ██  ██ ██ ██   ██ ██      ██   ██
+██   ██ ███████ ██   ████ ██████  ███████ ██   ██
+*/
+
   render() {
     var questionTypeContent = null;
     if(this.state.taskType === "Single Choice" || this.state.taskType === "Multiple Choice"){

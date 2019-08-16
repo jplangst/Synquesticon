@@ -25,7 +25,6 @@ class ObserverMode extends Component {
       participants: [],
       currentParticipant: -1,
     }
-
     this.handleNewWAMPEvent = this.onNewWAMPEvent.bind(this);
   }
 

@@ -13,7 +13,9 @@ class InstructionViewComponent extends Component {
     if (!this.props.hasBeenAnswered) {
       var answerObj = {
         responses: [],
-        correctlyAnswered: "notApplicable"
+        correctlyAnswered: "notApplicable",
+        taskID: this.props.task._id,
+        mapID: this.props.mapID,
       }
       this.props.answerCallback(answerObj);
     }

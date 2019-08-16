@@ -18,39 +18,13 @@ class IntroductionScreen extends Component {
     super(props);
     this.state = {
     }
-
     this.gotoPage = this.gotoPageHandler.bind(this);
-
-
-  }
-
-  //---------------------------component functions------------------------------
-  componentWillMount() {
   }
 
   gotoPageHandler(route){
     this.props.history.push(route);
   }
 
-  onDataExportationButtonClicked() {
-
-  }
-
-  // render() {
-  //   return(
-  //     <div >
-  //       <Button className="createTaskSetsBtn" onClick={(e) => this.gotoPage(e,"EditorMode")} >
-  //         <p>Editor</p>
-  //       </Button>
-  //       <Button className="createTaskButton" onClick={(e) => this.gotoPage(e,"PlayerMode")} >
-  //         <p>Player</p>
-  //       </Button>
-  //       <Button className="createTaskButton" onClick={(e) => this.gotoPage(e,"ObserverMode")} >
-  //         <p>Observer</p>
-  //       </Button>
-  //     </div>
-  //   );
-  // }
   render() {
     return(
     <div >
@@ -65,9 +39,7 @@ class IntroductionScreen extends Component {
           </div>
         </div>
         <PlayerMode gotoPage={this.gotoPage.bind(this)}/>
-
       </div>
-
       <div className = "AssetEditor">
         <div className="AssetViewerTitle">
           <div className="AssetViewerTitleText">Observer</div>

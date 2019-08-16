@@ -8,19 +8,21 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import NavigationIcon from '@material-ui/icons/NavigateNext';
 
 //view components
-import InstructionViewComponent from './Views/InstructionViewComponent';
-import TextEntryComponent from './Views/TextEntryComponent';
-import SingleChoiceComponent from './Views/SingleChoiceComponent';
-import MultipleChoiceComponent from './Views/MultipleChoiceComponent';
-import ImageViewComponent from './Views/ImageViewComponent';
+import InstructionViewComponent from '../Views/InstructionViewComponent';
+import TextEntryComponent from '../Views/TextEntryComponent';
+import SingleChoiceComponent from '../Views/SingleChoiceComponent';
+import MultipleChoiceComponent from '../Views/MultipleChoiceComponent';
+import ImageViewComponent from '../Views/ImageViewComponent';
 
-import wamp from '../core/wamp';
-import store from '../core/store';
-import shuffle from '../core/shuffle';
+import MultiItemTask from './MultiItemTask';
 
-import db_helper from '../core/db_helper';
-import * as dbObjects from '../core/db_objects';
-import * as dbObjectsUtilityFunctions from '../core/db_objects_utility_functions';
+import wamp from '../../core/wamp';
+import store from '../../core/store';
+import shuffle from '../../core/shuffle';
+import db_helper from '../../core/db_helper';
+import * as dbObjects from '../../core/db_objects';
+import * as dbObjectsUtilityFunctions from '../../core/db_objects_utility_functions';
+import * as playerUtils from '../../core/player_utility_functions';
 
 import './DisplayTaskComponent.css';
 
@@ -76,7 +78,6 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 
     this.currentTask = null;
     this.currentLineOfData = null;
-
     this.handleGazeLocUpdate = this.updateCursorLocation.bind(this);
   }
 
@@ -86,26 +87,20 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 
   componentWillUnmount() {
     clearInterval(this.timer);
-    var layoutAction = {
-      type: 'SET_SHOW_HEADER',
-      showHeader: true,
-      showFooter: true
-    }
-
-    store.dispatch(layoutAction);
   }
 
   logTheStartOfTask() {
-    var startTimestamp = getCurrentTime();
+    var startTimestamp = playerUtils.getCurrentTime();
     this.currentLineOfData = new dbObjects.LineOfData(startTimestamp,
                                                       this.currentTask._id,
                                                       this.props.tasksFamilyTree, //the array that has the task's tasksFamilyTree
                                                       dbObjectsUtilityFunctions.getTaskContent(this.currentTask),
                                                       this.currentTask.correctResponses);
 
-    wamp.broadcastEvents(stringifyWAMPMessage(this.currentTask, startTimestamp, "START"));
+    wamp.broadcastEvents(playerUtils.stringifyWAMPMessage(this.currentTask, startTimestamp, "START"));
   }
 
+  //Updates the location of the Gaze Cursor. And checks if any of the AOIs were looked at
   updateCursorLocation(){
     try {
       let gazeLoc = store.getState().gazeData[store.getState().experimentInfo.selectedTracker];
@@ -117,7 +112,6 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
         }
       });
     } catch (err) {
-
     }
   }
 
@@ -132,7 +126,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
         if (this.currentLineOfData) {
           if (!this.currentTask.globalVariable) {
             //complete line of data before saving to DB
-            this.currentLineOfData.timeToCompletion = getCurrentTime() - this.currentLineOfData.startTimestamp;
+            this.currentLineOfData.timeToCompletion = playerUtils.getCurrentTime() - this.currentLineOfData.startTimestamp;
             db_helper.addNewLineToParticipantDB(store.getState().experimentInfo.participantId,
                                                   JSON.stringify(this.currentLineOfData));
           }
@@ -145,12 +139,12 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
                                                             JSON.stringify(globalVariableObj));
           }
 
-          wamp.broadcastEvents(stringifyWAMPMessage(this.currentLineOfData, null,
+          wamp.broadcastEvents(playerUtils.stringifyWAMPMessage(this.currentLineOfData, null,
                                                     this.state.hasBeenAnswered ? "NEXT" : "SKIP"));
         }
       }
 
-      //reset
+      //reset state
       this.setState({
         hasBeenAnswered: false,
         answerItem: null,
@@ -164,7 +158,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
   onAnswer(answer) {
     if (!this.state.hasBeenAnswered) {
       if (!(store.getState().experimentInfo.participantId === "TESTING")) {
-        this.currentLineOfData.firstResponseTimestamp = getCurrentTime();
+        this.currentLineOfData.firstResponseTimestamp = playerUtils.getCurrentTime();
         this.currentLineOfData.timeToFirstAnswer = this.currentLineOfData.firstResponseTimestamp - this.currentLineOfData.startTimestamp;
       }
     }
@@ -185,16 +179,26 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
     //check if we should enter a new level or leave
     if(this.props.taskSet.length > 0 && this.state.currentTaskIndex < this.props.taskSet.length) {
       if (this.props.taskSet[this.state.currentTaskIndex].objType === "TaskSet") {
+
+        console.log(this.props.taskSet[this.state.currentTaskIndex]);
         //shuffle set if set was marked as "Random"
         var runThisTaskSet = this.props.taskSet[this.state.currentTaskIndex].data;
         if (this.props.taskSet[this.state.currentTaskIndex].setTaskOrder === "Random") {
           runThisTaskSet = shuffle(runThisTaskSet);
         }
 
+        let updatedTaskSet = this.props.taskSet[this.state.currentTaskIndex];
+        updatedTaskSet.data = runThisTaskSet;
+
         let trackingTaskSetNames = this.props.tasksFamilyTree.slice(); //clone array, since javascript passes by reference, we need to keep the orgin familyTree untouched
         trackingTaskSetNames.push(this.props.taskSet[this.state.currentTaskIndex].name);
-        //recursion
-        return <DisplayTaskHelper tasksFamilyTree={trackingTaskSetNames} taskSet={runThisTaskSet} onFinished={this.onFinishedRecursion.bind(this)}/>
+
+        if(this.props.taskSet[this.state.currentTaskIndex].displayOnePage){
+          return <MultiItemTask tasksFamilyTree={trackingTaskSetNames} taskSet={runThisTaskSet} onFinished={this.onFinishedRecursion.bind(this)}/>
+        } else{
+          //recursion
+          return <DisplayTaskHelper tasksFamilyTree={trackingTaskSetNames} taskSet={runThisTaskSet} onFinished={this.onFinishedRecursion.bind(this)}/>
+        }
       }
       //TODO: this is a go around solution, please fix it to make it solid
       else {//if (this.props.taskSet[this.state.currentTaskIndex].objType === "Task" || ) {
@@ -228,7 +232,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
               }
             if((this.currentTask.taskType === "Image") ||
                   (this.currentTask.taskType === "Complex" && this.state.complexStep === 1)) {
-                    return <ImageViewComponent task={this.currentTask}/>;
+                return <ImageViewComponent task={this.currentTask}/>;
               }
           } else {
 
@@ -287,6 +291,24 @@ class DisplayTaskComponent extends Component {
 
   componentWillMount() {
     this.broadcastStartEvent();
+
+    var layoutAction = {
+      type: 'SET_SHOW_HEADER',
+      showHeader: false,
+      showFooter: false
+    }
+
+    store.dispatch(layoutAction);
+  }
+
+  componentWillUnmount() {
+    var layoutAction = {
+      type: 'SET_SHOW_HEADER',
+      showHeader: true,
+      showFooter: true
+    }
+
+    store.dispatch(layoutAction);
   }
 
   onFinished() {
@@ -296,9 +318,17 @@ class DisplayTaskComponent extends Component {
   }
 
   render() {
+    var renderObj = null;
+    if(store.getState().experimentInfo.selectedTaskSetObject.displayOnePage){
+      renderObj = <MultiItemTask tasksFamilyTree={[store.getState().experimentInfo.mainTaskSetId]} taskSet={store.getState().experimentInfo.taskSet} onFinished={this.onFinished.bind(this)}/>;
+    }
+    else{
+      renderObj = <DisplayTaskHelper tasksFamilyTree={[store.getState().experimentInfo.mainTaskSetId]} taskSet={store.getState().experimentInfo.taskSet} onFinished={this.onFinished.bind(this)}/>;
+    }
+
     return (
-      <DisplayTaskHelper tasksFamilyTree={[store.getState().experimentInfo.mainTaskSetId]} taskSet={store.getState().experimentInfo.taskSet} onFinished={this.onFinished.bind(this)}/>
-      );
+        renderObj
+    );
   }
 }
 

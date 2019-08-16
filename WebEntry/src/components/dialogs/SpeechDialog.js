@@ -29,8 +29,6 @@ class SpeechDialog extends Component {
     }
   }
 
-
-
   componentWillMount() {
     window.speechSynthesis.onvoiceschanged = this.speechConfigurations.bind(this);
   }

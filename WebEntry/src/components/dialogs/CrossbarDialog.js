@@ -14,11 +14,6 @@ import {restartWAMP} from '../../core/wamp';
 var myStorage = window.localStorage;
 
 class CrossbarDialog extends Component {
-
-  /*constructor(props) {
-    super(props);
-  }*/
-
   componentWillMount() {
     this.crossbarConfigurations();
     restartWAMP(this.crossbar);
