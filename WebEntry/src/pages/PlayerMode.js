@@ -81,6 +81,7 @@ class PlayerMode extends Component {
           participantId: returnedIdFromDB,
           mainTaskSetId: this.selectedTaskSet.name,
           taskSet: runThisTaskSet,
+          selectedTaskSetObject: this.selectedTaskSet,
           selectedTracker: this.state.selectedTracker
         }
       }

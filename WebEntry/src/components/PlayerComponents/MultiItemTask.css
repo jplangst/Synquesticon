@@ -1,0 +1,21 @@
+.multiItemContainer{
+  height: 100%;
+  Width: 100%;
+  overflow-y: scroll;
+}
+
+.multiItemContent{
+  position: relative;
+  top: 4%;
+  left: 20%;
+  width: 60%;
+  height: auto;
+
+  font-size: 1em;
+}
+
+.multiItemButtonContainer{
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}

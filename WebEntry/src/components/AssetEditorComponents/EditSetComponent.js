@@ -120,6 +120,7 @@ class EditSetComponent extends Component {
         participantId: "TESTING",
         mainTaskSetId: this.set.name,
         taskSet: this.state.taskListObjects,
+        selectedTaskSetObject: this.set,
         selectedTracker: ""
       }
     }

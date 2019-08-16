@@ -13,7 +13,7 @@
 .MainContent{
   position: absolute;
   width: 100%;
-  height: 94%;
+  height: 94%; /* Set dynamically if the header is visible or not */
 }
 
 
