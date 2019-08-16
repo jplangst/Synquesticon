@@ -6,7 +6,7 @@ const fs = require("fs");
 //var ObjectID = require('mongodb').ObjectID;
 
 
-const dataSchema = require("./data");
+const dataSchema = require("./data_schema");
 const Tasks = dataSchema.Tasks;
 Tasks.createIndexes({queryString: "text", tags: "text"});
 const TaskSets = dataSchema.TaskSets;
@@ -15,6 +15,8 @@ const Participants = dataSchema.Participants;
 Participants.createIndexes({queryString: "text", tags: "text"});
 const Experiments = dataSchema.Experiments;
 Experiments.createIndexes({queryString: "text", tags: "text"});
+
+const data_exportation = require("./data_exportation");
 
 const API_PORT = 3001;
 const app = express();
@@ -51,10 +53,29 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(logger("dev"));
 
-/*********************************************************
- **                    DATA functions                    *
- *********************************************************/
- //---------------------TASKS---------------------
+/*
+██████   █████  ████████  █████      ███████ ██   ██ ██████   ██████  ██████  ████████  █████  ████████ ██  ██████  ███    ██
+██   ██ ██   ██    ██    ██   ██     ██       ██ ██  ██   ██ ██    ██ ██   ██    ██    ██   ██    ██    ██ ██    ██ ████   ██
+██   ██ ███████    ██    ███████     █████     ███   ██████  ██    ██ ██████     ██    ███████    ██    ██ ██    ██ ██ ██  ██
+██   ██ ██   ██    ██    ██   ██     ██       ██ ██  ██      ██    ██ ██   ██    ██    ██   ██    ██    ██ ██    ██ ██  ██ ██
+██████  ██   ██    ██    ██   ██     ███████ ██   ██ ██       ██████  ██   ██    ██    ██   ██    ██    ██  ██████  ██   ████
+*/
+router.post("/exportToCSV", (req, res) => {
+  const { data } = req.body;
+  var obj = JSON.parse(data);
+  data_exportation.save_to_csv(obj);
+});
+
+
+/*
+████████  █████  ███████ ██   ██ ███████
+   ██    ██   ██ ██      ██  ██  ██
+   ██    ███████ ███████ █████   ███████
+   ██    ██   ██      ██ ██  ██       ██
+   ██    ██   ██ ███████ ██   ██ ███████
+*/
+
+
  // this method fetches all available questions in our database
 router.get("/getAllTasks", (req, res) => {
   Tasks.find((err, data) => {
@@ -147,7 +168,14 @@ router.delete("/deleteAllTasks", (req, res) => {
   });
 });
 
-//---------------SET----------------
+/*
+███████ ███████ ████████
+██      ██         ██
+███████ █████      ██
+     ██ ██         ██
+███████ ███████    ██
+*/
+
 router.get("/getAllTaskSets", (req, res) => {
   TaskSets.find((err, data) => {
     if (err) {
@@ -326,7 +354,15 @@ router.post("/getImage", (req, res) => {
   })
 });
 
-//---------------------PARTICIPANTS---------------------
+/*
+██████   █████  ██████  ████████ ██  ██████ ██ ██████   █████  ███    ██ ████████ ███████
+██   ██ ██   ██ ██   ██    ██    ██ ██      ██ ██   ██ ██   ██ ████   ██    ██    ██
+██████  ███████ ██████     ██    ██ ██      ██ ██████  ███████ ██ ██  ██    ██    ███████
+██      ██   ██ ██   ██    ██    ██ ██      ██ ██      ██   ██ ██  ██ ██    ██         ██
+██      ██   ██ ██   ██    ██    ██  ██████ ██ ██      ██   ██ ██   ████    ██    ███████
+*/
+
+
 router.get("/getAllParticipants", (req, res) => {
   Participants.find((err, data) => {
     if (err) {
@@ -419,7 +455,15 @@ router.delete("/deleteAllParticipants", (req, res) => {
   });
 });
 
-//---------------------EXPERIMENTS---------------------
+/*
+███████ ██   ██ ██████  ███████ ██████  ██ ███    ███ ███████ ███    ██ ████████ ███████
+██       ██ ██  ██   ██ ██      ██   ██ ██ ████  ████ ██      ████   ██    ██    ██
+█████     ███   ██████  █████   ██████  ██ ██ ████ ██ █████   ██ ██  ██    ██    ███████
+██       ██ ██  ██      ██      ██   ██ ██ ██  ██  ██ ██      ██  ██ ██    ██         ██
+███████ ██   ██ ██      ███████ ██   ██ ██ ██      ██ ███████ ██   ████    ██    ███████
+*/
+
+
 router.get("/getAllExperiments", (req, res) => {
   Experiments.find((err, data) => {
     if (err) {

@@ -3,7 +3,7 @@ import { createStore } from 'redux';
 import wampStore from './wampStore';
 
 const initialState = {
-  remoteEyeTrackers: [],
+  participants: {},
   gazeCursorRadius: 0,
   gazeData: {},
   showHeader: true,
@@ -13,15 +13,17 @@ const initialState = {
 const store = createStore ((state = initialState, action) => {
   switch(action.type) {
     case 'SET_GAZE_DATA': {
-      if (!state.remoteEyeTrackers.includes(action.tracker)) {
-        wampStore.setCurrentRemoteTracker(action.tracker);
-        wampStore.emitNewRemoteTrackerListener();
-      }
       state.gazeData[action.tracker] = action.gazeData;
       return state;
     }
-    case 'ADD_REMOTE_TRACKER': {
-      state.remoteEyeTrackers.push(action.tracker);
+    case 'ADD_PARTICIPANT': {
+      state.participants[action.participant] = action.tracker;
+      return state;
+    }
+    case 'REMOVE_PARTICIPANT': {
+      if (state.participants[action.participant] != undefined) {
+        delete state.participants[action.participant];
+      }
       return state;
     }
     case 'SET_GAZE_RADIUS': {

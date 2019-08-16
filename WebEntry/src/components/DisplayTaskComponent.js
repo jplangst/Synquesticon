@@ -37,14 +37,18 @@ function stringifyWAMPMessage(obj, timestamp, type) {
 
     //Event type (0), task content (1), startTimestamp (2), remoteTracker (3)
     return ["START",
+                store.getState().experimentInfo.participantId,
+                store.getState().experimentInfo.selectedTracker,
                 obj.taskType,
                 dbObjectsUtilityFunctions.getTaskContent(obj),
                 obj.globalVariable,
-                timestamp,
-                store.getState().experimentInfo.selectedTracker];
+                timestamp
+                ];
   }
   else if (type === "NEXT") {
     return ["ANSWERED",
+                store.getState().experimentInfo.participantId,
+                store.getState().experimentInfo.selectedTracker,
                 obj.firstResponseTimestamp,
                 obj.timeToFirstAnswer,
                 obj.timeToCompletion,
@@ -54,6 +58,8 @@ function stringifyWAMPMessage(obj, timestamp, type) {
   }
   else if (type === "SKIP") {
     return ["SKIPPED",
+                store.getState().experimentInfo.participantId,
+                store.getState().experimentInfo.selectedTracker,
                 obj.timeToCompletion];
   }
   return null;
@@ -261,6 +267,8 @@ class DisplayTaskComponent extends Component {
     var timestamp = dt.toUTCString();
 
     var info = ["NEW EXPERIMENT",
+                store.getState().experimentInfo.participantId,
+                store.getState().experimentInfo.selectedTracker,
                 store.getState().experimentInfo.mainTaskSetId,
                 timestamp]
     wamp.broadcastEvents(info);
@@ -270,6 +278,8 @@ class DisplayTaskComponent extends Component {
     var timestamp = dt.toUTCString();
 
     var info = ["FINISHED",
+                store.getState().experimentInfo.participantId,
+                store.getState().experimentInfo.selectedTracker,
                 store.getState().experimentInfo.mainTaskSetId,
                 timestamp]
     wamp.broadcastEvents(info);

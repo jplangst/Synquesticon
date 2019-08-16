@@ -9,6 +9,7 @@
     "@material-ui/styles": "^4.0.1",
     "autobahn": "^18.3.2",
     "axios": "^0.18.0",
+    "babel-polyfill": "^6.26.0",
     "dnd": "^0.1.0",
     "immutability-helper": "^3.0.0",
     "material-ui": "^1.0.0-beta.47",

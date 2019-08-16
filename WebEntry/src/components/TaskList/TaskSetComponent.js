@@ -13,8 +13,6 @@ import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
 import SpeakerIcon from '@material-ui/icons/VolumeUp';
 
-import wamp from '../../core/wamp.js';
-
 import './TaskSetComponent.css';
 
 class TaskSetComponent extends React.Component {
@@ -57,7 +55,7 @@ class TaskSetComponent extends React.Component {
     } else {
       this.props.task.stopTimestamp = new Date().getTime();
     }
-    wamp.startStopTask(this.props.task);
+
     this.props.task.start = !this.props.task.start;
     this.forceUpdate();
   }

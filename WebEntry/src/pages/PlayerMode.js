@@ -42,18 +42,11 @@ class PlayerMode extends Component {
   }
 
   componentWillMount() {
-    wampStore.addNewRemoteTrackerListener(this.onNewRemoteTracker.bind(this));
-
-    //db_helper.deleteAllParticipantsFromDb();
     //save data into DB before closing
     db_helper.getAllParticipantsFromDb((participants) => {
       console.log("all participants", participants);
     });
     db_helper.queryTasksFromDb(false, "experiment", this.dbTaskSetCallback);
-  }
-
-  componentWillUnmount() {
-    wampStore.removeNewRemoteTrackerListener(this.onNewRemoteTracker.bind(this));
   }
 
   onNewRemoteTracker() {
