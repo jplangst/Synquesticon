@@ -33,6 +33,16 @@ class DataExportationComponent extends Component {
     })
   }
 
+  handleDeleteAll() {
+    db_helper.deleteAllParticipantsFromDb(() => {
+      db_helper.getAllParticipantsFromDb((ids) => {
+        this.setState({
+          participants: ids
+        });
+      })
+    });
+  }
+
   handlePick() {
 
   }
@@ -42,10 +52,18 @@ class DataExportationComponent extends Component {
       //TODO
       courier.exportToCSV(this.pickedParticipants[0], (s) => {
         alert(s);
+        this.handleClose();
       });
     }
 
-    this.handleClose();
+
+  }
+
+  handleExportAll() {
+    courier.exportAllToCSVs((s) => {
+      this.handleClose();
+      alert(s);
+    })
   }
 
   handleClose() {
@@ -63,12 +81,15 @@ class DataExportationComponent extends Component {
   }
 
   getParticipantName(p) {
-    for (var i = 0; i < p.globalVariables.length; i++) {
-        if(p.globalVariables[i].label.toLowerCase().includes("participant")) {
-          return p.globalVariables[i].value;
-        }
+    if (p.globalVariables.length <= 0) {
+      return "Unnamed";
     }
-    return "Unnamed";
+
+    var name = p.globalVariables[0].label + "_" + p.globalVariables[0].value;
+    for (var i = 1; i < p.globalVariables.length; i++) {
+      name += ("-" + p.globalVariables[i].label + "_" + p.globalVariables[i].value);
+    }
+    return name;
   }
 
   render() {
@@ -97,11 +118,17 @@ class DataExportationComponent extends Component {
             })}
           </List>
           <DialogActions>
+            <Button onClick={this.handleDeleteAll.bind(this)} color="primary">
+              Delete All
+            </Button>
             <Button onClick={this.handleClose.bind(this)} color="primary">
               Cancel
             </Button>
             <Button onClick={this.handleExport.bind(this)} color="primary">
               Export
+            </Button>
+            <Button onClick={this.handleExportAll.bind(this)} color="primary">
+              Export All
             </Button>
           </DialogActions>
         </Dialog>

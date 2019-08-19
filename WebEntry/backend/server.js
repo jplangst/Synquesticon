@@ -66,7 +66,18 @@ router.post("/exportToCSV", (req, res) => {
   data_exportation.save_to_csv(obj);
 });
 
+router.post("/exportAllToCSVs", (req, res) => {
+  Participants.find((err, data) => {
+    if (err) {
+      return res.json({ success: false, error: err });
+    }
+    data.map((p, index) => {
+      data_exportation.save_to_csv(p);
+    });
+    return res.json({ success: true});
+  });
 
+})
 /*
 ████████  █████  ███████ ██   ██ ███████
    ██    ██   ██ ██      ██  ██  ██

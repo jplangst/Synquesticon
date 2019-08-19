@@ -42,7 +42,7 @@ class TextEntryComponent extends Component {
   }
 
   reset() {
-    if (!this.props.hasBeenAnswered) {
+    if (this.props.newTask) {
       this.textEntry = "";
       this.decimalWasPressed = false;
     }
@@ -91,7 +91,7 @@ class TextEntryComponent extends Component {
     var getKeyboardLine = (keyboard, css) => {
       return (<div className={css}>
               {keyboard.map((item, index) => {
-                  return <span className="inputButton">
+                  return <span className="inputButton" key={index}>
                             <Button key={index} variant="contained" onClick={() => this.keyboardPressed(item)}>
                               {item}
                             </Button>

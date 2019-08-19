@@ -8,11 +8,13 @@ class SingleChoiceComponent extends Component {
   constructor() {
     super();
     this.pickedItem = null;
+    this.hasBeenAnswered = false;
   }
 
   reset() {
-    if (!this.props.hasBeenAnswered) {
+    if (this.props.newTask) {
       this.pickedItem = null;
+      this.hasBeenAnswered = false;
     }
   }
 
@@ -28,7 +30,7 @@ class SingleChoiceComponent extends Component {
   }
 
   onAnswer(response) {
-    if (!this.props.hasBeenAnswered) {
+    if (!this.hasBeenAnswered) {
       this.pickedItem = response;
       var answerObj = {
         responses: [this.pickedItem],
@@ -37,6 +39,7 @@ class SingleChoiceComponent extends Component {
         mapID: this.props.mapID,
       }
       this.props.answerCallback(answerObj);
+      this.hasBeenAnswered = true;
     }
   }
   render() {
@@ -51,9 +54,9 @@ class SingleChoiceComponent extends Component {
             this.props.task.responses.map((item, index)=>{
               if (item === this.pickedItem) {
                 return (
-                  <span className="inputButton"><Button key={index} variant="contained"  disabled={this.props.hasBeenAnswered} onClick={() => this.onAnswer(item)}>{item}</Button></span>)
+                  <span className="inputButton" key={index}><Button  variant="contained"  disabled={this.hasBeenAnswered} onClick={() => this.onAnswer(item)}>{item}</Button></span>)
               }
-              return (<span className="inputButton"><Button key={index} variant="contained" onClick={() => this.onAnswer(item)}>{item}</Button></span>);
+              return (<span className="inputButton" key={index}><Button  variant="contained" onClick={() => this.onAnswer(item)}>{item}</Button></span>);
             })
           }
         </div>

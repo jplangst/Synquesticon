@@ -18,11 +18,8 @@ import * as playerUtils from '../../core/player_utility_functions';
 import './MultiItemTask.css';
 
 class MultiItemTask extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      hasBeenAnswered: false
-    }
+  constructor(props) {
+    super(props);
 
     //Map to hold all the answers from the questions
     //in key = questionID, value = [AnswerList]}
@@ -35,7 +32,7 @@ class MultiItemTask extends React.Component {
 
   componentDidMount() {
     this.timer = setInterval(this.handleGazeLocUpdate, 4.5); //Update the gaze cursor location every 2ms
-    this.logTheStartOfTask();
+    //this.logTheStartOfTask();
   }
 
   componentWillUnmount() {
@@ -43,18 +40,18 @@ class MultiItemTask extends React.Component {
   }
 
   //TODO tweak this for the multi-item
-  logTheStartOfTask() {
-    var startTimestamp = playerUtils.getCurrentTime();
-    this.currentLineOfData = new dbObjects.LineOfData(startTimestamp,
-                                                      //this.currentTask._id,
-                                                      this.props.tasksFamilyTree); //the array that has the task's tasksFamilyTree
-
-                                                      //TODO - verify Not needed fro this type of task?
-                                                      //dbObjectsUtilityFunctions.getTaskContent(this.currentTask),
-                                                      //this.currentTask.correctResponses);
-
-    wamp.broadcastEvents(playerUtils.stringifyWAMPMessage(this.props.tasksFamilyTree, startTimestamp, "START"));
-  }
+  // logTheStartOfTask() {
+  //   var startTimestamp = playerUtils.getCurrentTime();
+  //   this.currentLineOfData = new dbObjects.LineOfData(startTimestamp,
+  //                                                     //this.currentTask._id,
+  //                                                     this.props.tasksFamilyTree); //the array that has the task's tasksFamilyTree
+  //
+  //                                                     //TODO - verify Not needed fro this type of task?
+  //                                                     //dbObjectsUtilityFunctions.getTaskContent(this.currentTask),
+  //                                                     //this.currentTask.correctResponses);
+  //
+  //   wamp.broadcastEvents(playerUtils.stringifyWAMPMessage(this.props.tasksFamilyTree, startTimestamp, "START"));
+  // }
 
   //Updates the location of the Gaze Cursor. And checks if any of the AOIs were looked at
   updateCursorLocation(){
@@ -73,27 +70,6 @@ class MultiItemTask extends React.Component {
 
   //TODO tweak this for the multi-item
   onClickNext() {
-    /*if (!(store.getState().experimentInfo.participantId === "TESTING")) {
-      if (this.currentLineOfData) {
-        if (!this.currentTask.globalVariable) {
-          //complete line of data before saving to DB
-          this.currentLineOfData.timeToCompletion = getCurrentTime() - this.currentLineOfData.startTimestamp;
-          db_helper.addNewLineToParticipantDB(store.getState().experimentInfo.participantId,
-                                                JSON.stringify(this.currentLineOfData));
-        }
-        else {
-          var globalVariableObj = {
-            label: this.currentTask.question,
-            value: this.currentLineOfData.responses
-          };
-          db_helper.addNewGlobalVariableToParticipantDB(store.getState().experimentInfo.participantId,
-                                                          JSON.stringify(globalVariableObj));
-        }
-
-        wamp.broadcastEvents(stringifyWAMPMessage(this.currentLineOfData, null,
-                                                  this.state.hasBeenAnswered ? "NEXT" : "SKIP"));
-      }
-    }*/
 
     this.props.onFinished();
   }
@@ -105,28 +81,29 @@ class MultiItemTask extends React.Component {
     this.taskResponses.set(answerObj.taskID+answerObj.mapID, answerObj);
     console.log(this.taskResponses);
     //Update the state to rerender the components so we can see the new user input
-    this.setState({
-      hasBeenAnswered: true,
-    });
+
+    this.forceUpdate();
+    // this.setState({
+    //   hasBeenAnswered: true,
+    // });
   }
 
   getDisplayedContent(taskList, mapIndex){
     return taskList.map((item, i) => {
       if(item.objType === "Task"){
         mapIndex += i;
-        console.log(mapIndex);
         var key = item._id+"MultiItemTask";
         if(item.taskType === "Instruction"){
-            return <InstructionViewComponent key={key} task={item} answerCallback={this.answerCallback} hasBeenAnswered={this.state.hasBeenAnswered} mapID={mapIndex}/>;
+            return <InstructionViewComponent key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex}/>;
         }
         else if(item.taskType === "Text Entry"){
-            return <TextEntryComponent key={key} task={item} answerCallback={this.answerCallback} hasBeenAnswered={this.state.hasBeenAnswered} mapID={mapIndex}/>;
+            return <TextEntryComponent key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex}/>;
         }
         else if(item.taskType === "Single Choice"){
-            return <SingleChoiceComponent key={key} task={item} answerCallback={this.answerCallback} hasBeenAnswered={this.state.hasBeenAnswered} mapID={mapIndex}/>;
+            return <SingleChoiceComponent key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex}/>;
         }
         else if(item.taskType === "Multiple Choice"){
-            return <MultipleChoiceComponent key={key} task={item} answerCallback={this.answerCallback} hasBeenAnswered={this.state.hasBeenAnswered} mapID={mapIndex}/>;
+            return <MultipleChoiceComponent key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex}/>;
         }
         else if(item.taskType === "Image") {
             return <ImageViewComponent key={key} task={item} mapID={mapIndex}/>;

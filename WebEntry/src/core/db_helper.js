@@ -353,6 +353,7 @@ class db_helper {
     axios.post("/api/getTasksOrTaskSetsWithIDs", {
         objIds: JSON.stringify(objIds)
     }).then(response => {
+      console.log("tasks from DB, ", response.data.data);
       callback(response.data.data);
     });
   };
@@ -492,14 +493,15 @@ class db_helper {
       participantId: participantId,
       globalVariableJSON: globalVariableJSON //please stringify before calling this function
     }).then(data => {console.log("after adding new globalVariable to set", data)});
-  };
+   };
 
-  /**
+
+  /*
    * deleteAllParticipantsFromDb - Deletes all the participants from the DB. Use with care.
    *
    */
-   deleteAllParticipantsFromDb() {
-    axios.delete("/api/deleteAllParticipants");
-  }
+   deleteAllParticipantsFromDb(callback) {
+    axios.delete("/api/deleteAllParticipants").then(() => callback());
+   }
 }
 export default new db_helper();

@@ -17,6 +17,7 @@ import shuffle from '../core/shuffle';
 import wampStore from '../core/wampStore';
 import db_helper from '../core/db_helper.js';
 import * as dbObjects from '../core/db_objects';
+import * as playerUtils from '../core/player_utility_functions';
 
 import './PlayerMode.css';
 
@@ -34,7 +35,6 @@ class PlayerMode extends Component {
 
     //Database callbacks
     this.dbTaskSetCallback = this.dbTaskSetCallbackFunction.bind(this);
-    this.dbTasksCallback = this.dbTasksCallbackFunction.bind(this);
   }
 
   componentWillMount() {
@@ -61,42 +61,41 @@ class PlayerMode extends Component {
     this.setState({taskSets: data.tasks});
   }
 
-  dbTasksCallbackFunction(dbQueryResult) {
-    var runThisTaskSet = dbQueryResult;
-    if (this.selectedTaskSet.setTaskOrder === "Random") {
-      runThisTaskSet = shuffle(runThisTaskSet);
-    }
-
-    db_helper.addParticipantToDb(new dbObjects.ParticipantObject(this.selectedTaskSet._id), (returnedIdFromDB)=> {
-      var action = {
-        type: 'SET_EXPERIMENT_INFO',
-        experimentInfo: {
-          experimentId: "",
-          participantId: returnedIdFromDB,
-          mainTaskSetId: this.selectedTaskSet.name,
-          taskSet: runThisTaskSet,
-          selectedTaskSetObject: this.selectedTaskSet,
-          selectedTracker: this.state.selectedTracker
-        }
-      }
-
-      store.dispatch(action);
-
-      var layoutAction = {
-        type: 'SET_SHOW_HEADER',
-        showHeader: false
-      }
-
-      store.dispatch(layoutAction);
-
-      this.props.gotoPage('/RunTasksMode');
-    })
-  }
-
   //bottom button handler
   onPlayButtonClick(taskSet) {
     this.selectedTaskSet = taskSet;
-    db_helper.getTasksOrTaskSetsWithIDs(this.selectedTaskSet.childIds, this.dbTasksCallback);
+    db_helper.getTasksOrTaskSetsWithIDs(this.selectedTaskSet.childIds, (dbQueryResult) => {
+      var runThisTaskSet = dbQueryResult;
+      if (this.selectedTaskSet.setTaskOrder === "Random") {
+        runThisTaskSet = shuffle(runThisTaskSet);
+      }
+
+      db_helper.addParticipantToDb(new dbObjects.ParticipantObject(this.selectedTaskSet._id), (returnedIdFromDB)=> {
+        var action = {
+          type: 'SET_EXPERIMENT_INFO',
+          experimentInfo: {
+            experimentId: "",
+            participantLabel: playerUtils.getFormattedCurrentTime(),
+            participantId: returnedIdFromDB,
+            mainTaskSetId: this.selectedTaskSet.name,
+            taskSet: runThisTaskSet,
+            selectedTaskSetObject: this.selectedTaskSet,
+            selectedTracker: this.state.selectedTracker
+          }
+        }
+
+        store.dispatch(action);
+
+        var layoutAction = {
+          type: 'SET_SHOW_HEADER',
+          showHeader: false
+        }
+
+        store.dispatch(layoutAction);
+
+        this.props.gotoPage('/DisplayTaskComponent');
+      })
+    });
   }
 
   onSelectRemoteTracker(e) {

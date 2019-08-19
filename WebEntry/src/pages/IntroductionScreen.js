@@ -35,7 +35,6 @@ class IntroductionScreen extends Component {
             <Button className="listItemDragBtnContainer" onClick={(e) => this.gotoPage("EditorMode")} >
               <EditIcon/>
             </Button>
-            <DataExportationComponent />
           </div>
         </div>
         <PlayerMode gotoPage={this.gotoPage.bind(this)}/>

@@ -29,7 +29,7 @@ const TaskSchema = new Schema(
     correctResponses: [String], //The correct response
     responseUnit: String, //The unit of the response e.g. "%", "RPM"
     refSets: [String], //list of sets that reference to this questions
-    objType: String
+    objType: String,
   }, {
     collection: 'Tasks'
   }
@@ -46,7 +46,7 @@ const TaskSetSchema = new Schema({
   }], //list of the task ids referenced by this set
   setTaskOrder: String, //In Order, Random
   displayOnePage: Boolean, //If true display all the tasks on one page
-  logOneLine: Boolean, //If true log all the tasks in one line
+  //logOneLine: Boolean, //If true log all the tasks in one line
   counterbalancingOrder: [Number], //List of the order the tasks should be played
   objType: String
 }, {

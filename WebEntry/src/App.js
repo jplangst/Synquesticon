@@ -9,7 +9,7 @@ import EditorMode from './pages/EditorMode';
 import IntroductionScreen from './pages/IntroductionScreen';
 import PlayerMode from './pages/PlayerMode';
 import ObserverMode from './pages/ObserverMode';
-import RunTasksMode from './components/PlayerComponents/DisplayTaskComponent';
+import DisplayTaskComponent from './components/PlayerComponents/DisplayTaskComponent';
 
 import HTML5Backend from 'react-dnd-html5-backend'
 import { DragDropContext } from 'react-dnd'
@@ -34,7 +34,7 @@ class App extends Component {
               <Route path="/EditorMode" component={EditorMode} />
               <Route path="/PlayerMode" component={PlayerMode} />
               <Route path="/ObserverMode" component={ObserverMode} />
-              <Route path="/RunTasksMode" component={RunTasksMode}/>} />
+              <Route path="/DisplayTaskComponent" component={DisplayTaskComponent}/>} />
             </Switch>
           </div>
         </div>
