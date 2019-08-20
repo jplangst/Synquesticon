@@ -116,48 +116,53 @@ class Header extends Component {
   }
 
   render() {
-    if (store.getState().showHeader) {
-      return(
-        <AppBar position="sticky" style={{width:"100%", height:"6%"}}>
-           <Toolbar variant="dense" position="absolute">
-             <Button size="small" style={{width:"10px", height:"90%"}} onClick={this.handleBackwardsNavigation.bind(this)} >
-               <BackArrowNavigation fontSize="large" className="headerIcon"/>
-             </Button>
-             <div className="AppName">Synquesticon</div>
-            <Button style={{width:"10px", height:"90%"}} onClick={this.openSettingsMenu.bind(this)} >
-              <Settings fontSize="large" className="headerIcon"/>
-            </Button>
-          </Toolbar>
+    let storeState = store.getState();
+    if (storeState.showHeader) {
+      var fontSize = Math.max(28, Math.min(storeState.windowSize.height * 0.08, storeState.windowSize.width * 0.08));
 
-          <Drawer anchor="right" open={this.state.showMenu} onClose={this.closeSettingsMenu.bind(this)}>
-            <div
-              tabIndex={0}
-              role="button"
-              onClick={this.openSettingsMenu.bind(this)}
-            >
-              <List>
-                <ListItem button key="Crossbar Settings" onClick={this.onOpenCrossbarSettings.bind(this)}>
-                  <ListItemText primary="Crossbar Settings" />
-                </ListItem>
-                <ListItem button key="Speech Settings" onClick={this.onOpenSpeechSettings.bind(this)}>
-                  <ListItemText primary="Speech Settings" />
-                </ListItem>
-              </List>
-              <Divider />
-              <List>
-                <ListItem button key="Fullscreen" onClick={this.onFullscreen.bind(this)}>
-                  <ListItemText primary="Fullscreen" />
-                </ListItem>
-              </List>
-            </div>
-          </Drawer>
-          <CrossbarDialog openCrossbarSettings={this.state.openCrossbarSettings} closeCrossbarSettings={this.closeCrossbarSettings}/>
-          <SpeechDialog openSpeechSettings={this.state.openSpeechSettings} closeSpeechSettings={this.closeSpeechSettings}/>
-        </AppBar>
+      return(
+          <AppBar style={{margin: 0, padding: 0, display:'flex', flexGrow: 1, flexShrink:1, position: 'relative', minHeight:50, maxHeight:'10%', width:'100%'}}>
+            <Toolbar variant="dense" style={{margin: 0, padding: 0, display:'flex', flexDirection:'row', position:'relative', width:'100%', height:'100%'}}>
+               <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:"0", maxWidth:200, height:'100%'}}
+                onClick={this.handleBackwardsNavigation.bind(this)} >
+                 <BackArrowNavigation style={{display:'flex', position: 'absolute', height: '100%', width: 'auto', maxWidth: '100%', flexGrow: 1}} />
+               </Button>
+               <div style={{fontSize: fontSize}} className="AppName"><div className="centredHeaderTitle"> Synquesticon </div></div>
+              <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:200, height:"100%"}}
+                onClick={this.openSettingsMenu.bind(this)} >
+                <Settings size='large' style={{display:'flex', position: 'absolute', height: '100%', width: 'auto', maxWidth: '100%', flexGrow: 1}} />
+              </Button>
+            </Toolbar>
+
+            <Drawer anchor="right" open={this.state.showMenu} onClose={this.closeSettingsMenu.bind(this)}>
+              <div
+                tabIndex={0}
+                role="button"
+                onClick={this.openSettingsMenu.bind(this)}
+              >
+                <List>
+                  <ListItem button key="Crossbar Settings" onClick={this.onOpenCrossbarSettings.bind(this)}>
+                    <ListItemText primary="Crossbar Settings" />
+                  </ListItem>
+                  <ListItem button key="Speech Settings" onClick={this.onOpenSpeechSettings.bind(this)}>
+                    <ListItemText primary="Speech Settings" />
+                  </ListItem>
+                </List>
+                <Divider />
+                <List>
+                  <ListItem button key="Fullscreen" onClick={this.onFullscreen.bind(this)}>
+                    <ListItemText primary="Fullscreen" />
+                  </ListItem>
+                </List>
+              </div>
+            </Drawer>
+            <CrossbarDialog openCrossbarSettings={this.state.openCrossbarSettings} closeCrossbarSettings={this.closeCrossbarSettings}/>
+            <SpeechDialog openSpeechSettings={this.state.openSpeechSettings} closeSpeechSettings={this.closeSpeechSettings}/>
+          </AppBar>
       );
     }
     else {
-      return <div />;
+      return null;
     }
   }
 }

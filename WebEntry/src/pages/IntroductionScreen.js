@@ -27,7 +27,7 @@ class IntroductionScreen extends Component {
 
   render() {
     return(
-    <div >
+    <div className="introductionScreenContainer">
       <div className = "AssetViewer">
         <div className="AssetViewerTitle">
           <div className="AssetViewerTitleText">Studies</div>

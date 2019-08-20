@@ -1,17 +1,24 @@
-.spacer{
-  flex-grow: 1;
-  background-color: red;
-}
-
-.headerIcon{
-  position: absolute;
+.headerContent{
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 auto;
+  background-color: blue;
 }
 
 .AppName {
-  align-self: center;
-  font-weight: bold;
+  display: flex;
   flex-grow: 1;
-  text-align: center;
-  font-size: 1.2em;
+
+  position: relative;
+
+  font-weight: bold;
   font-family: Arial;
+
+  align-self: center;
+  justify-content: center;
+}
+
+.centredHeaderTitle{
+  position: relative;
+  max-width: 50%;
 }
