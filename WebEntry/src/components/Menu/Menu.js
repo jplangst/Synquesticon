@@ -143,8 +143,8 @@ class Menu extends Component {
             onClick={this.openSettingsMenu.bind(this)}
           >
             <List>
-              <ListItem button key="Crossbar Settings" onClick={this.onOpenDeviceIDSettings.bind(this)}>
-                <ListItemText primary="Crossbar Settings" />
+              <ListItem button key={myStorage.getItem('deviceID')} onClick={this.onOpenDeviceIDSettings.bind(this)}>
+                <ListItemText primary={myStorage.getItem('deviceID')} />
               </ListItem>
               <ListItem button key="Crossbar Settings" onClick={this.onOpenCrossbarSettings.bind(this)}>
                 <ListItemText primary="Crossbar Settings" />
