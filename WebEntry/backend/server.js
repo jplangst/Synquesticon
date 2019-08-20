@@ -25,7 +25,7 @@ const router = express.Router();
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/webEntryDb";
 
-MongoClient.connect(url, function(err, db) {
+MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
   if (err) throw err;
   console.log("Database created!");
   db.close();
