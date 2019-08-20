@@ -10,7 +10,7 @@ class InstructionViewComponent extends Component {
     this.onAnswer();
   }
   onAnswer() {
-    if (!this.props.hasBeenAnswered) {
+    if (this.props.newTask) {
       var answerObj = {
         responses: [],
         correctlyAnswered: "notApplicable",

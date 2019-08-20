@@ -39,7 +39,7 @@ function stringifyWAMPMessage(obj, timestamp, type) {
 
     //Event type (0), task content (1), startTimestamp (2), remoteTracker (3)
     return ["START",
-                store.getState().experimentInfo.participantId,
+                store.getState().experimentInfo.participantLabel,
                 store.getState().experimentInfo.selectedTracker,
                 obj.taskType,
                 dbObjectsUtilityFunctions.getTaskContent(obj),
@@ -49,7 +49,7 @@ function stringifyWAMPMessage(obj, timestamp, type) {
   }
   else if (type === "NEXT") {
     return ["ANSWERED",
-                store.getState().experimentInfo.participantId,
+                store.getState().experimentInfo.participantLabel,
                 store.getState().experimentInfo.selectedTracker,
                 obj.firstResponseTimestamp,
                 obj.timeToFirstAnswer,
@@ -60,26 +60,43 @@ function stringifyWAMPMessage(obj, timestamp, type) {
   }
   else if (type === "SKIP") {
     return ["SKIPPED",
-                store.getState().experimentInfo.participantId,
+                store.getState().experimentInfo.participantLabel,
                 store.getState().experimentInfo.selectedTracker,
                 obj.timeToCompletion];
   }
   return null;
 }
 
+/*
+██████  ███████  ██████ ██    ██ ██████  ███████ ██  ██████  ███    ██      ██████  ██████  ███    ███ ██████   ██████  ███    ██ ███████ ███    ██ ████████
+██   ██ ██      ██      ██    ██ ██   ██ ██      ██ ██    ██ ████   ██     ██      ██    ██ ████  ████ ██   ██ ██    ██ ████   ██ ██      ████   ██    ██
+██████  █████   ██      ██    ██ ██████  ███████ ██ ██    ██ ██ ██  ██     ██      ██    ██ ██ ████ ██ ██████  ██    ██ ██ ██  ██ █████   ██ ██  ██    ██
+██   ██ ██      ██      ██    ██ ██   ██      ██ ██ ██    ██ ██  ██ ██     ██      ██    ██ ██  ██  ██ ██      ██    ██ ██  ██ ██ ██      ██  ██ ██    ██
+██   ██ ███████  ██████  ██████  ██   ██ ███████ ██  ██████  ██   ████      ██████  ██████  ██      ██ ██       ██████  ██   ████ ███████ ██   ████    ██
+*/
+
+
 class DisplayTaskHelper extends React.Component { //for the fking sake of recursion
   constructor() {
     super();
     this.state = {
       currentTaskIndex: 0,
-      hasBeenAnswered: false,
-      complexStep: 0 //for complex tasks only
+      hasBeenAnswered: false
     }
 
     this.currentTask = null;
     this.currentLineOfData = null;
     this.handleGazeLocUpdate = this.updateCursorLocation.bind(this);
   }
+
+  /*
+   ██████  ██████  ███    ███ ██████   ██████  ███    ██ ███████ ███    ██ ████████     ███████ ██    ██ ███    ██  ██████ ████████ ██  ██████  ███    ██ ███████
+  ██      ██    ██ ████  ████ ██   ██ ██    ██ ████   ██ ██      ████   ██    ██        ██      ██    ██ ████   ██ ██         ██    ██ ██    ██ ████   ██ ██
+  ██      ██    ██ ██ ████ ██ ██████  ██    ██ ██ ██  ██ █████   ██ ██  ██    ██        █████   ██    ██ ██ ██  ██ ██         ██    ██ ██    ██ ██ ██  ██ ███████
+  ██      ██    ██ ██  ██  ██ ██      ██    ██ ██  ██ ██ ██      ██  ██ ██    ██        ██      ██    ██ ██  ██ ██ ██         ██    ██ ██    ██ ██  ██ ██      ██
+   ██████  ██████  ██      ██ ██       ██████  ██   ████ ███████ ██   ████    ██        ██       ██████  ██   ████  ██████    ██    ██  ██████  ██   ████ ███████
+  */
+
 
   componentDidMount() {
     this.timer = setInterval(this.handleGazeLocUpdate, 4.5); //Update the gaze cursor location every 2ms
@@ -89,7 +106,15 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
     clearInterval(this.timer);
   }
 
+  /*
+██       ██████   ██████   ██████  ██ ███    ██  ██████
+██      ██    ██ ██       ██       ██ ████   ██ ██
+██      ██    ██ ██   ███ ██   ███ ██ ██ ██  ██ ██   ███
+██      ██    ██ ██    ██ ██    ██ ██ ██  ██ ██ ██    ██
+███████  ██████   ██████   ██████  ██ ██   ████  ██████
+*/
   logTheStartOfTask() {
+    console.log("logTheStartOfTask");
     var startTimestamp = playerUtils.getCurrentTime();
     this.currentLineOfData = new dbObjects.LineOfData(startTimestamp,
                                                       this.currentTask._id,
@@ -97,7 +122,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
                                                       dbObjectsUtilityFunctions.getTaskContent(this.currentTask),
                                                       this.currentTask.correctResponses);
 
-    wamp.broadcastEvents(playerUtils.stringifyWAMPMessage(this.currentTask, startTimestamp, "START"));
+    wamp.broadcastEvents(stringifyWAMPMessage(this.currentTask, startTimestamp, "START"));
   }
 
   //Updates the location of the Gaze Cursor. And checks if any of the AOIs were looked at
@@ -115,13 +140,14 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
     }
   }
 
+  /*
+   ██████  █████  ██      ██      ██████   █████   ██████ ██   ██ ███████
+  ██      ██   ██ ██      ██      ██   ██ ██   ██ ██      ██  ██  ██
+  ██      ███████ ██      ██      ██████  ███████ ██      █████   ███████
+  ██      ██   ██ ██      ██      ██   ██ ██   ██ ██      ██  ██       ██
+   ██████ ██   ██ ███████ ███████ ██████  ██   ██  ██████ ██   ██ ███████
+  */
   onClickNext() {
-    if (this.currentTask && this.currentTask.taskType === "Complex" && this.state.complexStep < 2) {
-      this.setState({
-        complexStep: (this.state.complexStep + 1)
-      })
-    }
-    else {
       if (!(store.getState().experimentInfo.participantId === "TESTING")) {
         if (this.currentLineOfData) {
           if (!this.currentTask.globalVariable) {
@@ -139,7 +165,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
                                                             JSON.stringify(globalVariableObj));
           }
 
-          wamp.broadcastEvents(playerUtils.stringifyWAMPMessage(this.currentLineOfData, null,
+          wamp.broadcastEvents(stringifyWAMPMessage(this.currentLineOfData, null,
                                                     this.state.hasBeenAnswered ? "NEXT" : "SKIP"));
         }
       }
@@ -148,11 +174,9 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
       this.setState({
         hasBeenAnswered: false,
         answerItem: null,
-        currentTaskIndex: (this.state.currentTaskIndex + 1),
-        complexStep: 0
+        currentTaskIndex: (this.state.currentTaskIndex + 1)
       });
       this.currentLineOfData = null;
-    }
   }
 
   onAnswer(answer) {
@@ -175,12 +199,19 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
     this.onClickNext();
   }
 
+  /*
+  ██████  ███████ ███    ██ ██████  ███████ ██████
+  ██   ██ ██      ████   ██ ██   ██ ██      ██   ██
+  ██████  █████   ██ ██  ██ ██   ██ █████   ██████
+  ██   ██ ██      ██  ██ ██ ██   ██ ██      ██   ██
+  ██   ██ ███████ ██   ████ ██████  ███████ ██   ██
+  */
+
+
   render() {
     //check if we should enter a new level or leave
     if(this.props.taskSet.length > 0 && this.state.currentTaskIndex < this.props.taskSet.length) {
       if (this.props.taskSet[this.state.currentTaskIndex].objType === "TaskSet") {
-
-        console.log(this.props.taskSet[this.state.currentTaskIndex]);
         //shuffle set if set was marked as "Random"
         var runThisTaskSet = this.props.taskSet[this.state.currentTaskIndex].data;
         if (this.props.taskSet[this.state.currentTaskIndex].setTaskOrder === "Random") {
@@ -209,29 +240,26 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
         }
 
         //log the start
-        if (!this.state.hasBeenAnswered && this.state.complexStep === 0
+        if (!this.state.hasBeenAnswered
               && !(store.getState().experimentInfo.participantId === "TESTING")) {
           this.logTheStartOfTask();
         }
 
         var getDisplayedContent = () => {
           if(this.currentTask){
-            if((this.currentTask.taskType === "Instruction") ||
-                  (this.currentTask.taskType === "Complex" && this.state.complexStep === 0)) {
+            if((this.currentTask.taskType === "Instruction")) {
                 return <InstructionViewComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)}/>;
               }
             if(this.currentTask.taskType === "Text Entry") {
-                return <TextEntryComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} hasBeenAnswered={this.state.hasBeenAnswered}/>;
+                return <TextEntryComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered}/>;
               }
             if(this.currentTask.taskType === "Single Choice") {
-                return <SingleChoiceComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} hasBeenAnswered={this.state.hasBeenAnswered}/>;
+                return <SingleChoiceComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered}/>;
               }
-            if((this.currentTask.taskType === "Multiple Choice") ||
-                  (this.currentTask.taskType === "Complex" && this.state.complexStep === 2)) {
-                return <MultipleChoiceComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} hasBeenAnswered={this.state.hasBeenAnswered}/>;
+            if((this.currentTask.taskType === "Multiple Choice")) {
+                return <MultipleChoiceComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered}/>;
               }
-            if((this.currentTask.taskType === "Image") ||
-                  (this.currentTask.taskType === "Complex" && this.state.complexStep === 1)) {
+            if((this.currentTask.taskType === "Image")) {
                 return <ImageViewComponent task={this.currentTask}/>;
               }
           } else {
@@ -265,24 +293,38 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
   }
 }
 
+/*
+██     ██ ██████   █████  ██████  ██████  ███████ ██████       ██████  ██████  ███    ███ ██████   ██████  ███    ██ ███████ ███    ██ ████████
+██     ██ ██   ██ ██   ██ ██   ██ ██   ██ ██      ██   ██     ██      ██    ██ ████  ████ ██   ██ ██    ██ ████   ██ ██      ████   ██    ██
+██  █  ██ ██████  ███████ ██████  ██████  █████   ██████      ██      ██    ██ ██ ████ ██ ██████  ██    ██ ██ ██  ██ █████   ██ ██  ██    ██
+██ ███ ██ ██   ██ ██   ██ ██      ██      ██      ██   ██     ██      ██    ██ ██  ██  ██ ██      ██    ██ ██  ██ ██ ██      ██  ██ ██    ██
+ ███ ███  ██   ██ ██   ██ ██      ██      ███████ ██   ██      ██████  ██████  ██      ██ ██       ██████  ██   ████ ███████ ██   ████    ██
+*/
+
+
 class DisplayTaskComponent extends Component {
   broadcastStartEvent() {
-    var dt = new Date();
-    var timestamp = dt.toUTCString();
+    try {
+      var dt = new Date();
+      var timestamp = dt.toUTCString();
 
-    var info = ["NEW EXPERIMENT",
-                store.getState().experimentInfo.participantId,
-                store.getState().experimentInfo.selectedTracker,
-                store.getState().experimentInfo.mainTaskSetId,
-                timestamp]
-    wamp.broadcastEvents(info);
+      var info = ["NEW EXPERIMENT",
+                  store.getState().experimentInfo.participantLabel,
+                  store.getState().experimentInfo.selectedTracker,
+                  store.getState().experimentInfo.mainTaskSetId,
+                  timestamp]
+      wamp.broadcastEvents(info);
+    }
+    catch(err) {
+      console.log(err);
+    }
   }
   broadcastEndEvent() {
     var dt = new Date();
     var timestamp = dt.toUTCString();
 
     var info = ["FINISHED",
-                store.getState().experimentInfo.participantId,
+                store.getState().experimentInfo.participantLabel,
                 store.getState().experimentInfo.selectedTracker,
                 store.getState().experimentInfo.mainTaskSetId,
                 timestamp]
@@ -318,17 +360,23 @@ class DisplayTaskComponent extends Component {
   }
 
   render() {
-    var renderObj = null;
-    if(store.getState().experimentInfo.selectedTaskSetObject.displayOnePage){
-      renderObj = <MultiItemTask tasksFamilyTree={[store.getState().experimentInfo.mainTaskSetId]} taskSet={store.getState().experimentInfo.taskSet} onFinished={this.onFinished.bind(this)}/>;
-    }
-    else{
-      renderObj = <DisplayTaskHelper tasksFamilyTree={[store.getState().experimentInfo.mainTaskSetId]} taskSet={store.getState().experimentInfo.taskSet} onFinished={this.onFinished.bind(this)}/>;
-    }
+    try {
+      var renderObj = null;
+      if(store.getState().experimentInfo.selectedTaskSetObject.displayOnePage){
+        renderObj = <MultiItemTask tasksFamilyTree={[store.getState().experimentInfo.mainTaskSetId]} taskSet={store.getState().experimentInfo.taskSet} onFinished={this.onFinished.bind(this)}/>;
+      }
+      else{
+        renderObj = <DisplayTaskHelper tasksFamilyTree={[store.getState().experimentInfo.mainTaskSetId]} taskSet={store.getState().experimentInfo.taskSet} onFinished={this.onFinished.bind(this)}/>;
+      }
 
-    return (
-        renderObj
-    );
+      return (
+          renderObj
+      );
+    }
+    catch(err) {
+      alert("something went wrong!");
+      return <div/>;
+    }
   }
 }
 

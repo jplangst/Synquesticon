@@ -8,7 +8,7 @@ exports.save_to_csv = function(p) {
     var file_name = "";
     for (let i = 0; i < p.globalVariables.length; i++) {
       header += p.globalVariables[i].label + ",";
-      globalVariables = p.globalVariables[i].value + ",";
+      globalVariables += p.globalVariables[i].value + ",";
       file_name += p.globalVariables[i].label + '_' + p.globalVariables[i].value + '_';
     }
 

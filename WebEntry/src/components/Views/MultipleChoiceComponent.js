@@ -11,7 +11,7 @@ class MultipleChoiceComponent extends Component {
   }
 
   reset() {
-    if (!this.props.hasBeenAnswered) {
+    if (this.props.newTask) {
       this.pickedItems = [];
     }
   }
@@ -51,9 +51,9 @@ class MultipleChoiceComponent extends Component {
             this.props.task.responses.map((item, index)=>{
               if (this.pickedItems.includes(item)) {
                 return (
-                  <span className="inputButton"><Button key={index} variant="contained" color="primary" disabled={true} onClick={() => this.onAnswer(item)}>{item}</Button></span>)
+                  <span className="inputButton" key={index}><Button  variant="contained" color="primary" disabled={true} onClick={() => this.onAnswer(item)}>{item}</Button></span>)
               }
-              return (<span className="inputButton"><Button key={index} variant="contained" onClick={() => this.onAnswer(item)}>{item}</Button></span>);
+              return (<span className="inputButton" key={index}><Button  variant="contained" onClick={() => this.onAnswer(item)}>{item}</Button></span>);
             })
           }
         </div>
