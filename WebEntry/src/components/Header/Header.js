@@ -121,14 +121,14 @@ class Header extends Component {
       var fontSize = Math.max(28, Math.min(storeState.windowSize.height * 0.08, storeState.windowSize.width * 0.08));
 
       return(
-          <AppBar style={{margin: 0, padding: 0, display:'flex', flexGrow: 1, flexShrink:1, position: 'relative', minHeight:50, maxHeight:'10%', width:'100%'}}>
+          <AppBar style={{margin: 0, padding: 0, display:'flex', flexGrow: 1, flexShrink:1, position: 'relative', minHeight:50, maxHeight:'8%', width:'100%'}}>
             <Toolbar variant="dense" style={{margin: 0, padding: 0, display:'flex', flexDirection:'row', position:'relative', width:'100%', height:'100%'}}>
-               <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:"0", maxWidth:200, height:'100%'}}
+               <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:150, height:'100%'}}
                 onClick={this.handleBackwardsNavigation.bind(this)} >
                  <BackArrowNavigation style={{display:'flex', position: 'absolute', height: '100%', width: 'auto', maxWidth: '100%', flexGrow: 1}} />
                </Button>
                <div style={{fontSize: fontSize}} className="AppName"><div className="centredHeaderTitle"> Synquesticon </div></div>
-              <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:200, height:"100%"}}
+              <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:150, height:"100%"}}
                 onClick={this.openSettingsMenu.bind(this)} >
                 <Settings size='large' style={{display:'flex', position: 'absolute', height: '100%', width: 'auto', maxWidth: '100%', flexGrow: 1}} />
               </Button>
