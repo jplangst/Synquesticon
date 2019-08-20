@@ -4,7 +4,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
 import GazeCursor from '../components/Views/GazeCursor';
-import WAMPMessageComponent from '../components/Views/WAMPMessageComponent';
+import WAMPMessageComponent from '../components/Views/ObserverMessages/WAMPMessageComponent';
 
 import wampStore from '../core/wampStore';
 import store from '../core/store';
