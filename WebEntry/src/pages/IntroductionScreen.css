@@ -1,3 +1,8 @@
+.introductionScreenContainer{
+  display: flex;
+  flex: 1;
+}
+
 .AssetViewerNoRoundCorner{
   position: absolute;
   width: 28%;

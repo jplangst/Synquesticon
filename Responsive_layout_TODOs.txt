@@ -1,0 +1,17 @@
+Responsive layout TODOs:
+
+Header:
+*Content overlaps with header in small window
+*Buttons now using whole height of the header
+
+EditorMode page:
+*Both parts header overlaps content when small window
+
+* Asset Viewer needs to be tweaked
+    *When smaller have icons on top of each other?
+    *Less text in content before ...
+    *Horizontal scrolling?
+
+* Asset Editor
+    * Set Tasks and set details overlap with small window
+    * Bottom buttons overlap content with small window

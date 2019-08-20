@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Route, Switch  } from 'react-router-dom';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { throttle } from 'lodash'
+
 import store from './core/store';
 
 import Header from './components/Header/Header'
@@ -20,15 +22,34 @@ import './App.css'
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
 
 class App extends Component {
+  constructor(props){
+    super(props);
+    this.resize = throttle(this.resize.bind(this), 100); //Setup the resize callback function so it is not called too frequently
+  }
+
+  resize(){
+    var resizeAction = {
+      type: 'WINDOW_RESIZE',
+      windowSize: {width: window.innerWidth, height: window.innerHeight}
+    };
+
+    store.dispatch(resizeAction);
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.resize)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resize)
+  }
+
   render() {
-
-    var mainContentHeight = this.props.showHeader ? '94%' : '100%';
-
     return (
         <Router>
         <div className="App">
           <Route component={Header} />
-          <div className="MainContent" style={{height: mainContentHeight}}>
+          <div className="MainContent">
             <Switch>
               <Route exact path="/" component={IntroductionScreen} />
               <Route path="/EditorMode" component={EditorMode} />
@@ -43,10 +64,11 @@ class App extends Component {
   }
 }
 
-//Allow sus to use store state to update our react component
+//Allows us to use store state to update our react component
 function mapStateToProps(state, ownProps) {
     return {
-        showHeader: state.showHeader
+        showHeader: state.showHeader,
+        windowSize: state.windowSize
     };
 }
 
