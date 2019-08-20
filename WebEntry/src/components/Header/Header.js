@@ -16,11 +16,27 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
+import Avatar from '@material-ui/core/Avatar';
+
+import { makeStyles } from '@material-ui/core/styles';
+import { blue } from '@material-ui/core/colors';
+
 //Icons
 import Settings from '@material-ui/icons/Settings';
 import BackArrowNavigation from '@material-ui/icons/ChevronLeft';
 
 import store from '../../core/store';
+
+const useStyles = makeStyles({
+  avatar: {
+    margin: 10,
+  },
+  blueAvatar: {
+    margin: 10,
+    color: '#fff',
+    backgroundColor: blue[500],
+  }
+});
 
 class Header extends Component {
   constructor(props) {
