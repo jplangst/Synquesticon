@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './Header.css';
 
 //Components
+import Menu from '../Menu/Menu';
 import CrossbarDialog from '../dialogs/CrossbarDialog';
 import SpeechDialog from '../dialogs/SpeechDialog';
 
@@ -16,27 +17,11 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-import Avatar from '@material-ui/core/Avatar';
-
-import { makeStyles } from '@material-ui/core/styles';
-import { blue } from '@material-ui/core/colors';
-
 //Icons
 import Settings from '@material-ui/icons/Settings';
 import BackArrowNavigation from '@material-ui/icons/ChevronLeft';
 
 import store from '../../core/store';
-
-const useStyles = makeStyles({
-  avatar: {
-    margin: 10,
-  },
-  blueAvatar: {
-    margin: 10,
-    color: '#fff',
-    backgroundColor: blue[500],
-  }
-});
 
 class Header extends Component {
   constructor(props) {
@@ -144,36 +129,8 @@ class Header extends Component {
                  <BackArrowNavigation style={{display:'flex', position: 'absolute', height: '100%', width: 'auto', maxWidth: '100%', flexGrow: 1}} />
                </Button>
                <div style={{fontSize: fontSize}} className="AppName"><div className="centredHeaderTitle"> Synquesticon </div></div>
-              <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:150, height:"100%"}}
-                onClick={this.openSettingsMenu.bind(this)} >
-                <Settings size='large' style={{display:'flex', position: 'absolute', height: '100%', width: 'auto', maxWidth: '100%', flexGrow: 1}} />
-              </Button>
+              <Menu/>
             </Toolbar>
-
-            <Drawer anchor="right" open={this.state.showMenu} onClose={this.closeSettingsMenu.bind(this)}>
-              <div
-                tabIndex={0}
-                role="button"
-                onClick={this.openSettingsMenu.bind(this)}
-              >
-                <List>
-                  <ListItem button key="Crossbar Settings" onClick={this.onOpenCrossbarSettings.bind(this)}>
-                    <ListItemText primary="Crossbar Settings" />
-                  </ListItem>
-                  <ListItem button key="Speech Settings" onClick={this.onOpenSpeechSettings.bind(this)}>
-                    <ListItemText primary="Speech Settings" />
-                  </ListItem>
-                </List>
-                <Divider />
-                <List>
-                  <ListItem button key="Fullscreen" onClick={this.onFullscreen.bind(this)}>
-                    <ListItemText primary="Fullscreen" />
-                  </ListItem>
-                </List>
-              </div>
-            </Drawer>
-            <CrossbarDialog openCrossbarSettings={this.state.openCrossbarSettings} closeCrossbarSettings={this.closeCrossbarSettings}/>
-            <SpeechDialog openSpeechSettings={this.state.openSpeechSettings} closeSpeechSettings={this.closeSpeechSettings}/>
           </AppBar>
       );
     }
