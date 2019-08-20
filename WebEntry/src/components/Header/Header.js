@@ -161,7 +161,7 @@ class Header extends Component {
           </AppBar>
       );
     }
-    else {
+    else { //If the header flag is False we return null
       return null;
     }
   }

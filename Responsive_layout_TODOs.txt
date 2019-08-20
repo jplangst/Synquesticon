@@ -1,8 +1,8 @@
 Responsive layout TODOs:
 
 Header:
-*Content overlaps with header in small window
-*Buttons now using whole height of the header
+*Content overlaps with header in small window (Done)
+*Buttons now using whole height of the header (Done)
 
 EditorMode page:
 *Both parts header overlaps content when small window

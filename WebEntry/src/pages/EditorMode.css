@@ -2,13 +2,30 @@
   width: 100%;
   height: 100%;
   background-color: #EEE;
+
+  position: relative;
+
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
 }
 
 /****** Asset Viewer ********/
 .AssetViewer{
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+
   position: absolute;
   width: 28%;
   height: 96%;
+
   top: 2%;
   left: 2%;
   background-color: white;
@@ -17,6 +34,56 @@
   border-style: solid;
   border-color: #303f9f;
   /* border-radius: 11px; */
+}
+
+.AssetViewerTitle{
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+
+  flex: 1 1 auto;
+  min-height: 200;
+
+  position: relative;
+
+  border-bottom-width: thin;
+  border-bottom-style: solid;
+  border-color: #303f9f;
+
+  font-size: large;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: bold;
+  color: #999;
+}
+
+.AssetViewerTitleText{
+  position: relative;
+  width: 100%;
+
+  padding-left: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.AssetViewerContent{
+  position: relative;
+
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  flex: 1 1 100%;
+
+  overflow-y: scroll;
+}
+
+.ContainerSeperator{
+  position: relative;
+  border-bottom-width: thin;
+  border-bottom-style: solid;
+  border-color: #303f9f;
 }
 
 .collapsableHeaderBtnsContainer{
@@ -37,47 +104,15 @@
   width: 62%;
 }
 
-.AssetViewerContent{
-  position: absolute;
-  width: 100%;
-  height: 95%;
-  top: 5%;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-.AssetViewerTitle{
-  font-size: large;
-  font-family: "Times New Roman", Times, serif;
-  font-weight: bold;
-  color: #999;
-
-  position: absolute;
-  width: 100%;
-  height: 5%;
-
-  border-bottom-width: thin;
-  border-bottom-style: solid;
-  border-color: #303f9f;
-}
-
-.AssetViewerTitleText{
-  position: absolute;
-
-  left: 15px;
-  top: 5px;
-  bottom: 2px;
-}
-
-.ContainerSeperator{
-  position: relative;
-  border-top-width: thin;
-  border-top-style: solid;
-  border-color: #303f9f;
-}
-
 /****** Asset Editor ********/
 .AssetEditor{
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+
   position: absolute;
   width: 66%;
   height: 96%;
