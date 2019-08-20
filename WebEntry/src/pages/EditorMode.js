@@ -186,6 +186,34 @@ class EditorMode extends Component {
     return assetEditorObject;
   }
 
+  //
+  getCollapsableHeaderButtons(searchCallback, addCallback, filterCallback){
+
+    var filterButton = null;
+    if(filterCallback !== null){
+      filterButton = <Button style={{width: '50%', height: '100%', minWidth: '30px', minHeight: '30px'}}
+      className="collapsableHeaderBtns" size="small" onClick={filterCallback} >
+        <FilterList fontSize="large" className="addItemsIcon" />
+      </Button>;
+    }
+
+    var collapsableTaskHeaderButtons =
+    <div className="collapsableHeaderBtnsContainer">
+      <div className="searchWrapperDiv"><SearchBar onChange={searchCallback} searchID="taskSearch"/></div>
+      <div className="collapsableBtns">
+        <Button style={{width: '50%', height: '100%', minWidth: '30px', minHeight: '30px'}}
+        className="collapsableHeaderBtns" size="small" onClick={addCallback} >
+          <AddCircleOutline fontSize="large" className="addItemsIcon" />
+        </Button>
+        {filterButton}
+      </div>
+    </div>;
+
+    //Currently filter is not implemented so we don't render it
+
+    return collapsableTaskHeaderButtons;
+  }
+
   /*
 ██████  ███████ ███    ██ ██████  ███████ ██████
 ██   ██ ██      ████   ██ ██   ██ ██      ██   ██
@@ -195,35 +223,8 @@ class EditorMode extends Component {
 */
 
   render() {
-    var collapsableTaskHeaderButtons =
-    <div className="collapsableHeaderBtnsContainer">
-      <div className="searchWrapperDiv"><SearchBar onChange={this.taskSearchCallback} searchID="taskSearch"/></div>
-      <div className="collapsableBtns">
-        <Button style={{width: '50%', height: '100%', minWidth: '30px', minHeight: '30px'}}
-        className="collapsableHeaderBtns" size="small" onClick={this.addTaskCallback.bind(this)} >
-          <AddCircleOutline fontSize="large" className="addItemsIcon" />
-        </Button>
-        <Button style={{width: '50%', height: '100%', minWidth: '30px', minHeight: '30px'}}
-        className="collapsableHeaderBtns" size="small" onClick={this.filterTasksCallback.bind(this)} >
-          <FilterList fontSize="large" className="addItemsIcon" />
-        </Button>
-      </div>
-    </div>;
-
-    var collapsableSetHeaderButtons =
-    <div className="collapsableHeaderBtnsContainer">
-      <div className="searchWrapperDiv"><SearchBar onChange={this.taskSetSearchCallback} searchID="taskSetSearch"/></div>
-      <div className="collapsableBtns">
-        <Button style={{width: '50%', height: '100%', minWidth: '30px', minHeight: '30px'}}
-        className="collapsableHeaderBtns" size="small" onClick={this.addSetCallback.bind(this)} >
-          <AddCircleOutline fontSize="large" className="addItemsIcon" />
-        </Button>
-        <Button style={{width: '50%', height: '100%', minWidth: '30px', minHeight: '30px'}}
-        className="collapsableHeaderBtns" size="small" onClick={this.filterSetsCallback.bind(this)} >
-          <FilterList fontSize="large" className="addItemsIcon" />
-        </Button>
-      </div>
-    </div>;
+    var collapsableTaskHeaderButtons = this.getCollapsableHeaderButtons(this.taskSearchCallback, this.addTaskCallback.bind(this), null);
+    var collapsableSetHeaderButtons = this.getCollapsableHeaderButtons(this.taskSetSearchCallback, this.addSetCallback.bind(this), null);
 
     return (
     <div className = "Background">
@@ -231,7 +232,7 @@ class EditorMode extends Component {
       <div className = "AssetViewer">
         <div className="AssetViewerTitle"><div className="AssetViewerTitleText">Asset viewer</div></div>
         <div className="AssetViewerContent">
-          <CollapsableContainer classNames="ContainerSeperator" style={{height: "5%"}} headerTitle="Tasks"
+          <CollapsableContainer classNames="ContainerSeperator" style={{minHeight: 200}} headerTitle="Tasks"
           headerComponents={collapsableTaskHeaderButtons} hideHeaderComponents={true} open={true}>
               < TaskListComponent reorderDisabled={true} placeholderName="TaskPlaceholder" reorderID="tasksReorder" taskList={ this.state.taskList }
                 selectTask={ this.selectTask.bind(this) } selectedTask={this.state.selectedTask} dragDropCallback={this.onDragDropCallback.bind(this)}
