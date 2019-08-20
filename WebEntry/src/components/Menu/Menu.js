@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './Menu.css';
 
 //Components
+import DeviceIDDialog from '../dialogs/DeviceIDDialog';
 import CrossbarDialog from '../dialogs/CrossbarDialog';
 import SpeechDialog from '../dialogs/SpeechDialog';
 
@@ -16,7 +17,7 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-import Avatar from '@material-ui/core/Avatar';
+import StyledAvatar from './StyledAvatar';
 
 import { makeStyles } from '@material-ui/core/styles';
 import { blue } from '@material-ui/core/colors';
@@ -27,17 +28,17 @@ import BackArrowNavigation from '@material-ui/icons/ChevronLeft';
 
 import store from '../../core/store';
 
+var myStorage = window.localStorage;
+
 class Menu extends Component {
   constructor(props) {
     super(props);
     this.state = {
       showMenu: false,
+      openDeviceIDSettings: false,
       openCrossbarSettings: false,
       openSpeechSettings: false
     }
-
-    this.closeCrossbarSettings = this.onCloseCrossbarSettings.bind(this);
-    this.closeSpeechSettings = this.onCloseSpeechSettings.bind(this);
   }
 
   //Menus
@@ -60,6 +61,18 @@ class Menu extends Component {
         document.webkitCancelFullScreen();
       }
     }
+  }
+
+  onOpenDeviceIDSettings(e) {
+    this.setState({
+      openDeviceIDSettings: true
+    });
+  }
+
+  onCloseDeviceIDSettings(e) {
+    this.setState({
+      openDeviceIDSettings: false
+    });
   }
 
   onOpenCrossbarSettings(e) {
@@ -118,8 +131,8 @@ class Menu extends Component {
 
   render() {
     return(
-      <div>
-        <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:150, height:"100%"}}
+      <div style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:150, height:"100%"}}>
+        <Button
           onClick={this.openSettingsMenu.bind(this)} >
           <Settings size='large' style={{display:'flex', position: 'absolute', height: '100%', width: 'auto', maxWidth: '100%', flexGrow: 1}} />
         </Button>
@@ -130,7 +143,9 @@ class Menu extends Component {
             onClick={this.openSettingsMenu.bind(this)}
           >
             <List>
-              <Avatar className="blueAvatar">H</Avatar>
+              <ListItem button key="Crossbar Settings" onClick={this.onOpenDeviceIDSettings.bind(this)}>
+                <ListItemText primary="Crossbar Settings" />
+              </ListItem>
               <ListItem button key="Crossbar Settings" onClick={this.onOpenCrossbarSettings.bind(this)}>
                 <ListItemText primary="Crossbar Settings" />
               </ListItem>
@@ -146,8 +161,9 @@ class Menu extends Component {
             </List>
           </div>
         </Drawer>
-        <CrossbarDialog openCrossbarSettings={this.state.openCrossbarSettings} closeCrossbarSettings={this.closeCrossbarSettings}/>
-        <SpeechDialog openSpeechSettings={this.state.openSpeechSettings} closeSpeechSettings={this.closeSpeechSettings}/>
+        <DeviceIDDialog openDeviceIDSettings={this.state.openDeviceIDSettings} closeDeviceIDSettings={this.onCloseDeviceIDSettings.bind(this)} myStorage={myStorage} />
+        <CrossbarDialog openCrossbarSettings={this.state.openCrossbarSettings} closeCrossbarSettings={this.onCloseCrossbarSettings.bind(this)} myStorage={myStorage}/>
+        <SpeechDialog openSpeechSettings={this.state.openSpeechSettings} closeSpeechSettings={this.onCloseSpeechSettings.bind(this)} myStorage={myStorage}/>
       </div>
     );
   }

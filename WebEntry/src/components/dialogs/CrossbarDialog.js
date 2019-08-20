@@ -11,8 +11,6 @@ import TextField from '@material-ui/core/TextField';
 
 import {restartWAMP} from '../../core/wamp';
 
-var myStorage = window.localStorage;
-
 class CrossbarDialog extends Component {
   componentWillMount() {
     this.crossbarConfigurations();
@@ -24,7 +22,7 @@ class CrossbarDialog extends Component {
 
   //-----------Crossbar Settings------------
   crossbarConfigurations() {
-    var crossbarConfig = JSON.parse(myStorage.getItem('crossbar'));
+    var crossbarConfig = JSON.parse(this.props.myStorage.getItem('crossbar'));
     this.crossbar = (crossbarConfig && crossbarConfig !== undefined && crossbarConfig.ip !== undefined) ? crossbarConfig : {
       ip: "127.0.0.1",
       port: 8080,
@@ -33,7 +31,7 @@ class CrossbarDialog extends Component {
   }
 
   onChangeCrossbarSettings(e) {
-    myStorage.setItem('crossbar', JSON.stringify(this.crossbar));
+    this.props.myStorage.setItem('crossbar', JSON.stringify(this.crossbar));
     restartWAMP(this.crossbar);
 
     //Callback to close the dialog from the header

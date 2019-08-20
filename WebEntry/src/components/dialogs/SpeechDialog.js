@@ -15,7 +15,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 
 import Button from '@material-ui/core/Button';
 
-var myStorage = window.localStorage;
 var voices = []; // = synth.getVoices();
 
 class SpeechDialog extends Component {
@@ -38,7 +37,7 @@ class SpeechDialog extends Component {
 
   //------------initialize configurations-----------
   speechConfigurations() {
-    var speechConfig = JSON.parse(myStorage.getItem('speech'));
+    var speechConfig = JSON.parse(this.props.myStorage.getItem('speech'));
     voices = window.speechSynthesis.getVoices();
 
     if (!speechConfig || speechConfig === undefined) {
