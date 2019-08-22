@@ -29,6 +29,7 @@ class CollapsableContainer extends Component {
 
     return (
 
+
       <div className={this.props.classNames+" collpasedContainer"}>
         <div className={this.props.headerClassNames+" containerHeader"}>
           <div className="leftHeaderContent">

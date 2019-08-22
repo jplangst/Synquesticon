@@ -27,10 +27,10 @@ class Header extends Component {
   render() {
     let storeState = store.getState();
     if (storeState.showHeader) {
-      var fontSize = Math.max(28, Math.min(storeState.windowSize.height * 0.08, storeState.windowSize.width * 0.08));
+      var fontSize = Math.max(28, Math.min(storeState.windowSize.height * 0.04, storeState.windowSize.width * 0.04));
 
       return(
-          <AppBar style={{margin: 0, padding: 0, display:'flex', flexGrow: 1, flexShrink:1, position: 'relative', minHeight:50, maxHeight:'8%', width:'100%'}}>
+          <AppBar style={{margin: 0, padding: 0, display:'flex', flexGrow: 1, flexShrink:1, position: 'relative', minHeight:50, maxHeight:'6%', width:'100%'}}>
             <Toolbar variant="dense" style={{margin: 0, padding: 0, display:'flex', flexDirection:'row', position:'relative', width:'100%', height:'100%'}}>
                <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:150, height:'100%'}}
                 onClick={this.handleBackwardsNavigation.bind(this)} >
