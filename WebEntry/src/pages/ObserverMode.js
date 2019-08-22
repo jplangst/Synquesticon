@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import Button from '@material-ui/core/Button';
 
 import GazeCursor from '../components/Views/GazeCursor';
 import WAMPMessageComponent from '../components/Views/ObserverMessages/WAMPMessageComponent';
+
+import ObserverTab from '../components/Views/ObserverTabs/ObserverTab';
 
 import wampStore from '../core/wampStore';
 import store from '../core/store';
@@ -13,8 +14,8 @@ import './ObserverMode.css';
 
 function a11yProps(index) {
   return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    id: `scrollable-force-tab-${index}`,
+    'aria-controls': `scrollable-force-tabpanel-${index}`,
   };
 }
 
@@ -34,6 +35,10 @@ class ObserverMode extends Component {
 
   componentWillUnmount() {
     wampStore.removeEventListener(this.handleNewWAMPEvent);
+  }
+
+  onPausePlayPressed(target, shouldPause){
+    //TODO send WAMP message here
   }
 
   onNewWAMPEvent() {
@@ -187,7 +192,7 @@ class ObserverMode extends Component {
     */
   }
 
-  onClickedTab(event, newValue) {
+  onClickedTab(newValue) {
     this.setState({
       currentParticipant: newValue
     });
@@ -202,18 +207,17 @@ class ObserverMode extends Component {
     return (
       <div className="AssetViewerContent">
         <div className="ContainerSeperator SelectedTaskContainer">
-          <Tabs
-            value={this.state.currentParticipant}
-            indicatorColor="primary"
-            textColor="primary"
-            onChange={this.onClickedTab.bind(this)}
-            >
-              {
-                this.state.participants.map((p, index) => {
-                  return <Tab label={p.name} {...a11yProps(index)} key={index}/>;
-                })
-              }
-          </Tabs>
+
+          <div style={{display:'flex', flexDirection:'row', position:'relative', flexGrow:1, flexShrink:1, width:'100%', overflowX:'auto'}}>
+            {
+              //TODO get the number of tasks in the experiment and the number of tasks completed
+              this.state.participants.map((p, index) => {
+                return <ObserverTab label={p.name} index={index} tabPressedCallback={this.onClickedTab.bind(this)}
+                        isActive={this.state.currentParticipant===index} completedTasks={50} totalTasks={100}/>
+              })
+            }
+          </div>
+
           <WAMPMessageComponent messages={wampMessage}/>
         </div>
 
