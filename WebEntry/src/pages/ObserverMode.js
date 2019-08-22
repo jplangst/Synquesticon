@@ -37,10 +37,6 @@ class ObserverMode extends Component {
     wampStore.removeEventListener(this.handleNewWAMPEvent);
   }
 
-  onPausePlayPressed(target, shouldPause){
-    //TODO send WAMP message here
-  }
-
   onNewWAMPEvent() {
     var args = wampStore.getCurrentMessage();
 
@@ -207,20 +203,17 @@ class ObserverMode extends Component {
     return (
       <div className="AssetViewerContent">
         <div className="ContainerSeperator SelectedTaskContainer">
-
           <div style={{display:'flex', flexDirection:'row', position:'relative', flexGrow:1, flexShrink:1, width:'100%', overflowX:'auto'}}>
             {
               //TODO get the number of tasks in the experiment and the number of tasks completed
               this.state.participants.map((p, index) => {
                 return <ObserverTab label={p.name} index={index} tabPressedCallback={this.onClickedTab.bind(this)}
-                        isActive={this.state.currentParticipant===index} completedTasks={50} totalTasks={100}/>
+                        isActive={this.state.currentParticipant===index} completedTasks={50} totalTasks={100} shouldPause={this.props.isParticipantsPaused}/>
               })
             }
           </div>
-
           <WAMPMessageComponent messages={wampMessage}/>
         </div>
-
         <div className="ContainerSeperator ViewerGaze">
           {
             this.state.participants.map((p, index) => {

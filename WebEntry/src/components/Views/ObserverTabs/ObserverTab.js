@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 
-import './ObserverTab.css'
-
 //Components
 import Button from '@material-ui/core/Button';
 import PauseIcon from '@material-ui/icons/PauseCircleOutline';
@@ -13,6 +11,7 @@ class ObserverTab extends Component {
     super(props);
 
     this.state = {
+      forcedPause: this.props.shouldPause,
       isPaused: false,
     };
 
@@ -20,19 +19,28 @@ class ObserverTab extends Component {
     this.onTabPress = this.onTabPressed.bind(this);
   }
 
+  static getDerivedStateFromProps(props, state) {
+    if(props.shouldPause !== state.forcedPause){
+      return {forcedPause: props.shouldPause,
+              isPaused: props.shouldPause};
+    }
+
+    return null;
+  }
+
   onTabPressed(evt){
     evt.stopPropagation();
-
     this.props.tabPressedCallback(this.props.index);
   }
 
   onButtonPressed(evt){
     evt.stopPropagation();
 
-    this.setState({
-      isPaused: !this.state.isPaused
-    });
-
+    if(!this.state.forcedPause){
+      this.setState({
+        isPaused: !this.state.isPaused
+      });
+    }
     //TODO either send WAMP message here or use a callback to do it in the parent component
   }
 
@@ -41,7 +49,7 @@ class ObserverTab extends Component {
     var activeUnderlineStyle = this.props.isActive ? { borderBottom:'2px solid #0033BB'} : {color:'grey'}
 
     var buttonIcon = null;
-    if(this.state.isPaused){
+    if(this.state.isPaused || this.state.forcedPause){
       buttonIcon = <PauseIcon style={{display:'flex', position: 'absolute', height: '100%', width: 'auto', maxWidth: '100%', flexGrow: 1}} />;
     }
     else{
@@ -49,7 +57,7 @@ class ObserverTab extends Component {
     }
 
     return(
-          <div onClick={this.onTabPress} style={{ margin:'4px 0 0 2px', display:'flex', flexDirection:'column', position:'relative', flexGrow:1, flexShrink:1, minWidth:150, maxWidth:250}}>
+          <div onClick={this.onTabPress} style={{ margin:'0 0 0 2px', display:'flex', flexDirection:'column', position:'relative', flexGrow:1, flexShrink:1, minWidth:150, maxWidth:250}}>
             <div style={{...activeTextStyle, ...{display:'flex', flexGrow:1, position: 'relative', justifyContent:'center', alignItems:'center', paddingTop:5}}}>
               <p style={{flex:1, textAlign:'center'}}>{this.props.label}</p>
             </div>
