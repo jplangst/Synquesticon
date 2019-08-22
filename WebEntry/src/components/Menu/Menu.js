@@ -130,6 +130,10 @@ class Menu extends Component {
   }
 
   render() {
+    var deviceName = myStorage.getItem('deviceID');
+    if (!deviceName || deviceName == "") {
+      deviceName="Unnamed";
+    }
     return(
       <div style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:150, height:"100%"}}>
         <Button
@@ -143,8 +147,8 @@ class Menu extends Component {
             onClick={this.openSettingsMenu.bind(this)}
           >
             <List>
-              <ListItem button key={myStorage.getItem('deviceID')} onClick={this.onOpenDeviceIDSettings.bind(this)}>
-                <ListItemText primary={myStorage.getItem('deviceID')} />
+              <ListItem button key="Device ID" onClick={this.onOpenDeviceIDSettings.bind(this)}>
+                <ListItemText primary={deviceName} />
               </ListItem>
               <ListItem button key="Crossbar Settings" onClick={this.onOpenCrossbarSettings.bind(this)}>
                 <ListItemText primary="Crossbar Settings" />

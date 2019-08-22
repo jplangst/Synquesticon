@@ -13,8 +13,18 @@
   right: 20px;
 }
 .mainDisplay{
-  position: fixed;
+  position: relative;
   width: 60%;
+  height: 100%;
+
+  left: 50%;
+  transform: translateX(-50%);
+
+  font-size: 1em;
+}
+
+.commonContainer{
+  position: relative;
   height: auto;
 
   top: 50%;
@@ -22,11 +32,14 @@
   transform: translate(-50%, -50%);
 
   font-size: 1em;
+  padding-bottom: 5%;
+
+  font-size: 3.5em;
+  text-align: center;
 }
 
 .questionDisplay {
-  font-size: 4em;
-  text-align: center;
+
 }
 
 .responsesButtons {

@@ -26,6 +26,7 @@ import * as playerUtils from '../../core/player_utility_functions';
 
 import './DisplayTaskComponent.css';
 
+var progressCount = 0;
 function getCurrentTime() {
   var dt = new Date();
   return dt.getTime();
@@ -33,36 +34,57 @@ function getCurrentTime() {
 
 function stringifyWAMPMessage(obj, timestamp, type) {
   if (type === "START") {
+    var taskType = "";
+    if (obj.objType === "TaskSet" && obj.displayOnePage) {
+      taskType = "Multi-tasks";
+    }
+    else if (obj.objType === "Task") {
+      taskType = obj.taskType;
+    }
     var globalVariable = obj.globalVariable ? " (global variable) " : "";
     var message = obj.taskType + " \"" +
                   dbObjectsUtilityFunctions.getTaskContent(obj) + "\"" + globalVariable;
 
-    //Event type (0), task content (1), startTimestamp (2), remoteTracker (3)
-    return ["START",
-                store.getState().experimentInfo.participantLabel,
-                store.getState().experimentInfo.selectedTracker,
-                obj.taskType,
-                dbObjectsUtilityFunctions.getTaskContent(obj),
-                obj.globalVariable,
-                timestamp
-                ];
+   return JSON.stringify({
+                            eventType: "START",
+                            participantID: store.getState().experimentInfo.participantId,
+                            participantLabel: store.getState().experimentInfo.participantLabel,
+                            startTimestamp: store.getState().experimentInfo.startTimestamp,
+                            selectedTracker: store.getState().experimentInfo.selectedTracker,
+                            taskType: taskType,
+                            taskContent: dbObjectsUtilityFunctions.getTaskContent(obj),
+                            isGlobalVariable: obj.globalVariable,
+                            timestamp: timestamp
+                          });
   }
   else if (type === "NEXT") {
-    return ["ANSWERED",
-                store.getState().experimentInfo.participantLabel,
-                store.getState().experimentInfo.selectedTracker,
-                obj.firstResponseTimestamp,
-                obj.timeToFirstAnswer,
-                obj.timeToCompletion,
-                obj.responses,
-                obj.correctlyAnswered,
-                obj.aoiCheckedList];
+    return JSON.stringify({
+                            eventType: "ANSWERED",
+                            participantID: store.getState().experimentInfo.participantId,
+                            participantLabel: store.getState().experimentInfo.participantLabel,
+                            startTimestamp: store.getState().experimentInfo.startTimestamp,
+                            selectedTracker: store.getState().experimentInfo.selectedTracker,
+                            firstResponseTimestamp: obj.firstResponseTimestamp,
+                            timeToFirstAnswer: obj.timeToFirstAnswer,
+                            timeToCompletion: obj.timeToCompletion,
+                            responses: obj.responses,
+                            correctlyAnswered: obj.correctlyAnswered,
+                            aoiCheckedList: obj.aoiCheckedList,
+                            progressCount: progressCount,
+                            taskSetCount: store.getState().experimentInfo.taskSetCount
+                          });
   }
   else if (type === "SKIP") {
-    return ["SKIPPED",
-                store.getState().experimentInfo.participantLabel,
-                store.getState().experimentInfo.selectedTracker,
-                obj.timeToCompletion];
+    return JSON.stringify({
+                            eventType: "SKIPPED",
+                            participantID: store.getState().experimentInfo.participantId,
+                            participantLabel: store.getState().experimentInfo.participantLabel,
+                            startTimestamp: store.getState().experimentInfo.startTimestamp,
+                            selectedTracker: store.getState().experimentInfo.selectedTracker,
+                            timeToCompletion: obj.timeToCompletion,
+                            progressCount: progressCount,
+                            taskSetCount: store.getState().experimentInfo.taskSetCount
+                          });
   }
   return null;
 }
@@ -74,7 +96,6 @@ function stringifyWAMPMessage(obj, timestamp, type) {
 ██   ██ ██      ██      ██    ██ ██   ██      ██ ██ ██    ██ ██  ██ ██     ██      ██    ██ ██  ██  ██ ██      ██    ██ ██  ██ ██ ██      ██  ██ ██    ██
 ██   ██ ███████  ██████  ██████  ██   ██ ███████ ██  ██████  ██   ████      ██████  ██████  ██      ██ ██       ██████  ██   ████ ███████ ██   ████    ██
 */
-
 
 class DisplayTaskHelper extends React.Component { //for the fking sake of recursion
   constructor() {
@@ -99,11 +120,11 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 
 
   componentDidMount() {
-    this.timer = setInterval(this.handleGazeLocUpdate, 4.5); //Update the gaze cursor location every 2ms
+
   }
 
   componentWillUnmount() {
-    clearInterval(this.timer);
+
   }
 
   /*
@@ -114,13 +135,15 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 ███████  ██████   ██████   ██████  ██ ██   ████  ██████
 */
   logTheStartOfTask() {
-    console.log("logTheStartOfTask");
     var startTimestamp = playerUtils.getCurrentTime();
-    this.currentLineOfData = new dbObjects.LineOfData(startTimestamp,
-                                                      this.currentTask._id,
-                                                      this.props.tasksFamilyTree, //the array that has the task's tasksFamilyTree
-                                                      dbObjectsUtilityFunctions.getTaskContent(this.currentTask),
-                                                      this.currentTask.correctResponses);
+    if (this.currentTask.objType === "Task") {
+      this.currentLineOfData = new dbObjects.LineOfData(startTimestamp,
+                                                        this.currentTask._id,
+                                                        this.props.tasksFamilyTree, //the array that has the task's tasksFamilyTree
+                                                        dbObjectsUtilityFunctions.getTaskContent(this.currentTask),
+                                                        this.currentTask.correctResponses,
+                                                        "SingleItem");
+    }
 
     wamp.broadcastEvents(stringifyWAMPMessage(this.currentTask, startTimestamp, "START"));
   }
@@ -148,7 +171,9 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
    ██████ ██   ██ ███████ ███████ ██████  ██   ██  ██████ ██   ██ ███████
   */
   onClickNext() {
-      if (!(store.getState().experimentInfo.participantId === "TESTING")) {
+    if (!(store.getState().experimentInfo.participantId === "TESTING")) {
+      if (this.currentTask.objType === "Task") {
+        progressCount += 1;
         if (this.currentLineOfData) {
           if (!this.currentTask.globalVariable) {
             //complete line of data before saving to DB
@@ -166,36 +191,62 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
           }
 
           wamp.broadcastEvents(stringifyWAMPMessage(this.currentLineOfData, null,
-                                                    this.state.hasBeenAnswered ? "NEXT" : "SKIP"));
+                                                    (this.currentLineOfData.firstResponseTimestamp != -1) ? "NEXT" : "SKIP"));
         }
-      }
 
-      //reset state
-      this.setState({
-        hasBeenAnswered: false,
-        answerItem: null,
-        currentTaskIndex: (this.state.currentTaskIndex + 1)
-      });
-      this.currentLineOfData = null;
+      }
+      else if (this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage) {
+        progressCount += this.currentLineOfData.size;
+        this.currentLineOfData.forEach((line, index) => {
+          if (line.isGlobalVariable !== undefined) {
+            db_helper.addNewGlobalVariableToParticipantDB(store.getState().experimentInfo.participantId,
+                                                          JSON.stringify(line.obj));
+          }
+          else {
+            line.timeToCompletion = playerUtils.getCurrentTime() - line.startTimestamp;
+            db_helper.addNewLineToParticipantDB(store.getState().experimentInfo.participantId,
+                                                JSON.stringify(line));
+          }
+          wamp.broadcastEvents(stringifyWAMPMessage(line, null,
+                                                    (line.firstResponseTimestamp != -1) ? "NEXT" : "SKIP"));
+        });
+        console.log("multiitem", this.currentLineOfData.size);
+
+      }
+    }
+
+    //reset state
+    this.setState({
+      hasBeenAnswered: false,
+      answerItem: null,
+      currentTaskIndex: (this.state.currentTaskIndex + 1)
+    });
+
+    this.currentLineOfData = null;
   }
 
   onAnswer(answer) {
-    if (!this.state.hasBeenAnswered) {
-      if (!(store.getState().experimentInfo.participantId === "TESTING")) {
-        this.currentLineOfData.firstResponseTimestamp = playerUtils.getCurrentTime();
-        this.currentLineOfData.timeToFirstAnswer = this.currentLineOfData.firstResponseTimestamp - this.currentLineOfData.startTimestamp;
+    if(!(store.getState().experimentInfo.participantId === "TESTING")) {
+      if (this.currentTask.objType === "Task") {
+        if (this.currentLineOfData.firstResponseTimestamp == -1) { //log the timeToFirstAnswer
+          this.currentLineOfData.firstResponseTimestamp = playerUtils.getCurrentTime();
+          this.currentLineOfData.timeToFirstAnswer = this.currentLineOfData.firstResponseTimestamp - this.currentLineOfData.startTimestamp;
+        }
+        //update answers
+        this.currentLineOfData.responses = answer.responses;
+        this.currentLineOfData.correctlyAnswered = answer.correctlyAnswered;
+      }
+      else if (this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage) {
+        this.currentLineOfData = answer;
       }
     }
     this.setState({
       hasBeenAnswered: true
     });
-    if (!(store.getState().experimentInfo.participantId === "TESTING")) {
-      this.currentLineOfData.responses = answer.responses;
-      this.currentLineOfData.correctlyAnswered = answer.correctlyAnswered;
-    }
   }
 
   onFinishedRecursion() {
+    //progressCount -= 1;
     this.onClickNext();
   }
 
@@ -210,35 +261,28 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 
   render() {
     //check if we should enter a new level or leave
-    if(this.props.taskSet.length > 0 && this.state.currentTaskIndex < this.props.taskSet.length) {
-      if (this.props.taskSet[this.state.currentTaskIndex].objType === "TaskSet") {
+    if(this.props.taskSet.data.length > 0 && this.state.currentTaskIndex < this.props.taskSet.data.length) {
+      this.currentTask = this.props.taskSet.data[this.state.currentTaskIndex];
+      let trackingTaskSetNames = this.props.tasksFamilyTree.slice(); //clone array, since javascript passes by reference, we need to keep the orgin familyTree untouched
+      trackingTaskSetNames.push(this.currentTask.name);
+      if (this.currentTask.objType === "TaskSet" && !this.currentTask.displayOnePage) {
         //shuffle set if set was marked as "Random"
-        var runThisTaskSet = this.props.taskSet[this.state.currentTaskIndex].data;
-        if (this.props.taskSet[this.state.currentTaskIndex].setTaskOrder === "Random") {
+        var runThisTaskSet = this.currentTask.data;
+        if (this.currentTask.setTaskOrder === "Random") {
           runThisTaskSet = shuffle(runThisTaskSet);
         }
 
-        let updatedTaskSet = this.props.taskSet[this.state.currentTaskIndex];
+        let updatedTaskSet = this.currentTask;
         updatedTaskSet.data = runThisTaskSet;
 
-        let trackingTaskSetNames = this.props.tasksFamilyTree.slice(); //clone array, since javascript passes by reference, we need to keep the orgin familyTree untouched
-        trackingTaskSetNames.push(this.props.taskSet[this.state.currentTaskIndex].name);
-
-        if(this.props.taskSet[this.state.currentTaskIndex].displayOnePage){
-          return <MultiItemTask tasksFamilyTree={trackingTaskSetNames} taskSet={runThisTaskSet} onFinished={this.onFinishedRecursion.bind(this)}/>
+        if(this.currentTask.displayOnePage){
+          return
         } else{
           //recursion
-          return <DisplayTaskHelper tasksFamilyTree={trackingTaskSetNames} taskSet={runThisTaskSet} onFinished={this.onFinishedRecursion.bind(this)}/>
+          return <DisplayTaskHelper tasksFamilyTree={trackingTaskSetNames} taskSet={updatedTaskSet} onFinished={this.onFinishedRecursion.bind(this)}/>
         }
       }
-      //TODO: this is a go around solution, please fix it to make it solid
-      else {//if (this.props.taskSet[this.state.currentTaskIndex].objType === "Task" || ) {
-        this.currentTask = this.props.taskSet[this.state.currentTaskIndex].data;
-        if (this.currentTask === undefined) {
-          //console.log("bug in the database, set the task to the correct data");
-          this.currentTask = this.props.taskSet[this.state.currentTaskIndex];
-        }
-
+      else {
         //log the start
         if (!this.state.hasBeenAnswered
               && !(store.getState().experimentInfo.participantId === "TESTING")) {
@@ -247,21 +291,27 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 
         var getDisplayedContent = () => {
           if(this.currentTask){
+            if((this.currentTask.objType === "TaskSet") && this.currentTask.displayOnePage) {
+              var init = (taskResponses) => {
+                this.currentLineOfData = taskResponses;
+              }
+              return <MultiItemTask tasksFamilyTree={trackingTaskSetNames} taskSet={this.currentTask} answerCallback={this.onAnswer.bind(this)} newTask={!this.state.hasBeenAnswered} initCallback={init}/>
+            }
             if((this.currentTask.taskType === "Instruction")) {
-                return <InstructionViewComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)}/>;
-              }
+              return <InstructionViewComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)}/>;
+            }
             if(this.currentTask.taskType === "Text Entry") {
-                return <TextEntryComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered}/>;
-              }
+              return <TextEntryComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered}/>;
+            }
             if(this.currentTask.taskType === "Single Choice") {
-                return <SingleChoiceComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered}/>;
-              }
+              return <SingleChoiceComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered}/>;
+            }
             if((this.currentTask.taskType === "Multiple Choice")) {
-                return <MultipleChoiceComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered}/>;
-              }
+              return <MultipleChoiceComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered}/>;
+            }
             if((this.currentTask.taskType === "Image")) {
-                return <ImageViewComponent task={this.currentTask}/>;
-              }
+              return <ImageViewComponent task={this.currentTask}/>;
+            }
           } else {
 
             return <div/>;
@@ -308,11 +358,14 @@ class DisplayTaskComponent extends Component {
       var dt = new Date();
       var timestamp = dt.toUTCString();
 
-      var info = ["NEW EXPERIMENT",
-                  store.getState().experimentInfo.participantLabel,
-                  store.getState().experimentInfo.selectedTracker,
-                  store.getState().experimentInfo.mainTaskSetId,
-                  timestamp]
+      var info = JSON.stringify({
+                                  eventType: "NEW EXPERIMENT",
+                                  participantID: store.getState().experimentInfo.participantId,
+                                  participantLabel: store.getState().experimentInfo.participantLabel,
+                                  startTimestamp: store.getState().experimentInfo.startTimestamp,
+                                  selectedTracker: store.getState().experimentInfo.selectedTracker,
+                                  mainTaskSetId: store.getState().experimentInfo.mainTaskSetId
+                                });
       wamp.broadcastEvents(info);
     }
     catch(err) {
@@ -323,16 +376,24 @@ class DisplayTaskComponent extends Component {
     var dt = new Date();
     var timestamp = dt.toUTCString();
 
-    var info = ["FINISHED",
-                store.getState().experimentInfo.participantLabel,
-                store.getState().experimentInfo.selectedTracker,
-                store.getState().experimentInfo.mainTaskSetId,
-                timestamp]
+    var info = JSON.stringify({
+                                eventType: "FINISHED",
+                                participantID: store.getState().experimentInfo.participantId,
+                                participantLabel: store.getState().experimentInfo.participantLabel,
+                                startTimestamp: store.getState().experimentInfo.startTimestamp,
+                                selectedTracker: store.getState().experimentInfo.selectedTracker,
+                                mainTaskSetId: store.getState().experimentInfo.mainTaskSetId,
+                                timestamp: timestamp
+                              });
     wamp.broadcastEvents(info);
   }
 
   componentWillMount() {
-    this.broadcastStartEvent();
+    progressCount = 0;
+    if (!(store.getState().experimentInfo.participantId === "TESTING")) {
+      this.broadcastStartEvent();
+      this.timer = setInterval(this.handleGazeLocUpdate, 4.5); //Update the gaze cursor location every 2ms
+    }
 
     var layoutAction = {
       type: 'SET_SHOW_HEADER',
@@ -344,6 +405,9 @@ class DisplayTaskComponent extends Component {
   }
 
   componentWillUnmount() {
+    if (!store.getState().experimentInfo.participantID === "TESTING") {
+      clearInterval(this.timer);
+    }
     var layoutAction = {
       type: 'SET_SHOW_HEADER',
       showHeader: true,
@@ -354,21 +418,16 @@ class DisplayTaskComponent extends Component {
   }
 
   onFinished() {
-    this.broadcastEndEvent();
+    if (!(store.getState().experimentInfo.participantId === "TESTING")) {
+      this.broadcastEndEvent();
+    }
     this.props.history.goBack();
     alert("finished!");
   }
 
   render() {
     try {
-      var renderObj = null;
-      if(store.getState().experimentInfo.selectedTaskSetObject.displayOnePage){
-        renderObj = <MultiItemTask tasksFamilyTree={[store.getState().experimentInfo.mainTaskSetId]} taskSet={store.getState().experimentInfo.taskSet} onFinished={this.onFinished.bind(this)}/>;
-      }
-      else{
-        renderObj = <DisplayTaskHelper tasksFamilyTree={[store.getState().experimentInfo.mainTaskSetId]} taskSet={store.getState().experimentInfo.taskSet} onFinished={this.onFinished.bind(this)}/>;
-      }
-
+      var renderObj = <DisplayTaskHelper tasksFamilyTree={[store.getState().experimentInfo.mainTaskSetId]} taskSet={store.getState().experimentInfo.taskSet} onFinished={this.onFinished.bind(this)}/>;
       return (
           renderObj
       );

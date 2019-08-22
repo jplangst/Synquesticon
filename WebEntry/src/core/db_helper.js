@@ -349,12 +349,12 @@ class db_helper {
    * @param  {string}   objIds   The ids to retrieve, should be in a list/array format.
    * @param  {function} callback This function is called with the result of the query. Should take one parameter.
    */
-   getTasksOrTaskSetsWithIDs(objIds, callback) {
+   getTasksOrTaskSetsWithIDs(wrapperSet, callback) {
     axios.post("/api/getTasksOrTaskSetsWithIDs", {
-        objIds: JSON.stringify(objIds)
+        wrapperSetJson: JSON.stringify(wrapperSet)
     }).then(response => {
-      console.log("tasks from DB, ", response.data.data);
-      callback(response.data.data);
+      console.log("tasks from DB, ", response.data.data, response.data.count);
+      callback(response.data.data, response.data.count);
     });
   };
 

@@ -11,3 +11,8 @@ export function getFormattedCurrentTime() {
   var currentTime = dt.toUTCString();
   return currentTime;
 }
+
+var myStorage = window.localStorage;
+export function getDeviceName() {
+  return myStorage.getItem('deviceID');
+}

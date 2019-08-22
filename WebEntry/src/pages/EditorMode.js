@@ -92,7 +92,7 @@ class EditorMode extends Component {
     this.setState({selectedTask: null, selectedTaskSet:taskSet, assetEditorObject: <EditSetComponent isEditing={true}
       setObject={taskSet} closeSetCallback={this.assetEditorObjectClosed.bind(this)}
       key={this.assetEditorCompKey} ref={this.editSetComponentRef}
-      runTestSet={()=>{this.props.history.push('/RunTasksMode')}}/>});
+      runTestSet={()=>{this.props.history.push('/DisplayTaskComponent')}}/>});
   }
 
   //Callback from the asset editor object if an object has been changed that requires a refresh of the page

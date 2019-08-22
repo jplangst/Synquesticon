@@ -55,7 +55,7 @@ class EditSetComponent extends Component {
   }
 
   onRetrievedSetChildTasks(retrievedObjects){
-    this.setState({taskListObjects: retrievedObjects});
+    this.setState({taskListObjects: retrievedObjects.data});
   }
 
   onDBCallback(setDBID){
@@ -112,14 +112,19 @@ class EditSetComponent extends Component {
     if (this.state.randomizeSet === "Random") {
       runThisTaskSet = shuffle(runThisTaskSet);
     }
+    var testingSet = this.set;
+    testingSet.data = runThisTaskSet;
 
     var action = {
       type: 'SET_EXPERIMENT_INFO',
       experimentInfo: {
         experimentId: "",
+        participantLabel: "",
+        startTimestamp: "",
         participantId: "TESTING",
         mainTaskSetId: this.set.name,
-        taskSet: this.state.taskListObjects,
+        taskSet: testingSet,
+        taskSetCount: -1,
         selectedTaskSetObject: this.set,
         selectedTracker: ""
       }
@@ -281,7 +286,7 @@ class EditSetComponent extends Component {
 
   refreshSetChildList(){
     if(this.state.taskList && this.state.taskList.length > 0){
-      db_helper.getTasksOrTaskSetsWithIDs(this.state.taskList, this.handleRetrieveSetChildTasks);
+      db_helper.getTasksOrTaskSetsWithIDs(this.set, this.handleRetrieveSetChildTasks);
     }
     else{ //If the list is empty we clear the list in the state
       this.setState({taskListObjects: []});

@@ -26,7 +26,7 @@ class ImageViewComponent extends Component {
   render() {
     if (this.state.imageSrc) {
       return (
-        <div className="imageDisplay">
+        <div className="commonContainer">
           <img src={this.state.imageSrc} alt="Can't find image"/>
         </div>
       );

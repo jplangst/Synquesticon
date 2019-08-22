@@ -103,7 +103,7 @@ class TextEntryComponent extends Component {
     }
 
     return (
-      <div className="TextEntry">
+      <div className="commonContainer TextEntry">
         <div className="questionDisplay">
           {this.props.task.question}
         </div>
