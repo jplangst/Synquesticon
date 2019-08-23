@@ -1,22 +1,18 @@
 .introductionScreenContainer{
   display: flex;
-  flex: 1;
+  position: relative;
+  height: 100%;
+  width: 100%;
 }
 
-.AssetViewerNoRoundCorner{
-  position: absolute;
-  width: 28%;
-  height: 96%;
-  top: 2%;
-  left: 2%;
-  background-color: white;
+.IntroContentWrapper{
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
 
-  border-width: thin;
-  border-style: solid;
-  border-color: #303f9f;
-}
-
-.AssetEditorNoRoundCorner{
   position: absolute;
   width: 66%;
   height: 96%;
@@ -27,4 +23,31 @@
   border-width: thin;
   border-style: solid;
   border-color: #303f9f;
+}
+
+.IntroContentTitle{
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+
+  min-height: 200;
+
+  position: relative;
+
+  border-bottom-width: thin;
+  border-bottom-style: solid;
+  border-color: #303f9f;
+
+  font-size: large;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: bold;
+  color: #999;
+}
+
+.IntroContent{
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+
+  flex: 1 1 auto;
 }

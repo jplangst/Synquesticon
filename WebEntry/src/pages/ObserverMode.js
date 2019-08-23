@@ -19,6 +19,9 @@ function a11yProps(index) {
   };
 }
 
+//TODO add a persistent drawer for the "Studies" part fo the UI. As well as for the gaze overlay. https://material-ui.com/components/drawers/
+// Could consider to move the remote eye tracker display into the left column instead.
+
 class ObserverMode extends Component {
   constructor(props) {
     super(props);
@@ -196,14 +199,16 @@ class ObserverMode extends Component {
 
   render() {
     var wampMessage = [];
+    var gazeObject = null;
     if (this.state.currentParticipant >= 0) {
       wampMessage = this.state.participants[this.state.currentParticipant].messages;
+      gazeObject = <GazeCursor tracker={this.state.participants[this.state.currentParticipant].tracker}
+                  id={this.state.currentParticipant} participant={this.state.participants[this.state.currentParticipant].name} />;
     }
 
     return (
-      <div className="AssetViewerContent">
-        <div className="ContainerSeperator SelectedTaskContainer">
-          <div style={{display:'flex', flexDirection:'row', position:'relative', flexGrow:1, flexShrink:1, width:'100%', overflowX:'auto'}}>
+      <div className="ObserverViewerContent">
+          <div className="ObserverTabContainer">
             {
               //TODO get the number of tasks in the experiment and the number of tasks completed
               this.state.participants.map((p, index) => {
@@ -212,15 +217,20 @@ class ObserverMode extends Component {
               })
             }
           </div>
-          <WAMPMessageComponent messages={wampMessage}/>
-        </div>
-        <div className="ContainerSeperator ViewerGaze">
-          {
-            this.state.participants.map((p, index) => {
-              return <GazeCursor tracker={p.tracker} id={index} participant={p.name} key={index}/>;
-            })
-          }
-        </div>
+          <div className="ObserverMessageLog">
+            <WAMPMessageComponent messages={wampMessage}/>
+          </div>
+          <div className="ViewerGaze">
+            {
+              //If we only want to show the selected participant
+              gazeObject
+
+              //If we want to show all the participants gaze
+              //this.state.participants.map((p, index) => {
+              //  return <GazeCursor tracker={p.tracker} id={index} participant={p.name} key={index}/>;
+              //})
+            }
+          </div>
       </div>
       );
   }

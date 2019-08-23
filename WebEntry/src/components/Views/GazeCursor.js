@@ -41,7 +41,7 @@ class GazeCursor extends React.Component {
     return (
       <div className="wrapper" >
         <div className="title">{this.props.participant}</div>
-        <div className="frame" ref={this.frameDiv}>
+        <div className="gazeCursorContainer" ref={this.frameDiv}>
           {cursor}
         </div>
       </div>

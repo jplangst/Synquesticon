@@ -11,23 +11,31 @@
   border: 1px solid black;
   box-sizing: border-box;
   position: relative;
-  height: 96%;
-  width: calc(90vh*0.5);
+  height: 100%;
+  width: 100%;
   background-color: white;
-  float: left;
-  left: 2%;
-  top: 10%;
+
+  min-width: 100px;
+  max-width: 350px;
 }
 
-.frame {
-  border: 1px solid black;
-  box-sizing: border-box;
-  height: 85%;
+.gazeCursorContainer {
+  height: calc(84% - 10px);
   width: 100%;
 }
 
 .title {
   box-sizing: border-box;
-  height: 15%;
+  border-bottom: 1px solid black;
+  height: calc(16% + 10px);
+  width: 100%;
   padding: 5px;
+
+  font-size: medium;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 1em;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

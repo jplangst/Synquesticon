@@ -60,8 +60,8 @@ class IntroductionScreen extends Component {
         </div>
         <PlayerMode gotoPage={this.gotoPage.bind(this)}/>
       </div>
-      <div className = "AssetEditor">
-        <div className="AssetViewerTitle">
+      <div className = "IntroContentWrapper">
+        <div className="IntroContentTitle">
           <div className="AssetViewerTitleText">Observer</div>
           <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:20, maxWidth:60, minHeight:20, maxHeight:60, marginRight: 300}}
            onClick={this.onPauseAllPressed}>
@@ -71,7 +71,9 @@ class IntroductionScreen extends Component {
             <DataExportationComponent />
           </div>
         </div>
-        <ObserverMode isParticipantsPaused={this.state.isParticipantsPaused}/>
+        <div className="IntroContent">
+          <ObserverMode isParticipantsPaused={this.state.isParticipantsPaused}/>
+        </div>
       </div>
     </div>
     );

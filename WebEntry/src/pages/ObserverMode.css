@@ -1,27 +1,65 @@
-.ViewerContainer {
-  margin:0;
-  padding:0;
-  width: 100%;
+.ObserverViewerContent{
+  position: relative;
+
+  display: flex;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  flex: 1 1 100%;
+
   height: 100%;
-  position: relative;
-  background-color: #EEEEEE;
+  width: 100%;
 }
 
-.TaskSetHeaderContainer{
+.ObserverTabContainer{
   position: relative;
+
+  display: flex;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+
+  flex-shrink: 1;
+
+  min-height: 0px;
+  max-height: 100px;
+
   width: 100%;
-  height: 10%;
-  background-color: red;
+  overflow-x: auto;
 }
 
-.SelectedTaskContainer{
+.ObserverMessageLog{
   position: relative;
+
+  display: flex;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+
+  flex-grow: 1;
+
   width: 100%;
-  height: 65%;
 }
 
 .ViewerGaze{
-  position: relative;
+  display: flex;
+
+  /* Only use if single participant displayed */
+  justify-content: center;
+  align-items: center;
+
+  min-height: 50px;
+  max-height: 200px;
+
+
+
   width: 100%;
-  height: 30%;
+  overflow-x: scroll;
+
+  flex: 1 0 auto;
 }
