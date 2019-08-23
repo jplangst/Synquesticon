@@ -13,15 +13,18 @@ import Button from '@material-ui/core/Button';
 class DeviceIDDialog extends Component {
   constructor(props){
     super(props);
+    this.deviceName = "";
   }
 
   componentWillMount() {
+    this.deviceName = this.props.myStorage.getItem('deviceID');
   }
 
   componentWillUnmount() {
   }
 
   onChangeDeviceID(e) {
+    this.props.myStorage.setItem('deviceID', this.deviceName);
     this.props.closeDeviceIDSettings();
   }
 
@@ -40,6 +43,7 @@ class DeviceIDDialog extends Component {
                 label="ID"
                 margin="dense"
                 variant="outlined"
+                onChange={(e)=>{this.deviceName = e.target.value}}
               />
           </DialogContent>
           <DialogActions>

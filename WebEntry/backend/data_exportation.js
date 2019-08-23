@@ -31,6 +31,7 @@ exports.save_to_csv = function(p) {
 
     p.linesOfData.map((line, index) => {
       let text = globalVariables + line.tasksFamilyTree.join('_') + ',' +
+                                   line.displayType + ',' +
                                    line.startTimestamp + ',' +
                                    line.firstResponseTimestamp + ',' +
                                    line.timeToFirstAnswer + ',' +

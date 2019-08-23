@@ -94,7 +94,7 @@ module.exports = {
   },
   broadcastEvents(info) {
     if(glob_session) {
-      glob_session.publish(SynquesticonTopic, info);
+      glob_session.publish(SynquesticonTopic, [info]);
     }
   },
   restartWAMP(config) {

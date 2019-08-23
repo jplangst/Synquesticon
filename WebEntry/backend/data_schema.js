@@ -62,6 +62,7 @@ const ParticipantSchema = new Schema(
       tasksFamilyTree: [String],
       taskId: String,
       taskContent: String,
+      displayType: String, //MultiItem, SingleItem
       responses: [String],
       correctResponses: [String],
       /* correctlyAnswered:

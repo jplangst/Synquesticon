@@ -64,21 +64,18 @@ class PlayerMode extends Component {
   //bottom button handler
   onPlayButtonClick(taskSet) {
     this.selectedTaskSet = taskSet;
-    db_helper.getTasksOrTaskSetsWithIDs(this.selectedTaskSet.childIds, (dbQueryResult) => {
-      var runThisTaskSet = dbQueryResult;
-      if (this.selectedTaskSet.setTaskOrder === "Random") {
-        runThisTaskSet = shuffle(runThisTaskSet);
-      }
-
+    db_helper.getTasksOrTaskSetsWithIDs(this.selectedTaskSet, (dbQueryResult, count) => {
       db_helper.addParticipantToDb(new dbObjects.ParticipantObject(this.selectedTaskSet._id), (returnedIdFromDB)=> {
         var action = {
           type: 'SET_EXPERIMENT_INFO',
           experimentInfo: {
             experimentId: "",
-            participantLabel: playerUtils.getFormattedCurrentTime(),
+            participantLabel: playerUtils.getDeviceName(),
+            startTimestamp: playerUtils.getFormattedCurrentTime(),
             participantId: returnedIdFromDB,
             mainTaskSetId: this.selectedTaskSet.name,
-            taskSet: runThisTaskSet,
+            taskSet: dbQueryResult,
+            taskSetCount: count,
             selectedTaskSetObject: this.selectedTaskSet,
             selectedTracker: this.state.selectedTracker
           }

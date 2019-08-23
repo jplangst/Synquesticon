@@ -42,7 +42,7 @@ class MultipleChoiceComponent extends Component {
   render() {
     this.reset();
     return (
-      <div>
+      <div className="commonContainer">
         <div className="questionDisplay">
           {this.props.task.question}
         </div>

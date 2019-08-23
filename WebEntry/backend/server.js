@@ -299,8 +299,11 @@ router.post("/getCompleteTaskSetObject", async (req, res) => {
 });
 
 router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
-  const { objIds } = req.body;
-  const ids = JSON.parse(objIds);
+  const { wrapperSetJson } = req.body;
+  var wrapperSet = JSON.parse(wrapperSetJson);
+  const ids = wrapperSet.childIds;
+
+  var count = 0;
 
   var recursionForArray = async function(targetArray) {
     const childs = targetArray.map(async item => {
@@ -314,6 +317,7 @@ router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
   var recursion = async function(target) {
     if (target.objType === "Task") {
       var taskFromDb = await Tasks.findOne({_id: target.id}, async (err, task) => {
+        count = count + 1;
         return task;
       });
 
@@ -328,6 +332,9 @@ router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
         var data = await recursion(item);
         return data;
       });
+      // if (setData.displayOnePage) {
+      //   count = count - setData.childIds.length + 1;
+      // }
 
       var childrenData = await Promise.all(childs);
 
@@ -339,7 +346,8 @@ router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
   }
 
   const results = await recursionForArray(ids);
-  return res.json({success: true, data: results});
+  wrapperSet.data = results;
+  return res.json({success: true, data: wrapperSet, count: count});
 });
 
 router.post("/getImage", (req, res) => {

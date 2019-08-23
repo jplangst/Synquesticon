@@ -52,10 +52,11 @@ export class ParticipantObject {
  * The default object used for LineOfData. New lines of data should use this as the base.
  */
 export class LineOfData {
-  constructor(currentTime, taskId, familyTree, taskContent, taskCorrectResponses) {
+  constructor(currentTime, taskId, familyTree, taskContent, taskCorrectResponses, displayType) {
     this.tasksFamilyTree = familyTree;
     this.taskId = taskId;
     this.taskContent = taskContent;
+    this.displayType = displayType;
     this.responses = [];
     this.correctResponses = taskCorrectResponses;
     /* correctlyAnswered:
