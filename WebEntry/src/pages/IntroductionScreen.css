@@ -30,6 +30,7 @@
   display: -ms-flexbox;
   display: flex;
 
+  width: 100%;
   min-height: 200;
 
   position: relative;
@@ -42,6 +43,25 @@
   font-family: "Times New Roman", Times, serif;
   font-weight: bold;
   color: #999;
+}
+
+.IntroTitleText{
+  position: relative;
+  width: 100%;
+
+  padding-left: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.IntroDataExportBtnContainer{
+
+  height: 100%;
+
+  border-left-style: solid;
+  border-width: thin;
+  border-radius: 10px;
+  border-color: #BDBDBD;
 }
 
 .IntroContent{

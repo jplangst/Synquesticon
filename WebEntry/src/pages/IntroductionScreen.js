@@ -41,10 +41,10 @@ class IntroductionScreen extends Component {
   render() {
     var buttonIcon = null;
     if(this.state.isParticipantsPaused){
-      buttonIcon = <PauseIcon style={{display:'flex', position: 'absolute', height: '100%', width: 'auto', maxWidth: '100%', flexGrow: 1}} />;
+      buttonIcon = <PauseIcon style={{display:'flex', position: 'absolute', height: '75%', width: 'auto', maxWidth: '75%', flexGrow: 1}} />;
     }
     else{
-      buttonIcon = <PlayIcon style={{display:'flex', position: 'absolute', height: '100%', width: 'auto', maxWidth: '100%', flexGrow: 1}} />;
+      buttonIcon = <PlayIcon style={{display:'flex', position: 'absolute', height: '75%', width: 'auto', maxWidth: '75%', flexGrow: 1}} />;
     }
 
     return(
@@ -62,12 +62,13 @@ class IntroductionScreen extends Component {
       </div>
       <div className = "IntroContentWrapper">
         <div className="IntroContentTitle">
-          <div className="AssetViewerTitleText">Observer</div>
-          <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:20, maxWidth:60, minHeight:20, maxHeight:60, marginRight: 300}}
+          <div className="IntroTitleText">Observer</div>
+          <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1,
+                  borderRadius:10, borderColor:'#BDBDBD', borderWidth:'thin', borderLeftStyle:'solid'}}
            onClick={this.onPauseAllPressed}>
             {buttonIcon}
           </Button>
-          <div className="listItemDragBtnContainer">
+          <div className="IntroDataExportBtnContainer">
             <DataExportationComponent />
           </div>
         </div>
