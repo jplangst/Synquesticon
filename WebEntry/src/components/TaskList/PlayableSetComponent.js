@@ -11,7 +11,6 @@ class PlayableSetComponent extends Component {
   render() {
     var buttonSize = store.getState().windowSize.width > 500 ? 40 : 20;
 
-
     var content =
         <div  className={"listItem "}>
           <div className="listItemTextContainer dotLongText">
