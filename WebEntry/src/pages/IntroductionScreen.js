@@ -49,14 +49,13 @@ class IntroductionScreen extends Component {
 
     return(
     <div className="introductionScreenContainer">
-      <div className = "AssetViewer">
-        <div className="AssetViewerTitle">
-          <div className="AssetViewerTitleText">Studies</div>
-          <div className="EditorButton">
-            <Button className="listItemDragBtnContainer" onClick={(e) => this.gotoPage("EditorMode")} >
-              <EditIcon/>
-            </Button>
-          </div>
+      <div className = "IntroViewer">
+        <div className="IntroViewerTitle">
+          <div className="IntroViewerTitleText">Studies</div>
+          <Button className="IntroDataExportBtnContainer" onClick={(e) => this.gotoPage("EditorMode")}
+            style={{borderLeftStyle:'solid', borderWidth:'thin', borderRadius: 10, borderColor:'#BDBDBD'}}>
+            <EditIcon/>
+          </Button>
         </div>
         <PlayerMode gotoPage={this.gotoPage.bind(this)}/>
       </div>

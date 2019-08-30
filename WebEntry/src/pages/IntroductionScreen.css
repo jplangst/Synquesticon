@@ -5,6 +5,60 @@
   width: 100%;
 }
 
+.IntroViewer{
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+
+  position: absolute;
+  width: 28%;
+  height: 96%;
+
+  top: 2%;
+  left: 2%;
+  background-color: white;
+
+  border-width: thin;
+  border-style: solid;
+  border-color: #303f9f;
+}
+
+.IntroViewerTitle{
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+
+  flex: 1 1 auto;
+  min-height: 200;
+
+  position: relative;
+
+  border-bottom-width: thin;
+  border-bottom-style: solid;
+  border-color: #303f9f;
+
+  font-size: large;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: bold;
+  color: #999;
+}
+
+.IntroViewerTitleText{
+  position: relative;
+  width: 100%;
+
+  padding-left: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
 .IntroContentWrapper{
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -55,7 +109,6 @@
 }
 
 .IntroDataExportBtnContainer{
-
   height: 100%;
 
   border-left-style: solid;

@@ -4,8 +4,6 @@ import PlayableSetComponent from './PlayableSetComponent';
 
 import * as listUtils from '../../core/db_objects_utility_functions';
 
-import './TaskListComponent.css';
-
 //================ React component ================
 class PlayableSetListComponent extends Component {
   constructor(props) {
@@ -17,7 +15,7 @@ class PlayableSetListComponent extends Component {
 
   render() {
     this.taskList = this.props.taskList;
-    return (<div className="taskListComponentContainer">
+    return (<div style={{height:'100%', width:'100%', display:'flex', flexDirection:'column'}}>
         {
           this.taskList.map((item, index) => {
             var content = listUtils.getTaskContent(item);
