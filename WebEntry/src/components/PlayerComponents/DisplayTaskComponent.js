@@ -16,7 +16,10 @@ import ImageViewComponent from '../Views/ImageViewComponent';
 
 import MultiItemTask from './MultiItemTask';
 
+import PauseDialog from '../dialogs/PauseDialog';
+
 import wamp from '../../core/wamp';
+import wampStore from '../../core/wampStore';
 import store from '../../core/store';
 import shuffle from '../../core/shuffle';
 import db_helper from '../../core/db_helper';
@@ -331,6 +334,55 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 
 
 class DisplayTaskComponent extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isPaused : false
+    }
+    this.handleNewCommandEvent = this.onNewCommandEvent.bind(this);
+  }
+
+  componentWillMount() {
+    progressCount = 0;
+    if (!(store.getState().experimentInfo.participantId === "TESTING")) {
+      this.broadcastStartEvent();
+      this.timer = setInterval(this.handleGazeLocUpdate, 4.5); //Update the gaze cursor location every 2ms
+    }
+
+    var layoutAction = {
+      type: 'SET_SHOW_HEADER',
+      showHeader: false,
+      showFooter: false
+    }
+
+    store.dispatch(layoutAction);
+
+    wampStore.addNewCommandListener(this.handleNewCommandEvent);
+  }
+
+  componentWillUnmount() {
+    if (!store.getState().experimentInfo.participantId === "TESTING") {
+      clearInterval(this.timer);
+    }
+    var layoutAction = {
+      type: 'SET_SHOW_HEADER',
+      showHeader: true,
+      showFooter: true
+    }
+
+    store.dispatch(layoutAction);
+    wampStore.removeNewCommandListener(this.handleNewCommandEvent);
+  }
+
+  /*
+██     ██  █████  ███    ███ ██████      ███████ ██    ██ ███████ ███    ██ ████████
+██     ██ ██   ██ ████  ████ ██   ██     ██      ██    ██ ██      ████   ██    ██
+██  █  ██ ███████ ██ ████ ██ ██████      █████   ██    ██ █████   ██ ██  ██    ██
+██ ███ ██ ██   ██ ██  ██  ██ ██          ██       ██  ██  ██      ██  ██ ██    ██
+ ███ ███  ██   ██ ██      ██ ██          ███████   ████   ███████ ██   ████    ██
+*/
+
+
   broadcastStartEvent() {
     try {
       var dt = new Date();
@@ -367,33 +419,39 @@ class DisplayTaskComponent extends Component {
     wamp.broadcastEvents(info);
   }
 
-  componentWillMount() {
-    progressCount = 0;
-    if (!(store.getState().experimentInfo.participantId === "TESTING")) {
-      this.broadcastStartEvent();
-      this.timer = setInterval(this.handleGazeLocUpdate, 4.5); //Update the gaze cursor location every 2ms
+  /*
+ ██████  ██████  ███    ███ ███    ███  █████  ███    ██ ██████  ███████
+██      ██    ██ ████  ████ ████  ████ ██   ██ ████   ██ ██   ██ ██
+██      ██    ██ ██ ████ ██ ██ ████ ██ ███████ ██ ██  ██ ██   ██ ███████
+██      ██    ██ ██  ██  ██ ██  ██  ██ ██   ██ ██  ██ ██ ██   ██      ██
+ ██████  ██████  ██      ██ ██      ██ ██   ██ ██   ████ ██████  ███████
+*/
+  onNewCommandEvent() {
+    var args = JSON.parse(wampStore.getCurrentCommand());
+    console.log("new command", args);
+    var shouldProcess = false;
+
+    if (args.participantId == -1 || args.participantId === store.getState().experimentInfo.participantId) {
+      shouldProcess = true;
     }
 
-    var layoutAction = {
-      type: 'SET_SHOW_HEADER',
-      showHeader: false,
-      showFooter: false
+    if (shouldProcess) {
+      switch (args.commandType) {
+        case "PAUSE":
+          this.setState({
+            isPaused: true
+          });
+          break;
+        case "RESUME":
+          this.setState({
+            isPaused: false
+          });
+          break;
+        default:
+          break;
+      }
     }
 
-    store.dispatch(layoutAction);
-  }
-
-  componentWillUnmount() {
-    if (!store.getState().experimentInfo.participantId === "TESTING") {
-      clearInterval(this.timer);
-    }
-    var layoutAction = {
-      type: 'SET_SHOW_HEADER',
-      showHeader: true,
-      showFooter: true
-    }
-
-    store.dispatch(layoutAction);
   }
 
   onFinished() {
@@ -408,7 +466,10 @@ class DisplayTaskComponent extends Component {
     try {
       var renderObj = <DisplayTaskHelper tasksFamilyTree={[store.getState().experimentInfo.mainTaskSetId]} taskSet={store.getState().experimentInfo.taskSet} onFinished={this.onFinished.bind(this)}/>;
       return (
-          renderObj
+          <div className="page">
+            {renderObj}
+            <PauseDialog openDialog={this.state.isPaused}/>
+          </div>
       );
     }
     catch(err) {

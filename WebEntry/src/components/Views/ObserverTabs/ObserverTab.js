@@ -8,6 +8,8 @@ import PauseIcon from '@material-ui/icons/PauseCircleOutline';
 import PlayIcon from '@material-ui/icons/PlayCircleOutline';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
+import wamp from '../../../core/wamp';
+
 class ObserverTab extends Component {
   constructor(props) {
     super(props);
@@ -37,7 +39,10 @@ class ObserverTab extends Component {
 
   onButtonPressed(evt){
     evt.stopPropagation();
-
+    wamp.broadcastCommands(JSON.stringify({
+                            commandType: !this.state.isPaused ? "PAUSE" : "RESUME",
+                            participantId: this.props.participantId
+                           }));
     if(!this.state.forcedPause){
       this.setState({
         isPaused: !this.state.isPaused
