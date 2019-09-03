@@ -1,12 +1,22 @@
 .introductionScreenContainer{
   display: flex;
-  flex: 1;
+  position: relative;
+  height: 100%;
+  width: 100%;
 }
 
-.AssetViewerNoRoundCorner{
+.IntroViewer{
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+
   position: absolute;
   width: 28%;
   height: 96%;
+
   top: 2%;
   left: 2%;
   background-color: white;
@@ -16,7 +26,47 @@
   border-color: #303f9f;
 }
 
-.AssetEditorNoRoundCorner{
+.IntroViewerTitle{
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+
+  flex: 1 1 auto;
+  min-height: 200;
+
+  position: relative;
+
+  border-bottom-width: thin;
+  border-bottom-style: solid;
+  border-color: #303f9f;
+
+  font-size: large;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: bold;
+  color: #999;
+}
+
+.IntroViewerTitleText{
+  position: relative;
+  width: 100%;
+
+  padding-left: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.IntroContentWrapper{
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+
   position: absolute;
   width: 66%;
   height: 96%;
@@ -27,4 +77,50 @@
   border-width: thin;
   border-style: solid;
   border-color: #303f9f;
+}
+
+.IntroContentTitle{
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+
+  width: 100%;
+  min-height: 200;
+
+  position: relative;
+
+  border-bottom-width: thin;
+  border-bottom-style: solid;
+  border-color: #303f9f;
+
+  font-size: large;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: bold;
+  color: #999;
+}
+
+.IntroTitleText{
+  position: relative;
+  width: 100%;
+
+  padding-left: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.IntroDataExportBtnContainer{
+  height: 100%;
+
+  border-left-style: solid;
+  border-width: thin;
+  border-radius: 10px;
+  border-color: #BDBDBD;
+}
+
+.IntroContent{
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+
+  flex: 1 1 auto;
 }

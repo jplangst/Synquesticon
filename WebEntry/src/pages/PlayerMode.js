@@ -103,13 +103,12 @@ class PlayerMode extends Component {
 
   render() {
     return (
-      <div className="AssetViewerContent">
-        <div className="ContainerSeperator TaskSetContainer">
-          < PlayableSetListComponent
-                              taskList={ this.state.taskSets }
-                              runSetCallback={ this.onPlayButtonClick.bind(this) } />
+      <div className="PlayerViewerContent">
+        <div className="TaskSetContainer">
+          < PlayableSetListComponent taskList={ this.state.taskSets }
+                  runSetCallback={ this.onPlayButtonClick.bind(this) } />
         </div>
-        <div className="ContainerSeperator RemoteTrackerContainer">
+        <div className="RemoteTrackerContainer">
           <FormControl className="textinput">
             <InputLabel htmlFor="age-simple">Remote Eye Tracker</InputLabel>
             <Select

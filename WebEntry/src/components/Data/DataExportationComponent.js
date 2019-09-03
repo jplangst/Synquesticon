@@ -13,8 +13,6 @@ import ExportationIcon from '@material-ui/icons/Archive';
 import db_helper from '../../core/db_helper';
 import courier from '../../core/courier';
 
-import './DataExportationComponent.css';
-
 class DataExportationComponent extends Component {
   constructor(props){
     super(props);

@@ -53,7 +53,7 @@ class WAMPMessageComponent extends React.Component {
   render() {
     return (
       <div className="wampMessageBoard">
-        <div className="title">
+        <div className="messageBoardtitle">
          Messaging Log
         </div>
         <div className="messages">

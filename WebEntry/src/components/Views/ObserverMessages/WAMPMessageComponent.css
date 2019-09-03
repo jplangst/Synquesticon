@@ -1,17 +1,22 @@
 .wampMessageBoard {
+  position: absolute;
+
+  height: calc(100% - 10px);
+  width: calc(100% - 20px);
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 10px;
+
   font-family: Arial;
-  padding: 15px;
-  height: 90%;
 }
 
-.title {
+.messageBoardtitle {
   font-weight: bold;
-  /* color: #BDBDBD; */
 }
 
 .messages {
-  padding-left: 15px;
-  height: 95%;
-  overflow-x: hidden;
+  margin-left: 15px;
+  margin-top: 6px;
+  height: 100%;
   overflow-y: auto;
 }
