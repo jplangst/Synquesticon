@@ -43,8 +43,12 @@ class DeviceIDDialog extends Component {
         });
       }
       else {
+        var roleArray = [];
+        receivedRoles.map((role, index) => {
+          roleArray.push(role.name);
+        })
         this.setState({
-          roles: receivedRoles
+          roles: roleArray
         });
       }
     });
@@ -89,7 +93,7 @@ class DeviceIDDialog extends Component {
                     onChange={(e)=>{this.selectedRole = e.target.value}}
                   >
                     {this.state.roles.map((role, index) => {
-                      return <option key={index} value={role}>{role}</option>
+                      return <option value={role}>{role}</option>
                     })}
                  </NativeSelect>
                </FormControl>

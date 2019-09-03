@@ -22,10 +22,6 @@ import StyledAvatar from './StyledAvatar';
 import { makeStyles } from '@material-ui/core/styles';
 import { blue } from '@material-ui/core/colors';
 
-//Icons
-import Settings from '@material-ui/icons/Settings';
-import BackArrowNavigation from '@material-ui/icons/ChevronLeft';
-
 import store from '../../core/store';
 
 var myStorage = window.localStorage;
@@ -34,7 +30,6 @@ class Menu extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showMenu: false,
       openDeviceIDSettings: false,
       openCrossbarSettings: false,
       openSpeechSettings: false
@@ -119,32 +114,18 @@ class Menu extends Component {
     }
   }
 
-
-  //button click handlers
-  openSettingsMenu() {
-    this.setState({showMenu: true});
-  }
-
-  closeSettingsMenu(e) {
-    this.setState({showMenu: false});
-  }
-
   render() {
     var deviceName = myStorage.getItem('deviceID');
     if (!deviceName || deviceName == "") {
       deviceName="Unnamed";
     }
     return(
-      <div style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:150, height:"100%"}}>
-        <Button
-          onClick={this.openSettingsMenu.bind(this)} >
-          <Settings size='large' style={{display:'flex', position: 'absolute', height: '100%', width: 'auto', maxWidth: '100%', flexGrow: 1}} />
-        </Button>
-        <Drawer anchor="right" open={this.state.showMenu} onClose={this.closeSettingsMenu.bind(this)}>
+      <div >
+        <Drawer anchor="right" open={this.props.showMenu} onClose={this.props.closeSettingsMenu}>
           <div
             tabIndex={0}
             role="button"
-            onClick={this.openSettingsMenu.bind(this)}
+            onClick={this.props.openSettingsMenu}
           >
             <List>
               <ListItem button key="Device ID" onClick={this.onOpenDeviceIDSettings.bind(this)}>
