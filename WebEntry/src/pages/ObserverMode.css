@@ -31,7 +31,31 @@
   max-height: 100px;
 
   width: 100%;
-  overflow-x: auto;
+  overflow-x: scroll;
+}
+
+.ShowScrollBar::-webkit-scrollbar{
+  display: inline-block;
+}
+
+.ObserverTabContainer::-webkit-scrollbar {
+  width: 2px;
+  height: 4px;
+}
+
+/* Track */
+.ObserverTabContainer::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+.ObserverTabContainer::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+.ObserverTabContainer::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 .ObserverMessageLog{
