@@ -60,8 +60,6 @@ class MultiItemTask extends React.Component {
     }
 
     this.taskResponses.set(answerObj.taskID+answerObj.mapID, lineOfData);
-    console.log("updatedLineOfData", this.taskResponses);
-
     this.props.answerCallback(this.taskResponses);
 
     //this.forceUpdate();
@@ -79,6 +77,7 @@ class MultiItemTask extends React.Component {
       newLine.question = task.question;
     }
     this.taskResponses.set(task._id + ind, newLine);
+    this.props.logTheStartOfTask(task, newLine);
   }
 
   getDisplayedContent(taskList, mapIndex){

@@ -32,61 +32,18 @@ function getCurrentTime() {
   return dt.getTime();
 }
 
-function stringifyWAMPMessage(obj, timestamp, type) {
-  if (type === "START") {
-    var taskType = "";
-    if (obj.objType === "TaskSet" && obj.displayOnePage) {
-      taskType = "Multi-tasks";
-    }
-    else if (obj.objType === "Task") {
-      taskType = obj.taskType;
-    }
-    var globalVariable = obj.globalVariable ? " (global variable) " : "";
-    var message = obj.taskType + " \"" +
-                  dbObjectsUtilityFunctions.getTaskContent(obj) + "\"" + globalVariable;
-
-   return JSON.stringify({
-                            eventType: "START",
-                            participantID: store.getState().experimentInfo.participantId,
-                            participantLabel: store.getState().experimentInfo.participantLabel,
-                            startTimestamp: store.getState().experimentInfo.startTimestamp,
-                            selectedTracker: store.getState().experimentInfo.selectedTracker,
-                            taskType: taskType,
-                            taskContent: dbObjectsUtilityFunctions.getTaskContent(obj),
-                            isGlobalVariable: obj.globalVariable,
-                            timestamp: timestamp
-                          });
-  }
-  else if (type === "NEXT") {
-    return JSON.stringify({
-                            eventType: "ANSWERED",
-                            participantID: store.getState().experimentInfo.participantId,
-                            participantLabel: store.getState().experimentInfo.participantLabel,
-                            startTimestamp: store.getState().experimentInfo.startTimestamp,
-                            selectedTracker: store.getState().experimentInfo.selectedTracker,
-                            firstResponseTimestamp: obj.firstResponseTimestamp,
-                            timeToFirstAnswer: obj.timeToFirstAnswer,
-                            timeToCompletion: obj.timeToCompletion,
-                            responses: obj.responses,
-                            correctlyAnswered: obj.correctlyAnswered,
-                            aoiCheckedList: obj.aoiCheckedList,
-                            progressCount: progressCount,
-                            taskSetCount: store.getState().experimentInfo.taskSetCount
-                          });
-  }
-  else if (type === "SKIP") {
-    return JSON.stringify({
-                            eventType: "SKIPPED",
-                            participantID: store.getState().experimentInfo.participantId,
-                            participantLabel: store.getState().experimentInfo.participantLabel,
-                            startTimestamp: store.getState().experimentInfo.startTimestamp,
-                            selectedTracker: store.getState().experimentInfo.selectedTracker,
-                            timeToCompletion: obj.timeToCompletion,
-                            progressCount: progressCount,
-                            taskSetCount: store.getState().experimentInfo.taskSetCount
-                          });
-  }
-  return null;
+function stringifyWAMPMessage(task, lineOfData, eventType) {
+  return JSON.stringify({
+                          eventType: eventType,
+                          participantId: store.getState().experimentInfo.participantId,
+                          participantLabel: store.getState().experimentInfo.participantLabel,
+                          startTimestamp: store.getState().experimentInfo.startTimestamp,
+                          selectedTracker: store.getState().experimentInfo.selectedTracker,
+                          task: task,
+                          lineOfData: lineOfData,
+                          taskSetCount: store.getState().experimentInfo.taskSetCount,
+                          progressCount: progressCount,
+                        });
 }
 
 /*
@@ -134,6 +91,19 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 ██      ██    ██ ██    ██ ██    ██ ██ ██  ██ ██ ██    ██
 ███████  ██████   ██████   ██████  ██ ██   ████  ██████
 */
+  // logTheStartOfTask() {
+  //   var startTimestamp = playerUtils.getCurrentTime();
+  //   if (this.currentTask.objType === "Task") {
+  //     this.currentLineOfData = new dbObjects.LineOfData(startTimestamp,
+  //                                                       this.currentTask._id,
+  //                                                       this.props.tasksFamilyTree, //the array that has the task's tasksFamilyTree
+  //                                                       dbObjectsUtilityFunctions.getTaskContent(this.currentTask),
+  //                                                       this.currentTask.correctResponses,
+  //                                                       "SingleItem");
+  //     wamp.broadcastEvents(stringifyWAMPMessage(this.currentTask, this.currentLineOfData, "START"));
+  //   }
+  // }
+
   logTheStartOfTask() {
     var startTimestamp = playerUtils.getCurrentTime();
     if (this.currentTask.objType === "Task") {
@@ -143,9 +113,8 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
                                                         dbObjectsUtilityFunctions.getTaskContent(this.currentTask),
                                                         this.currentTask.correctResponses,
                                                         "SingleItem");
+      wamp.broadcastEvents(stringifyWAMPMessage(this.currentTask, this.currentLineOfData, "START"));
     }
-
-    wamp.broadcastEvents(stringifyWAMPMessage(this.currentTask, startTimestamp, "START"));
   }
 
   //Updates the location of the Gaze Cursor. And checks if any of the AOIs were looked at
@@ -190,8 +159,8 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
                                                             JSON.stringify(globalVariableObj));
           }
 
-          wamp.broadcastEvents(stringifyWAMPMessage(this.currentLineOfData, null,
-                                                    (this.currentLineOfData.firstResponseTimestamp != -1) ? "NEXT" : "SKIP"));
+          wamp.broadcastEvents(stringifyWAMPMessage(null, this.currentLineOfData,
+                                                    (this.currentLineOfData.firstResponseTimestamp != -1) ? "ANSWERED" : "SKIPPED"));
         }
 
       }
@@ -207,8 +176,8 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
             db_helper.addNewLineToParticipantDB(store.getState().experimentInfo.participantId,
                                                 JSON.stringify(line));
           }
-          wamp.broadcastEvents(stringifyWAMPMessage(line, null,
-                                                    (line.firstResponseTimestamp != -1) ? "NEXT" : "SKIP"));
+          wamp.broadcastEvents(stringifyWAMPMessage(null, line,
+                                                    (line.firstResponseTimestamp != -1) ? "ANSWERED" : "SKIPPED"));
         });
         console.log("multiitem", this.currentLineOfData.size);
 
@@ -295,7 +264,16 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
               var init = (taskResponses) => {
                 this.currentLineOfData = taskResponses;
               }
-              return <MultiItemTask tasksFamilyTree={trackingTaskSetNames} taskSet={this.currentTask} answerCallback={this.onAnswer.bind(this)} newTask={!this.state.hasBeenAnswered} initCallback={init}/>
+              return <MultiItemTask tasksFamilyTree={trackingTaskSetNames}
+                                    taskSet={this.currentTask}
+                                    answerCallback={this.onAnswer.bind(this)}
+                                    newTask={!this.state.hasBeenAnswered}
+                                    initCallback={(taskResponses) => {
+                                      this.currentLineOfData = taskResponses;
+                                    }}
+                                    logTheStartOfTask={(task, log) => {
+                                      wamp.broadcastEvents(stringifyWAMPMessage(task, log, "START"))
+                                    }}/>
             }
             if((this.currentTask.taskType === "Instruction")) {
               return <InstructionViewComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)}/>;
@@ -360,11 +338,12 @@ class DisplayTaskComponent extends Component {
 
       var info = JSON.stringify({
                                   eventType: "NEW EXPERIMENT",
-                                  participantID: store.getState().experimentInfo.participantId,
+                                  participantId: store.getState().experimentInfo.participantId,
                                   participantLabel: store.getState().experimentInfo.participantLabel,
                                   startTimestamp: store.getState().experimentInfo.startTimestamp,
                                   selectedTracker: store.getState().experimentInfo.selectedTracker,
-                                  mainTaskSetId: store.getState().experimentInfo.mainTaskSetId
+                                  mainTaskSetId: store.getState().experimentInfo.mainTaskSetId,
+                                  taskSetCount: store.getState().experimentInfo.taskSetCount
                                 });
       wamp.broadcastEvents(info);
     }
@@ -378,7 +357,7 @@ class DisplayTaskComponent extends Component {
 
     var info = JSON.stringify({
                                 eventType: "FINISHED",
-                                participantID: store.getState().experimentInfo.participantId,
+                                participantId: store.getState().experimentInfo.participantId,
                                 participantLabel: store.getState().experimentInfo.participantLabel,
                                 startTimestamp: store.getState().experimentInfo.startTimestamp,
                                 selectedTracker: store.getState().experimentInfo.selectedTracker,
@@ -405,7 +384,7 @@ class DisplayTaskComponent extends Component {
   }
 
   componentWillUnmount() {
-    if (!store.getState().experimentInfo.participantID === "TESTING") {
+    if (!store.getState().experimentInfo.participantId === "TESTING") {
       clearInterval(this.timer);
     }
     var layoutAction = {

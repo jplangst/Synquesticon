@@ -12,6 +12,8 @@ import store from '../core/store';
 
 import './ObserverMode.css';
 
+var myStorage = window.localStorage;
+
 function a11yProps(index) {
   return {
     id: `scrollable-force-tab-${index}`,
@@ -24,8 +26,10 @@ class ObserverMode extends Component {
     super(props);
     this.state = {
       participants: [],
-      currentParticipant: -1,
+      currentParticipant: -1
     }
+    this.completedTasks = 0;
+    this.totalTasks = 0;
     this.handleNewWAMPEvent = this.onNewWAMPEvent.bind(this);
   }
 
@@ -39,127 +43,29 @@ class ObserverMode extends Component {
 
   onNewWAMPEvent() {
     var args = JSON.parse(wampStore.getCurrentMessage());
-    console.log("new wamp message", args);
-    var displayText = '';
-
-    switch (args.eventType) {
-      case "NEW EXPERIMENT":
-        /*
-        ["NEW EXPERIMENT",
-                    store.getState().experimentInfo.participantId,
-                    store.getState().experimentInfo.startTimestamp,
-                    store.getState().experimentInfo.selectedTracker,
-                    store.getState().experimentInfo.mainTaskSetId,
-                    timestamp]
-        */
-
-        var startTime = new Date(args.startTimestamp);
-        displayText = <div>
-                        <b>New experiment - Task set: </b>
-                        <i>{args.mainTaskSetId} </i>
-                        started at {startTime.toUTCString()}
-                      </div>
-
-        break;
-      case "START":
-        /*
-        ["START",
-                    store.getState().experimentInfo.participantId,
-                    store.getState().experimentInfo.startTimestamp,
-                    store.getState().experimentInfo.selectedTracker,
-                    obj.taskType,
-                    dbObjectsUtilityFunctions.getTaskContent(obj),
-                    obj.globalVariable,
-                    timestamp];
-        */
-
-        var startTaskTime = new Date(args.timestamp);
-        displayText = <div>
-                          <b>{args.taskType} </b>
-                          <i>{args.taskContent} </i>
-                          {(args.isGlobalVariable ? " (global variable) " : "") + " - start at: " + startTaskTime.toUTCString()}
-                      </div>
-
-
-        break;
-      case "ANSWERED":
-       /*
-       ["ANSWERED",
-                   store.getState().experimentInfo.participantId,
-                   store.getState().experimentInfo.startTimestamp,
-                   store.getState().experimentInfo.selectedTracker,
-                   obj.firstResponseTimestamp,
-                   obj.timeToFirstAnswer,
-                   obj.timeToCompletion,
-                   obj.responses,
-                   obj.correctlyAnswered,
-                   obj.aoiCheckedList];
-       */
-
-        var firstResponseTimestamp = new Date(args.firstResponseTimestamp);
-        var responses = args.responses.join(', ');
-        var timeToCompletion = args.timeToCompletion < 0 ? "s" : "s. Time to completion: " + args.timeToCompletion/1000 + "s";
-        displayText = <div>
-                        <b>Answered </b>
-                        <i>{responses} </i>
-                         - {args.responses}. Time to first answer: {args.timeToFirstAnswer/1000}{timeToCompletion}. First answered at {firstResponseTimestamp.toUTCString()}.
-                      </div>;
-
-
-        var aoisList = "";
-
-        args.aoiCheckedList.map((item, index) => {
-          aoisList += "\t" + item["name"] + ":" + (item["checked"] !== undefined ? "checked" : "unchecked");
-        });
-        //displayText += aoisList;
-        console.log("progress", args.progressCount, args.taskSetCount);
-        break;
-      case "SKIPPED":
-      /*
-      "SKIPPED",
-                  store.getState().experimentInfo.participantId,
-                  store.getState().experimentInfo.startTimestamp,
-                  store.getState().experimentInfo.selectedTracker,
-                  obj.timeToCompletion
-      */
-        displayText = <div>
-                        <b>Skipped </b>
-                        Time to completion: {args.timeToCompletion/1000} s.
-                      </div>;
-        console.log("progress", args.progressCount, args.taskSetCount);
-        break;
-      case "FINISHED":
-      /*
-      "FINISHED",
-                  store.getState().experimentInfo.participantId,
-                  store.getState().experimentInfo.startTimestamp,
-                  store.getState().experimentInfo.selectedTracker,
-                  store.getState().experimentInfo.mainTaskSetId,
-                  timestamp
-      */
-        var endTime = new Date(args.timestamp);
-        displayText = <div>
-                        <b>Experiment finished at </b>
-                        {endTime.toUTCString()}
-                      </div>;
-        break;
-      default:
-        break;
+    var isComment = (args.eventType === "COMMENT"); // &&
+                          // args.observerName != myStorage.getItem('deviceID') &&
+                          // args.observerRole != myStorage.getItem('deviceRole'));
+    if (args.taskSetCount != undefined) {
+      this.totalTasks = args.taskSetCount;
     }
-    console.log("observer", args.participantID);
-    if (store.getState().participants[args.participantID] == undefined) {
+    if (args.progressCount != undefined) {
+      this.completedTasks = args.progressCount;
+    }
+
+    if (store.getState().participants[args.participantId] == undefined && !isComment) {
       var action = {
         type: 'ADD_PARTICIPANT',
-        participant: args.participantID,
+        participant: args.participantId,
         tracker: args.selectedTracker
       }
       store.dispatch(action);
     }
     var existed = false;
     for (let i = 0; i < this.state.participants.length; i++) {
-      if (this.state.participants[i].id === args.participantID) {
+      if (this.state.participants[i].id === args.participantId) {
         var newMessage = this.state.participants[i].messages;
-        newMessage.push(displayText);
+        newMessage.push(args);
         this.state.participants[i] = {
           ...this.state.participants[i],
           messages: newMessage
@@ -168,15 +74,14 @@ class ObserverMode extends Component {
         break;
       }
     }
-    if (!existed) {
+    if (!existed && !isComment) {
       var label = (!args.participantLabel || args.participantLabel == "") ? args.startTimestamp : (args.participantLabel + "   " + args.startTimestamp);
       this.state.participants.push({
-        id: args.participantID,
+        id: args.participantId,
         name: label,
         tracker: args.selectedTracker,
-        messages: [displayText]
+        messages: [args]
       })
-      console.log("push new", this.state.participants);
     }
 
     if (this.state.currentParticipant < 0) {
@@ -185,12 +90,6 @@ class ObserverMode extends Component {
       });
     }
     this.forceUpdate();
-    /*
-    parse message, structure:
-    eventType: string (start task timestamp, answer task timestamp, answer: what-is it correct, aois list)
-    experimentID: string,
-    participantID: string
-    */
   }
 
   onClickedTab(newValue) {
@@ -212,8 +111,8 @@ class ObserverMode extends Component {
             {
               //TODO get the number of tasks in the experiment and the number of tasks completed
               this.state.participants.map((p, index) => {
-                return <ObserverTab label={p.name} index={index} tabPressedCallback={this.onClickedTab.bind(this)}
-                        isActive={this.state.currentParticipant===index} completedTasks={50} totalTasks={100} shouldPause={this.props.isParticipantsPaused}/>
+                return <ObserverTab key={index} label={p.name} index={index} tabPressedCallback={this.onClickedTab.bind(this)}
+                        isActive={this.state.currentParticipant===index} completedTasks={this.completedTasks} totalTasks={this.totalTasks} shouldPause={this.props.isParticipantsPaused}/>
               })
             }
           </div>

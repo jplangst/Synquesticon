@@ -30,7 +30,6 @@ class db_helper {
         }
       })
       .then(res => {
-        console.log("data fetched from database", res);
         callback(res.questions);
       })
       .catch((error) => {
@@ -45,12 +44,10 @@ class db_helper {
    * @param  {function} callback This function will be called with the result of the query. The function should take one parameter.
    */
    getTaskWithID(id, callback){
-    console.log("find ", id);
     axios.post("/api/getTaskWithID", {
       id: id
     }).then((response) => {
       if(response.status === 200) {
-        console.log("Task received from database with id: ", id, response.data.question);
         callback(response.data.question);
       }
       else {
@@ -76,7 +73,6 @@ class db_helper {
     .then((response) => {
       if(response.status === 200) {
         if(response.data.success === true){
-          console.log("added task to database", response.data._id);
           callback(response.data._id);
         }
         else{
@@ -103,7 +99,6 @@ class db_helper {
       message: JSON.stringify(editedObj)
     }).then(data =>
       {
-        console.log("after updating", data)
         callback(data._id)
       });
   };
@@ -118,7 +113,7 @@ class db_helper {
     axios.post("/api/deleteTask", {
         id: idTodelete
     }).then(response =>
-      {console.log("after deleting", response)
+    {
       callback();
     });
   };
@@ -155,7 +150,6 @@ class db_helper {
         }
       })
       .then(res => {
-        console.log("Tasksets fetched from database", res.sets);
         callback(res.sets)
       })
       .catch((error) => {
@@ -174,7 +168,6 @@ class db_helper {
       id: id
     }).then((response) => {
       if(response.status === 200) {
-        console.log("Task set received from database with id: ", id, response.data.set);
         callback(response.data.set);
       }
       else {
@@ -198,7 +191,6 @@ class db_helper {
     axios.post("/api/getCompleteTaskSetObject", {
         objId: JSON.stringify(taskSetID)
     }).then(response => {
-      console.log("after get task set object", response);
       callback(response.data.data);
     });
   };
@@ -215,7 +207,6 @@ class db_helper {
     })
     .then((response) => {
       if(response.status === 200) {
-        console.log("added task set to database", response.data._id);
         callback(response.data._id);
       }
       else {
@@ -237,7 +228,6 @@ class db_helper {
       id: id,
       message: JSON.stringify(editedObj)
     }).then(data => {
-          console.log("after updating set", data);
           callback();
         });
   };
@@ -252,7 +242,6 @@ class db_helper {
     axios.post("/api/deleteTaskSet", {
         id: idTodelete
     }).then(response => {
-      console.log("after deleting set", response);
       callback();
     });
   };
@@ -267,7 +256,7 @@ class db_helper {
     axios.post("/api/addChildToTaskSet", {
       setId: setID,
       childObj: childObj
-    }).then(data => {console.log("after adding child to set", data)});
+    }).then(data => {});
   }
 
   /**
@@ -280,7 +269,7 @@ class db_helper {
     axios.post("/api/removeChildFromTaskSet", {
       setId: setID,
       childId: childId
-    }).then(data => {console.log("after remove child from set", data)});
+    }).then(data => {});
   }
 
   /**
@@ -331,7 +320,6 @@ class db_helper {
       queryString: queryString,
     }).then((response) => {
       if(response.status === 200) {
-        console.log("Task received from database with id: ", queryString, response.data);
         callback(queryTasks, response.data);
       }
       else {
@@ -353,7 +341,6 @@ class db_helper {
     axios.post("/api/getTasksOrTaskSetsWithIDs", {
         wrapperSetJson: JSON.stringify(wrapperSet)
     }).then(response => {
-      console.log("tasks from DB, ", response.data.data, response.data.count);
       callback(response.data.data, response.data.count);
     });
   };
@@ -477,7 +464,7 @@ class db_helper {
     axios.post("/api/addNewLineToParticipant", {
       participantId: participantId,
       newLineJSON: newLineJSON
-    }).then(data => {console.log("after adding new line to set", data)});
+    }).then(response => {});
   };
 
   /**
@@ -492,7 +479,7 @@ class db_helper {
     axios.post("/api/addNewGlobalVariableToParticipant", {
       participantId: participantId,
       globalVariableJSON: globalVariableJSON //please stringify before calling this function
-    }).then(data => {console.log("after adding new globalVariable to set", data)});
+    }).then(response => {});
    };
 
 
@@ -503,5 +490,131 @@ class db_helper {
    deleteAllParticipantsFromDb(callback) {
     axios.delete("/api/deleteAllParticipants").then(() => callback());
    }
+
+   /*
+██████   ██████  ██      ███████ ███████
+██   ██ ██    ██ ██      ██      ██
+██████  ██    ██ ██      █████   ███████
+██   ██ ██    ██ ██      ██           ██
+██   ██  ██████  ███████ ███████ ███████
+*/
+ getAllRolesFromDb(callback){
+    fetch("/api/getAllRoles")
+      .then((response) => {
+        if(response.ok) {
+          return response.json();
+        }
+        else {
+          alert("Database connection failed!");
+          throw new Error("Database connection failed");
+        }
+      })
+      .then(res => {
+        callback(res.roles)
+      })
+      .catch((error) => {
+        console.log(error)
+      });
+  };
+
+   addRoleToDb(name){
+    axios.post("/api/addRole", {
+      role: name
+    })
+    .then((response) => {
+      if(response.status === 200) {
+      }
+      else {
+        alert("Something's wrong! Cannot log the current run into database.");
+        throw new Error("Cannot log data");
+      }
+    });
+  };
+
+  deleteRoleFromDb(role, callback){
+     axios.post("/api/deleteRole", {
+         role: role
+     }).then(response => {
+       callback();
+     });
+   };
+
+   deleteAllRolesFromDb(callback) {
+    axios.delete("/api/deleteAllRoles").then(() => callback());
+   }
+
+   /*
+    ██████  ██████  ███████ ███████ ██████  ██    ██ ███████ ██████      ███    ███ ███████ ███████ ███████  █████   ██████  ███████ ███████
+   ██    ██ ██   ██ ██      ██      ██   ██ ██    ██ ██      ██   ██     ████  ████ ██      ██      ██      ██   ██ ██       ██      ██
+   ██    ██ ██████  ███████ █████   ██████  ██    ██ █████   ██████      ██ ████ ██ █████   ███████ ███████ ███████ ██   ███ █████   ███████
+   ██    ██ ██   ██      ██ ██      ██   ██  ██  ██  ██      ██   ██     ██  ██  ██ ██           ██      ██ ██   ██ ██    ██ ██           ██
+    ██████  ██████  ███████ ███████ ██   ██   ████   ███████ ██   ██     ██      ██ ███████ ███████ ███████ ██   ██  ██████  ███████ ███████
+   */
+   getAllObserverMessagesFromDb(callback){
+     fetch("/api/getAllObserverMessages")
+      .then((response) => {
+         if(response.ok) {
+           return response.json();
+         }
+       })
+       .then(res => {
+         callback(res.messages);
+       })
+   };
+
+   getAllMessagesFromAnObserverFromDb(name, role, callback) {
+     axios.post("/api/getAllMessagesFromAnObserver", {
+       name: name,
+       role: role })
+       .then(response => {
+         callback(response.data.messages);
+       });
+    }
+
+    getAllMessagesForAParticipantFromDb(participantId, callback) {
+      axios.post("/api/getAllMessagesForAParticipant", {
+        participantId: participantId
+      }).then(response => {
+        callback(response.data.messages);
+      })
+    }
+
+    getAllMessagesForALineOfDataFromDb(lineOfDataId, callback) {
+      axios.post("/api/getAllMessagesForALineOfData", {
+        lineOfDataId: lineOfDataId
+      }).then(response => {
+        callback(response.data.messages);
+      });
+    }
+
+    addNewObserverMessageToDb(message) {
+      console.log("add new msg", message);
+     axios.post("/api/addNewObserverMessage", {
+       observerMessage: JSON.stringify(message)
+     }).then(response => {});
+    }
+
+    deleteAMessageFromDb(info) {
+      axios.post("/api/deleteAMessage", {
+        info: JSON.stringify(info)
+      }).then(response => {});
+    }
+
+    deleteAllMessagesForParticipantFromDb(participantId) {
+      axios.post("/api/deleteAllMessagesForParticipant", {
+        participantId: participantId
+      }).then(response => {});
+    }
+
+    deleteAllMessagesFromObserverFromDb(name, role) {
+      axios.post("/api/deleteAllMessagesFromObserver", {
+        name: name,
+        role: role
+      }).then(response => {});
+    }
+
+    deleteAllMessagesFromDb() {
+      axios.post("/api/deleteAllMessages").then(response => {});
+    }
 }
 export default new db_helper();

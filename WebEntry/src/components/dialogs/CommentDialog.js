@@ -52,7 +52,7 @@ class CommentDialog extends Component {
               Cancel
             </Button>
             <Button onClick={this.onClosePressed} color="primary">
-              Apply
+              Submit
             </Button>
           </DialogActions>
       </Dialog>

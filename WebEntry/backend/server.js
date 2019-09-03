@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+mongoose.set('useFindAndModify', false);
 const express = require("express");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
@@ -15,6 +16,10 @@ const Participants = dataSchema.Participants;
 Participants.createIndexes({queryString: "text", tags: "text"});
 const Experiments = dataSchema.Experiments;
 Experiments.createIndexes({queryString: "text", tags: "text"});
+const Roles = dataSchema.Roles;
+Roles.createIndexes({queryString: "text", tags: "text"});
+const ObserverMessages = dataSchema.ObserverMessages;
+ObserverMessages.createIndexes({queryString: "text", tags: "text"});
 
 const data_exportation = require("./data_exportation");
 
@@ -439,9 +444,10 @@ router.post("/updateParticipant", (req, res) => {
 router.post("/addNewLineToParticipant", (req, res) => {
   const { participantId, newLineJSON} = req.body;
   var newLine = JSON.parse(newLineJSON);
-  Participants.updateOne({_id: participantId}, { $addToSet: {linesOfData: newLine}}, err => {
+  Participants.updateOne({_id: participantId},
+                         { $addToSet: {linesOfData: newLine}}).exec((err, participant) => {
     if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true });
+    return res.json({ success: true});
   });
 });
 
@@ -449,7 +455,7 @@ router.post("/addNewGlobalVariableToParticipant", (req, res) => {
   const { participantId, globalVariableJSON} = req.body;
   var globalVariable = JSON.parse(globalVariableJSON);
 
-  Participants.updateOne({_id: participantId}, { $addToSet: {globalVariables: globalVariable}}, err => {
+  Participants.updateOne({_id: participantId}, { $addToSet: {globalVariables: globalVariable}}, (err, participant) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
   });
@@ -550,6 +556,195 @@ router.post("/deleteExperiment", (req, res) => {
 
 router.delete("/deleteAllExperiments", (req, res) => {
   Experiments.deleteMany({}, err => {
+    if (err) return res.send(err);
+    return res.json({ success: true });
+  });
+});
+
+/*
+██████   ██████  ██      ███████ ███████
+██   ██ ██    ██ ██      ██      ██
+██████  ██    ██ ██      █████   ███████
+██   ██ ██    ██ ██      ██           ██
+██   ██  ██████  ███████ ███████ ███████
+*/
+router.get("/getAllRoles", (req, res) => {
+  Roles.find((err, data) => {
+    if (err) {
+      return res.json({ success: false, error: err });
+    }
+    return res.json({ success: true, roles: data });
+  });
+});
+
+router.post("/addRole", (req, res) => {
+  const { role } = req.body;
+  let newRole = new Roles(role);
+
+  newRole.save((err, s) => {
+    if (err) {
+      return res.json({ success: false, error: err });
+    }
+    return res.json({ success: true, _id: s._id });
+  });
+});
+
+router.post("/deleteRole", (req, res) => {
+  const { role } = req.body;
+  Roles.findOneAndDelete({name: role}, err => {
+    if (err) return res.send(err);
+    return res.json({ success: true });
+  });
+});
+
+router.delete("/deleteAllRoles", (req, res) => {
+  Roles.deleteMany({}, err => {
+    if (err) return res.send(err);
+    return res.json({ success: true });
+  });
+});
+
+/*
+ ██████  ██████  ███████ ███████ ██████  ██    ██ ███████ ██████  ███    ███ ███████ ███████ ███████  █████   ██████  ███████ ███████
+██    ██ ██   ██ ██      ██      ██   ██ ██    ██ ██      ██   ██ ████  ████ ██      ██      ██      ██   ██ ██       ██      ██
+██    ██ ██████  ███████ █████   ██████  ██    ██ █████   ██████  ██ ████ ██ █████   ███████ ███████ ███████ ██   ███ █████   ███████
+██    ██ ██   ██      ██ ██      ██   ██  ██  ██  ██      ██   ██ ██  ██  ██ ██           ██      ██ ██   ██ ██    ██ ██           ██
+ ██████  ██████  ███████ ███████ ██   ██   ████   ███████ ██   ██ ██      ██ ███████ ███████ ███████ ██   ██  ██████  ███████ ███████
+*/
+
+router.get("/getAllObserverMessages", (req, res) => {
+  ObserverMessages.find((err, data) => {
+    if (err) {
+      return res.json({ success: false, error: err });
+    }
+    return res.json({ success: true, messages: data });
+  });
+});
+
+router.post("/getAllMessagesFromAnObserver", (req, res) => {
+  const { name, role } = req.body;
+  ObserverMessages.find({name: name, role: role}, (err, obj) => {
+    if (err) {
+      return res.json({success: false, error: err});
+    }
+
+    return res.json({success: true, messages: obj});
+  });
+});
+
+router.post("/getAllMessagesForAParticipant", (req, res) => {
+  const { participantId } = req.body;
+  ObserverMessages.find({participantId: participantId}, (err, obj) => {
+    if (err) {
+      return res.json({success: false, error: err});
+    }
+
+    return res.json({success: true, messages: obj});
+  });
+});
+
+router.post("/getAllMessagesForALineOfData", (req, res) => {
+  const { taskId, startTaskTime } = req.body;
+  ObserverMessages.find({taskId: taskId, startTaskTime: startTaskTime}, (err, obj) => {
+    if (err) {
+      return res.json({success: false, error: err});
+    }
+
+    return res.json({success: true, messages: obj});
+  });
+});
+
+router.post("/addNewObserverMessage", async (req, res) => {
+  const { observerMessage } = req.body;
+  var obj = JSON.parse(observerMessage);
+  var existed = await ObserverMessages.findOne({name: obj.name,
+                                     role: obj.role,
+                                     participantId: obj.participantId,
+                                     taskId: obj.taskId,
+                                     startTaskTime: obj.startTaskTime}, (err, obj) => {
+    return obj;
+  });
+  if (existed) {
+    ObserverMessages.updateOne({name: obj.name,
+                                       role: obj.role,
+                                       participantId: obj.participantId,
+                                       taskId: obj.taskId,
+                                       startTaskTime: obj.startTaskTime}, { $addToSet: {messages: obj.messages[0]}}, err => {
+      if (err) {
+        console.log("updated");
+        return res.json({ success: false, error: err });
+      }
+      return res.json({ success: true });
+    });
+  }
+  else {
+    let newMessage = new ObserverMessages(obj);
+    newMessage.save((serr, m) => {
+      if (serr) {
+        console.log("created a new one");
+        return res.json({ success: false, error: serr });
+      }
+      return res.json({ success: true });
+    })
+  }
+  // var result = await ObserverMessages.updateOne({name: obj.name,
+  //                                    role: obj.role,
+  //                                    participantId: obj.participantId,
+  //                                    taskId: obj.taskId,
+  //                                    startTaskTime: obj.startTaskTime}, { $addToSet: {messages: obj.messages[0]}}, err => {
+  //   return err;
+  // });
+  //
+  // console.log("trying to update", result);
+  // if (result) {
+  //   if (result.nModified <= 0) {
+  //     console.log("can't find any message");
+  //     let newMessage = new ObserverMessages(obj);
+  //
+  //     newMessage.save((serr, m) => {
+  //       if (serr) {
+  //         console.log("created a new one");
+  //         return res.json({ success: false, error: serr });
+  //       }
+  //       return res.json({ success: true });
+  //     })
+  //   }
+  // }
+  // else {
+  //   return res.json({ success: false, error: serr });
+  // }
+});
+
+router.post("/deleteAMessage", (req, res) => {
+  const { info } = req.body;
+  ObserverMessages.findOneAndDelete({name: obj.name,
+                             role: obj.role,
+                             participantId: obj.participantId,
+                             taskId: obj.taskId,
+                             startTaskTime: obj.startTaskTime}, err => {
+    if (err) return res.send(err);
+    return res.json({ success: true });
+  });
+});
+
+router.post("/deleteAllMessagesForParticipant", (req, res) => {
+  const { participantId } = req.body;
+  ObserverMessages.deleteMany({participantId: participantId}, err => {
+    if (err) return res.send(err);
+    return res.json({ success: true });
+  });
+});
+
+router.post("/deleteAllMessagesFromObserver", (req, res) => {
+  const { name, role } = req.body;
+  ObserverMessages.deleteMany({name: name, role: role}, err => {
+    if (err) return res.send(err);
+    return res.json({ success: true });
+  });
+});
+
+router.post("/deleteAllMessages", (req, res) => {
+  ObserverMessages.deleteMany({}, err => {
     if (err) return res.send(err);
     return res.json({ success: true });
   });

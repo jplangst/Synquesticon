@@ -59,6 +59,7 @@ const ParticipantSchema = new Schema(
     mainTaskSetId: String,
     eyeData: String,
     linesOfData: [{
+      _id: false,
       tasksFamilyTree: [String],
       taskId: String,
       taskContent: String,
@@ -93,8 +94,7 @@ const ParticipantSchema = new Schema(
         label: String,
         checked: Boolean,
         _id: false
-      }],
-      _id: false
+      }]
     }],
     globalVariables: [{
       label: String,
@@ -115,10 +115,33 @@ const ExperimentSchema = new Schema(
   }
 );
 
+const ObserverMessageSchema = new Schema(
+  {
+    name: String,
+    role: String,
+    participantId: String,
+    taskId: String,
+    startTaskTime: String,
+    messages: [String]
+  }, {
+    collection: 'ObserverMessages'
+  }
+);
+
+const RoleSchema = new Schema(
+  {
+    name: String
+  }, {
+    collection: 'Roles'
+  }
+);
+
 // export the new Schema so we could modify it using Node.js
 module.exports = {
   Tasks: mongoose.model("Tasks", TaskSchema),
   TaskSets: mongoose.model("TaskSets", TaskSetSchema),
   Participants: mongoose.model("Participants", ParticipantSchema),
-  Experiments: mongoose.model("Experiments", ParticipantSchema)
+  Experiments: mongoose.model("Experiments", ParticipantSchema),
+  Roles: mongoose.model("Roles", RoleSchema),
+  ObserverMessages: mongoose.model("ObserverMessages", ObserverMessageSchema)
 };

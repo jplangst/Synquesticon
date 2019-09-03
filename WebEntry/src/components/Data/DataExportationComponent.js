@@ -30,6 +30,9 @@ class DataExportationComponent extends Component {
       this.setState({
         participants: ids
       });
+    });
+    db_helper.getAllObserverMessagesFromDb((msgs) => {
+      console.log("all comments", msgs);
     })
   }
 
@@ -82,7 +85,7 @@ class DataExportationComponent extends Component {
 
   getParticipantName(p) {
     if (p.globalVariables.length <= 0) {
-      return "Unnamed";
+      return "Anonymous";
     }
 
     var name = p.globalVariables[0].label + "_" + p.globalVariables[0].value;

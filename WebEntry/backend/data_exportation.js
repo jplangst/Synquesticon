@@ -1,8 +1,14 @@
 const fs = require('fs');
 const os = require("os");
+
+const dataSchema = require("./data_schema");
+
+const ObserverMessages = dataSchema.ObserverMessages;
+ObserverMessages.createIndexes({queryString: "text", tags: "text"});
+
 var exports = module.exports = {};
 
-exports.save_to_csv = function(p) {
+exports.save_to_csv = async function(p) {
     var header = "";
     var globalVariables = "";
     var file_name = "";
@@ -13,10 +19,10 @@ exports.save_to_csv = function(p) {
     }
 
     //prepare the header
-    header += "familyTree, startTimestamp, firstResponseTimestamp, timeToFirstAnswer, timeToCompletion, correctlyAnswered";
+    header += "familyTree, startTimestamp, firstResponseTimestamp, timeToFirstAnswer, timeToCompletion, correctlyAnswered, comments";
 
     if (file_name === "") {
-      file_name = "Unnamed";
+      file_name = "Anonymous";
     }
     file_name += ".csv";
 
@@ -29,14 +35,48 @@ exports.save_to_csv = function(p) {
     });
     logger.write(header + os.EOL);
 
+    await Promise.all(p.linesOfData.map(async (line, index) => {
+      //get all comments on this line
+       var comments = await (ObserverMessages.find({participantId: p._id,
+                                   taskId: line.taskId,
+                                   startTaskTime: line.startTimestamp},
+                                  async (err, obj) => {
+
+        if (obj.length > 0) {
+          line.comments = obj;
+        }
+
+      })).catch((exp) => {
+        console.log("exp 1");
+      });
+
+    })).catch(exp2 => {
+      console.log("exp 2");
+    });
+
     p.linesOfData.map((line, index) => {
+      var comments = [];
+      if (line.comments != undefined) {
+        line.comments.map((obs, obsInd) => {
+          obs.messages.map((msg, msgInd) => {
+            comments.push(obs.name + ": " + msg);
+          })
+        })
+      }
+
+      var commentText = "";
+      if (comments.length > 0) {
+        commentText = comments.join(';');
+      }
+
       let text = globalVariables + line.tasksFamilyTree.join('_') + ',' +
                                    line.displayType + ',' +
                                    line.startTimestamp + ',' +
                                    line.firstResponseTimestamp + ',' +
                                    line.timeToFirstAnswer + ',' +
                                    line.timeToCompletion + ',' +
-                                   line.correctlyAnswered + os.EOL;
+                                   line.correctlyAnswered + ',' +
+                                   commentText + os.EOL;
       logger.write(text);
     });
 

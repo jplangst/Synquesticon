@@ -86,3 +86,14 @@ export class LineOfData {
     this.aoiCheckedList = [];
   }
 }
+
+export class ObserverMessage {
+  constructor(name, role, participantId, taskId, startTaskTime, message) {
+    this.name = name;
+    this.role = role;
+    this.participantId = participantId;
+    this.taskId = taskId;
+    this.startTaskTime = startTaskTime;
+    this.messages = [message];
+  }
+}
