@@ -48,7 +48,11 @@ class ObserverTab extends Component {
 
   render() {
     var activeTextStyle = this.props.isActive ? {color:'#0033BB'} : {color:'grey'}
+
+
     var activeUnderlineStyle = this.props.isActive ? {boxShadow:'inset 0px -3px 0px #0033BB'} : {color:'grey'}
+    var showScroll = window.matchMedia("(any-pointer: coarse)").matches ? activeUnderlineStyle : {};
+
 
     var buttonIcon = null;
     if(this.state.isPaused || this.state.forcedPause){
@@ -64,7 +68,7 @@ class ObserverTab extends Component {
     var dotText = null;
     if(storeState.windowSize.height > 500){
       participantBigScreen =
-      <div style={{...activeUnderlineStyle,...{display:'flex', flexDirection:'row', flexGrow:1, position:'relative', paddingBottom:5}}}>
+      <div style={{...showScroll,...{display:'flex', flexDirection:'row', flexGrow:1, position:'relative', paddingBottom:5}}}>
         <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:20, maxWidth:40, minHeight:20, maxHeight:60}}
          onClick={this.onButtonPress}>
           {buttonIcon}

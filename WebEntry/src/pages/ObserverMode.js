@@ -211,9 +211,11 @@ class ObserverMode extends Component {
                   id={this.state.currentParticipant} participant={this.state.participants[this.state.currentParticipant].name} />;
     }
 
+    var showScroll = window.matchMedia("(any-pointer: coarse)").matches ? "" : "ShowScrollBar";
+
     return (
       <div className="ObserverViewerContent">
-          <div className="ObserverTabContainer">
+          <div className={"ObserverTabContainer " + showScroll}>
             {
               //TODO get the number of tasks in the experiment and the number of tasks completed
               this.state.participants.map((p, index) => {
