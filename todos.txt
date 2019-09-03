@@ -1,5 +1,11 @@
 * Remote Tracker box going outside of its bounds
-* Observer tabs should show hand cursor
-* Observer messages should not have edit text cursor when hovered
-* Observer messages scrolling area goes behind the gaze tracker
-* Experiment header does not scroll on pc
+* Observer tabs should show hand cursor (fixed)
+* Observer messages should not have edit text cursor when hovered (fixed)
+* Observer messages scrolling area goes behind the gaze tracker (fixed)
+* Experiment header does not scroll on pc (fixed)
+
+
+* PopupDialog for experiment paused
+
+
+* Settings button in header is too small

@@ -22,4 +22,6 @@
 .centredHeaderTitle{
   position: relative;
   max-width: 100%;
+
+  cursor: default;
 }
