@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
-
-//icons
-import CancelIcon from '@material-ui/icons/Cancel';
-import NavigationIcon from '@material-ui/icons/NavigateNext';
 
 //view components
 import InstructionViewComponent from '../Views/InstructionViewComponent';
@@ -30,10 +25,6 @@ import * as playerUtils from '../../core/player_utility_functions';
 import './DisplayTaskComponent.css';
 
 var progressCount = 0;
-function getCurrentTime() {
-  var dt = new Date();
-  return dt.getTime();
-}
 
 function stringifyWAMPMessage(task, lineOfData, eventType) {
   return JSON.stringify({
@@ -163,7 +154,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
           }
 
           wamp.broadcastEvents(stringifyWAMPMessage(null, this.currentLineOfData,
-                                                    (this.currentLineOfData.firstResponseTimestamp != -1) ? "ANSWERED" : "SKIPPED"));
+                                                    (this.currentLineOfData.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED"));
         }
 
       }
@@ -180,7 +171,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
                                                 JSON.stringify(line));
           }
           wamp.broadcastEvents(stringifyWAMPMessage(null, line,
-                                                    (line.firstResponseTimestamp != -1) ? "ANSWERED" : "SKIPPED"));
+                                                    (line.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED"));
         });
         console.log("multiitem", this.currentLineOfData.size);
 
@@ -200,7 +191,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
   onAnswer(answer) {
     if(!(store.getState().experimentInfo.participantId === "TESTING")) {
       if (this.currentTask.objType === "Task") {
-        if (this.currentLineOfData.firstResponseTimestamp == -1) { //log the timeToFirstAnswer
+        if (this.currentLineOfData.firstResponseTimestamp === -1) { //log the timeToFirstAnswer
           this.currentLineOfData.firstResponseTimestamp = playerUtils.getCurrentTime();
           this.currentLineOfData.timeToFirstAnswer = this.currentLineOfData.firstResponseTimestamp - this.currentLineOfData.startTimestamp;
         }
@@ -264,9 +255,6 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
         var getDisplayedContent = () => {
           if(this.currentTask){
             if((this.currentTask.objType === "TaskSet") && this.currentTask.displayOnePage) {
-              var init = (taskResponses) => {
-                this.currentLineOfData = taskResponses;
-              }
               return <MultiItemTask tasksFamilyTree={trackingTaskSetNames}
                                     taskSet={this.currentTask}
                                     answerCallback={this.onAnswer.bind(this)}
@@ -385,9 +373,6 @@ class DisplayTaskComponent extends Component {
 
   broadcastStartEvent() {
     try {
-      var dt = new Date();
-      var timestamp = dt.toUTCString();
-
       var info = JSON.stringify({
                                   eventType: "NEW EXPERIMENT",
                                   participantId: store.getState().experimentInfo.participantId,
@@ -431,7 +416,7 @@ class DisplayTaskComponent extends Component {
     console.log("new command", args);
     var shouldProcess = false;
 
-    if (args.participantId == -1 || args.participantId === store.getState().experimentInfo.participantId) {
+    if (args.participantId === -1 || args.participantId === store.getState().experimentInfo.participantId) {
       shouldProcess = true;
     }
 

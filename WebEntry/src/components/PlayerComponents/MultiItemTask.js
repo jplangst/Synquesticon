@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 
-import Button from '@material-ui/core/Button';
-
 import InstructionViewComponent from '../Views/InstructionViewComponent';
 import TextEntryComponent from '../Views/TextEntryComponent';
 import SingleChoiceComponent from '../Views/SingleChoiceComponent';
@@ -15,7 +13,7 @@ import * as playerUtils from '../../core/player_utility_functions';
 
 import './MultiItemTask.css';
 
-class MultiItemTask extends React.Component {
+class MultiItemTask extends Component {
   constructor(props) {
     super(props);
 
@@ -49,7 +47,7 @@ class MultiItemTask extends React.Component {
       }
     }
     else {
-      if (lineOfData.firstResponseTimestamp == -1) { //log the timeToFirstAnswer
+      if (lineOfData.firstResponseTimestamp === -1) { //log the timeToFirstAnswer
         lineOfData.firstResponseTimestamp = playerUtils.getCurrentTime();
         lineOfData.timeToFirstAnswer = lineOfData.firstResponseTimestamp - lineOfData.startTimestamp;
       }

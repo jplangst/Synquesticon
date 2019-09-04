@@ -48,7 +48,7 @@ class CommentDialog extends Component {
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.props.closeDialog} color="primary">
+            <Button onClick={e => this.props.closeDialog("")} color="primary">
               Cancel
             </Button>
             <Button onClick={this.onClosePressed} color="primary">

@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 
-import Button from '@material-ui/core/Button';
-
 import GazeCursor from '../components/Views/GazeCursor';
 import WAMPMessageComponent from '../components/Views/ObserverMessages/WAMPMessageComponent';
 
@@ -11,15 +9,6 @@ import wampStore from '../core/wampStore';
 import store from '../core/store';
 
 import './ObserverMode.css';
-
-var myStorage = window.localStorage;
-
-function a11yProps(index) {
-  return {
-    id: `scrollable-force-tab-${index}`,
-    'aria-controls': `scrollable-force-tabpanel-${index}`,
-  };
-}
 
 //TODO add a persistent drawer for the "Studies" part fo the UI. As well as for the gaze overlay. https://material-ui.com/components/drawers/
 // Could consider to move the remote eye tracker display into the left column instead.

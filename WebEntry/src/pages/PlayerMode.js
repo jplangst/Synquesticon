@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 
-import Button from '@material-ui/core/Button';
-import NavigationIcon from '@material-ui/icons/NavigateNext';
-import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
@@ -10,10 +7,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FilledInput from '@material-ui/core/FilledInput';
 
 import PlayableSetListComponent from '../components/TaskList/PlayableSetListComponent';
-import TaskListComponent from '../components/TaskList/TaskListComponent';
 
 import store from '../core/store';
-import shuffle from '../core/shuffle';
+
 import wampStore from '../core/wampStore';
 import db_helper from '../core/db_helper.js';
 import * as dbObjects from '../core/db_objects';

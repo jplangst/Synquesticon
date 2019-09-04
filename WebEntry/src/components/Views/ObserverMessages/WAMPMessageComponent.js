@@ -29,22 +29,25 @@ class WAMPMessageComponent extends React.Component {
   }
 
   onCommentRecieved(comment){
-    //TODO process comment here, might need to pass task id etc to the observermessage as needed
-    db_helper.addNewObserverMessageToDb(new dbObjects.ObserverMessage(myStorage.getItem('deviceID'),
-                                                                   myStorage.getItem('deviceRole'),
-                                                                   this.pickedEvent.participantId,
-                                                                   this.pickedEvent.lineOfData.taskId,
-                                                                   this.pickedEvent.lineOfData.startTimestamp,
-                                                                   comment));
-    wamp.broadcastEvents(JSON.stringify({
-                                          eventType: "COMMENT",
-                                          observerName: myStorage.getItem('deviceID'),
-                                          observerRole: myStorage.getItem('deviceRole'),
-                                          timestamp: playerUtils.getCurrentTime(),
-                                          participantId: this.pickedEvent.participantId,
-                                          lineOfData: this.pickedEvent.lineOfData,
-                                          comment: comment
-                                        }));
+    if (comment !== "") {
+      console.log("close comment dialog", comment);
+      //TODO process comment here, might need to pass task id etc to the observermessage as needed
+      db_helper.addNewObserverMessageToDb(new dbObjects.ObserverMessage(myStorage.getItem('deviceID'),
+                                                                     myStorage.getItem('deviceRole'),
+                                                                     this.pickedEvent.participantId,
+                                                                     this.pickedEvent.lineOfData.taskId,
+                                                                     this.pickedEvent.lineOfData.startTimestamp,
+                                                                     comment));
+      wamp.broadcastEvents(JSON.stringify({
+                                            eventType: "COMMENT",
+                                            observerName: myStorage.getItem('deviceID'),
+                                            observerRole: myStorage.getItem('deviceRole'),
+                                            timestamp: playerUtils.getCurrentTime(),
+                                            participantId: this.pickedEvent.participantId,
+                                            lineOfData: this.pickedEvent.lineOfData,
+                                            comment: comment
+                                          }));
+    }
     this.setState({
       openCommentDialog: false
     });

@@ -7,22 +7,11 @@ import DeviceIDDialog from '../dialogs/DeviceIDDialog';
 import CrossbarDialog from '../dialogs/CrossbarDialog';
 import SpeechDialog from '../dialogs/SpeechDialog';
 
-import Button from '@material-ui/core/Button';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-
-import StyledAvatar from './StyledAvatar';
-
-import { makeStyles } from '@material-ui/core/styles';
-import { blue } from '@material-ui/core/colors';
-
-import store from '../../core/store';
 
 var myStorage = window.localStorage;
 
@@ -116,7 +105,7 @@ class Menu extends Component {
 
   render() {
     var deviceName = myStorage.getItem('deviceID');
-    if (!deviceName || deviceName == "") {
+    if (!deviceName || deviceName === "") {
       deviceName="Unnamed";
     }
     return(

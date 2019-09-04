@@ -1,0 +1,47 @@
+.AOIEditor {
+  margin-left: 15%;
+  width: 70%;
+  height: 80%;
+}
+
+.AOIWrapper {
+}
+
+.AOIName {
+  fill: white;
+  background-color: white;
+}
+
+.AOIShape {
+  display: inline-block;
+  width: auto;
+  height: auto;
+  background-color: blue;
+}
+
+.imagePreviewContainer{
+  position: relative;
+  display: inline-block;
+  transition: transform 150ms ease-in-out;
+  background-color: yellow;
+}
+
+.imageViewWithAOIs {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.imageContainer{
+  display: block;
+  max-width: 100%;
+  height: auto;
+  background-color: pink;
+}
+
+.supportingToolBox {
+  position: relative;
+  float: right;
+}

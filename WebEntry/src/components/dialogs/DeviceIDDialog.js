@@ -93,7 +93,7 @@ class DeviceIDDialog extends Component {
                     onChange={(e)=>{this.selectedRole = e.target.value}}
                   >
                     {this.state.roles.map((role, index) => {
-                      return <option value={role}>{role}</option>
+                      return <option value={role} key={index}>{role}</option>
                     })}
                  </NativeSelect>
                </FormControl>
