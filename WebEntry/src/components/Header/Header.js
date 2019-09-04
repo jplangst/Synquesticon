@@ -9,6 +9,8 @@ import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 
+import { Typography } from '@material-ui/core';
+
 //Icons
 import Settings from '@material-ui/icons/Settings';
 import BackArrowNavigation from '@material-ui/icons/ChevronLeft';
@@ -27,7 +29,7 @@ class Header extends Component {
   render() {
     let storeState = store.getState();
     if (storeState.showHeader) {
-      var fontSize = Math.max(28, Math.min(storeState.windowSize.height * 0.04, storeState.windowSize.width * 0.04));
+      //var fontSize = Math.max(28, Math.min(storeState.windowSize.height * 0.04, storeState.windowSize.width * 0.04));
 
       return(
           <AppBar style={{margin: 0, padding: 0, display:'flex', flexGrow: 1, flexShrink:1, position: 'relative', minHeight:50, maxHeight:'6%', width:'100%'}}>
@@ -36,7 +38,7 @@ class Header extends Component {
                 onClick={this.handleBackwardsNavigation.bind(this)} >
                  <BackArrowNavigation style={{display:'flex', position: 'absolute', height: '100%', width: 'auto', maxWidth: '100%', flexGrow: 1}} />
                </Button>
-               <div style={{fontSize: fontSize}} className="AppName"><div className="centredHeaderTitle"> Synquesticon </div></div>
+               <div className="AppName"><Typography variant="h3">Synquesticon</Typography></div>
               <Menu/>
             </Toolbar>
           </AppBar>

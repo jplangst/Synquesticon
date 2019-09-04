@@ -15,6 +15,10 @@ import db_helper from '../core/db_helper.js';
 import './IntroductionScreen.css';
 import './ObserverMode.css';
 
+import ThemeProvider from '@material-ui/styles/ThemeProvider';
+import { withTheme } from '@material-ui/styles';
+import { Typography } from '@material-ui/core';
+
 class IntroductionScreen extends Component {
   constructor(props) {
     super(props);
@@ -39,6 +43,9 @@ class IntroductionScreen extends Component {
   }
 
   render() {
+
+    console.log(this.props.theme);
+
     var buttonIcon = null;
     if(this.state.isParticipantsPaused){
       buttonIcon = <PauseIcon style={{display:'flex', position: 'absolute', height: '75%', width: 'auto', maxWidth: '75%', flexGrow: 1}} />;
@@ -51,7 +58,7 @@ class IntroductionScreen extends Component {
     <div className="introductionScreenContainer">
       <div className = "IntroViewer">
         <div className="IntroViewerTitle">
-          <div className="IntroViewerTitleText">Studies</div>
+          <div className="IntroViewerTitleText"><Typography variant="h5">Studies</Typography></div>
           <Button className="IntroDataExportBtnContainer" onClick={(e) => this.gotoPage("EditorMode")}
             style={{borderLeftStyle:'solid', borderWidth:'thin', borderRadius: 10, borderColor:'#BDBDBD'}}>
             <EditIcon/>
@@ -61,7 +68,7 @@ class IntroductionScreen extends Component {
       </div>
       <div className = "IntroContentWrapper">
         <div className="IntroContentTitle">
-          <div className="IntroTitleText">Observer</div>
+          <div className="IntroTitleText"><Typography variant="h5">Observer</Typography></div>
           <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1,
                   borderRadius:10, borderColor:'#BDBDBD', borderWidth:'thin', borderLeftStyle:'solid'}}
            onClick={this.onPauseAllPressed}>
@@ -79,4 +86,4 @@ class IntroductionScreen extends Component {
     );
   }
 }
-export default IntroductionScreen;
+export default withTheme(IntroductionScreen);

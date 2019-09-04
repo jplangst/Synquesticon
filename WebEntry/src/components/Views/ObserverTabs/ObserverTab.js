@@ -68,7 +68,7 @@ class ObserverTab extends Component {
     var dotText = null;
     if(storeState.windowSize.height > 500){
       participantBigScreen =
-      <div style={{...showScroll,...{display:'flex', flexDirection:'row', flexGrow:1, position:'relative', paddingBottom:5}}}>
+      <div style={{...showScroll,...{display:'flex', flexDirection:'row', flexGrow:1, position:'relative', paddingBottom:5, marginRight:5}}}>
         <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:20, maxWidth:40, minHeight:20, maxHeight:60}}
          onClick={this.onButtonPress}>
           {buttonIcon}

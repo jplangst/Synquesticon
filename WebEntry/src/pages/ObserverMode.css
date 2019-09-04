@@ -31,7 +31,7 @@
   max-height: 100px;
 
   width: 100%;
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 
 .ShowScrollBar::-webkit-scrollbar{

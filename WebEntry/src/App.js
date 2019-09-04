@@ -18,6 +18,8 @@ import { DragDropContext } from 'react-dnd'
 
 import './App.css'
 
+import ThemeProvider from '@material-ui/styles/ThemeProvider';
+
 //To make MaterialUI use the new variant of typography and avoid the deprecation warning
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
 
@@ -45,18 +47,21 @@ class App extends Component {
   }
 
   render() {
+    let theme = store.getState().theme;
     return (
         <Router>
-        <div className="App">
-          <Route component={Header} />
-          <div className="MainContent">
-            <Switch>
-              <Route exact path="/" component={IntroductionScreen} />
-              <Route path="/EditorMode" component={EditorMode} />
-              <Route path="/DisplayTaskComponent" component={DisplayTaskComponent}/>} />
-            </Switch>
+          <ThemeProvider theme={theme}>
+          <div style={{backgroundColor:theme.palette.background.default}} className="App">
+            <Route component={Header} />
+            <div className="MainContent">
+              <Switch>
+                <Route exact path="/" component={IntroductionScreen} />
+                <Route path="/EditorMode" component={EditorMode} />
+                <Route path="/DisplayTaskComponent" component={DisplayTaskComponent}/>} />
+              </Switch>
+            </div>
           </div>
-        </div>
+          </ThemeProvider>
         </Router>
     );
   }
@@ -66,7 +71,8 @@ class App extends Component {
 function mapStateToProps(state, ownProps) {
     return {
         showHeader: state.showHeader,
-        windowSize: state.windowSize
+        windowSize: state.windowSize,
+        theme: state.theme,
     };
 }
 

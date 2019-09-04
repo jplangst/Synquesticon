@@ -16,6 +16,7 @@ import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import Switch from '@material-ui/core/Switch';
 
 import StyledAvatar from './StyledAvatar';
 
@@ -129,6 +130,14 @@ class Menu extends Component {
     this.setState({showMenu: false});
   }
 
+  onToggleThemeChange(){
+    var toggleThemeAction = {
+      type: 'TOGGLE_THEME_TYPE',
+    };
+
+    store.dispatch(toggleThemeAction);
+  }
+
   render() {
     var deviceName = myStorage.getItem('deviceID');
     if (!deviceName || deviceName == "") {
@@ -159,10 +168,22 @@ class Menu extends Component {
             </List>
             <Divider />
             <List>
+              <div style={{display:'flex', flexDirection:'row', alignItems: 'center'}}>
+                <ListItem key="ToggleTheme">
+                  <ListItemText primary="Dark Theme" />
+                </ListItem>
+                <Switch
+                  checked={store.getState().isLightTheme}
+                  onChange={this.onToggleThemeChange.bind(this)}
+                  value="checkedB"
+                  color="primary"
+                  inputProps={{ 'aria-label': 'primary checkbox' }}
+                />
+              </div>
               <ListItem button key="Fullscreen" onClick={this.onFullscreen.bind(this)}>
                 <ListItemText primary="Fullscreen" />
               </ListItem>
-            </List>
+              </List>
           </div>
         </Drawer>
         <DeviceIDDialog openDeviceIDSettings={this.state.openDeviceIDSettings} closeDeviceIDSettings={this.onCloseDeviceIDSettings.bind(this)} myStorage={myStorage} />

@@ -1,11 +1,21 @@
-* Remote Tracker box going outside of its bounds
+* Remote Tracker box going outside of its bounds (fixed?)
 * Observer tabs should show hand cursor (fixed)
 * Observer messages should not have edit text cursor when hovered (fixed)
 * Observer messages scrolling area goes behind the gaze tracker (fixed)
 * Experiment header does not scroll on pc (fixed)
 
 
-* PopupDialog for experiment paused
+* PopupDialog for experiment paused (Need to style it)
 
 
 * Settings button in header is too small
+
+
+*Light and dark theme switch in the settings menu
+*light and dark theme
+
+low prio:
+
+hover bg highlight for observer tabs
+
+show player stimilus in observer gaze window
