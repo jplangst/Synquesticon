@@ -10,7 +10,12 @@ import red from '@material-ui/core/colors/red';
 * The store is responsible for storing data that needs to be shared between different parts of the application.
 */
 
-let defaultTheme = createMuiTheme({
+var savedThemeType = JSON.parse(window.localStorage.getItem('theme'));
+
+if(savedThemeType === null || savedThemeType === undefined){
+  savedThemeType = "light";
+}
+let theme = createMuiTheme({
   palette:{
     primary: indigo,
     secondary: pink,
@@ -22,10 +27,11 @@ let defaultTheme = createMuiTheme({
     // two indexes within its tonal palette.
     // E.g., shift from Red 500 to Red 300 or Red 700.
     tonalOffset: 0.2,
-    type: 'light',
+    type: savedThemeType,
   }
 });
-defaultTheme = responsiveFontSizes(defaultTheme);
+theme = responsiveFontSizes(theme);
+
 
 const initialState = {
   participants: {},
@@ -37,7 +43,7 @@ const initialState = {
     width: window.innerWidth,
     height: window.innerHeight
   },
-  theme: defaultTheme,
+  theme: theme,
 };
 
 const store = createStore ((state = initialState, action) => {
@@ -86,6 +92,7 @@ const store = createStore ((state = initialState, action) => {
         }
       });
       theme = responsiveFontSizes(theme);
+      window.localStorage.setItem('theme', JSON.stringify(type));
       return {...state, theme: theme}
     }
     default:
