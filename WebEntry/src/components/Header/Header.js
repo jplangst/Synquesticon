@@ -20,10 +20,22 @@ import store from '../../core/store';
 class Header extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      showMenu: false
+    }
   }
 
   handleBackwardsNavigation(){
     this.props.history.push("/");
+  }
+
+  //button click handlers
+  openSettingsMenu() {
+    this.setState({showMenu: true});
+  }
+
+  closeSettingsMenu(e) {
+    this.setState({showMenu: false});
   }
 
   render() {
@@ -39,7 +51,13 @@ class Header extends Component {
                  <BackArrowNavigation style={{display:'flex', position: 'absolute', height: '100%', width: 'auto', maxWidth: '100%', flexGrow: 1}} />
                </Button>
                <div className="AppName"><Typography variant="h3">Synquesticon</Typography></div>
-              <Menu/>
+               <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:150, height:"100%"}}
+                 onClick={this.openSettingsMenu.bind(this)}>
+                 <Settings size='large' style={{display:'flex', position: 'absolute', height: '100%', width: 'auto', maxWidth: '100%', flexGrow: 1}} />
+               </Button>
+              <Menu openSettingsMenu={this.openSettingsMenu.bind(this)}
+                    closeSettingsMenu={this.closeSettingsMenu.bind(this)}
+                    showMenu={this.state.showMenu}/>
             </Toolbar>
           </AppBar>
       );

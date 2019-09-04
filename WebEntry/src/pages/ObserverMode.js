@@ -118,7 +118,7 @@ class ObserverMode extends Component {
             {
               //TODO get the number of tasks in the experiment and the number of tasks completed
               this.state.participants.map((p, index) => {
-                return <ObserverTab key={index} label={p.name} index={index} tabPressedCallback={this.onClickedTab.bind(this)}
+                return <ObserverTab key={index} label={p.name} index={index} tabPressedCallback={this.onClickedTab.bind(this)} participantId={p.id}
                         isActive={this.state.currentParticipant===index} completedTasks={this.completedTasks} totalTasks={this.totalTasks} shouldPause={this.props.isParticipantsPaused}/>
               })
             }

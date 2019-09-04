@@ -12,6 +12,7 @@ try {
 var connection = null;
 var glob_session = null;
 var SynquesticonTopic = "Synquesticon.Task";
+var SynquesticonCommandTopic = "Synquesticon.Command";
 var RemoteEyeTrackingTopic = "RETDataSample";
 
 function startWAMP(config) {
@@ -78,6 +79,12 @@ function startWAMP(config) {
       wampStore.default.emitNewWAMPEvent();
     }
     session.subscribe(SynquesticonTopic, onWAMPEvent);
+
+    function onCommandEvent(args) {
+      wampStore.default.setCurrentCommand(args);
+      wampStore.default.emitNewCommand();
+    }
+    session.subscribe(SynquesticonCommandTopic, onCommandEvent);
   };
   connection.open();
 }
@@ -95,6 +102,11 @@ module.exports = {
   broadcastEvents(info) {
     if(glob_session) {
       glob_session.publish(SynquesticonTopic, [info]);
+    }
+  },
+  broadcastCommands(command) {
+    if(glob_session) {
+      glob_session.publish(SynquesticonCommandTopic, [command]);
     }
   },
   restartWAMP(config) {

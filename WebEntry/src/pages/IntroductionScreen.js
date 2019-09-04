@@ -11,6 +11,7 @@ import ObserverMode from './ObserverMode';
 import PlayerMode from './PlayerMode';
 
 import db_helper from '../core/db_helper.js';
+import wamp from '../core/wamp';
 
 import './IntroductionScreen.css';
 import './ObserverMode.css';
@@ -35,8 +36,11 @@ class IntroductionScreen extends Component {
   }
 
   onPausePlayPressed(){
-    //TODO send WAMP message here. This will be for all participants
-    //
+    wamp.broadcastCommands(JSON.stringify({
+                            commandType: !this.state.isParticipantsPaused ? "PAUSE" : "RESUME",
+                            participantId: -1
+                           }));
+
     this.setState({
       isParticipantsPaused: !this.state.isParticipantsPaused
     });
