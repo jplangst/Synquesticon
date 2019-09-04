@@ -177,7 +177,7 @@ class EditorMode extends Component {
   getAssetEditorObject(){
     var assetEditorObject =
     <div className = "AssetEditor">
-      <div className="AssetEditorTitle">Asset editor</div>
+      <div className="AssetEditorTitle"><div className="AssetEditorTitleText"> Asset editor</div></div>
       <div className="AssetEditorContent">
         {this.state.assetEditorObject}
       </div>

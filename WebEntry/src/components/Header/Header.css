@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: row;
   flex: 0 0 auto;
-  background-color: blue;
 }
 
 .AppName {
@@ -11,17 +10,6 @@
   flex-shrink:1;
 
   position: relative;
-
-  font-weight: bold;
-  font-family: Arial;
-
   align-self: center;
   justify-content: center;
-}
-
-.centredHeaderTitle{
-  position: relative;
-  max-width: 100%;
-
-  cursor: default;
 }
