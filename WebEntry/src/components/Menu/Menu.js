@@ -167,7 +167,7 @@ class Menu extends Component {
                   checked={store.getState().isLightTheme}
                   onChange={this.onToggleThemeChange.bind(this)}
                   value="checkedB"
-                  color="primary"
+                  color="secondary"
                   inputProps={{ 'aria-label': 'primary checkbox' }}
                 />
               </div>

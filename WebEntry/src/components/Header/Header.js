@@ -48,12 +48,12 @@ class Header extends Component {
             <Toolbar variant="dense" style={{margin: 0, padding: 0, display:'flex', flexDirection:'row', position:'relative', width:'100%', height:'100%'}}>
                <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:150, height:'100%'}}
                 onClick={this.handleBackwardsNavigation.bind(this)} >
-                 <BackArrowNavigation style={{display:'flex', position: 'absolute', height: '100%', width: 'auto', maxWidth: '100%', flexGrow: 1}} />
+                 <BackArrowNavigation color='secondary' style={{display:'flex', position: 'absolute', height: '100%', width: 'auto', maxWidth: '100%', flexGrow: 1}} />
                </Button>
                <div className="AppName"><Typography variant="h3">Synquesticon</Typography></div>
                <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:150, height:"100%"}}
                  onClick={this.openSettingsMenu.bind(this)}>
-                 <Settings size='large' style={{display:'flex', position: 'absolute', height: '100%', width: 'auto', maxWidth: '100%', flexGrow: 1}} />
+                 <Settings color='secondary' size='large' style={{display:'flex', position: 'absolute', height: '100%', width: 'auto', maxWidth: '100%', flexGrow: 1}} />
                </Button>
               <Menu openSettingsMenu={this.openSettingsMenu.bind(this)}
                     closeSettingsMenu={this.closeSettingsMenu.bind(this)}
