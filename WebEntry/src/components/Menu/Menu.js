@@ -14,6 +14,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Switch from '@material-ui/core/Switch';
 
+import store from '../../core/store';
+
 var myStorage = window.localStorage;
 
 class Menu extends Component {
@@ -125,7 +127,7 @@ class Menu extends Component {
   render() {
     var deviceName = myStorage.getItem('deviceID');
     if (!deviceName || deviceName === "") {
-      deviceName="Unnamed";
+      deviceName="Anonymous";
     }
     return(
       <div >
