@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
 import FileSelector from '../../../core/fileSelector';
+//import Button from '@material-ui/core/Button';
+
+import AOIEditorComponent from '../../AOIEditor/AOIEditorComponent';
 
 import './SelectImageComponent.css';
 
@@ -23,7 +26,7 @@ class SelectImageComponent extends Component {
   render() {
     var previewImage = "No Image selected";
     if(this.props.task.image && this.props.task.image !== ""){
-      previewImage = <img className="imageContainer" src={"Images/"+this.props.task.image} alt="Task" />;
+      previewImage = <AOIEditorComponent image={this.props.task.image}/>//<img className="imageContainer" src={"Images/"+this.props.task.image} alt="Task" />;
     }
 
     var imageTaskName =
@@ -45,9 +48,7 @@ class SelectImageComponent extends Component {
       <div className="imageInputContainer">
         {imageTaskName}
       </div>
-      <div className="imagePreviewContainer">
-        <div className="imageContainer">{previewImage}</div>
-      </div>
+      {previewImage}
       <div className="fileSelectorContainer">
         <FileSelector handleSelectionCallback={this.handleImageSelectedCallback}/>
         </div>

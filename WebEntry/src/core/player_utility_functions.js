@@ -1,6 +1,3 @@
-import store from './store';
-import * as dbObjectsUtilityFunctions from './db_objects_utility_functions';
-
 export function getCurrentTime() {
   var dt = new Date();
   return dt.getTime();

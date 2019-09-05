@@ -10,7 +10,6 @@ import DataExportationComponent from '../components/Data/DataExportationComponen
 import ObserverMode from './ObserverMode';
 import PlayerMode from './PlayerMode';
 
-import db_helper from '../core/db_helper.js';
 import wamp from '../core/wamp';
 
 import './IntroductionScreen.css';

@@ -9,20 +9,29 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-class CommentDialog extends Component {
+class AOINameDialog extends Component {
   constructor(props){
     super(props);
     //this.closeDialogCallback = this.onClose.bind(this);
-    this.comment = "";
+    this.name = "";
 
     this.onClosePressed = this.onClose.bind(this);
   }
 
   onClose(){
-    this.props.closeDialog(this.comment);
+    if (this.name !== "") {
+      this.props.closeDialog(this.name);
+    }
   }
 
   render() {
+    this.name = this.props.name;
+    if (this.name !== "") {
+      var label = "Rename";
+    }
+    else {
+      var label = "Create";
+    }
     return(
       <Dialog
           open={this.props.openDialog}
@@ -31,28 +40,28 @@ class CommentDialog extends Component {
           fullWidth={true}
           maxWidth='md'
         >
-          <DialogTitle id="form-dialog-title">Write Comment</DialogTitle>
+          <DialogTitle id="form-dialog-title">Enter AOI's Name</DialogTitle>
           <DialogContent>
             <TextField
               required
               autoFocus
               margin="dense"
               id="taskComment"
-              defaultValue=""
+              defaultValue={this.name}
               label="Comment"
               ref="taskCommentRef"
               fullWidth
               multiline
               rows="5"
-              onChange={(e)=>{this.comment = e.target.value}}
+              onChange={(e)=>{this.name = e.target.value}}
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={e => this.props.closeDialog("")} variant="outlined">
+            <Button onClick={e => this.props.closeDialog("")} color="primary">
               Cancel
             </Button>
-            <Button variant="outlined" onClick={this.onClosePressed}>
-              Submit
+            <Button onClick={this.onClosePressed} color="primary">
+              {label}
             </Button>
           </DialogActions>
       </Dialog>
@@ -60,4 +69,4 @@ class CommentDialog extends Component {
   }
 }
 
-export default CommentDialog;
+export default AOINameDialog;

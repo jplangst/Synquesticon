@@ -9,8 +9,6 @@ import store from './core/store';
 import Header from './components/Header/Header'
 import EditorMode from './pages/EditorMode';
 import IntroductionScreen from './pages/IntroductionScreen';
-import PlayerMode from './pages/PlayerMode';
-import ObserverMode from './pages/ObserverMode';
 import DisplayTaskComponent from './components/PlayerComponents/DisplayTaskComponent';
 
 import HTML5Backend from 'react-dnd-html5-backend'

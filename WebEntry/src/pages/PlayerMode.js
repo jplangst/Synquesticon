@@ -15,12 +15,11 @@ import FilledInput from '@material-ui/core/FilledInput';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 
 import PlayableSetListComponent from '../components/TaskList/PlayableSetListComponent';
-import TaskListComponent from '../components/TaskList/TaskListComponent';
 
 import { Typography } from '@material-ui/core';
 
 import store from '../core/store';
-import shuffle from '../core/shuffle';
+
 import wampStore from '../core/wampStore';
 import db_helper from '../core/db_helper.js';
 import * as dbObjects from '../core/db_objects';
