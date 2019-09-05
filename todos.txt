@@ -33,9 +33,17 @@ Fix the observer tabs
 Some error when using the sliders in the speech dialog
 
 
+CONSIDER giving the message log a lighter grey background inside the darker background
 
 
 Text and style fixed in these components:
-SpeechDialog 
-DeviceIDDialog
-CrossbarDialog
+ObserverMessages:
+    WAMPMessageComponent
+    
+Dialogs:
+    SpeechDialog 
+    DeviceIDDialog
+    CrossbarDialog
+    CommentDialog
+    PauseDialog
+    AOINameDialog

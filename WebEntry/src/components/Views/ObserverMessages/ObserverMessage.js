@@ -26,20 +26,20 @@ class ObserverMessage extends React.Component {
         */
 
         var startTime = new Date(args.startTimestamp);
-        displayText = <div>
+        displayText = <Typography color="textPrimary">
                         <b>New experiment - Task set: </b>
                         <i>{args.mainTaskSetId} </i>
                         started at {startTime.toUTCString()}
-                      </div>
+                      </Typography>
         this.showCommentButton = false;
         break;
       case "START":
         var startTaskTime = new Date(args.lineOfData.startTimestamp);
-        displayText = <div>
+        displayText = <Typography color="textPrimary">
                           <b>{args.task.taskType} </b>
                           <i>{args.lineOfData.taskContent} </i>
                           {(args.task.globalVariable ? " (global variable) " : "") + " - start at: " + startTaskTime.toUTCString()}
-                      </div>
+                      </Typography>
 
         break;
       case "ANSWERED":
@@ -59,11 +59,11 @@ class ObserverMessage extends React.Component {
         var firstResponseTimestamp = new Date(args.lineOfData.firstResponseTimestamp);
         var responses = args.lineOfData.responses.join(', ');
         var timeToCompletion = args.lineOfData.timeToCompletion < 0 ? "s" : "s. Time to completion: " + args.lineOfData.timeToCompletion/1000 + "s";
-        displayText = <div>
+        displayText = <Typography color="textPrimary">
                         <b>Answered </b>
                         <i>{responses} </i>
                          - {args.lineOfData.correctlyAnswered}. Time to first answer: {args.lineOfData.timeToFirstAnswer/1000}{timeToCompletion}. First answered at {firstResponseTimestamp.toUTCString()}.
-                      </div>;
+                      </Typography>;
 
 
         var aoisList = "";
@@ -82,10 +82,10 @@ class ObserverMessage extends React.Component {
                   store.getState().experimentInfo.selectedTracker,
                   obj.timeToCompletion
       */
-        displayText = <div>
+        displayText = <Typography color="textPrimary">
                         <b>Skipped </b>
                         Time to completion: {args.lineOfData.timeToCompletion/1000} s.
-                      </div>;
+                      </Typography>;
         break;
       case "FINISHED":
       /*
@@ -97,18 +97,18 @@ class ObserverMessage extends React.Component {
                   timestamp
       */
         var endTime = new Date(args.timestamp);
-        displayText = <div>
+        displayText = <Typography color="textPrimary">
                         <b>Experiment finished at </b>
                         {endTime.toUTCString()}
-                      </div>;
+                      </Typography>;
         this.showCommentButton = false;
         break;
       case "COMMENT":
         var commentTime = new Date(args.timestamp);
-        displayText = <div>
+        displayText = <Typography color="textPrimary">
                         <b>Comment from {args.observerName}: </b>
                         {args.comment} at {commentTime.toUTCString()}
-                      </div>
+                      </Typography>;
         this.showCommentButton = false;
         break;
       default:
@@ -131,7 +131,7 @@ class ObserverMessage extends React.Component {
     return (
       <div className="observerMessageWrapper" style={{display:'flex', position: 'relative', flexDirection:'row', flexGrow: 1, flexShrink:1, minWidth:10, minHeight:50, marginBottom:10}}>
         <div className="observerMessageText" style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, height:'100%'}}>
-          <Typography color="textSecondary">{this.parseMessage(this.props.message)}</Typography>
+          {this.parseMessage(this.props.message)}
         </div>
         {commentButton}
       </div>

@@ -32,3 +32,23 @@
   margin-top: 6px;
   overflow-y: auto;
 }
+
+.messages::-webkit-scrollbar{
+  display: inline-block;
+  width: 10px;
+}
+
+/* Track */
+.messages::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+.messages::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+.messages::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
