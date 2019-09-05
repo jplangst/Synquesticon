@@ -8,6 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import { Typography } from '@material-ui/core';
 
 import {restartWAMP} from '../../core/wamp';
 
@@ -45,9 +46,9 @@ class CrossbarDialog extends Component {
           onClose={this.props.closeCrossbarSettings}
           aria-labelledby="form-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">Crossbar Settings</DialogTitle>
+          <DialogTitle id="form-dialog-title"><Typography variant="h5" color="textPrimary">Crossbar Settings</Typography></DialogTitle>
           <DialogContent>
-            <DialogContentText>Change crossbar Router information</DialogContentText>
+            <DialogContentText><Typography color="textPrimary">Change crossbar Router information</Typography></DialogContentText>
             <TextField
               required
               autoFocus
@@ -77,7 +78,7 @@ class CrossbarDialog extends Component {
               defaultValue={this.crossbar.realm}
               label="Crossbar Realm"
               ref="CrossbarRealmRef"
-              fullWidth          
+              fullWidth
               onChange={(e)=>{this.crossbar.realm = e.target.value}}
             />
           </DialogContent>

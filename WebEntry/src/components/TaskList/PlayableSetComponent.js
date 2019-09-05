@@ -18,7 +18,7 @@ class PlayableSetComponent extends Component {
         <div  className={"listItem "}>
           <div className="listItemTextContainer dotLongText">
             <div className="listItemText ">
-              <Typography color={textColor} variant="p" >{this.props.content}</Typography>
+              <Typography color={textColor} variant="body1" >{this.props.content}</Typography>
             </div>
           </div>
           <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:buttonSize, maxWidth:buttonSize}}

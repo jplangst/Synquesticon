@@ -3,7 +3,9 @@ import wampStore from './wampStore';
 
 import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
 import primary from '@material-ui/core/colors/grey';
-import secondary from '@material-ui/core/colors/amber';
+import lightPrimary from '@material-ui/core/colors/blueGrey';
+import lightSecondary from '@material-ui/core/colors/lightBlue';
+import darkSecondary from '@material-ui/core/colors/amber';
 
 /*
 * The store is responsible for storing data that needs to be shared between different parts of the application.
@@ -21,18 +23,16 @@ function prepareMUITheme(themeType){
     theme = createMuiTheme({
       palette:{
         primary: {
-          main: "#cfd8dc",
+          main: "#cfd8dc"
         },
-        secondary: {
-          main: "#fafafa",
-        },
+        secondary: lightSecondary,
         // Used by `getContrastText()` to maximize the contrast between the
         // background and the text.
         contrastThreshold: 3,
         // Used to shift a color's luminance by approximately
         // two indexes within its tonal palette.
         // E.g., shift from Red 500 to Red 300 or Red 700.
-        tonalOffset: 0.2,
+        tonalOffset: 0.02,
         type: themeType,
       }
     });
@@ -42,32 +42,38 @@ function prepareMUITheme(themeType){
       palette:{
         primary: {
           //light: '#757ce8',
-          main: '#424242',
+          main: '#555',
           //dark: '#002884',
           //contrastText: '#fff',
         },
-        secondary: {
-          //light: '#ff7961',
-          main: '#212121',
-          //dark: '#ba000d',
-          //contrastText: '#000',
-        },
+        secondary: darkSecondary,
         // Used by `getContrastText()` to maximize the contrast between the
         // background and the text.
         contrastThreshold: 3,
         // Used to shift a color's luminance by approximately
         // two indexes within its tonal palette.
         // E.g., shift from Red 500 to Red 300 or Red 700.
-        tonalOffset: 0.2,
+        tonalOffset: 0.1,
         type: themeType,
       }
     });
   }
+
+  theme.overrides = {
+    MuiSlider:{
+      track:{backgroundColor:theme.palette.secondary.dark, height:4},
+      thumb:{backgroundColor:theme.palette.secondary.dark}
+    },
+    MuiInputLabel:{
+      root:{"&$focused":{color: theme.palette.secondary.dark, underline:theme.palette.secondary.dark}},
+      focused:{borderColor:theme.palette.secondary.dark}
+    }
+  };
+
   return theme = responsiveFontSizes(theme);
 }
 
 let theme = prepareMUITheme(savedThemeType);
-
 
 const initialState = {
   participants: {},

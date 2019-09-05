@@ -13,6 +13,8 @@ import NativeSelect from '@material-ui/core/NativeSelect';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 
+import { withTheme } from '@material-ui/core/styles';
+
 import Button from '@material-ui/core/Button';
 
 var voices = []; // = synth.getVoices();
@@ -115,6 +117,8 @@ class SpeechDialog extends Component {
     this.props.closeSpeechSettings();
   }
 
+
+
   render() {
     return(
       <Dialog //------------------------speech settings------------------------
@@ -122,29 +126,29 @@ class SpeechDialog extends Component {
              onClose={this.props.closeSpeechSettings}
              aria-labelledby="form-dialog-title"
        >
-          <DialogTitle id="form-dialog-title">Speech Settings</DialogTitle>
+          <DialogTitle id="form-dialog-title"><Typography variant="h5" color="textPrimary">Speech Settings</Typography></DialogTitle>
           <DialogContent>
-             <DialogContentText>Change speech synthesis settings</DialogContentText>
+             <DialogContentText><Typography color="textPrimary">Change speech synthesis settings</Typography></DialogContentText>
              <div>
-                <Typography id="label">Rate</Typography>
-                <Slider
-                  value={this.speech.rate}
-                  aria-labelledby="label"
-                  className="slider"
-                  onChange={this.onHandleRateChange.bind(this)}
-                />
+                <Typography color="textPrimary" id="label">Rate</Typography>
+                  <Slider
+                    value={this.speech.rate}
+                    aria-labelledby="label"
+                    className="slider"
+                    onChange={this.onHandleRateChange.bind(this)}
+                  />
              </div>
              <div>
-                <Typography id="label">Pitch</Typography>
-                <Slider
-                  value={this.speech.pitch}
-                  aria-labelledby="label"
-                  className="slider"
-                  onChange={this.onHandlePitchChange.bind(this)}
-                />
+                <Typography color="textPrimary" id="label">Pitch</Typography>
+                  <Slider
+                    value={this.speech.pitch}
+                    aria-labelledby="label"
+                    className="slider"
+                    onChange={this.onHandlePitchChange.bind(this)}
+                  />
              </div>
              <div>
-             <InputLabel htmlFor="uncontrolled-native">Language</InputLabel>
+             <InputLabel htmlFor="uncontrolled-native"><Typography color="textPrimary" >Language</Typography></InputLabel>
              <NativeSelect defaultValue={(this.speech === undefined || !this.speech.langObj) ? "" : this.speech.langObj.name} input={<Input name="name" id="uncontrolled-native" />}>
                {voices.map((lang, index) => {
                  return <option key={index} value={lang.name}>{lang.name}</option>
@@ -165,4 +169,4 @@ class SpeechDialog extends Component {
   }
 }
 
-export default SpeechDialog;
+export default withTheme(SpeechDialog);

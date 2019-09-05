@@ -155,7 +155,7 @@ class Menu extends Component {
                   <ListItemText primary="Dark Theme" />
                 </ListItem>
                 <Switch
-                  checked={store.getState().isLightTheme}
+                  checked={store.getState().theme.palette.type !== "light"}
                   onChange={this.onToggleThemeChange.bind(this)}
                   value="checkedB"
                   color="secondary"

@@ -7,6 +7,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContentText from '@material-ui/core/DialogContentText';
 
 import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 
 import Button from '@material-ui/core/Button';
 
@@ -71,9 +72,9 @@ class DeviceIDDialog extends Component {
              onClose={this.props.closeDeviceIDSettings}
              aria-labelledby="form-dialog-title"
        >
-          <DialogTitle id="form-dialog-title">Device's ID</DialogTitle>
+          <DialogTitle id="form-dialog-title"><Typography variant="h5" color="textPrimary" >Device's ID</Typography></DialogTitle>
           <DialogContent>
-             <DialogContentText>Enter this device's ID</DialogContentText>
+             <DialogContentText><Typography color="textPrimary" >Enter this device's ID</Typography></DialogContentText>
              <div className="textField">
                <TextField
                   defaultValue={this.deviceName}
