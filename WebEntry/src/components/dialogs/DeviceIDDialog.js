@@ -100,10 +100,10 @@ class DeviceIDDialog extends Component {
               </div>
           </DialogContent>
           <DialogActions>
-             <Button onClick={this.props.closeDeviceIDSettings} color="primary">
+             <Button variant="outlined" onClick={this.props.closeDeviceIDSettings}>
                Cancel
              </Button>
-             <Button onClick={this.onChangeDeviceID.bind(this)} color="primary">
+             <Button variant="outlined" onClick={this.onChangeDeviceID.bind(this)}>
                OK
              </Button>
           </DialogActions>

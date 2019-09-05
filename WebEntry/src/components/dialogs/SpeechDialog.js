@@ -153,10 +153,10 @@ class SpeechDialog extends Component {
              </div>
           </DialogContent>
           <DialogActions>
-             <Button onClick={this.props.closeSpeechSettings} color="primary">
+             <Button variant="outlined" onClick={this.props.closeSpeechSettings} >
                Cancel
              </Button>
-             <Button onClick={this.onChangeSpeechSettings.bind(this)} color="primary">
+             <Button variant="outlined" onClick={this.onChangeSpeechSettings.bind(this)} >
                OK
              </Button>
           </DialogActions>

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import { withTheme } from '@material-ui/styles';
+
 import Button from '@material-ui/core/Button';
 import NavigationIcon from '@material-ui/icons/NavigateNext';
 import TextField from '@material-ui/core/TextField';
@@ -7,10 +9,15 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+
+import Input from '@material-ui/core/Input';
 import FilledInput from '@material-ui/core/FilledInput';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
 
 import PlayableSetListComponent from '../components/TaskList/PlayableSetListComponent';
 import TaskListComponent from '../components/TaskList/TaskListComponent';
+
+import { Typography } from '@material-ui/core';
 
 import store from '../core/store';
 import shuffle from '../core/shuffle';
@@ -102,6 +109,9 @@ class PlayerMode extends Component {
   }
 
   render() {
+    let theme = this.props.theme;
+    let textColor = theme.palette.type === "light" ? "textSecondary" : "textPrimary";
+
     return (
       <div className="PlayerViewerContent">
         <div className="TaskSetContainer">
@@ -110,11 +120,12 @@ class PlayerMode extends Component {
         </div>
         <div className="RemoteTrackerContainer">
           <FormControl className="textinput">
-            <InputLabel htmlFor="age-simple">Remote Eye Tracker</InputLabel>
+            <InputLabel style={{marginLeft: theme.spacing(1)}} htmlFor="outlined-age-simple"><Typography color={textColor} variant="h6">Remote Eye Tracker</Typography></InputLabel>
             <Select
+              style={{width:'100%', height:'100%', marginRight: theme.spacing(1)}}
               value={this.state.selectedTracker}
               onChange={this.onSelectRemoteTracker.bind(this)}
-              input={<FilledInput name="selectedTracker" id="selectedTracker-helper" />}
+              input={<OutlinedInput style={{marginRight: theme.spacing(1)}} name="selectedTracker" id="selectedTracker-helper" />}
             >
               {
                 this.state.remoteEyeTrackers.map((item, index) => {
@@ -129,4 +140,4 @@ class PlayerMode extends Component {
   }
 }
 
-export default PlayerMode;
+export default withTheme(PlayerMode);

@@ -47,8 +47,7 @@ class IntroductionScreen extends Component {
   }
 
   render() {
-
-    console.log(this.props.theme);
+    let theme = this.props.theme;
 
     var buttonIcon = null;
     if(this.state.isParticipantsPaused){
@@ -58,21 +57,24 @@ class IntroductionScreen extends Component {
       buttonIcon = <PlayIcon style={{display:'flex', position: 'absolute', height: '75%', width: 'auto', maxWidth: '75%', flexGrow: 1}} />;
     }
 
+    let bgColor = theme.palette.type === "light" ? theme.palette.secondary.dark : theme.palette.primary.dark;
+    let textColor = theme.palette.type === "light" ? "textSecondary" : "textPrimary";
+
     return(
     <div className="introductionScreenContainer">
-      <div className = "IntroViewer">
-        <div className="IntroViewerTitle">
-          <div className="IntroViewerTitleText"><Typography variant="h5">Studies</Typography></div>
+      <div style={{backgroundColor:theme.palette.primary.main}} className="IntroViewer">
+        <div style={{borderColor:'grey'}} className="IntroViewerTitle">
+          <div className="IntroViewerTitleText"><Typography color={textColor} variant="h5">Studies</Typography></div>
           <Button className="IntroDataExportBtnContainer" onClick={(e) => this.gotoPage("EditorMode")}
-            style={{borderLeftStyle:'solid', borderWidth:'thin', borderRadius: 10, borderColor:'#BDBDBD'}}>
-            <EditIcon/>
+            style={{borderLeftStyle:'solid', borderWidth:'thin', borderRadius: 10, borderColor:'grey'}}>
+            <EditIcon />
           </Button>
         </div>
         <PlayerMode gotoPage={this.gotoPage.bind(this)}/>
       </div>
-      <div className = "IntroContentWrapper">
+      <div style={{paddingLeft:5, backgroundColor:theme.palette.primary.light}} className="IntroContentWrapper">
         <div className="IntroContentTitle">
-          <div className="IntroTitleText"><Typography variant="h5">Observer</Typography></div>
+          <div className="IntroTitleText"><Typography color="textPrimary" variant="h5">Observer</Typography></div>
           <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1,
                   borderRadius:10, borderColor:'#BDBDBD', borderWidth:'thin', borderLeftStyle:'solid'}}
            onClick={this.onPauseAllPressed}>

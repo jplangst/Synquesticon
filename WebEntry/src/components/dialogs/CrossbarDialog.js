@@ -77,15 +77,15 @@ class CrossbarDialog extends Component {
               defaultValue={this.crossbar.realm}
               label="Crossbar Realm"
               ref="CrossbarRealmRef"
-              fullWidth
+              fullWidth          
               onChange={(e)=>{this.crossbar.realm = e.target.value}}
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.props.closeCrossbarSettings} color="primary">
+            <Button variant="outlined" onClick={this.props.closeCrossbarSettings} >
               Cancel
             </Button>
-            <Button onClick={this.onChangeCrossbarSettings.bind(this)} color="primary">
+            <Button variant="outlined" onClick={this.onChangeCrossbarSettings.bind(this)} >
               OK
             </Button>
           </DialogActions>

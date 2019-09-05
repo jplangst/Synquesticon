@@ -2,6 +2,7 @@ import React from 'react';
 
 import Button from '@material-ui/core/Button';
 import CommentIcon from '@material-ui/icons/ModeCommentOutlined';
+import { Typography } from '@material-ui/core';
 
 import './ObserverMessage.css';
 
@@ -130,7 +131,7 @@ class ObserverMessage extends React.Component {
     return (
       <div className="observerMessageWrapper" style={{display:'flex', position: 'relative', flexDirection:'row', flexGrow: 1, flexShrink:1, minWidth:10, minHeight:50, marginBottom:10}}>
         <div className="observerMessageText" style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, height:'100%'}}>
-          {this.parseMessage(this.props.message)}
+          <Typography color="textSecondary">{this.parseMessage(this.props.message)}</Typography>
         </div>
         {commentButton}
       </div>

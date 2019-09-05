@@ -2,8 +2,8 @@ import { createStore } from 'redux';
 import wampStore from './wampStore';
 
 import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
-import indigo from '@material-ui/core/colors/indigo';
-import pink from '@material-ui/core/colors/pink';
+import primary from '@material-ui/core/colors/grey';
+import secondary from '@material-ui/core/colors/amber';
 
 /*
 * The store is responsible for storing data that needs to be shared between different parts of the application.
@@ -20,8 +20,12 @@ function prepareMUITheme(themeType){
   if(themeType === "light"){
     theme = createMuiTheme({
       palette:{
-        primary: indigo,
-        secondary: pink,
+        primary: {
+          main: "#cfd8dc",
+        },
+        secondary: {
+          main: "#fafafa",
+        },
         // Used by `getContrastText()` to maximize the contrast between the
         // background and the text.
         contrastThreshold: 3,
@@ -38,13 +42,13 @@ function prepareMUITheme(themeType){
       palette:{
         primary: {
           //light: '#757ce8',
-          main: '#393E46',
+          main: '#424242',
           //dark: '#002884',
           //contrastText: '#fff',
         },
         secondary: {
           //light: '#ff7961',
-          main: '#00ADB5',
+          main: '#212121',
           //dark: '#ba000d',
           //contrastText: '#000',
         },

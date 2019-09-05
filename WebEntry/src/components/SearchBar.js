@@ -38,7 +38,7 @@ const styles = theme => ({
     },
   },
   searchIcon: {
-    width: theme.spacing.unit * 9,
+    width: theme.spacing(9),
     height: '100%',
     position: 'absolute',
     pointerEvents: 'none',
@@ -47,7 +47,7 @@ const styles = theme => ({
     justifyContent: 'center',
   },
   clearSearchIcon: {
-    width: theme.spacing.unit * 9,
+    width: theme.spacing(9),
     right: '0%',
     top: 0,
     height: '100%',
@@ -69,10 +69,10 @@ const styles = theme => ({
     marginTop: '10px',
   },
   inputInput: {
-    paddingTop: theme.spacing.unit,
-    paddingRight: theme.spacing.unit * 8,
-    paddingBottom: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit * 8,
+    paddingTop: theme.spacing(1),
+    paddingRight: theme.spacing(8),
+    paddingBottom: theme.spacing(1),
+    paddingLeft: theme.spacing(8),
     transition: theme.transitions.create('width'),
     width: '100%',
     borderRadius: '15px',
