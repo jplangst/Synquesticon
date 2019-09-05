@@ -66,7 +66,7 @@ class ObserverMode extends Component {
         break;
       }
     }
-    if (!existed && !isComment) {
+    if (!existed) {
       var label = (!args.participantLabel || args.participantLabel == "") ? args.startTimestamp : (args.participantLabel + "   " + args.startTimestamp);
       this.state.participants.push({
         id: args.participantId,

@@ -9,6 +9,12 @@ class AOIImageViewComponent extends Component {
     super(props);
   }
 
+  onSelectAOI(aoi) {
+    if(this.props.onSelectAOI !== undefined) {
+      this.props.onSelectAOI(aoi);
+    }
+  }
+
   render() {
     var tempAOI = this.props.mode !== "SELECT" ? <AOIComponent aoi={this.props.tempAOI}/> : null;
     return (
@@ -18,10 +24,10 @@ class AOIImageViewComponent extends Component {
         onMouseMove={this.props.onMouseMove}>
         <img className="imageContainer" src={"Images/"+this.props.image} alt="Task"
               />
-        <svg className="imageViewWithAOIs" width='100%' height='100%' viewBox="0 0 100 100" preserveAspectRatio="none">
+        <svg id="AOICanvas" className="imageViewWithAOIs" width='100%' height='100%' viewBox="0 0 100 100" preserveAspectRatio="none">
           {tempAOI}
           {this.props.aois.map((aoi, index) => {
-            return <AOIComponent aoi={aoi} key={index} onSelected={e => this.props.onSelectAOI(aoi)}/>
+            return <AOIComponent aoi={aoi} key={index} onSelected={e => this.onSelectAOI(aoi)}/>
           })}
         </svg>
       </div>

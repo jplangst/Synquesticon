@@ -10,16 +10,8 @@ import './AOIEditorComponent.css';
 class AOI {
   constructor(){
     this.name = "";
-    this.points = [];
+    this.boundingbox = [];
     this.isSelected = true;
-  }
-
-  convertToDBFormat() {
-    var dbPoints = [];
-    this.points.map((p, ind) => {
-      dbPoints.push([p.X, p.Y]);
-    })
-    return dbPoints;
   }
 }
 
@@ -30,10 +22,9 @@ class AOIEditorComponent extends Component {
       mode: "RECTANGLE",
       openAOINameDialog: false
     }
-    this.aois = [];
     this.p1TempAOI = null;
     this.imageRect = null;
-    this.p2TempAOI = {X: -1, Y: -1};
+    this.p2TempAOI = [-1, -1];
     this.tempAOI = new AOI();
 
     this.callbacks = null;
@@ -71,10 +62,10 @@ class AOIEditorComponent extends Component {
       this.tempAOI.name = name;
       this.tempAOI.isSelected = false;
       var newAOI = JSON.parse(JSON.stringify(this.tempAOI))
-      this.aois.push(newAOI);
+      this.props.task.aois.push(newAOI);
     }
     this.tempAOI = new AOI();
-    this.imageRect = null;
+    //this.imageRect = null;
     this.setState({
       openAOINameDialog: false
     });
@@ -88,13 +79,13 @@ class AOIEditorComponent extends Component {
 ██       ██████  ███████ ██     ██████   ██████  ██   ████
 */
   removeLastPointFromPolygon() {
-    if (this.tempAOI.points.length > 1) {
-      this.tempAOI.points.splice(-1,1);
+    if (this.tempAOI.boundingbox.length > 1) {
+      this.tempAOI.boundingbox.splice(-1,1);
       this.forceUpdate();
     }
   }
   finishDrawingPolygon() {
-    if (this.tempAOI.points.length < 3) {
+    if (this.tempAOI.boundingbox.length < 3) {
       alert("can not create a polygon with less than 3 points");
       return;
     }
@@ -146,14 +137,14 @@ class AOIEditorComponent extends Component {
  ██████ ██   ██ ███████ ███████ ██████  ██   ██  ██████ ██   ██ ███████     ██       ██████  ██   ██     ██ ██      ██ ██   ██  ██████  ███████   ████   ██ ███████  ███ ███
 */
   getMousePosition(e) {
-    return {X: (e.clientX - this.imageRect.left)*100/this.imageRect.width,
-            Y: (e.clientY - this.imageRect.top)*100/this.imageRect.height}
+    return [(e.clientX - this.imageRect.left)*100/this.imageRect.width,
+            (e.clientY - this.imageRect.top)*100/this.imageRect.height]
   }
 
   onMouseDown(e) {
     e.stopPropagation();
     e.preventDefault();
-    if (!this.imageRect) {
+    if (e.target.id === "AOICanvas") {
       this.imageRect = e.target.getBoundingClientRect();
     }
     if (this.state.mode === "RECTANGLE") {
@@ -166,13 +157,15 @@ class AOIEditorComponent extends Component {
     e.preventDefault();
     //this.drawTempAOI(e);
     if (this.state.mode === "POLYGON") {
-      this.tempAOI.points.push(this.getMousePosition(e));
+      this.tempAOI.boundingbox.push(this.getMousePosition(e));
       this.forceUpdate();
     }
     else if (this.state.mode === "RECTANGLE") {
-      this.setState({
-        openAOINameDialog: true
-      });
+      if (this.tempAOI.boundingbox.length >= 3) {
+        this.setState({
+          openAOINameDialog: true
+        });
+      }
       this.p1TempAOI = null;
     }
   }
@@ -184,13 +177,13 @@ class AOIEditorComponent extends Component {
 
       if (this.p1TempAOI) {
         var p2 = this.getMousePosition(e)
-        if (p2.X !== this.p2TempAOI.X || p2.Y !== this.p2TempAOI.Y) {
+        if (p2[0] !== this.p2TempAOI[0] || p2[1] !== this.p2TempAOI[1]) {
           var p1 = this.p1TempAOI;
 
-          this.tempAOI.points = [p1,
-                                 { X: p2.X, Y: p1.Y},
-                                 p2,
-                                 { X: p1.X, Y: p2.Y}
+          this.tempAOI.boundingbox = [p1,
+                                      [p2[0], p1[1]],
+                                      p2,
+                                      [p1[0], p2[1]]
                                 ];
           this.p2TempAOI = p2;
           this.forceUpdate();
@@ -201,15 +194,15 @@ class AOIEditorComponent extends Component {
 
   render() {
     if (this.state.mode === "SELECT") {
-      var imageReview = <AOIImageViewComponent image={this.props.image}
-                                               aois={this.aois}
+      var imageReview = <AOIImageViewComponent image={this.props.task.image}
+                                               aois={this.props.task.aois}
                                                mode={this.state.mode}
                                                onSelectAOI={this.onSelectAOI.bind(this)}
                                                />
     }
     else {
-      var imageReview = <AOIImageViewComponent image={this.props.image}
-                                               aois={this.aois}
+      var imageReview = <AOIImageViewComponent image={this.props.task.image}
+                                               aois={this.props.task.aois}
                                                mode={this.state.mode}
                                                tempAOI={this.tempAOI}
                                                onMouseDown={this.onMouseDown.bind(this)}

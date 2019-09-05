@@ -44,6 +44,8 @@ class WAMPMessageComponent extends React.Component {
                                             observerRole: myStorage.getItem('deviceRole'),
                                             timestamp: playerUtils.getCurrentTime(),
                                             participantId: this.pickedEvent.participantId,
+                                            participantLabel: this.pickedEvent.participantLabel,
+                                            startTimestamp: this.pickedEvent.startTimestamp,
                                             lineOfData: this.pickedEvent.lineOfData,
                                             comment: comment
                                           }));

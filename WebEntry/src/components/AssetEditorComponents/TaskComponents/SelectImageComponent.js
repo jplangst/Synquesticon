@@ -20,13 +20,14 @@ class SelectImageComponent extends Component {
 
   onImageFileSelected(selectedFile){
     this.props.task.image = selectedFile.name;
+    this.props.task.aois = [];
     this.setState({selectedImage: this.props.task.image});
   }
 
   render() {
     var previewImage = "No Image selected";
     if(this.props.task.image && this.props.task.image !== ""){
-      previewImage = <AOIEditorComponent image={this.props.task.image}/>//<img className="imageContainer" src={"Images/"+this.props.task.image} alt="Task" />;
+      previewImage = <AOIEditorComponent task={this.props.task}/>//<img className="imageContainer" src={"Images/"+this.props.task.image} alt="Task" />;
     }
 
     var imageTaskName =
@@ -44,7 +45,7 @@ class SelectImageComponent extends Component {
     />;
 
     var imageTypeContent =
-    <div className="imageTypeContainer">
+    <div className="imageTypeContainer" onScroll={(e)=>{console.log("scroll")}}>
       <div className="imageInputContainer">
         {imageTaskName}
       </div>
