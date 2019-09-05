@@ -97,7 +97,7 @@ class DataExportationComponent extends Component {
     return(
       <div>
         <Button onClick={this.onDataExportationButtonClicked.bind(this)} >
-          <ExportationIcon/>
+          <ExportationIcon />
         </Button>
         <Dialog open={this.state.open} onClose={this.handleClose.bind(this)}>
           <DialogTitle>Choose an experiment to export</DialogTitle>
@@ -119,16 +119,16 @@ class DataExportationComponent extends Component {
             })}
           </List>
           <DialogActions>
-            <Button onClick={this.handleDeleteAll.bind(this)} color="primary">
+            <Button onClick={this.handleDeleteAll.bind(this)} variant="outlined">
               Delete All
             </Button>
-            <Button onClick={this.handleClose.bind(this)} color="primary">
+            <Button onClick={this.handleClose.bind(this)} variant="outlined">
               Cancel
             </Button>
-            <Button onClick={this.handleExport.bind(this)} color="primary">
+            <Button onClick={this.handleExport.bind(this)} variant="outlined">
               Export
             </Button>
-            <Button onClick={this.handleExportAll.bind(this)} color="primary">
+            <Button onClick={this.handleExportAll.bind(this)} variant="outlined">
               Export All
             </Button>
           </DialogActions>

@@ -15,7 +15,7 @@ class PlayableSetListComponent extends Component {
 
   render() {
     this.taskList = this.props.taskList;
-    return (<div style={{height:'100%', width:'100%', display:'flex', flexDirection:'column'}}>
+    return (<div style={{position:'relative', height:'100%', width:'100%', display:'flex', flexDirection:'column'}}>
         {
           this.taskList.map((item, index) => {
             var content = listUtils.getTaskContent(item);

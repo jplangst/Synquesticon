@@ -48,10 +48,10 @@ class CommentDialog extends Component {
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={e => this.props.closeDialog("")} color="primary">
+            <Button onClick={e => this.props.closeDialog("")} variant="outlined">
               Cancel
             </Button>
-            <Button onClick={this.onClosePressed} color="primary">
+            <Button variant="outlined" onClick={this.onClosePressed}>
               Submit
             </Button>
           </DialogActions>

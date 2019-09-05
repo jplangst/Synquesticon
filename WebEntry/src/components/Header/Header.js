@@ -10,6 +10,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 
 import { Typography } from '@material-ui/core';
+import { withTheme } from '@material-ui/styles';
 
 //Icons
 import Settings from '@material-ui/icons/Settings';
@@ -44,16 +45,16 @@ class Header extends Component {
       //var fontSize = Math.max(28, Math.min(storeState.windowSize.height * 0.04, storeState.windowSize.width * 0.04));
 
       return(
-          <AppBar style={{margin: 0, padding: 0, display:'flex', flexGrow: 1, flexShrink:1, position: 'relative', minHeight:50, maxHeight:'6%', width:'100%'}}>
+          <AppBar style={{ backgroundColor:this.props.theme.palette.primary.dark, margin: 0, padding: 0, display:'flex', flexGrow: 1, flexShrink:1, position: 'relative', minHeight:50, maxHeight:'6%', width:'100%'}}>
             <Toolbar variant="dense" style={{margin: 0, padding: 0, display:'flex', flexDirection:'row', position:'relative', width:'100%', height:'100%'}}>
                <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:150, height:'100%'}}
                 onClick={this.handleBackwardsNavigation.bind(this)} >
-                 <BackArrowNavigation color='secondary' style={{display:'flex', position: 'absolute', height: '100%', width: 'auto', maxWidth: '100%', flexGrow: 1}} />
+                 <BackArrowNavigation style={{display:'flex', position: 'absolute', height: '100%', width: 'auto', maxWidth: '100%', flexGrow: 1}} />
                </Button>
-               <div className="AppName"><Typography variant="h3">Synquesticon</Typography></div>
+               <div className="AppName"><Typography color='textPrimary' variant="h3">Synquesticon</Typography></div>
                <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:150, height:"100%"}}
                  onClick={this.openSettingsMenu.bind(this)}>
-                 <Settings color='secondary' size='large' style={{display:'flex', position: 'absolute', height: '100%', width: 'auto', maxWidth: '100%', flexGrow: 1}} />
+                 <Settings size='large' style={{display:'flex', position: 'absolute', height: '100%', width: 'auto', maxWidth: '100%', flexGrow: 1}} />
                </Button>
               <Menu openSettingsMenu={this.openSettingsMenu.bind(this)}
                     closeSettingsMenu={this.closeSettingsMenu.bind(this)}
@@ -67,4 +68,4 @@ class Header extends Component {
     }
   }
 }
-export default Header;
+export default withTheme(Header);

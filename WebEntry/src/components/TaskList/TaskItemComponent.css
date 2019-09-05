@@ -1,17 +1,18 @@
 .listItem {
-  border: 1px solid #BDBDBD;
-  background-color: #F5F5F5;
   min-height: 40px;
   max-height: 120px;
   position: relative;
   width: 100%;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
   opacity: 1;
 
   display: flex;
   flex-direction: row;
   flex-grow: 1;
   flex-shrink: 1;
+
+  
+  border-bottom: grey solid 1px;
 }
 
 .listItemTextContainer{

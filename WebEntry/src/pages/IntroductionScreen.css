@@ -13,17 +13,9 @@
   -ms-flex-direction: column;
   flex-direction: column;
 
-  position: absolute;
-  width: 28%;
-  height: 96%;
-
-  top: 2%;
-  left: 2%;
-  background-color: white;
-
-  border-width: thin;
-  border-style: solid;
-  border-color: #303f9f;
+  position: relative;
+  width: 25%;
+  height: 100%;
 }
 
 .IntroViewerTitle{
@@ -35,19 +27,15 @@
   -ms-flex-direction: row;
   flex-direction: row;
 
-  flex: 1 1 auto;
-  min-height: 200;
+  width: 100%;
+  height: auto;
+  flex-grow: 0;
+  flex-shrink: 0;
 
   position: relative;
 
   border-bottom-width: thin;
   border-bottom-style: solid;
-  border-color: #303f9f;
-
-  font-size: large;
-  font-family: "Times New Roman", Times, serif;
-  font-weight: bold;
-  color: #999;
 }
 
 .IntroViewerTitleText{
@@ -70,15 +58,9 @@
   flex-direction: column;
 
   position: absolute;
-  width: 66%;
-  height: 96%;
-  top: 2%;
-  left: 32%;
-  background-color: white;
-
-  border-width: thin;
-  border-style: solid;
-  border-color: #303f9f;
+  width: 75%;
+  height: 100%;
+  left: 25%;
 }
 
 .IntroContentTitle{
@@ -90,15 +72,6 @@
   min-height: 200;
 
   position: relative;
-
-  border-bottom-width: thin;
-  border-bottom-style: solid;
-  border-color: #303f9f;
-
-  font-size: large;
-  font-family: "Times New Roman", Times, serif;
-  font-weight: bold;
-  color: #999;
 }
 
 .IntroTitleText{

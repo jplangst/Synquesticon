@@ -8,6 +8,7 @@ import db_helper from '../../../core/db_helper';
 import * as dbObjects from '../../../core/db_objects';
 import * as playerUtils from '../../../core/player_utility_functions';
 import './WAMPMessageComponent.css';
+import { Typography } from '@material-ui/core';
 
 var myStorage = window.localStorage;
 
@@ -59,7 +60,7 @@ class WAMPMessageComponent extends React.Component {
     return (
       <div className="wampMessageBoard">
         <div className="messageBoardtitle">
-         Messaging Log
+         <Typography color="textSecondary">Messaging Log</Typography>
         </div>
         <div className="messages">
           {this.props.messages.map((item, index) => {
