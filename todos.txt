@@ -41,6 +41,7 @@ Text and style fixed in these components:
 ObserverMessages:
     WAMPMessageComponent
     ObserverMessage
+    ObserverTab
     
 Dialogs:
     SpeechDialog 
