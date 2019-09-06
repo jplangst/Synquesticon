@@ -38,10 +38,18 @@ TODO fix the touch ripple bubble in the observer tab...
       Add box shadow or somwething like that to help show active component
 
 Text and style fixed in these components:
-ObserverMessages:
-    WAMPMessageComponent
-    ObserverMessage
-    ObserverTab
+
+Pages:
+    IntroductionScreen
+    PbserverMode
+    PlayerMode
+
+Views:
+    ObserverMessages:
+        WAMPMessageComponent
+        ObserverMessage
+        ObserverTab
+    GazeCursor
     
 Dialogs:
     SpeechDialog 
