@@ -7,6 +7,7 @@ import Collapse from '@material-ui/core/Collapse';
 import Button from '@material-ui/core/Button';
 
 import {ArrowDropDown, ArrowDropUp} from '@material-ui/icons';
+import { Typography } from '@material-ui/core';
 
 class CollapsableContainer extends Component {
   constructor(props) {
@@ -28,8 +29,6 @@ class CollapsableContainer extends Component {
                               :this.props.headerComponents;
 
     return (
-
-
       <div className={this.props.classNames+" collpasedContainer"}>
         <div className={this.props.headerClassNames+" containerHeader"}>
           <div className="leftHeaderContent">
@@ -39,7 +38,7 @@ class CollapsableContainer extends Component {
               </Button>
               </div>
             <div className="titleContainer">
-              <p className="dropdownTitle">{this.props.headerTitle}</p>
+              <Typography className="dropdownTitle" variant="h6" color="textPrimary">{this.props.headerTitle}</Typography>
             </div>
           </div>
           <div className="customHeaderComponents">

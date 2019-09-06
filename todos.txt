@@ -36,7 +36,13 @@ TODO NOW: Fix single choice option checkbox in edit task/MP choice component. (D
 TODO go over all input forms and use reasonable placeholders etc...
 TODO test to make sure that all tasks and set edit options are correctly saved and loaded from DB.
 
+Make the drag and drop layer also use the theme...
+
 Text and style fixed in these components:
+
+components:
+    Containers:
+        CollapsableContainer
 
 Pages:
     IntroductionScreen

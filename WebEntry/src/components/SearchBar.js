@@ -25,10 +25,10 @@ const styles = theme => ({
   },
   search: {
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
+    backgroundColor: fade(theme.palette.primary.main, 0.15),
+    /*'&:hover': {
+      backgroundColor: fade( theme.palette.type==="light"?theme.palette.primary.dark:theme.palette.primary.main , 0.1),
+    },*/
     marginLeft: 0,
     width: '100%',
     height: '100%',
@@ -38,7 +38,8 @@ const styles = theme => ({
     },
   },
   searchIcon: {
-    width: theme.spacing(9),
+    width: theme.spacing(4),
+    color: theme.palette.text.primary,
     height: '100%',
     position: 'absolute',
     pointerEvents: 'none',
@@ -47,7 +48,8 @@ const styles = theme => ({
     justifyContent: 'center',
   },
   clearSearchIcon: {
-    width: theme.spacing(9),
+    width: theme.spacing(4),
+    color: theme.palette.text.primary,
     right: '0%',
     top: 0,
     height: '100%',
@@ -56,26 +58,25 @@ const styles = theme => ({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  clearIcon: {
-
-  },
   inputRoot: {
     color: 'inherit',
     borderStyle: 'solid',
     borderWidth: 'thin',
     borderRadius: '15px',
+    borderColor: 'grey',//theme.palette.text.primary,
     width: '100%',
     height: 'calc(100%-5px)',
     marginTop: '10px',
   },
   inputInput: {
     paddingTop: theme.spacing(1),
-    paddingRight: theme.spacing(8),
+    paddingRight: theme.spacing(4),
     paddingBottom: theme.spacing(1),
-    paddingLeft: theme.spacing(8),
+    paddingLeft: theme.spacing(4),
     transition: theme.transitions.create('width'),
     width: '100%',
     borderRadius: '15px',
+    color: theme.palette.text.primary,
     [theme.breakpoints.up('sm')]: {
       width: 120,
       '&:focus': {
