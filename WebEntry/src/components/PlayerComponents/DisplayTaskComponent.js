@@ -71,11 +71,17 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 
 
   componentDidMount() {
-
+    if (!(store.getState().experimentInfo.participantId === "TESTING")) {
+      console.log("set up interval");
+      this.timer = setInterval(this.handleGazeLocUpdate, 4.5); //Update the gaze cursor location every 2ms
+    }
   }
 
   componentWillUnmount() {
-
+    if (!store.getState().experimentInfo.participantId === "TESTING") {
+      console.log("clear interval");
+      clearInterval(this.timer);
+    }
   }
 
   /*
@@ -113,16 +119,21 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 
   //Updates the location of the Gaze Cursor. And checks if any of the AOIs were looked at
   updateCursorLocation(){
-    try {
-      let gazeLoc = store.getState().gazeData[store.getState().experimentInfo.selectedTracker];
-      this.currentTask.aois.map((item, index) => {
-        if (gazeLoc.locX > item.boundingbox[0][0] && gazeLoc.locX < item.boundingbox[1][0]
-          && gazeLoc.locY > item.boundingbox[0][1] && gazeLoc.locY < item.boundingbox[3][1]
-          && item["checked"] === undefined) {
-          item["checked"] = true;
+    if (this.currentTask && this.currentTask.aois !== undefined && this.currentTask.aois.length > 0) {
+      try {
+        let gazeLoc = store.getState().gazeData[store.getState().experimentInfo.selectedTracker];
+        for (var i = 0; i < this.currentTask.aois.length; i++) {
+          var item = this.currentTask.aois[i];
+          if (gazeLoc.locX > item.boundingbox[0][0] && gazeLoc.locX < item.boundingbox[1][0]
+            && gazeLoc.locY > item.boundingbox[0][1] && gazeLoc.locY < item.boundingbox[3][1]
+            && item.checked === undefined) {
+            item.checked = true;
+            console.log("aoi checking", this.currentTask.aois);
+          }
         }
-      });
-    } catch (err) {
+
+      } catch (err) {
+      }
     }
   }
 
@@ -238,12 +249,8 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
         let updatedTaskSet = this.currentTask;
         updatedTaskSet.data = runThisTaskSet;
 
-        if(this.currentTask.displayOnePage){
-          return
-        } else{
-          //recursion
-          return <DisplayTaskHelper tasksFamilyTree={trackingTaskSetNames} taskSet={updatedTaskSet} onFinished={this.onFinishedRecursion.bind(this)}/>
-        }
+        //recursion
+        return <DisplayTaskHelper tasksFamilyTree={trackingTaskSetNames} taskSet={updatedTaskSet} onFinished={this.onFinishedRecursion.bind(this)}/>
       }
       else {
         //log the start
@@ -279,6 +286,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
               return <MultipleChoiceComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered}/>;
             }
             if((this.currentTask.taskType === "Image")) {
+              console.log("image task", this.currentTask.image);
               return <ImageViewComponent task={this.currentTask}/>;
             }
           } else {
@@ -334,7 +342,6 @@ class DisplayTaskComponent extends Component {
     progressCount = 0;
     if (!(store.getState().experimentInfo.participantId === "TESTING")) {
       this.broadcastStartEvent();
-      this.timer = setInterval(this.handleGazeLocUpdate, 4.5); //Update the gaze cursor location every 2ms
     }
 
     var layoutAction = {

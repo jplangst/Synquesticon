@@ -20,8 +20,8 @@ class ObserverMode extends Component {
       participants: [],
       currentParticipant: -1
     }
-    this.completedTasks = 0;
-    this.totalTasks = 0;
+    this.completedTasks = {};
+    this.totalTasks = {};
     this.handleNewWAMPEvent = this.onNewWAMPEvent.bind(this);
   }
 
@@ -35,14 +35,15 @@ class ObserverMode extends Component {
 
   onNewWAMPEvent() {
     var args = JSON.parse(wampStore.getCurrentMessage());
+    console.log("wamp events", args);
     var isComment = (args.eventType === "COMMENT"); // &&
                           // args.observerName != myStorage.getItem('deviceID') &&
                           // args.observerRole != myStorage.getItem('deviceRole'));
     if (args.taskSetCount != undefined) {
-      this.totalTasks = args.taskSetCount;
+      this.totalTasks[args.participantId] = args.taskSetCount;
     }
     if (args.progressCount != undefined) {
-      this.completedTasks = args.progressCount;
+      this.completedTasks[args.participantId] = args.progressCount;
     }
 
     if (store.getState().participants[args.participantId] == undefined && !isComment) {
@@ -108,7 +109,7 @@ class ObserverMode extends Component {
               //TODO get the number of tasks in the experiment and the number of tasks completed
               this.state.participants.map((p, index) => {
                 return <ObserverTab key={index} label={p.name} index={index} tabPressedCallback={this.onClickedTab.bind(this)} participantId={p.id}
-                        isActive={this.state.currentParticipant===index} completedTasks={this.completedTasks} totalTasks={this.totalTasks} shouldPause={this.props.isParticipantsPaused}/>
+                        isActive={this.state.currentParticipant===index} completedTasks={this.completedTasks[p.id]} totalTasks={this.totalTasks[p.id]} shouldPause={this.props.isParticipantsPaused}/>
               })
             }
           </div>

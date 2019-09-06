@@ -173,11 +173,11 @@ class EditTaskComponent extends Component {
             {imageTypeContent}
 
             <div className="editTaskFormButtons">
-              <Button onClick={this.closeTaskComponent.bind(this, false)} color="primary">
+              <Button onClick={this.closeTaskComponent.bind(this, false)} variant="outlined">
                 Cancel
               </Button>
               {deleteTaskBtn}
-              <Button onClick={this.onChangeTaskSettings.bind(this)} color="primary">
+              <Button onClick={this.onChangeTaskSettings.bind(this)} variant="outlined">
                 {this.props.isEditing ? "Edit" : "Create"}
               </Button>
             </div>

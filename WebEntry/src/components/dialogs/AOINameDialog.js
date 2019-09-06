@@ -57,10 +57,10 @@ class AOINameDialog extends Component {
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={e => this.props.closeDialog("")} color="primary">
+            <Button onClick={e => this.props.closeDialog("")} variant="outlined">
               Cancel
             </Button>
-            <Button onClick={this.onClosePressed} color="primary">
+            <Button onClick={this.onClosePressed} variant="outlined">
               {label}
             </Button>
           </DialogActions>

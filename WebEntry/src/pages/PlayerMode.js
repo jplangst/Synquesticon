@@ -33,9 +33,10 @@ class PlayerMode extends Component {
 
     this.state = {
       selectedTracker: '',
-      remoteEyeTrackers: [],
       taskSets: []
     }
+
+    this.remoteEyeTrackers = store.getState().remoteEyeTrackers;
 
     this.selectedTaskSet = null;
 
@@ -44,6 +45,7 @@ class PlayerMode extends Component {
   }
 
   componentWillMount() {
+    wampStore.addNewRemoteTrackerListener(this.onNewRemoteTracker.bind(this));
     //save data into DB before closing
     db_helper.getAllParticipantsFromDb((participants) => {
       console.log("all participants", participants);
@@ -51,12 +53,16 @@ class PlayerMode extends Component {
     db_helper.queryTasksFromDb(false, "experiment", this.dbTaskSetCallback);
   }
 
+  componentWillUnmount() {
+    wampStore.removeNewRemoteTrackerListener(this.onNewRemoteTracker.bind(this));
+  }
+
   onNewRemoteTracker() {
     console.log("new tracker coming in", wampStore.getCurrentRemoteTracker());
 
-    if (!this.state.remoteEyeTrackers.includes(wampStore.getCurrentRemoteTracker())) {
+    if (!this.remoteEyeTrackers.includes(wampStore.getCurrentRemoteTracker())) {
       wampStore.confirmRecevingRemoteTracker();
-      this.state.remoteEyeTrackers.push(wampStore.getCurrentRemoteTracker());
+      this.remoteEyeTrackers.push(wampStore.getCurrentRemoteTracker());
 
       this.forceUpdate();
     }
@@ -127,7 +133,7 @@ class PlayerMode extends Component {
               input={<OutlinedInput style={{marginRight: theme.spacing(1)}} name="selectedTracker" id="selectedTracker-helper" />}
             >
               {
-                this.state.remoteEyeTrackers.map((item, index) => {
+                this.remoteEyeTrackers.map((item, index) => {
                   return <MenuItem key={index} value={item} id={index}>{item}</MenuItem>
                 })
               }

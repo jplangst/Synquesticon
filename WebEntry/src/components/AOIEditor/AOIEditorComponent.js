@@ -30,6 +30,13 @@ class AOIEditorComponent extends Component {
     this.callbacks = null;
   }
 
+  componentDidMount() {
+    var aoiCanvas = document.getElementById("AOICanvas");
+    if (aoiCanvas) {
+      this.imageRect = aoiCanvas.getBoundingClientRect();
+    }
+  }
+
   /*
    ██████  █████  ██      ██      ██████   █████   ██████ ██   ██ ███████     ███████  ██████  ██████      ████████  ██████   ██████  ██      ██████   ██████  ██   ██
   ██      ██   ██ ██      ██      ██   ██ ██   ██ ██      ██  ██  ██          ██      ██    ██ ██   ██        ██    ██    ██ ██    ██ ██      ██   ██ ██    ██  ██ ██
@@ -79,7 +86,7 @@ class AOIEditorComponent extends Component {
 ██       ██████  ███████ ██     ██████   ██████  ██   ████
 */
   removeLastPointFromPolygon() {
-    if (this.tempAOI.boundingbox.length > 1) {
+    if (this.tempAOI.boundingbox.length > 0) {
       this.tempAOI.boundingbox.splice(-1,1);
       this.forceUpdate();
     }
@@ -121,9 +128,9 @@ class AOIEditorComponent extends Component {
     }
   }
   removeAOI() {
-    var ind = this.aois.indexOf(this.tempAOI)
+    var ind = this.props.task.aois.indexOf(this.tempAOI)
     if (ind > -1) {
-      this.aois.splice(ind, 1);
+      this.props.task.aois.splice(ind, 1);
       this.tempAOI = new AOI();
       this.forceUpdate();
     }
@@ -137,13 +144,16 @@ class AOIEditorComponent extends Component {
  ██████ ██   ██ ███████ ███████ ██████  ██   ██  ██████ ██   ██ ███████     ██       ██████  ██   ██     ██ ██      ██ ██   ██  ██████  ███████   ████   ██ ███████  ███ ███
 */
   getMousePosition(e) {
-    return [(e.clientX - this.imageRect.left)*100/this.imageRect.width,
-            (e.clientY - this.imageRect.top)*100/this.imageRect.height]
+    if (this.imageRect) {
+      return [(e.clientX - this.imageRect.left)*100/this.imageRect.width,
+              (e.clientY - this.imageRect.top)*100/this.imageRect.height]
+    }
   }
 
   onMouseDown(e) {
     e.stopPropagation();
     e.preventDefault();
+    console.log("mouse down", e.target.id);
     if (e.target.id === "AOICanvas") {
       this.imageRect = e.target.getBoundingClientRect();
     }

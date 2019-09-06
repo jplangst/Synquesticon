@@ -44,19 +44,19 @@ class CWampStore extends EventEmitter {
     this.emit(NEW_COMMAND_EVENT);
   }
 
-  // addNewRemoteTrackerListener(callback) {
-  //   this.addListener(NEW_REMOTE_TRACKER_EVENT, callback);
-  // }
-  //
-  // removeNewRemoteTrackerListener(callback) {
-  //   this.removeListener(NEW_REMOTE_TRACKER_EVENT, callback);
-  // }
-  //
-  // emitNewRemoteTrackerListener() {
-  //   if (!this.receivedRemoteTrackers.includes(this.currentRemoteTracker)) {
-  //     this.emit(NEW_REMOTE_TRACKER_EVENT);
-  //   }
-  // }
+  addNewRemoteTrackerListener(callback) {
+    this.addListener(NEW_REMOTE_TRACKER_EVENT, callback);
+  }
+
+  removeNewRemoteTrackerListener(callback) {
+    this.removeListener(NEW_REMOTE_TRACKER_EVENT, callback);
+  }
+
+  emitNewRemoteTrackerListener() {
+    if (!this.receivedRemoteTrackers.includes(this.currentRemoteTracker)) {
+      this.emit(NEW_REMOTE_TRACKER_EVENT);
+    }
+  }
 
 	getCurrentMessage(){
 		return this.currentMessage;
@@ -72,15 +72,15 @@ class CWampStore extends EventEmitter {
     this.currentCommand = args;
   }
 
-  // getCurrentRemoteTracker(){
-  //   return this.currentRemoteTracker;
-  // }
-  // setCurrentRemoteTracker(tracker){
-  //   this.currentRemoteTracker = tracker;
-  // }
-  // confirmRecevingRemoteTracker() {
-  //   this.receivedRemoteTrackers.push(this.currentRemoteTracker);
-  // }
+  getCurrentRemoteTracker(){
+    return this.currentRemoteTracker;
+  }
+  setCurrentRemoteTracker(tracker){
+    this.currentRemoteTracker = tracker;
+  }
+  confirmRecevingRemoteTracker() {
+    this.receivedRemoteTrackers.push(this.currentRemoteTracker);
+  }
 }
 
 let WampStore = new CWampStore();

@@ -12,22 +12,27 @@ class ImageViewComponent extends Component {
     this.state = {
       imageSrc: null
     }
+    this.image = null;
   }
   componentDidMount() {
     db_helper.getImage(this.props.task.image, this.onReceivedImage.bind(this));
   }
 
   onReceivedImage(img) {
+    this.image = this.props.task.image;
     this.setState({
       imageSrc: img
     });
   }
 
   render() {
+    if (this.image !== this.props.task.image) {
+      db_helper.getImage(this.props.task.image, this.onReceivedImage.bind(this));
+    }
     if (this.state.imageSrc) {
       return (
         <div className="commonContainer">
-          <img src={this.state.imageSrc} alt="Can't find image"/>
+          <img className="imageView" src={this.state.imageSrc} alt="Can't find image"/>
         </div>
       );
     }
