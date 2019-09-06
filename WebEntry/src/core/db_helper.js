@@ -355,7 +355,7 @@ class db_helper {
   async getTasksOrTaskSetsWithIDsPromise(objIds) {
       return new Promise((resolve, reject) => {
         axios.post("/api/getTasksOrTaskSetsWithIDs", {
-          objIds: JSON.stringify(objIds)
+          wrapperSetJson: JSON.stringify(objIds)
         }).then(response => {
             resolve(response.data.data);
         }, (errorResponse) => {

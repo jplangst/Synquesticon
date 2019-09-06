@@ -55,7 +55,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
       currentTaskIndex: 0,
       hasBeenAnswered: false
     }
-
+    this.numCorrectAnswers = 0;
     this.currentTask = null;
     this.currentLineOfData = null;
     this.handleGazeLocUpdate = this.updateCursorLocation.bind(this);
@@ -145,58 +145,78 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
    ██████ ██   ██ ███████ ███████ ██████  ██   ██  ██████ ██   ██ ███████
   */
   onClickNext() {
-    if (!(store.getState().experimentInfo.participantId === "TESTING")) {
-      if (this.currentTask.objType === "Task") {
-        progressCount += 1;
-        if (this.currentLineOfData) {
-          if (!this.currentTask.globalVariable) {
-            //complete line of data before saving to DB
-            this.currentLineOfData.timeToCompletion = playerUtils.getCurrentTime() - this.currentLineOfData.startTimestamp;
-            db_helper.addNewLineToParticipantDB(store.getState().experimentInfo.participantId,
-                                                  JSON.stringify(this.currentLineOfData));
-          }
-          else {
-            var globalVariableObj = {
-              label: this.currentTask.question,
-              value: this.currentLineOfData.responses
-            };
-            db_helper.addNewGlobalVariableToParticipantDB(store.getState().experimentInfo.participantId,
-                                                            JSON.stringify(globalVariableObj));
-          }
+    if ((this.state.currentTaskIndex + 1) >= this.props.taskSet.data.length && (this.numCorrectAnswers < 1)) {
 
-          wamp.broadcastEvents(stringifyWAMPMessage(null, this.currentLineOfData,
-                                                    (this.currentLineOfData.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED"));
-        }
+      if (!(store.getState().experimentInfo.participantId === "TESTING")) {
+        alert("you did not meat the required number of correct answers. This set will be repeated now.");
 
-      }
-      else if (this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage) {
-        progressCount += this.currentLineOfData.size;
-        this.currentLineOfData.forEach((line, index) => {
-          if (line.isGlobalVariable !== undefined) {
-            db_helper.addNewGlobalVariableToParticipantDB(store.getState().experimentInfo.participantId,
-                                                          JSON.stringify(line.obj));
-          }
-          else {
-            line.timeToCompletion = playerUtils.getCurrentTime() - line.startTimestamp;
-            db_helper.addNewLineToParticipantDB(store.getState().experimentInfo.participantId,
-                                                JSON.stringify(line));
-          }
-          wamp.broadcastEvents(stringifyWAMPMessage(null, line,
-                                                    (line.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED"));
+        //reset state
+        this.setState({
+          hasBeenAnswered: false,
+          answerItem: null,
+          currentTaskIndex: 0
         });
-        console.log("multiitem", this.currentLineOfData.size);
 
+        this.currentLineOfData = null;
       }
     }
+    else {
+      if (!(store.getState().experimentInfo.participantId === "TESTING")) {
+        if (this.currentTask.objType === "Task") {
+          if (this.currentLineOfData.correctlyAnswered === "correct") {
+            this.numCorrectAnswers += 1;
+          }
+          progressCount += 1;
+          if (this.currentLineOfData) {
+            if (!this.currentTask.globalVariable) {
+              //complete line of data before saving to DB
+              this.currentLineOfData.timeToCompletion = playerUtils.getCurrentTime() - this.currentLineOfData.startTimestamp;
+              db_helper.addNewLineToParticipantDB(store.getState().experimentInfo.participantId,
+                                                    JSON.stringify(this.currentLineOfData));
+            }
+            else {
+              var globalVariableObj = {
+                label: this.currentTask.question,
+                value: this.currentLineOfData.responses
+              };
+              db_helper.addNewGlobalVariableToParticipantDB(store.getState().experimentInfo.participantId,
+                                                              JSON.stringify(globalVariableObj));
+            }
 
-    //reset state
-    this.setState({
-      hasBeenAnswered: false,
-      answerItem: null,
-      currentTaskIndex: (this.state.currentTaskIndex + 1)
-    });
+            wamp.broadcastEvents(stringifyWAMPMessage(null, this.currentLineOfData,
+                                                      (this.currentLineOfData.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED"));
+          }
 
-    this.currentLineOfData = null;
+        }
+        else if (this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage) {
+          progressCount += this.currentLineOfData.size;
+          this.currentLineOfData.forEach((line, index) => {
+            if (line.isGlobalVariable !== undefined) {
+              db_helper.addNewGlobalVariableToParticipantDB(store.getState().experimentInfo.participantId,
+                                                            JSON.stringify(line.obj));
+            }
+            else {
+              line.timeToCompletion = playerUtils.getCurrentTime() - line.startTimestamp;
+              db_helper.addNewLineToParticipantDB(store.getState().experimentInfo.participantId,
+                                                  JSON.stringify(line));
+            }
+            wamp.broadcastEvents(stringifyWAMPMessage(null, line,
+                                                      (line.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED"));
+          });
+          console.log("multiitem", this.currentLineOfData.size);
+
+        }
+      }
+
+      //reset state
+      this.setState({
+        hasBeenAnswered: false,
+        answerItem: null,
+        currentTaskIndex: (this.state.currentTaskIndex + 1)
+      });
+
+      this.currentLineOfData = null;
+    }
   }
 
   onAnswer(answer) {

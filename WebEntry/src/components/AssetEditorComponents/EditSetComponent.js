@@ -155,11 +155,11 @@ class EditSetComponent extends Component {
       var query = {id: task._id, objType: task.objType};
       var queryList = [];
       queryList.push(query);
-      db_helper.getTasksOrTaskSetsWithIDsPromise(queryList).then(result =>{
+      db_helper.getTasksOrTaskSetsWithIDsPromise(task).then(data =>{
         //If the query was successful
-        if(result){
+        if(data){
           //Extract the child set ids of the set we are trying to add as well as the set id
-          var addingTaskChildSets = this.getChildSetIDs(result[0],[result[0]._id]);
+          var addingTaskChildSets = this.getChildSetIDs(data,[data._id]);
 
           //Check that we are not adding a set containing the set we are editing now
           if(addingTaskChildSets.includes(this.set._id)){
@@ -172,7 +172,7 @@ class EditSetComponent extends Component {
           var outerList = this.state.taskListObjects;
 
           //Iterate over the task set being edited and examine all child sets
-          for(var i = 0; i < outerList.legnth; i++){
+          for(var i = 0; i < outerList.length; i++){ //was lentgh
             //Only need to check if it is a set
             if(outerList[i].objType === "TaskSet"){
               //Extract the child set ids of the set we are trying to add as well as the set id
@@ -207,6 +207,9 @@ class EditSetComponent extends Component {
   getChildSetIDs(setObject, childSets){
     //Add the object to the list
     childSets.push(setObject._id);
+
+    console.log(setObject);
+
     //Iterate over the sets children
     for(var i = 0; i<setObject.data.length; i++){
       if(setObject.data[i].objType === "TaskSet"){
