@@ -52,7 +52,7 @@ class ObserverTab extends Component {
                            }));
     if(!this.state.forcedPause){
       this.setState({
-        isPaused: !this.state.isPaused
+        isPaused: !this.state.isPaused,
       });
     }
 
@@ -83,7 +83,7 @@ class ObserverTab extends Component {
     if(storeState.windowSize.height > 500){
       participantBigScreen =
       <div style={{display:'flex', flexDirection:'row', flexGrow:1, position:'relative', paddingBottom:5, marginRight:5}}>
-        <Button onTouchTap={e => e.stopPropagation()} style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:20, maxWidth:40, minHeight:20, maxHeight:60}}
+        <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:20, maxWidth:40, minHeight:20, maxHeight:60}}
          onClick={this.onButtonPress}>
           {buttonIcon}
         </Button>
@@ -97,7 +97,7 @@ class ObserverTab extends Component {
     }
     else{
       participantSmallScreen =
-        <Button onTouchTap={e => e.stopPropagation()} style={{zIndex:10,display:'flex', position: 'relative', flexShrink:1, minWidth:20, maxWidth:60, minHeight:20, maxHeight:60}}
+        <Button style={{zIndex:10,display:'flex', position: 'relative', flexShrink:1, minWidth:20, maxWidth:60, minHeight:20, maxHeight:60}}
            onClick={this.onButtonPress}>
             {buttonIcon}
         </Button>;
@@ -105,14 +105,14 @@ class ObserverTab extends Component {
     }
 
     return(
-          <ButtonBase style={{...shouldHighlight,...{ zIndex:1, margin:'0 0 0 2px', display:'flex', flexDirection:'column', cursor:'pointer', position:'relative', flexShrink:1, minHeight:20, maxHeight:150, minWidth:150, maxWidth:250}}}>
+          <div style={{...shouldHighlight,...{ zIndex:1, margin:'0 0 0 2px', display:'flex', flexDirection:'column', cursor:'pointer', position:'relative', flexShrink:1, minHeight:20, maxHeight:150, minWidth:150, maxWidth:250}}}>
             <div onClick={this.onTabPress} style={{display:'flex', flexDirection:'column', position:'relative', width:"100%", height:"100%"}}>
               <div style={{...activeTextStyle, ...{display:'flex', flexDirection:'row', position: 'relative'}, ...dotText}}>
                 {participantSmallScreen}<p style={{ textAlign:'center'}}>{this.props.label}</p>
               </div>
               {participantBigScreen}
             </div>
-          </ButtonBase>
+          </div>
     );
   }
 }

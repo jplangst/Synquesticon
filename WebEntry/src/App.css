@@ -61,3 +61,7 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+
+/*** Touch ***/
+-webkit-tap-highlight-color:rgba(255, 255, 255, 0); 

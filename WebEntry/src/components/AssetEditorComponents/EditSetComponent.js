@@ -183,6 +183,7 @@ class EditSetComponent extends Component {
             }
           }
           //No circular reference detected
+          console.log("Task added");
           this.handleAddTaskAllowed(true, task);
         }
         //Otherwise we do not add as we don't know if it will be ok
@@ -193,6 +194,7 @@ class EditSetComponent extends Component {
       });
     }
     else{
+      console.log("Task added");
       this.handleAddTaskAllowed(true, task);
     }
   }

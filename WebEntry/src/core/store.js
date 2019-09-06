@@ -2,9 +2,9 @@ import { createStore } from 'redux';
 import wampStore from './wampStore';
 
 import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
-import primary from '@material-ui/core/colors/grey';
-import lightPrimary from '@material-ui/core/colors/blueGrey';
-import lightSecondary from '@material-ui/core/colors/lightBlue';
+import lightPrimary from '@material-ui/core/colors/grey';
+import lightPrimary2 from '@material-ui/core/colors/blueGrey';
+import lightSecondary from '@material-ui/core/colors/orange';
 import darkSecondary from '@material-ui/core/colors/amber';
 
 /*
@@ -22,10 +22,12 @@ function prepareMUITheme(themeType){
   if(themeType === "light"){
     theme = createMuiTheme({
       palette:{
-        primary: {
-          main: "#cfd8dc"
+        primary:{
+          main: "#EEEEEE"
         },
-        secondary: lightSecondary,
+        secondary:{
+          main:"#3F51B5"
+        },
         // Used by `getContrastText()` to maximize the contrast between the
         // background and the text.
         contrastThreshold: 3,
