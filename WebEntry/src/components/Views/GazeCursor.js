@@ -1,6 +1,9 @@
 import React from 'react';
 import './GazeCursor.css';
 
+import { withTheme } from '@material-ui/styles';
+import { Typography } from '@material-ui/core';
+
 import store from '../../core/store';
 
 class GazeCursor extends React.Component {
@@ -32,22 +35,6 @@ class GazeCursor extends React.Component {
     clearInterval(this.timer);
   }
 
-  render() {
-    let cursor = null;
-    if(this.state.visible){
-      cursor = <span className="gazeCursor" id={"gazeCursorDiv" + this.props.id}/>;
-    }
-
-    return (
-      <div className="wrapper" >
-        <div className="title">{this.props.participant}</div>
-        <div className="gazeCursorContainer" ref={this.frameDiv}>
-          {cursor}
-        </div>
-      </div>
-    );
-  }
-
   updateCursorLocation(){
     try {
       let gazeLoc = store.getState().gazeData[this.props.tracker];
@@ -77,6 +64,28 @@ class GazeCursor extends React.Component {
       }
     );
   }
+
+  render() {
+    let theme = this.props.theme;
+
+    let cursor = null;
+    if(this.state.visible){
+      cursor = <span style={{backgroundColor:theme.palette.secondary.main}} className="gazeCursor" id={"gazeCursorDiv" + this.props.id}/>;
+    }
+
+    let bgolor = theme.palette.type === "light" ? theme.palette.primary.dark : theme.palette.primary.main;
+
+    return (
+      <div style={{backgroundColor: bgolor}} className="wrapper" >
+        <div className="title"><Typography variant="body1" color="textPrimary" align="center">{this.props.participant}</Typography></div>
+        <div className="gazeCursorContainer" ref={this.frameDiv}>
+          {cursor}
+        </div>
+      </div>
+    );
+  }
 }
 
-export default GazeCursor;
+
+
+export default withTheme(GazeCursor);

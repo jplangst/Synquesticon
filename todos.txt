@@ -32,16 +32,24 @@ Fix the observer tabs
 
 Some error when using the sliders in the speech dialog
 
-
-CONSIDER giving the message log a lighter grey background inside the darker background
-
 errors with dialogs, p is indise a p. Fix...
 
+TODO fix the touch ripple bubble in the observer tab...
+      Add box shadow or somwething like that to help show active component
 
 Text and style fixed in these components:
-ObserverMessages:
-    WAMPMessageComponent
-    ObserverMessage
+
+Pages:
+    IntroductionScreen
+    PbserverMode
+    PlayerMode
+
+Views:
+    ObserverMessages:
+        WAMPMessageComponent
+        ObserverMessage
+        ObserverTab
+    GazeCursor
     
 Dialogs:
     SpeechDialog 
