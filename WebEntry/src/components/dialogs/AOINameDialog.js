@@ -6,6 +6,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContentText from '@material-ui/core/DialogContentText';
 
+import { Typography } from '@material-ui/core';
+
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
@@ -40,7 +42,7 @@ class AOINameDialog extends Component {
           fullWidth={true}
           maxWidth='md'
         >
-          <DialogTitle id="form-dialog-title">Enter AOI's Name</DialogTitle>
+          <DialogTitle id="form-dialog-title"><Typography variant="h5" color="textPrimary">Enter AOI's Name</Typography></DialogTitle>
           <DialogContent>
             <TextField
               required

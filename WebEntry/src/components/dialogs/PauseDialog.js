@@ -5,6 +5,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContentText from '@material-ui/core/DialogContentText';
+import { Typography } from '@material-ui/core';
 
 class PauseDialog extends Component {
   constructor(props){
@@ -20,7 +21,7 @@ class PauseDialog extends Component {
           fullWidth={true}
           maxWidth='md'
         >
-          <DialogTitle id="form-dialog-title">Experimenter has paused the experiment</DialogTitle>
+          <DialogTitle id="form-dialog-title"><Typography variant="h5" color="textPrimary">Experimenter has paused the experiment</Typography></DialogTitle>
       </Dialog>
     );
   }

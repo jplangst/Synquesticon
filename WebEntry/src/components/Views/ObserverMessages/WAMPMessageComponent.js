@@ -9,6 +9,7 @@ import * as dbObjects from '../../../core/db_objects';
 import * as playerUtils from '../../../core/player_utility_functions';
 import './WAMPMessageComponent.css';
 import { Typography } from '@material-ui/core';
+import { withTheme } from '@material-ui/styles';
 
 var myStorage = window.localStorage;
 
@@ -58,9 +59,9 @@ class WAMPMessageComponent extends React.Component {
 
   render() {
     return (
-      <div className="wampMessageBoard">
+      <div  className="wampMessageBoard">
         <div className="messageBoardtitle">
-         <Typography color="textSecondary">Messaging Log</Typography>
+         <Typography color="textPrimary" variant="h6">Messaging Log</Typography>
         </div>
         <div className="messages">
           {this.props.messages.map((item, index) => {
@@ -74,4 +75,4 @@ class WAMPMessageComponent extends React.Component {
   }
 }
 
-export default WAMPMessageComponent;
+export default withTheme(WAMPMessageComponent);

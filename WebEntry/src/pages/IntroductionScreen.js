@@ -56,14 +56,17 @@ class IntroductionScreen extends Component {
       buttonIcon = <PlayIcon style={{display:'flex', position: 'absolute', height: '75%', width: 'auto', maxWidth: '75%', flexGrow: 1}} />;
     }
 
-    let bgColor = theme.palette.type === "light" ? theme.palette.secondary.dark : theme.palette.primary.dark;
-    let textColor = theme.palette.type === "light" ? "textSecondary" : "textPrimary";
+    console.log(theme);
+
+    let leftBG = theme.palette.type === "light" ? theme.palette.primary.dark : theme.palette.primary.main;
+    let rightBG = theme.palette.type === "light" ? theme.palette.primary.main : theme.palette.primary.dark;
 
     return(
+
     <div className="introductionScreenContainer">
-      <div style={{backgroundColor:theme.palette.primary.main}} className="IntroViewer">
+      <div style={{backgroundColor:leftBG}} className="IntroViewer">
         <div style={{borderColor:'grey'}} className="IntroViewerTitle">
-          <div className="IntroViewerTitleText"><Typography color={textColor} variant="h5">Studies</Typography></div>
+          <div className="IntroViewerTitleText"><Typography color="textPrimary" variant="h5">Studies</Typography></div>
           <Button className="IntroDataExportBtnContainer" onClick={(e) => this.gotoPage("EditorMode")}
             style={{borderLeftStyle:'solid', borderWidth:'thin', borderRadius: 10, borderColor:'grey'}}>
             <EditIcon />
@@ -71,7 +74,7 @@ class IntroductionScreen extends Component {
         </div>
         <PlayerMode gotoPage={this.gotoPage.bind(this)}/>
       </div>
-      <div style={{paddingLeft:5, backgroundColor:theme.palette.primary.light}} className="IntroContentWrapper">
+      <div style={{paddingLeft:5, backgroundColor:rightBG}} className="IntroContentWrapper">
         <div className="IntroContentTitle">
           <div className="IntroTitleText"><Typography color="textPrimary" variant="h5">Observer</Typography></div>
           <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1,

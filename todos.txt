@@ -19,3 +19,34 @@ low prio:
 hover bg highlight for observer tabs
 
 show player stimilus in observer gaze window
+
+
+
+
+Go over the whole application and look for text to put into typography.
+Make sure all dialog buttons are of variant="outlined"
+
+Fix play mode buttons and text
+
+Fix the observer tabs
+
+Some error when using the sliders in the speech dialog
+
+
+CONSIDER giving the message log a lighter grey background inside the darker background
+
+errors with dialogs, p is indise a p. Fix...
+
+
+Text and style fixed in these components:
+ObserverMessages:
+    WAMPMessageComponent
+    ObserverMessage
+    
+Dialogs:
+    SpeechDialog 
+    DeviceIDDialog
+    CrossbarDialog
+    CommentDialog
+    PauseDialog
+    AOINameDialog

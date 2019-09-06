@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 
 import GazeCursor from '../components/Views/GazeCursor';
 import WAMPMessageComponent from '../components/Views/ObserverMessages/WAMPMessageComponent';
-
-import ObserverTab from '../components/Views/ObserverTabs/ObserverTab';
+import ObserverTab from '../components/Views/ObserverMessages/ObserverTab';
 
 import wampStore from '../core/wampStore';
 import store from '../core/store';
