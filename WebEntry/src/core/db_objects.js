@@ -27,6 +27,7 @@ export class TaskSetObject {
     this.tags = [];
     this.childIds = [];
     this.setTaskOrder = "InOrder";
+    this.repeatSetThreshold = 0;
     this.displayOnePage = false; //If true display all the tasks on one page
     this.logOneLine = false; //If true log all the tasks in one line
     this.counterbalancingOrder = [];

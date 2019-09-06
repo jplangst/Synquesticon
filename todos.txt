@@ -1,4 +1,4 @@
-* Remote Tracker box going outside of its bounds (fixed?)
+* Remote Tracker box going outside of its bounds (fixed)
 * Observer tabs should show hand cursor (fixed)
 * Observer messages should not have edit text cursor when hovered (fixed)
 * Observer messages scrolling area goes behind the gaze tracker (fixed)
@@ -7,17 +7,8 @@
 
 * PopupDialog for experiment paused (Need to style it)
 
-
-* Settings button in header is too small
-
-
-*Light and dark theme switch in the settings menu
-*light and dark theme
-
 low prio:
-
 hover bg highlight for observer tabs
-
 show player stimilus in observer gaze window
 
 
@@ -36,6 +27,14 @@ errors with dialogs, p is indise a p. Fix...
 
 TODO fix the touch ripple bubble in the observer tab...
       Add box shadow or somwething like that to help show active component
+
+TODO hide/remove the edit button next to each study in the intro page.
+
+TODO NOW: Fix single choice option checkbox in edit task/MP choice component. (Done)
+          Add repeat set field in edit task set (Done)
+
+TODO go over all input forms and use reasonable placeholders etc...
+TODO test to make sure that all tasks and set edit options are correctly saved and loaded from DB.
 
 Text and style fixed in these components:
 

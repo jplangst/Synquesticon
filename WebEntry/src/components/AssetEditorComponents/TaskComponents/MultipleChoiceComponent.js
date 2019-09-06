@@ -9,7 +9,7 @@ class MultipleChoiceComponent extends Component {
     super(props);
 
     this.state = {
-      singleChoice: props.task.singleChoice,
+      singleChoice: props.task.taskType === "Single Choice" ? true : false,
       globalVariable: props.task.globalVariable,
     };
 
