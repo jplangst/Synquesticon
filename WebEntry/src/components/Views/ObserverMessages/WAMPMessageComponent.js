@@ -59,7 +59,7 @@ class WAMPMessageComponent extends React.Component {
 
   render() {
     return (
-      <div style={{backgroundColor:this.props.theme.palette.primary.main}} className="wampMessageBoard">
+      <div  className="wampMessageBoard">
         <div className="messageBoardtitle">
          <Typography color="textPrimary" variant="h6">Messaging Log</Typography>
         </div>

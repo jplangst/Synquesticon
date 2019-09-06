@@ -67,7 +67,12 @@ function prepareMUITheme(themeType){
     MuiInputLabel:{
       root:{"&$focused":{color: theme.palette.secondary.dark, underline:theme.palette.secondary.dark}},
       focused:{borderColor:theme.palette.secondary.dark}
-    }
+    },
+    MuiTouchRipple:{
+      ripple: {
+        color: theme.palette.secondary.main,
+      },
+    },
   };
 
   return theme = responsiveFontSizes(theme);

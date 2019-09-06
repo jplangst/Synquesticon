@@ -26,7 +26,7 @@ class ObserverMessage extends React.Component {
         */
 
         var startTime = new Date(args.startTimestamp);
-        displayText = <Typography color="textPrimary">
+        displayText = <Typography variant="body1" color="textPrimary">
                         <b>New experiment - Task set: </b>
                         <i>{args.mainTaskSetId} </i>
                         started at {startTime.toUTCString()}
@@ -35,7 +35,7 @@ class ObserverMessage extends React.Component {
         break;
       case "START":
         var startTaskTime = new Date(args.lineOfData.startTimestamp);
-        displayText = <Typography color="textPrimary">
+        displayText = <Typography variant="body1" color="textPrimary">
                           <b>{args.task.taskType} </b>
                           <i>{args.lineOfData.taskContent} </i>
                           {(args.task.globalVariable ? " (global variable) " : "") + " - start at: " + startTaskTime.toUTCString()}
@@ -59,7 +59,7 @@ class ObserverMessage extends React.Component {
         var firstResponseTimestamp = new Date(args.lineOfData.firstResponseTimestamp);
         var responses = args.lineOfData.responses.join(', ');
         var timeToCompletion = args.lineOfData.timeToCompletion < 0 ? "s" : "s. Time to completion: " + args.lineOfData.timeToCompletion/1000 + "s";
-        displayText = <Typography color="textPrimary">
+        displayText = <Typography variant="body1" color="textPrimary">
                         <b>Answered </b>
                         <i>{responses} </i>
                          - {args.lineOfData.correctlyAnswered}. Time to first answer: {args.lineOfData.timeToFirstAnswer/1000}{timeToCompletion}. First answered at {firstResponseTimestamp.toUTCString()}.
@@ -82,7 +82,7 @@ class ObserverMessage extends React.Component {
                   store.getState().experimentInfo.selectedTracker,
                   obj.timeToCompletion
       */
-        displayText = <Typography color="textPrimary">
+        displayText = <Typography variant="body1" color="textPrimary">
                         <b>Skipped </b>
                         Time to completion: {args.lineOfData.timeToCompletion/1000} s.
                       </Typography>;
@@ -97,7 +97,7 @@ class ObserverMessage extends React.Component {
                   timestamp
       */
         var endTime = new Date(args.timestamp);
-        displayText = <Typography color="textPrimary">
+        displayText = <Typography variant="body1" color="textPrimary">
                         <b>Experiment finished at </b>
                         {endTime.toUTCString()}
                       </Typography>;
@@ -105,7 +105,7 @@ class ObserverMessage extends React.Component {
         break;
       case "COMMENT":
         var commentTime = new Date(args.timestamp);
-        displayText = <Typography color="textPrimary">
+        displayText = <Typography variant="body1" color="textPrimary">
                         <b>Comment from {args.observerName}: </b>
                         {args.comment} at {commentTime.toUTCString()}
                       </Typography>;

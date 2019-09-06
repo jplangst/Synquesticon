@@ -35,10 +35,13 @@ Some error when using the sliders in the speech dialog
 
 CONSIDER giving the message log a lighter grey background inside the darker background
 
+errors with dialogs, p is indise a p. Fix...
+
 
 Text and style fixed in these components:
 ObserverMessages:
     WAMPMessageComponent
+    ObserverMessage
     
 Dialogs:
     SpeechDialog 
