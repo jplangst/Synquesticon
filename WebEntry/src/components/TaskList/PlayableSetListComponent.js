@@ -21,7 +21,7 @@ class PlayableSetListComponent extends Component {
             var content = listUtils.getTaskContent(item);
 
             return <div key={index}><PlayableSetComponent task={item}
-                        runSetCallback={ this.props.runSetCallback } content={content} /></div>
+                        runSetCallback={ this.props.runSetCallback } content={content} showEditButton={this.props.showEditButton}/></div>
           })
         }
 
