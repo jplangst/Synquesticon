@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import { withTheme } from '@material-ui/styles';
+
 import './AOIEditorComponent.css';
 
 class AOIComponent extends Component {
@@ -8,6 +10,8 @@ class AOIComponent extends Component {
   }
 
   render() {
+    let theme = this.props.theme;
+
     if (this.props.aoi.boundingbox.length <= 0) {
       return <div className="AOI" />
     }
@@ -18,7 +22,7 @@ class AOIComponent extends Component {
       pathData.push(point[0] + ' ' + point[1]);
     });
 
-    var color = this.props.aoi.isSelected ? "red" : "blue";
+    var color = this.props.aoi.isSelected ? "red" : theme.palette.secondary.main;
     var path = pathData.join(' ');
     var p1 = this.props.aoi.boundingbox[0];
 
@@ -32,7 +36,7 @@ class AOIComponent extends Component {
             {this.props.aoi.boundingbox.map((p, ind) => {
               return <circle key={ind} cx={p[0]} cy={p[1]} r="0.75" stroke="black" fill="white" strokeWidth={strokeWidth}/>
             })}
-          <text className="AOIName" x={p1[0]} y={p1[1]} dy="-1">{this.props.aoi.name}</text>
+          <text className="AOIName" x={p1[0]} y={p1[1]} dy="-1" fill={color}>{this.props.aoi.name}</text>
         </g>
       );
     }
@@ -50,4 +54,4 @@ class AOIComponent extends Component {
 
 }
 
-export default AOIComponent;
+export default withTheme(AOIComponent);

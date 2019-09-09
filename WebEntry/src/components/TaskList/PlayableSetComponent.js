@@ -23,7 +23,7 @@ class PlayableSetComponent extends Component {
         <div  className={"listItem "}>
           <div className="listItemTextContainer dotLongText">
             <div className="listItemText ">
-              <Typography color={textColor} variant="body1" >{this.props.content}</Typography>
+              <Typography color={textColor} noWrap variant="body1" >{this.props.content}</Typography>
             </div>
           </div>
           {editButton}
