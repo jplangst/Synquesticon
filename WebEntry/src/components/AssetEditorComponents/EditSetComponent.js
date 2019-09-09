@@ -340,8 +340,7 @@ class EditSetComponent extends Component {
           label="Set Name"
           ref="setTextRef"
           fullWidth
-          multiline
-          rows="3"
+          rows="1"
           onChange={(e)=>{this.set.name = e.target.value}}
         />
         <TextField id="tags"

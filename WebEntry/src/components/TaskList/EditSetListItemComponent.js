@@ -83,42 +83,41 @@ class EditSetListItemComponent extends Component {
 
   render() {
     const { theme, connectDragSource, connectDropTarget, isOver } = this.props;
-    
+
     var opacity = 1;
     if(isOver){
         opacity = 0;
     }
 
+    var task = <div className={"editListItemTextContainer "}>
+                <div className="editListItemText">
+                  <Typography color="textPrimary" noWrap> {this.props.content} </Typography>
+                </div>
+              </div>;
+
     if(this.props.item.objType === "Task"){
       if(this.props.componentDepth === 0){ //If it is a top level parent it should be dragable
-        return(connectDropTarget(<div  style={{opacity:opacity }} className={"editListItem "} >
-              <div className={"editListItemTextContainer " +this.props.highlight}>
-                <div className="editListItemText dotLongText">
-                  {this.props.content}
-                </div>
-              </div>
-              <div className="editListItemDelBtnContainer">
-                <Button style={{cursor:'pointer',width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
-                  className="editListItemDragBtn" size="small" fullWidth onClick={this.removeTask.bind(this)}>
-                  <DeleteIcon className="delBtnIcon"/>
-                </Button>
-              </div>
-              {connectDragSource(
-                <div className="editListItemDragBtnContainer">
-                <Button style={{cursor:'move',width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
-                  className="editListItemDragBtn" size="small" fullWidth >
-                  <DragIcon className="dragBtnIcon"/>
-                </Button>
-              </div>)}
-            </div>));
+        return(connectDropTarget(
+          <div  style={{opacity:opacity }} className={"editListItem "} >
+            {task}
+            <div className="editListItemDelBtnContainer">
+              <Button style={{cursor:'pointer',width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
+                 size="small" onClick={this.removeTask.bind(this)}>
+                <DeleteIcon />
+              </Button>
+            </div>
+            {connectDragSource(
+              <div className="editListItemDragBtnContainer">
+              <Button style={{cursor:'move',width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
+                 size="small" >
+                <DragIcon />
+              </Button>
+            </div>)}
+          </div>));
       }
       else{ //If it is a child we don't want it to be draggable
         return(<div  className={"editListItem "} >
-              <div className={"editListItemTextContainer " +this.props.highlight}>
-                <div className="editListItemText dotLongText">
-                  {this.props.content}
-                </div>
-              </div>
+              {task}
             </div>);
       }
     }
@@ -139,28 +138,35 @@ class EditSetListItemComponent extends Component {
         <div>
         <div className="editListItemDelBtnContainer">
           <Button style={{cursor:'pointer',width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
-            className="editListItemDragBtn" size="small" fullWidth onClick={this.removeTask.bind(this)} >
+             size="small" onClick={this.removeTask.bind(this)} >
             <DeleteIcon className="delBtnIcon"/>
           </Button>
         </div>
         {connectDragSource(
         <div className="editListItemDragBtnContainer">
           <Button style={{cursor:'move', width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
-            className="editListItemDragBtn" size="small" fullWidth>
+             size="small" >
             <DragIcon className="dragBtnIcon"/>
           </Button>
         </div>)}
         </div>;
-
-        return (connectDropTarget(<div content={this.props.content} style={{opacity:opacity }}><CollapsableContainer content={this.props.content} classNames="editSetCompContainer" contentClassNames="editSetCompContent" headerComponents={dragSource} open={false}
-          headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={this.props.item.name}>
-          {collapsableContent}
-        </CollapsableContainer></div>));
+        return (connectDropTarget(
+          <div content={this.props.content} style={{opacity:opacity}}>
+            <CollapsableContainer content={this.props.content} classNames="editSetCompContainer"
+              contentClassNames="editSetCompContent" headerComponents={dragSource} open={false} headerHeight={40}
+              headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={this.props.item.name}
+              titleVariant="body1" indentContent={20}>
+                {collapsableContent}
+              </CollapsableContainer>
+          </div>));
       }
-      return(<CollapsableContainer classNames="editSetCompContainer" contentClassNames="editSetCompContent" headerComponents={dragSource} open={false}
-        headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={this.props.item.name}>
-        {collapsableContent}
-      </CollapsableContainer>);
+      return(
+        <div style={{marginLeft:20*this.props.componentDepth}}>
+        <CollapsableContainer  classNames="editSetCompContainer" contentClassNames="editSetCompContent" headerComponents={dragSource} open={false}
+        headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={this.props.item.name} headerHeight={40}
+        headerWidth={{flexGrow:1}} titleVariant="body1" indentContent={10}>
+          {collapsableContent}
+        </CollapsableContainer></div>);
     }
 
     return null;

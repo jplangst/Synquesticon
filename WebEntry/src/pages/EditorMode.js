@@ -245,14 +245,14 @@ class EditorMode extends Component {
         </div>
 
         <div className="AssetViewerContent">
-          <CollapsableContainer headerTitle="Tasks"
+          <CollapsableContainer headerTitle="Tasks" useMediaQuery={true}
           headerComponents={collapsableTaskHeaderButtons} hideHeaderComponents={true} open={true}>
               < TaskListComponent reorderDisabled={true} placeholderName="TaskPlaceholder" reorderID="tasksReorder" taskList={ this.state.taskList }
                 selectTask={ this.selectTask.bind(this) } selectedTask={this.state.selectedTask} dragDropCallback={this.onDragDropCallback.bind(this)}
                 reactDND={false} itemType="Task"/ >
           </CollapsableContainer>
 
-          <CollapsableContainer headerTitle="Sets"
+          <CollapsableContainer headerTitle="Sets" useMediaQuery={true}
           headerComponents={collapsableSetHeaderButtons} hideHeaderComponents={true}
           open={true}>
               < TaskListComponent selectedTask={this.state.selectedTaskSet} reorderDisabled={false} placeholderName="TaskSetPlaceholder" reorderID="taskSetsReorder"

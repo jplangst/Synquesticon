@@ -3,8 +3,6 @@ import React, { Component } from 'react';
 import EditSetListItemComponent from './EditSetListItemComponent';
 import * as listUtils from '../../core/db_objects_utility_functions';
 
-import './EditSetListComponent.css';
-
 import { DropTarget } from 'react-dnd'
 const Types = {
  ITEM: 'taskItemComp'
@@ -26,7 +24,6 @@ function collect(connect, monitor) {
  }
 }
 
-
 class EditSetListComponent extends Component {
   constructor(props) {
     super(props);
@@ -35,10 +32,10 @@ class EditSetListComponent extends Component {
 
   render() {
     this.taskListObjects = this.props.taskListObjects;
-    const { connectDropTarget } = this.props //, canDrop
+    const { connectDropTarget } = this.props;
 
     return connectDropTarget(
-      <div className="taskListComponentContainer">
+      <div style={{width:'100%', height:'100%'}}>
         {
           this.taskListObjects.map((item, index) => {
             var content = listUtils.getTaskContent(item);
