@@ -66,26 +66,27 @@
 
 .ContainerSeperator{
   position: relative;
-  /*border-bottom-width: thin;
-  border-bottom-style: solid;
-  border-color: #303f9f;*/
 }
 
 .collapsableHeaderBtnsContainer{
   min-height: 55px;
   width: 100%;
   position: relative;
+  display: flex;
+  flex-direction: row;
 }
 .collapsableBtns{
-  position: absolute;
-  left: 62%;
+  position: relative;
+  display: flex;
   height: 100%;
-  width: 38%;
 }
 .searchWrapperDiv{
-  position: absolute;
+  position: relative;
+  display: flex;
   height: 100%;
-  width: 62%;
+  padding-left: 3px;
+  padding-right: 1px;
+  flex-grow: 1;
 }
 
 /****** Asset Editor ********/

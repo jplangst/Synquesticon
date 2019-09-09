@@ -77,12 +77,12 @@ const styles = theme => ({
     width: '100%',
     borderRadius: '15px',
     color: theme.palette.text.primary,
-    [theme.breakpoints.up('sm')]: {
+    /*[theme.breakpoints.up('sm')]: {
       width: 120,
       '&:focus': {
         width: 200,
       },
-    },
+    },*/
   },
 });
 

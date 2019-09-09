@@ -27,49 +27,30 @@
   height: 55px;
 }
 .collapseBtnContainer{
-  position: absolute;
-  width: 65px;
+  position: relative;
   height: 100%;
 }
-.collapseBtn{
-  width: 65px;
-  height: 100%;
-}
-.collapsableIcon{
-  height: 100%;
-}
+
 .rotateIcon{
   transform: rotate(90deg);
 }
 .titleContainer{
-  position: absolute;
-  left: 65px;
-  width: calc(100% - 65px);
+  position: relative;
+  width: 55px;
   height: 100%;
-
   display:flex;
   align-items: center; /* Vertical center alignment */
-}
-.dropdownTitle{
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .customHeaderComponents{
   position: relative;
-  display: inline-flex;
-  flex-grow: 2;
+  display: flex;
+  flex-grow: 1;
+  height: 100%;
 }
 
 /**** Content ******/
 .collapsableContent{
-  width: 90%;
+  width: 100%;
   height: auto;
-  margin-left: 5%;
-}
-
-.collapsableContentSpacer{
-  padding-top: 4px;
-  /*padding-bottom: 4px;*/
 }

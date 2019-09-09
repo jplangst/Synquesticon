@@ -193,9 +193,9 @@ class EditorMode extends Component {
 
     var filterButton = null;
     if(filterCallback !== null){
-      filterButton = <Button style={{width: '50%', height: '100%', minWidth: '30px', minHeight: '30px'}}
+      filterButton = <Button style={{width: '100%', height: '100%'}}
       className="collapsableHeaderBtns" size="small" onClick={filterCallback} >
-        <FilterList fontSize="large" className="addItemsIcon" />
+        <FilterList fontSize="large"/>
       </Button>;
     }
 
@@ -203,9 +203,8 @@ class EditorMode extends Component {
     <div className="collapsableHeaderBtnsContainer">
       <div className="searchWrapperDiv"><SearchBar onChange={searchCallback} searchID="taskSearch"/></div>
       <div className="collapsableBtns">
-        <Button style={{width: '50%', height: '100%', minWidth: '30px', minHeight: '30px'}}
-        className="collapsableHeaderBtns" size="small" onClick={addCallback} >
-          <AddCircleOutline fontSize="large" className="addItemsIcon" />
+        <Button style={{position:"relative", width: '100%', height: '100%', minWidth:0, minHeight:0}} size="small" onClick={addCallback} >
+          <AddCircleOutline fontSize="large"/>
         </Button>
         {filterButton}
       </div>
@@ -242,7 +241,7 @@ class EditorMode extends Component {
         </div>
 
         <div className="AssetViewerContent">
-          <CollapsableContainer style={{minHeight: 200}} headerTitle="Tasks"
+          <CollapsableContainer headerTitle="Tasks"
           headerComponents={collapsableTaskHeaderButtons} hideHeaderComponents={true} open={true}>
               < TaskListComponent reorderDisabled={true} placeholderName="TaskPlaceholder" reorderID="tasksReorder" taskList={ this.state.taskList }
                 selectTask={ this.selectTask.bind(this) } selectedTask={this.state.selectedTask} dragDropCallback={this.onDragDropCallback.bind(this)}

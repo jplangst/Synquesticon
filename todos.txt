@@ -10,7 +10,7 @@
 low prio:
 hover bg highlight for observer tabs
 show player stimilus in observer gaze window
-
+split the searchbar and the add & filter buttons into seperate containers and use flex-wrap or something 
 
 
 
@@ -18,20 +18,13 @@ Go over the whole application and look for text to put into typography.
 Make sure all dialog buttons are of variant="outlined"
 
 Fix play mode buttons and text
-
-Fix the observer tabs
-
 Some error when using the sliders in the speech dialog
-
 errors with dialogs, p is indise a p. Fix...
 
-TODO fix the touch ripple bubble in the observer tab...
+TODO fix the touch ripple bubble in the observer tab... (Done)
       Add box shadow or somwething like that to help show active component
 
 TODO hide/remove the edit button next to each study in the intro page.
-
-TODO NOW: Fix single choice option checkbox in edit task/MP choice component. (Done)
-          Add repeat set field in edit task set (Done)
 
 TODO go over all input forms and use reasonable placeholders etc...
 TODO test to make sure that all tasks and set edit options are correctly saved and loaded from DB.
@@ -39,7 +32,6 @@ TODO test to make sure that all tasks and set edit options are correctly saved a
 Make the drag and drop layer also use the theme...
 
 Text and style fixed in these components:
-
 components:
     Containers:
         CollapsableContainer
