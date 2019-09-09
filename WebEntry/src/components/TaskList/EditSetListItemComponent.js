@@ -4,6 +4,9 @@ import Button from '@material-ui/core/Button';
 import DragIcon from '@material-ui/icons/ControlCamera';
 import DeleteIcon from '@material-ui/icons/Delete';
 
+import { withTheme } from '@material-ui/styles';
+import { Typography } from '@material-ui/core';
+
 import * as listUtils from '../../core/db_objects_utility_functions';
 
 import CollapsableContainer from '../Containers/CollapsableContainer';
@@ -79,8 +82,8 @@ class EditSetListItemComponent extends Component {
   }
 
   render() {
-    const {  connectDragSource, connectDropTarget, isOver } = this.props; //isDragging, connectDragPreview
-
+    const { theme, connectDragSource, connectDropTarget, isOver } = this.props;
+    
     var opacity = 1;
     if(isOver){
         opacity = 0;
@@ -164,4 +167,4 @@ class EditSetListItemComponent extends Component {
   }
 }
 
-export default flow( DropTarget(Types.REORDER, itemTarget, targetConnect), DragSource(Types.REORDER, itemSource, collect))(EditSetListItemComponent);
+export default flow( DropTarget(Types.REORDER, itemTarget, targetConnect), DragSource(Types.REORDER, itemSource, collect))(withTheme(EditSetListItemComponent));

@@ -361,6 +361,7 @@ class EditSetComponent extends Component {
           margin="dense"
           defaultValue={this.set.repeatSetThreshold}
           placeholder="0"
+          fullWidth
           helperText="The amount of tasks that must be completed, otherwise the set repeats"
           label="Repeat Set Threshold"
           ref="repeatRef"

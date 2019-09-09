@@ -36,7 +36,7 @@
   border-left-style: solid;
   border-width: thin;
   border-radius: 10px;
-  border-color: #BDBDBD;
+  border-color: grey;
 }
 
 .editListItemDragBtn{
@@ -64,7 +64,7 @@
   border-left-style: solid;
   border-width: thin;
   border-radius: 10px;
-  border-color: #BDBDBD;
+  border-color: grey;
 }
 
 .editListItemDelBtn{
