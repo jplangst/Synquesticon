@@ -31,8 +31,8 @@ class EditSetComponent extends Component {
     //Clone the array via JSON. Otherwise we would operate directly on the original objects which we do not want
     this.set = this.props.isEditing ? JSON.parse(JSON.stringify(this.props.setObject)) : new dbObjects.TaskSetObject();
     console.log("this set", this.set);
-    if (this.set.requiredCorrect === undefined) {
-      this.set.requiredCorrect = 0;
+    if (this.set.repeatSetThreshold === undefined) {
+      this.set.repeatSetThreshold = 0;
     }
 
     //We keep these fields in the state as they affect how the component is rendered
@@ -386,16 +386,6 @@ class EditSetComponent extends Component {
           control={<Checkbox color="secondary" />}
           onChange={this.handleLogOneLineChange}
           labelPlacement="end"
-        />
-        <TextField id="requiredCorrect"
-          margin="dense"
-          defaultValue={this.set.requiredCorrect}
-          placeholder=""
-          helperText="Repeat unless a certain number of correct answers has been achieved"
-          label="Required number of correct answers"
-          fullWidth
-          ref="tagsRef"
-          onChange={(e)=> {this.set.requiredCorrect = e.target.value}}
         />
       </div>;
 
