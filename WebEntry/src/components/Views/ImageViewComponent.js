@@ -31,7 +31,7 @@ class ImageViewComponent extends Component {
     }
     if (this.state.imageSrc) {
       return (
-        <div className="commonContainer">
+        <div className={this.props.className} >
           <img className="imageView" src={this.state.imageSrc} alt="Can't find image"/>
         </div>
       );

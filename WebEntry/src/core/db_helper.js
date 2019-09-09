@@ -588,7 +588,6 @@ class db_helper {
     }
 
     addNewObserverMessageToDb(message) {
-      console.log("add new msg", message);
      axios.post("/api/addNewObserverMessage", {
        observerMessage: JSON.stringify(message)
      }).then(response => {});
@@ -615,6 +614,21 @@ class db_helper {
 
     deleteAllMessagesFromDb() {
       axios.post("/api/deleteAllMessages").then(response => {});
+    }
+
+    /*
+ ██████   █████  ███████ ███████     ██████   █████  ████████  █████
+██       ██   ██    ███  ██          ██   ██ ██   ██    ██    ██   ██
+██   ███ ███████   ███   █████       ██   ██ ███████    ██    ███████
+██    ██ ██   ██  ███    ██          ██   ██ ██   ██    ██    ██   ██
+ ██████  ██   ██ ███████ ███████     ██████  ██   ██    ██    ██   ██
+*/
+
+    saveGazeData(participantId, gazeData) {
+      axios.post("/api/saveGazeData", {
+        participantId: participantId,
+        gazeData: JSON.stringify(gazeData)
+      });
     }
 }
 export default new db_helper();

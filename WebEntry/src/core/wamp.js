@@ -1,5 +1,6 @@
 var store = require('./store');
 var wampStore = require('./wampStore');
+var playerUtils = require('./player_utility_functions');
 
 try {
    // for Node.js
@@ -66,8 +67,11 @@ function startWAMP(config) {
           type: 'SET_GAZE_DATA',
           tracker: args[0],
           gazeData: {
+            timestamp: playerUtils.getCurrentTime(),
             locX: gazeX,
-            locY: gazeY
+            locY: gazeY,
+            leftPupilRadius: gazeData[0]/2,
+            rightPupilRadius: gazeData[3]/2
           }
         }
         store.default.dispatch(gazeAction);

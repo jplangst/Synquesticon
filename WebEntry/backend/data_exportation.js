@@ -24,6 +24,18 @@ exports.save_to_csv = async function(p) {
     if (file_name === "") {
       file_name = "Anonymous";
     }
+
+    var gazeDataFile = "gaze_data_" + p._id;
+    var newGazeDataFile = "gaze_data_" + file_name + ".csv";
+
+    if (fs.existsSync(gazeDataFile)) {
+      if (!fs.existsSync(newGazeDataFile)) {
+        fs.rename(gazeDataFile, newGazeDataFile, function(err) {
+            if ( err ) console.log('ERROR: ' + err);
+        });
+      }
+    }
+
     file_name += ".csv";
 
     if (fs.existsSync(file_name)) {
@@ -82,3 +94,24 @@ exports.save_to_csv = async function(p) {
 
     logger.end();
   }
+
+exports.save_gaze_data = function (participantId, gazeData) {
+  var file_name = "gaze_data_" + participantId;
+  var logger = fs.createWriteStream(file_name, {
+    flags: 'a' // 'a' means appending (old data will be preserved)
+  });
+
+  if (!fs.existsSync(file_name)) {
+    var header = "timestamp,X,Y,leftPupilRadius,rightPupilRadius";
+    logger.write(header + os.EOL);
+  }
+
+  gazeData.map((row, index) => {
+    logger.write(row.timestamp + ',' +
+                 row.locX + ',' +
+                 row.locY + ',' +
+                 row.leftPupilRadius + ',' +
+                 row.rightPupilRadius + os.EOL);
+  })
+  logger.end();
+}

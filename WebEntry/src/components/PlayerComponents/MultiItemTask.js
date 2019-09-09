@@ -89,19 +89,19 @@ class MultiItemTask extends Component {
         var key = item._id+"MultiItemTask";
 
         if(item.taskType === "Instruction"){
-            return <InstructionViewComponent key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex}/>;
+            return <InstructionViewComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex}/>;
         }
         else if(item.taskType === "Text Entry"){
-            return <TextEntryComponent key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex}/>;
+            return <TextEntryComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex}/>;
         }
         else if(item.taskType === "Single Choice"){
-            return <SingleChoiceComponent key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex}/>;
+            return <SingleChoiceComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex}/>;
         }
         else if(item.taskType === "Multiple Choice"){
-            return <MultipleChoiceComponent key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex}/>;
+            return <MultipleChoiceComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex}/>;
         }
         else if(item.taskType === "Image") {
-            return <ImageViewComponent key={key} task={item} mapID={mapIndex}/>;
+            return <ImageViewComponent className="itemContainer" key={key} task={item} mapID={mapIndex}/>;
         }
       }
       else{ //If it is a set we recursively call this function to render the set children

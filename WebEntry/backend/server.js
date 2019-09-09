@@ -750,6 +750,21 @@ router.post("/deleteAllMessages", (req, res) => {
   });
 });
 
+/*
+ ██████   █████  ███████ ███████     ██████   █████  ████████  █████
+██       ██   ██    ███  ██          ██   ██ ██   ██    ██    ██   ██
+██   ███ ███████   ███   █████       ██   ██ ███████    ██    ███████
+██    ██ ██   ██  ███    ██          ██   ██ ██   ██    ██    ██   ██
+ ██████  ██   ██ ███████ ███████     ██████  ██   ██    ██    ██   ██
+*/
+
+router.post("/saveGazeData", (req, res) => {
+  const { participantId, gazeData } = req.body;
+  var gazeDataObj = JSON.parse(gazeData);
+
+  data_exportation.save_gaze_data(participantId, gazeDataObj);
+});
+
 // append /api for our http requests
 app.use("/api", router);
 

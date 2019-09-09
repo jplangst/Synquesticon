@@ -58,6 +58,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
     this.numCorrectAnswers = 0;
     this.currentTask = null;
     this.currentLineOfData = null;
+    this.gazeDataArray = [];
     this.handleGazeLocUpdate = this.updateCursorLocation.bind(this);
   }
 
@@ -75,6 +76,8 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
       console.log("set up interval");
       this.timer = setInterval(this.handleGazeLocUpdate, 4.5); //Update the gaze cursor location every 2ms
     }
+
+    this.gazeDataArray = [];
   }
 
   componentWillUnmount() {
@@ -91,18 +94,6 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 ██      ██    ██ ██    ██ ██    ██ ██ ██  ██ ██ ██    ██
 ███████  ██████   ██████   ██████  ██ ██   ████  ██████
 */
-  // logTheStartOfTask() {
-  //   var startTimestamp = playerUtils.getCurrentTime();
-  //   if (this.currentTask.objType === "Task") {
-  //     this.currentLineOfData = new dbObjects.LineOfData(startTimestamp,
-  //                                                       this.currentTask._id,
-  //                                                       this.props.tasksFamilyTree, //the array that has the task's tasksFamilyTree
-  //                                                       dbObjectsUtilityFunctions.getTaskContent(this.currentTask),
-  //                                                       this.currentTask.correctResponses,
-  //                                                       "SingleItem");
-  //     wamp.broadcastEvents(stringifyWAMPMessage(this.currentTask, this.currentLineOfData, "START"));
-  //   }
-  // }
 
   logTheStartOfTask() {
     var startTimestamp = playerUtils.getCurrentTime();
@@ -119,20 +110,29 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 
   //Updates the location of the Gaze Cursor. And checks if any of the AOIs were looked at
   updateCursorLocation(){
-    if (this.currentTask && this.currentTask.aois !== undefined && this.currentTask.aois.length > 0) {
+    if (this.currentTask) {
       try {
         let gazeLoc = store.getState().gazeData[store.getState().experimentInfo.selectedTracker];
-        for (var i = 0; i < this.currentTask.aois.length; i++) {
-          var item = this.currentTask.aois[i];
-          if (gazeLoc.locX > item.boundingbox[0][0] && gazeLoc.locX < item.boundingbox[1][0]
-            && gazeLoc.locY > item.boundingbox[0][1] && gazeLoc.locY < item.boundingbox[3][1]
-            && item.checked === undefined) {
-            item.checked = true;
-            console.log("aoi checking", this.currentTask.aois);
+        if (this.currentTask.aois !== undefined && this.currentTask.aois.length > 0) {
+          for (var i = 0; i < this.currentTask.aois.length; i++) {
+            var item = this.currentTask.aois[i];
+            if (gazeLoc.locX > item.boundingbox[0][0] && gazeLoc.locX < item.boundingbox[1][0]
+              && gazeLoc.locY > item.boundingbox[0][1] && gazeLoc.locY < item.boundingbox[3][1]
+              && item.checked === undefined) {
+              item.checked = true;
+              console.log("aoi checking", this.currentTask.aois);
+            }
           }
         }
 
+        var timestamp = playerUtils.getCurrentTime();
+        if (!this.gazeDataArray.includes(gazeLoc)) {
+          this.gazeDataArray.push(gazeLoc);
+        }
+
+
       } catch (err) {
+
       }
     }
   }
@@ -146,6 +146,12 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
   */
   onClickNext() {
     if (!(store.getState().experimentInfo.participantId === "TESTING")) {
+      //save gaze data
+      var copiedGazeData = this.gazeDataArray.slice();
+      this.gazeDataArray = [];
+      db_helper.saveGazeData(store.getState().experimentInfo.participantId, copiedGazeData);
+
+
       if (this.currentTask.objType === "Task") {
         if (this.currentLineOfData.correctlyAnswered === "correct") {
           this.numCorrectAnswers += 1;
@@ -309,19 +315,19 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
                                     }}/>
             }
             if((this.currentTask.taskType === "Instruction")) {
-              return <InstructionViewComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)}/>;
+              return <InstructionViewComponent className="commonContainer" task={this.currentTask} answerCallback={this.onAnswer.bind(this)}/>;
             }
-            if(this.currentTask.taskType === "Text Entry") {
-              return <TextEntryComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered}/>;
+            if(this.currentTask.taskType  === "Text Entry") {
+              return <TextEntryComponent className="commonContainer" task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered}/>;
             }
             if(this.currentTask.taskType === "Single Choice") {
-              return <SingleChoiceComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered}/>;
+              return <SingleChoiceComponent className="commonContainer" task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered}/>;
             }
             if((this.currentTask.taskType === "Multiple Choice")) {
-              return <MultipleChoiceComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered}/>;
+              return <MultipleChoiceComponent className="commonContainer" task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered}/>;
             }
             if((this.currentTask.taskType === "Image")) {
-              return <ImageViewComponent task={this.currentTask}/>;
+              return <ImageViewComponent className="commonContainer" task={this.currentTask}/>;
             }
           } else {
 
@@ -390,9 +396,7 @@ class DisplayTaskComponent extends Component {
   }
 
   componentWillUnmount() {
-    if (!store.getState().experimentInfo.participantId === "TESTING") {
-      clearInterval(this.timer);
-    }
+
     var layoutAction = {
       type: 'SET_SHOW_HEADER',
       showHeader: true,

@@ -18,3 +18,14 @@
   bottom: 20px;
   right: 20px;
 }
+
+.itemContainer {
+  position: relative;
+  height: auto;
+
+  font-size: 1em;
+  padding-bottom: 5%;
+
+  font-size: 3.5em;
+  text-align: center;
+}

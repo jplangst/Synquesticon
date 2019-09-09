@@ -22,7 +22,7 @@ class InstructionViewComponent extends Component {
   }
   render() {
     return (
-      <div className="commonContainer">
+      <div className={this.props.className}>
         {this.props.task.instruction}
       </div>
     );
