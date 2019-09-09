@@ -361,6 +361,7 @@ class EditSetComponent extends Component {
           margin="dense"
           defaultValue={this.set.repeatSetThreshold}
           placeholder="0"
+          fullWidth
           helperText="The amount of tasks that must be completed, otherwise the set repeats"
           label="Repeat Set Threshold"
           ref="repeatRef"
@@ -417,11 +418,11 @@ class EditSetComponent extends Component {
         </div>
 
         <div className="editSetComponentButtons">
-          <Button onClick={this.closeSetComponent.bind(this, false)} color="primary">
+          <Button onClick={this.closeSetComponent.bind(this, false)} variant="outlined">
             Cancel
           </Button>
           {deleteTaskBtn}
-          <Button onClick={this.onChangeSetSettings.bind(this)} color="primary">
+          <Button onClick={this.onChangeSetSettings.bind(this)} variant="outlined">
             {this.props.isEditing ? "Save" : "Create"}
           </Button>
           {playTaskBtn}

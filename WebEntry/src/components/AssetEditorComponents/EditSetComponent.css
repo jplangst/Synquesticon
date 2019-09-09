@@ -9,7 +9,7 @@
 .setFormContainer{
   position: relative;
   width: 100%;
-  height: 43%;
+  height: 44%;
 }
 .setFormRoot{
   position: relative;
@@ -20,7 +20,7 @@
 .setTaskListContainer{
   position:relative;
   width: 100%;
-  height: 50%;
+  height: calc(50% - 20px);
 }
 .setTaskListTitle{
   position: absolute;
@@ -39,9 +39,9 @@
 
 .setTaskListViewer{
   position: absolute;
-  top: 20px;
   height: calc(100% - 20px);
-  width: 100%;
+  width: calc(100% - 6px);
+  top: 20px;
 
   border-style: solid;
   border-width: thin;
@@ -51,9 +51,33 @@
   overflow-x: hidden;
 }
 
+.setTaskListViewer::-webkit-scrollbar{
+  display: inline-block;
+  width: 6px;
+}
+
+/* Track */
+.setTaskListViewer::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+.setTaskListViewer::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+.setTaskListViewer::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+
 .editSetComponentButtons{
   position: relative;
-  margin-top: 1%;
+  display: flex;
+  flex-direction: row;
   width: 100%;
-  height: 7%;
+  height: 6%;
+  padding-left: 20px;
+  margin-top: 10px;
 }

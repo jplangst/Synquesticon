@@ -1,10 +1,7 @@
 TODO remove warings and errors
 
-make the item components on the left side's text scrollable?
-
 low prio:
 show player stimilus in observer gaze window
-saving aois is instant, should be done when edit/create task is pressed
 
 the AOI list in the task objects does not make sense currently
 
@@ -16,14 +13,8 @@ Fix play mode buttons and text
 Some error when using the sliders in the speech dialog
 errors with dialogs, p is indise a p. Fix...
 
-TODO fix the touch ripple bubble in the observer tab... (Done)
-      Add box shadow or somwething like that to help show active component
-
 TODO go over all input forms and use reasonable placeholders etc...
 TODO test to make sure that all tasks and set edit options are correctly saved and loaded from DB.
-
-Missing play button in edit mode.
-
 
 Make the drag and drop layer also use the theme...
 
