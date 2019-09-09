@@ -58,14 +58,15 @@ class TaskItemComponent extends Component {
 
     //const opacityValue = isDragging ? 0.8 : 1;
     var content =
-        <div  className={"listItem "} onClick={()=>this.props.onSelectedCallback(this.props.task)}>
-          <div className="listItemTextContainer" style={{backgroundColor:bgColor}}>
+        <div  className={"listItem "} style={{backgroundColor:bgColor}}
+          onClick={()=>this.props.onSelectedCallback(this.props.task)}>
+          <div className="listItemTextContainer" >
             <div className="listItemText">
               <Typography color="textPrimary" noWrap> {this.props.content} </Typography>
             </div>
           </div>
           {connectDragSource(
-          <div className="listItemDragBtnContainer">
+          <div className="listItemDragBtnContainer" style={{backgroundColor:theme.palette.primary.main}}>
             <Button style={{cursor:'move',width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
               className="listItemDragBtn" size="small" fullWidth >
               <DragIcon className="dragBtnIcon"/>

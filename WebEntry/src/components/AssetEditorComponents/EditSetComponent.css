@@ -1,28 +1,28 @@
+.setComponentContainer{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow-y:auto;
+  overflow-x: hidden;
+}
+
 .setFormContainer{
-  position: absolute;
+  position: relative;
   width: 100%;
   height: 43%;
 }
 .setFormRoot{
-  position: absolute;
+  position: relative;
   height: 100%;
   width: 100%;
 }
 
 .setTaskListContainer{
-  position:absolute;
+  position:relative;
   width: 100%;
   height: 50%;
-  top: 43%;
-
 }
 .setTaskListTitle{
-
-  font-size: large;
-  font-family: "Times New Roman", Times, serif;
-  font-weight: bold;
-  color: #999;
-
   position: absolute;
   width: 100px;
   height: 20px;
@@ -30,8 +30,7 @@
   border-style: solid;
   border-bottom-style: none;
   border-width: thin;
-  border-color: #BBB;
-
+  border-color: grey;
 }
 .setTaskListTitleText{
   position: absolute;
@@ -46,26 +45,15 @@
 
   border-style: solid;
   border-width: thin;
-  border-color: #303f9f;
-  border-color: #BBB;
+  border-color: grey;
 
   overflow-y: scroll;
   overflow-x: hidden;
 }
 
 .editSetComponentButtons{
-  position: absolute;
-  top: 93%;
+  position: relative;
+  margin-top: 1%;
   width: 100%;
   height: 7%;
-}
-
-.setComponentContainer{
-  margin-top: 1%;
-  position: absolute;
-  width: 94%;
-  height: 98%;
-  left: 3%;
-  overflow-y:auto;
-  overflow-x: hidden;
 }

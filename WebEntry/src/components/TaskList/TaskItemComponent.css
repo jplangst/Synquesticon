@@ -1,6 +1,6 @@
 .listItem {
   min-height: 40px;
-  max-height: 120px;
+  max-height: 40px; /*was 120*/
   position: relative;
   width: 100%;
 
@@ -11,14 +11,15 @@
   flex-grow: 1;
   flex-shrink: 1;
 
-  border-bottom: grey solid 1px;
-
   align-items: center;
+
+  border-bottom: grey solid 1px;
 }
 
 .listItemTextContainer{
   position: relative;
   width: calc(100% - 40px);
+  height: 100%;
   cursor:pointer;
 }
 
@@ -30,10 +31,11 @@
 .listItemDragBtnContainer{
   position: relative;
   width: 40px;
+  height: 40px;
 
   border-left-style: solid;
   border-width: thin;
-  border-radius: 10px;
+  border-radius: 10px 0 0 10px;
   border-color: #BDBDBD;
 }
 
