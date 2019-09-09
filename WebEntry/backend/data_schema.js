@@ -49,8 +49,7 @@ const TaskSetSchema = new Schema({
   repeatSetThreshold: Number,
   //logOneLine: Boolean, //If true log all the tasks in one line
   counterbalancingOrder: [Number], //List of the order the tasks should be played
-  objType: String,
-  requiredCorrect: Number
+  objType: String
 }, {
   collection: 'TaskSets'
 });

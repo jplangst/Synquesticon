@@ -189,7 +189,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
         });
       }
 
-      if ((this.state.currentTaskIndex + 1) >= this.props.taskSet.data.length && this.numCorrectAnswers < this.props.requiredCorrect){
+      if ((this.state.currentTaskIndex + 1) >= this.props.taskSet.data.length && this.numCorrectAnswers < this.props.repeatSetThreshold){
         if (!(store.getState().experimentInfo.participantId === "TESTING")) {
           alert("you did not meet the required number of correct answers. This set will be repeated now.");
 
@@ -206,8 +206,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
         }
       }
 
-      if (this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage && this.currentTask.numCorrectAnswers < this.currentTask.requiredCorrect) {
-        console.log("multi item", this.currentTask, this.currentTask.displayOnePage, this.currentTask.numCorrectAnswers, this.currentTask.requiredCorrect);
+      if (this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage && this.currentTask.numCorrectAnswers < this.currentTask.repeatSetThreshold) {
         if (!(store.getState().experimentInfo.participantId === "TESTING")) {
           alert("you did not meet the required number of correct answers.");
           return;
@@ -283,7 +282,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
         return <DisplayTaskHelper tasksFamilyTree={trackingTaskSetNames}
                                   taskSet={updatedTaskSet}
                                   onFinished={this.onFinishedRecursion.bind(this)}
-                                  requiredCorrect={updatedTaskSet.requiredCorrect}/>
+                                  repeatSetThreshold={updatedTaskSet.repeatSetThreshold}/>
       }
       else {
         //log the start
@@ -295,12 +294,13 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
         var getDisplayedContent = () => {
           if(this.currentTask){
             if((this.currentTask.objType === "TaskSet") && this.currentTask.displayOnePage) {
-              this.currentTask.numCorrectAnswers = 0;
+              if (this.currentTask.numCorrectAnswers === undefined) {
+                this.currentTask.numCorrectAnswers = 0;
+              }
               return <MultiItemTask tasksFamilyTree={trackingTaskSetNames}
                                     taskSet={this.currentTask}
                                     answerCallback={this.onAnswer.bind(this)}
                                     newTask={!this.state.hasBeenAnswered}
-                                    requiredCorrect={this.currentTask.requiredCorrect}
                                     initCallback={(taskResponses) => {
                                       this.currentLineOfData = taskResponses;
                                     }}
@@ -493,7 +493,7 @@ class DisplayTaskComponent extends Component {
       var renderObj = <DisplayTaskHelper tasksFamilyTree={[store.getState().experimentInfo.mainTaskSetId]}
                                          taskSet={store.getState().experimentInfo.taskSet}
                                          onFinished={this.onFinished.bind(this)}
-                                         requiredCorrect={store.getState().experimentInfo.taskSet.requiredCorrect}/>;
+                                         repeatSetThreshold={store.getState().experimentInfo.taskSet.repeatSetThreshold}/>;
       return (
           <div className="page">
             {renderObj}
