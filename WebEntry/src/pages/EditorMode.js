@@ -236,7 +236,7 @@ class EditorMode extends Component {
       <CustomDragLayer />
       <div style={{backgroundColor:leftBG}} className = "AssetViewer">
 
-        <div style={{borderColor:'grey'}} className="AssetViewerTitle">
+        <div className="AssetViewerTitle">
           <div className="AssetViewerTitleText"><Typography color="textPrimary" variant="h5">Asset viewer</Typography></div>
         </div>
 
