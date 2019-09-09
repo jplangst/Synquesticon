@@ -32,7 +32,8 @@ class EditTaskComponent extends Component {
     super(props);
 
     //If we got a taskObject passed as a prop we use it, otherwise we init with a default constructed object
-    this.task = this.props.isEditing ? {...(new dbObjects.TaskObject()), ...this.props.taskObject} : new dbObjects.TaskObject();
+    var copiedTask = JSON.parse(JSON.stringify(this.props.taskObject));
+    this.task = this.props.isEditing ? {...(new dbObjects.TaskObject()), ...copiedTask} : new dbObjects.TaskObject();
 
     this.state = { //We keep these fields in the state as they affect how the component is rendered
       taskType: this.task.taskType,//taskType,
@@ -83,20 +84,6 @@ class EditTaskComponent extends Component {
     else if(target==="AOIs"){
       //this.task.aois = response;
       //TODO: implement interface for this functionality
-
-      this.task.aois = [{
-          name: "window1",
-          boundingbox: [[0.440425545, 0.156989247], [0.07234043, 0.156989247], [0.07234043, 0.56774193], [0.440425545, 0.56774193]]
-        },
-        {
-          name: "window2",
-          boundingbox: [[0.6, 0.156989247], [0.976595759, 0.156989247], [0.976595759, 0.688172042], [0.6, 0.688172042]]
-        },
-        {
-          name: "fish",
-          boundingbox: [[0.385106385, 0.677419364], [0.568085134, 0.677419364], [0.568085134, 0.8731183], [0.385106385, 0.8731183]]
-        }
-      ];
     }
     else if(target==="Answers"){
       this.task.correctResponses = response;

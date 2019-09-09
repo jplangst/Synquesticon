@@ -37,6 +37,11 @@ class AOIEditorComponent extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.tempAOI.isSelected = false;
+    this.tempAOI = new AOI();
+  }
+
   /*
    ██████  █████  ██      ██      ██████   █████   ██████ ██   ██ ███████     ███████  ██████  ██████      ████████  ██████   ██████  ██      ██████   ██████  ██   ██
   ██      ██   ██ ██      ██      ██   ██ ██   ██ ██      ██  ██  ██          ██      ██    ██ ██   ██        ██    ██    ██ ██    ██ ██      ██   ██ ██    ██  ██ ██
@@ -59,6 +64,10 @@ class AOIEditorComponent extends Component {
         onRemove: this.removeAOI.bind(this)
       }
     }
+    else {
+      this.tempAOI.isSelected = false;
+      this.tempAOI = new AOI();
+    }
     this.setState({
       mode: mode
     });
@@ -68,7 +77,7 @@ class AOIEditorComponent extends Component {
     if (name !== "") {
       this.tempAOI.name = name;
       this.tempAOI.isSelected = false;
-      var newAOI = JSON.parse(JSON.stringify(this.tempAOI))
+      var newAOI = JSON.parse(JSON.stringify(this.tempAOI));
       this.props.task.aois.push(newAOI);
     }
     this.tempAOI = new AOI();
