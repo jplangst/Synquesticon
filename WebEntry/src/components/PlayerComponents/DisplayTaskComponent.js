@@ -207,7 +207,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
       }
 
       if (this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage && this.currentTask.numCorrectAnswers < this.currentTask.requiredCorrect) {
-        console.log("multi item", this.currentTask.objType, this.currentTask.displayOnePage, this.currentTask.numCorrectAnswers, this.currentTask.requiredCorrect);
+        console.log("multi item", this.currentTask, this.currentTask.displayOnePage, this.currentTask.numCorrectAnswers, this.currentTask.requiredCorrect);
         if (!(store.getState().experimentInfo.participantId === "TESTING")) {
           alert("you did not meet the required number of correct answers.");
           return;
@@ -237,10 +237,10 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
         this.currentLineOfData.correctlyAnswered = answer.correctlyAnswered;
       }
       else if (this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage) {
-        console.log("on answer multi item", answer);
         this.currentLineOfData = answer.linesOfData;
         if (answer.correctlyAnswered === "correct") {
           this.currentTask.numCorrectAnswers += 1;
+          console.log("on answer multi item", this.currentTask, this.currentTask.numCorrectAnswers);
         }
       }
     }
