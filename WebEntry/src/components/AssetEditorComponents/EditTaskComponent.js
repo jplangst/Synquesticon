@@ -148,7 +148,7 @@ class EditTaskComponent extends Component {
     var value = this.state.taskType === "Single Choice" ? "Multiple Choice" : this.state.taskType;
 
     return(
-      <div className="componentContainer">
+      <div className="taskComponentContainer">
         <form className="formRoot" autoComplete="off" id="formRootId">
             <FormControl className="formControl">
               <InputLabel htmlFor="TaskType">Task Type</InputLabel>

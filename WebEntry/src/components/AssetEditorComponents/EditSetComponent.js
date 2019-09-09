@@ -365,21 +365,21 @@ class EditSetComponent extends Component {
           checked={this.state.randomizeSet}
           control={<Checkbox color="primary" />}
           onChange={this.handleSetTaskOrderChange}
-          labelPlacement="start"
+          labelPlacement="end"
         />
         <FormControlLabel label="Display on one page"
           value="start"
           checked={this.state.displayOnePage}
           control={<Checkbox color="primary" />}
           onChange={this.handleDisplayOnePageChange}
-          labelPlacement="start"
+          labelPlacement="end"
         />
         <FormControlLabel label="Log on one line"
           value="start"
           checked={this.state.logOneLine}
           control={<Checkbox color="primary" />}
           onChange={this.handleLogOneLineChange}
-          labelPlacement="start"
+          labelPlacement="end"
         />
       </div>;
 
@@ -395,7 +395,7 @@ class EditSetComponent extends Component {
     }
 
     return(
-      <div className="componentContainer">
+      <div className="setComponentContainer">
         <div className="setFormContainer">
           <form className="setFormRoot" autoComplete="off" id="formRootId">
               {setContent}

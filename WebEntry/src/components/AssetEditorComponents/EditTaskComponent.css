@@ -14,3 +14,17 @@
   width: 100%;
   height: auto;
 }
+
+.taskComponentContainer{
+  margin-top: 1%;
+  position: absolute;
+  width: 94%;
+  height: 98%;
+  left: 3%;
+  overflow-y:auto;
+  overflow-x: hidden;
+}
+
+.formControl{
+  width: 49.5%;
+}

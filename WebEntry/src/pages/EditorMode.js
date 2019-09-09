@@ -177,9 +177,14 @@ class EditorMode extends Component {
 
   //Get the current asset editorObject
   getAssetEditorObject(){
+    let theme = this.props.theme;
+    let rightBG = theme.palette.type === "light" ? theme.palette.primary.main : theme.palette.primary.dark;
+
     var assetEditorObject =
-    <div className = "AssetEditor">
-      <div className="AssetEditorTitle"><div className="AssetEditorTitleText"> Asset editor</div></div>
+    <div className="AssetEditor" style={{paddingLeft:5, backgroundColor:rightBG}}>
+      <div className="AssetEditorTitle">
+        <div className="AssetEditorTitleText"><Typography color="textPrimary" variant="h4">Asset editor</Typography></div>
+      </div>
       <div className="AssetEditorContent">
         {this.state.assetEditorObject}
       </div>
@@ -226,7 +231,6 @@ class EditorMode extends Component {
   render() {
     let theme = this.props.theme;
     let leftBG = theme.palette.type === "light" ? theme.palette.primary.dark : theme.palette.primary.main;
-    let rightBG = theme.palette.type === "light" ? theme.palette.primary.main : theme.palette.primary.dark;
 
     var collapsableTaskHeaderButtons = this.getCollapsableHeaderButtons(this.taskSearchCallback, this.addTaskCallback.bind(this), null);
     var collapsableSetHeaderButtons = this.getCollapsableHeaderButtons(this.taskSetSearchCallback, this.addSetCallback.bind(this), null);
@@ -237,7 +241,7 @@ class EditorMode extends Component {
       <div style={{backgroundColor:leftBG}} className = "AssetViewer">
 
         <div className="AssetViewerTitle">
-          <div className="AssetViewerTitleText"><Typography color="textPrimary" variant="h5">Asset viewer</Typography></div>
+          <div className="AssetViewerTitleText"><Typography color="textPrimary" variant="h4">Asset viewer</Typography></div>
         </div>
 
         <div className="AssetViewerContent">

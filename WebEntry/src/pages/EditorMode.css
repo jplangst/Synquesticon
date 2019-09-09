@@ -100,15 +100,9 @@
   flex-direction: column;
 
   position: absolute;
-  width: 66%;
-  height: 96%;
-  top: 2%;
-  left: 32%;
-  background-color: white;
-
-  border-width: thin;
-  border-style: solid;
-  border-color: #303f9f;
+  width: 75%;
+  height: 100%;
+  left: 25%;
 }
 
 .AssetEditorTitle{
@@ -120,17 +114,6 @@
   min-height: 200;
 
   position: relative;
-
-  border-bottom-width: thin;
-  border-bottom-style: solid;
-  border-color: #303f9f;
-
-  font-size: large;
-  font-family: "Times New Roman", Times, serif;
-  font-weight: bold;
-  color: #999;
-
-  cursor: default;
 }
 .AssetEditorTitleText{
   position: relative;
@@ -148,20 +131,6 @@
   display: flex;
 
   flex: 1 1 auto;
-}
-
-.componentContainer{
-  margin-top: 1%;
-  position: absolute;
-  width: 94%;
-  height: 98%;
-  left: 3%;
-  overflow-y:auto;
-  overflow-x: hidden;
-}
-
-.formControl{
-  width: 49.5%;
 }
 
 /***** Others *****/
