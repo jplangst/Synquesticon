@@ -427,11 +427,11 @@ class EditSetComponent extends Component {
         </div>
 
         <div className="editSetComponentButtons">
-          <Button onClick={this.closeSetComponent.bind(this, false)} color="primary">
+          <Button onClick={this.closeSetComponent.bind(this, false)} variant="outlined">
             Cancel
           </Button>
           {deleteTaskBtn}
-          <Button onClick={this.onChangeSetSettings.bind(this)} color="primary">
+          <Button onClick={this.onChangeSetSettings.bind(this)} variant="outlined">
             {this.props.isEditing ? "Save" : "Create"}
           </Button>
           {playTaskBtn}

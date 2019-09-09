@@ -55,7 +55,7 @@ class TaskItemComponent extends Component {
     const { theme, connectDragSource} = this.props; //connectDragPreview, isDragging
 
     let bgColor = this.props.highlight ? theme.palette.secondary.main + "22" : null;
-
+    let leftBG = theme.palette.type === "light" ? theme.palette.primary.dark : theme.palette.primary.main;
     //const opacityValue = isDragging ? 0.8 : 1;
     var content =
         <div  className={"listItem "} style={{backgroundColor:bgColor}}
@@ -66,7 +66,7 @@ class TaskItemComponent extends Component {
             </div>
           </div>
           {connectDragSource(
-          <div className="listItemDragBtnContainer" style={{backgroundColor:theme.palette.primary.main}}>
+          <div className="listItemDragBtnContainer" style={{backgroundColor:leftBG}}>
             <Button style={{cursor:'move',width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
               className="listItemDragBtn" size="small" fullWidth >
               <DragIcon className="dragBtnIcon"/>
