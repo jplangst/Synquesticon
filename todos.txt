@@ -1,5 +1,7 @@
 TODO remove warings and errors
 
+make the item components on the left side's text scrollable?
+
 low prio:
 show player stimilus in observer gaze window
 saving aois is instant, should be done when edit/create task is pressed

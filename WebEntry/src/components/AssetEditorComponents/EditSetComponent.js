@@ -17,6 +17,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Snackbar from '@material-ui/core/Snackbar';
 
 import EditSetListComponent from '../TaskList/EditSetListComponent';
+import { Typography } from '@material-ui/core';
 
 import update from 'immutability-helper'
 
@@ -401,10 +402,10 @@ class EditSetComponent extends Component {
     var deleteTaskBtn = null;
     var playTaskBtn = null;
     if(this.props.isEditing){
-      deleteTaskBtn = <Button onClick={this.removeSet.bind(this)} color="primary">
+      deleteTaskBtn = <Button onClick={this.removeSet.bind(this)} variant="outlined">
         Delete Set
         </Button>;
-      playTaskBtn = <Button onClick={this.onPlaySet.bind(this)} color="primary">
+      playTaskBtn = <Button onClick={this.onPlaySet.bind(this)} variant="outlined">
         Play
         </Button>;
     }
@@ -418,7 +419,7 @@ class EditSetComponent extends Component {
         </div>
 
         <div className="setTaskListContainer">
-          <div className="setTaskListTitle"><div className="setTaskListTitleText"> Set Tasks </div></div>
+          <div className="setTaskListTitle"><div className="setTaskListTitleText"><Typography color="textPrimary">Set Tasks</Typography></div></div>
           <div className="setTaskListViewer">
             < EditSetListComponent removeCallback={this.removeTaskFromListCallback} taskListObjects={this.state.taskListObjects} reactDND={true}
               removeTaskCallback={this.removeTaskFromListCallback} moveTaskCallback={this.moveTaskCallback} / >
