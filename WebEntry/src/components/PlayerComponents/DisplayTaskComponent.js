@@ -145,66 +145,72 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
    ██████ ██   ██ ███████ ███████ ██████  ██   ██  ██████ ██   ██ ███████
   */
   onClickNext() {
-    if ((this.state.currentTaskIndex + 1) >= this.props.taskSet.data.length && (this.numCorrectAnswers < 1)) {
-
-      if (!(store.getState().experimentInfo.participantId === "TESTING")) {
-        alert("you did not meat the required number of correct answers. This set will be repeated now.");
-
-        //reset state
-        this.setState({
-          hasBeenAnswered: false,
-          answerItem: null,
-          currentTaskIndex: 0
-        });
-
-        this.currentLineOfData = null;
-      }
-    }
-    else {
-      if (!(store.getState().experimentInfo.participantId === "TESTING")) {
-        if (this.currentTask.objType === "Task") {
-          if (this.currentLineOfData.correctlyAnswered === "correct") {
-            this.numCorrectAnswers += 1;
-          }
-          progressCount += 1;
-          if (this.currentLineOfData) {
-            if (!this.currentTask.globalVariable) {
-              //complete line of data before saving to DB
-              this.currentLineOfData.timeToCompletion = playerUtils.getCurrentTime() - this.currentLineOfData.startTimestamp;
-              db_helper.addNewLineToParticipantDB(store.getState().experimentInfo.participantId,
-                                                    JSON.stringify(this.currentLineOfData));
-            }
-            else {
-              var globalVariableObj = {
-                label: this.currentTask.question,
-                value: this.currentLineOfData.responses
-              };
-              db_helper.addNewGlobalVariableToParticipantDB(store.getState().experimentInfo.participantId,
-                                                              JSON.stringify(globalVariableObj));
-            }
-
-            wamp.broadcastEvents(stringifyWAMPMessage(null, this.currentLineOfData,
-                                                      (this.currentLineOfData.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED"));
-          }
-
+    if (!(store.getState().experimentInfo.participantId === "TESTING")) {
+      if (this.currentTask.objType === "Task") {
+        if (this.currentLineOfData.correctlyAnswered === "correct") {
+          this.numCorrectAnswers += 1;
         }
-        else if (this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage) {
-          progressCount += this.currentLineOfData.size;
-          this.currentLineOfData.forEach((line, index) => {
-            if (line.isGlobalVariable !== undefined) {
-              db_helper.addNewGlobalVariableToParticipantDB(store.getState().experimentInfo.participantId,
-                                                            JSON.stringify(line.obj));
-            }
-            else {
-              line.timeToCompletion = playerUtils.getCurrentTime() - line.startTimestamp;
-              db_helper.addNewLineToParticipantDB(store.getState().experimentInfo.participantId,
-                                                  JSON.stringify(line));
-            }
-            wamp.broadcastEvents(stringifyWAMPMessage(null, line,
-                                                      (line.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED"));
-          });
-          console.log("multiitem", this.currentLineOfData.size);
+        progressCount += 1;
+        if (this.currentLineOfData) {
+          if (!this.currentTask.globalVariable) {
+            //complete line of data before saving to DB
+            this.currentLineOfData.timeToCompletion = playerUtils.getCurrentTime() - this.currentLineOfData.startTimestamp;
+            db_helper.addNewLineToParticipantDB(store.getState().experimentInfo.participantId,
+                                                  JSON.stringify(this.currentLineOfData));
+          }
+          else {
+            var globalVariableObj = {
+              label: this.currentTask.question,
+              value: this.currentLineOfData.responses
+            };
+            db_helper.addNewGlobalVariableToParticipantDB(store.getState().experimentInfo.participantId,
+                                                            JSON.stringify(globalVariableObj));
+          }
 
+          wamp.broadcastEvents(stringifyWAMPMessage(null, this.currentLineOfData,
+                                                    (this.currentLineOfData.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED"));
+        }
+
+      }
+      else if (this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage) {
+        progressCount += this.currentLineOfData.size;
+        this.currentLineOfData.forEach((line, index) => {
+          if (line.isGlobalVariable !== undefined) {
+            db_helper.addNewGlobalVariableToParticipantDB(store.getState().experimentInfo.participantId,
+                                                          JSON.stringify(line.obj));
+          }
+          else {
+            line.timeToCompletion = playerUtils.getCurrentTime() - line.startTimestamp;
+            db_helper.addNewLineToParticipantDB(store.getState().experimentInfo.participantId,
+                                                JSON.stringify(line));
+          }
+          wamp.broadcastEvents(stringifyWAMPMessage(null, line,
+                                                    (line.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED"));
+        });
+      }
+
+      if ((this.state.currentTaskIndex + 1) >= this.props.taskSet.data.length && this.numCorrectAnswers < this.props.requiredCorrect){
+        if (!(store.getState().experimentInfo.participantId === "TESTING")) {
+          alert("you did not meet the required number of correct answers. This set will be repeated now.");
+
+          //reset state
+          this.setState({
+            hasBeenAnswered: false,
+            answerItem: null,
+            currentTaskIndex: 0
+          });
+
+          this.numCorrectAnswers = 0;
+          this.currentLineOfData = null;
+          return;
+        }
+      }
+
+      if (this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage && this.currentTask.numCorrectAnswers < this.currentTask.requiredCorrect) {
+        console.log("multi item", this.currentTask, this.currentTask.displayOnePage, this.currentTask.numCorrectAnswers, this.currentTask.requiredCorrect);
+        if (!(store.getState().experimentInfo.participantId === "TESTING")) {
+          alert("you did not meet the required number of correct answers.");
+          return;
         }
       }
 
@@ -231,7 +237,11 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
         this.currentLineOfData.correctlyAnswered = answer.correctlyAnswered;
       }
       else if (this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage) {
-        this.currentLineOfData = answer;
+        this.currentLineOfData = answer.linesOfData;
+        if (answer.correctlyAnswered === "correct") {
+          this.currentTask.numCorrectAnswers += 1;
+          console.log("on answer multi item", this.currentTask, this.currentTask.numCorrectAnswers);
+        }
       }
     }
     this.setState({
@@ -270,7 +280,10 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
         updatedTaskSet.data = runThisTaskSet;
 
         //recursion
-        return <DisplayTaskHelper tasksFamilyTree={trackingTaskSetNames} taskSet={updatedTaskSet} onFinished={this.onFinishedRecursion.bind(this)}/>
+        return <DisplayTaskHelper tasksFamilyTree={trackingTaskSetNames}
+                                  taskSet={updatedTaskSet}
+                                  onFinished={this.onFinishedRecursion.bind(this)}
+                                  requiredCorrect={updatedTaskSet.requiredCorrect}/>
       }
       else {
         //log the start
@@ -282,10 +295,12 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
         var getDisplayedContent = () => {
           if(this.currentTask){
             if((this.currentTask.objType === "TaskSet") && this.currentTask.displayOnePage) {
+              this.currentTask.numCorrectAnswers = 0;
               return <MultiItemTask tasksFamilyTree={trackingTaskSetNames}
                                     taskSet={this.currentTask}
                                     answerCallback={this.onAnswer.bind(this)}
                                     newTask={!this.state.hasBeenAnswered}
+                                    requiredCorrect={this.currentTask.requiredCorrect}
                                     initCallback={(taskResponses) => {
                                       this.currentLineOfData = taskResponses;
                                     }}
@@ -306,7 +321,6 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
               return <MultipleChoiceComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered}/>;
             }
             if((this.currentTask.taskType === "Image")) {
-              console.log("image task", this.currentTask.image);
               return <ImageViewComponent task={this.currentTask}/>;
             }
           } else {
@@ -476,7 +490,10 @@ class DisplayTaskComponent extends Component {
 
   render() {
     try {
-      var renderObj = <DisplayTaskHelper tasksFamilyTree={[store.getState().experimentInfo.mainTaskSetId]} taskSet={store.getState().experimentInfo.taskSet} onFinished={this.onFinished.bind(this)}/>;
+      var renderObj = <DisplayTaskHelper tasksFamilyTree={[store.getState().experimentInfo.mainTaskSetId]}
+                                         taskSet={store.getState().experimentInfo.taskSet}
+                                         onFinished={this.onFinished.bind(this)}
+                                         requiredCorrect={store.getState().experimentInfo.taskSet.requiredCorrect}/>;
       return (
           <div className="page">
             {renderObj}

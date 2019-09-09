@@ -559,7 +559,7 @@ class db_helper {
        })
        .then(res => {
          callback(res.messages);
-       })
+       }).catch((err) => {})
    };
 
    getAllMessagesFromAnObserverFromDb(name, role, callback) {
