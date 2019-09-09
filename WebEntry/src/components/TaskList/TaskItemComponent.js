@@ -57,10 +57,11 @@ class TaskItemComponent extends Component {
     let bgColor = this.props.highlight ? theme.palette.secondary.main + "22" : null;
 
     //const opacityValue = isDragging ? 0.8 : 1;
-    var content = <div  className={"listItem "} onClick={()=>this.props.onSelectedCallback(this.props.task)}>
+    var content =
+        <div  className={"listItem "} onClick={()=>this.props.onSelectedCallback(this.props.task)}>
           <div className="listItemTextContainer" style={{backgroundColor:bgColor}}>
-            <div className="listItemText dotLongText">
-              <Typography color="textPrimary"> {this.props.content} </Typography>
+            <div className="listItemText">
+              <Typography color="textPrimary" noWrap> {this.props.content} </Typography>
             </div>
           </div>
           {connectDragSource(
