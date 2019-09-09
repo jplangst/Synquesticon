@@ -31,6 +31,7 @@ export class TaskSetObject {
     this.logOneLine = false; //If true log all the tasks in one line
     this.counterbalancingOrder = [];
     this.objType = "TaskSet";
+    this.requiredCorrect = 0;
   }
 }
 

@@ -14,7 +14,7 @@ class ImageViewComponent extends Component {
     }
     this.image = null;
   }
-  componentDidMount() {
+  componentWillMount() {
     db_helper.getImage(this.props.task.image, this.onReceivedImage.bind(this));
   }
 

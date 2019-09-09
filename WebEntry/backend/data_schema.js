@@ -48,7 +48,8 @@ const TaskSetSchema = new Schema({
   displayOnePage: Boolean, //If true display all the tasks on one page
   //logOneLine: Boolean, //If true log all the tasks in one line
   counterbalancingOrder: [Number], //List of the order the tasks should be played
-  objType: String
+  objType: String,
+  requiredCorrect: Number
 }, {
   collection: 'TaskSets'
 });

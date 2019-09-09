@@ -58,7 +58,7 @@ class MultiItemTask extends Component {
     }
 
     this.taskResponses.set(answerObj.taskID+answerObj.mapID, lineOfData);
-    this.props.answerCallback(this.taskResponses);
+    this.props.answerCallback({linesOfData: this.taskResponses, correctlyAnswered: answerObj.correctlyAnswered});
 
     //this.forceUpdate();
   }
