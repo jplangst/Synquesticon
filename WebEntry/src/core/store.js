@@ -75,6 +75,9 @@ function prepareMUITheme(themeType){
         color: theme.palette.secondary.main,
       },
     },
+    MuiFormControlLabel:{
+      root:{color: theme.palette.text.primary}
+    }
   };
 
   return theme = responsiveFontSizes(theme);

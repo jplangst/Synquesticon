@@ -16,13 +16,16 @@ class PolygonToolBox extends Component {
   render() {
     return (
       <div>
-        <Button onClick={this.props.onRemoveLastPoint} >
+        <Button variant="outlined" onClick={this.props.onRemoveLastPoint}>
+          Undo Point
           <RemoveLastPointIcon />
         </Button>
-        <Button onClick={this.props.onFinished} >
+        <Button variant="outlined" onClick={this.props.onFinished} >
+          Confirm
           <DoneIcon />
         </Button>
-        <Button onClick={this.props.onCancel} >
+        <Button variant="outlined" onClick={this.props.onCancel} >
+          Cancel
           <CancelIcon />
         </Button>
       </div>

@@ -363,21 +363,21 @@ class EditSetComponent extends Component {
         <FormControlLabel label="Randomize Set Order"
           value="start"
           checked={this.state.randomizeSet}
-          control={<Checkbox color="primary" />}
+          control={<Checkbox color="secondary" />}
           onChange={this.handleSetTaskOrderChange}
           labelPlacement="end"
         />
         <FormControlLabel label="Display on one page"
           value="start"
           checked={this.state.displayOnePage}
-          control={<Checkbox color="primary" />}
+          control={<Checkbox color="secondary" />}
           onChange={this.handleDisplayOnePageChange}
           labelPlacement="end"
         />
         <FormControlLabel label="Log on one line"
           value="start"
           checked={this.state.logOneLine}
-          control={<Checkbox color="primary" />}
+          control={<Checkbox color="secondary" />}
           onChange={this.handleLogOneLineChange}
           labelPlacement="end"
         />

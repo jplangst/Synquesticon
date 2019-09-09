@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
 import FileSelector from '../../../core/fileSelector';
+import { Typography } from '@material-ui/core';
 //import Button from '@material-ui/core/Button';
 
 import AOIEditorComponent from '../../AOIEditor/AOIEditorComponent';
@@ -25,7 +26,7 @@ class SelectImageComponent extends Component {
   }
 
   render() {
-    var previewImage = "No Image selected";
+    var previewImage = <Typography color="textPrimary"> "No Image selected" </Typography>;
     if(this.props.task.image && this.props.task.image !== ""){
       previewImage = <AOIEditorComponent task={this.props.task}/>//<img className="imageContainer" src={"Images/"+this.props.task.image} alt="Task" />;
     }

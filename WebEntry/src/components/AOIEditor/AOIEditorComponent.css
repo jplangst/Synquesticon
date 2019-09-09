@@ -9,21 +9,18 @@
 
 .AOIName {
   fill: white;
-  background-color: white;
 }
 
 .AOIShape {
   display: inline-block;
   width: auto;
   height: auto;
-  background-color: blue;
 }
 
 .imagePreviewContainer{
   position: relative;
   display: inline-block;
   transition: transform 150ms ease-in-out;
-  background-color: yellow;
 }
 
 .imageViewWithAOIs {
@@ -38,7 +35,6 @@
   display: block;
   max-width: 100%;
   height: auto;
-  background-color: pink;
 }
 
 .supportingToolBox {

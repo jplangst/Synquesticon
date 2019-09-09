@@ -1,4 +1,5 @@
 import * as React from "react";
+import { withTheme } from '@material-ui/styles';
 
 /**
  * A file selector React component. Can be used to select files.
@@ -22,10 +23,13 @@ export class FileSelector extends React.Component<undefined, undefined>
 
     render ()
     {
+      let theme = this.props.theme;
+
         return <div>
-            <input type="file" filename="testing" accept="image/gif, image/jpeg, image/png" onChange={ (e) => this.handleChange(e.target.files) } />
+            <input style={{color:theme.palette.text.primary}} type="file" filename="testing"
+              accept="image/gif, image/jpeg, image/png" onChange={ (e) => this.handleChange(e.target.files) } />
         </div>;
     }
 }
 
-export default FileSelector;
+export default withTheme(FileSelector);

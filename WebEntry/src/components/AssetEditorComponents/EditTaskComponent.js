@@ -10,6 +10,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import { Typography } from '@material-ui/core';
 
 //Component imports
 import InstructionComponent from './TaskComponents/InstructionComponent';
@@ -143,7 +144,7 @@ class EditTaskComponent extends Component {
                                     <SelectImageComponent task={this.task} /> : null;
 
     var deleteTaskBtn = this.props.isEditing ?
-      <Button onClick={this.removeTask.bind(this)} color="primary">Delete Task </Button> : null;
+      <Button onClick={this.removeTask.bind(this)} variant="outlined">Delete Task </Button> : null;
 
     var value = this.state.taskType === "Single Choice" ? "Multiple Choice" : this.state.taskType;
 
