@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 
 import Button from '@material-ui/core/Button';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import { withTheme } from '@material-ui/styles';
+import { Typography } from '@material-ui/core';
 
 import PolygonToolBox from './PolygonToolBox';
 import SelectAOIToolBox from './SelectAOIToolBox';
@@ -10,9 +14,17 @@ import './AOIEditorComponent.css';
 class AOIToolboxComponent extends Component {
   constructor(props) {
     super(props);
+
+    this.handleTabs = this.handleChangeTab.bind(this);
+  }
+
+  handleChangeTab(evt, mode) {
+    this.props.onSwitchMode(mode);
   }
 
   render() {
+    let theme = this.props.theme;
+
     var rectBtnColor = "default";
     var polyBtnColor = "default";
     var selectBtnColor = "default";
@@ -37,16 +49,19 @@ class AOIToolboxComponent extends Component {
     }
 
     return (
-      <div>
-        <Button onClick={e=>this.props.onSwitchMode("RECTANGLE")} variant="contained" color={rectBtnColor}>
-          Rectangle
-        </Button>
-        <Button onClick={e=>this.props.onSwitchMode("POLYGON")} variant="contained" color={polyBtnColor}>
-          Polygon
-        </Button>
-        <Button onClick={e=>this.props.onSwitchMode("SELECT")} variant="contained" color={selectBtnColor}>
-          Select
-        </Button>
+      <div style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
+        <Typography color="textPrimary" variant="h6"> AOI creation mode </Typography>
+        <Tabs
+          value={this.props.mode}
+          onChange={this.handleTabs}
+          indicatorColor="secondary"
+          variant="fullWidth"
+          style={{color:theme.palette.text.primary, marginBottom:5}}
+        >
+            <Tab label="Rectangle" value="RECTANGLE" />
+            <Tab label="Polygon" value="POLYGON" />
+            <Tab label="Select" value="SELECT" />
+        </Tabs>
         <div className="supportingToolBox">{toolbox}</div>
       </div>
     );
@@ -54,4 +69,4 @@ class AOIToolboxComponent extends Component {
 
 }
 
-export default AOIToolboxComponent;
+export default withTheme(AOIToolboxComponent);

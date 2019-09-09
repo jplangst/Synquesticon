@@ -12,4 +12,6 @@
   position: relative;
   align-self: center;
   justify-content: center;
+
+  cursor: default;
 }

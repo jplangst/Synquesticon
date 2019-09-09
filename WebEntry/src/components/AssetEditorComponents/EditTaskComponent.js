@@ -10,6 +10,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import { Typography } from '@material-ui/core';
 
 //Component imports
 import InstructionComponent from './TaskComponents/InstructionComponent';
@@ -113,6 +114,7 @@ class EditTaskComponent extends Component {
 
   //Called from the MultipleChoice component when the user interacts with the single choice checkbox //TODO this and the related changes are a hack. Not a good solution
   onSingleChoiceChanged(singleChoice){
+    console.log(singleChoice);
     this.setState({
       taskType: singleChoice ? "Single Choice" : "Multiple Choice",
     });
@@ -142,12 +144,12 @@ class EditTaskComponent extends Component {
                                     <SelectImageComponent task={this.task} /> : null;
 
     var deleteTaskBtn = this.props.isEditing ?
-      <Button onClick={this.removeTask.bind(this)} color="primary">Delete Task </Button> : null;
+      <Button onClick={this.removeTask.bind(this)} variant="outlined">Delete Task </Button> : null;
 
     var value = this.state.taskType === "Single Choice" ? "Multiple Choice" : this.state.taskType;
 
     return(
-      <div className="componentContainer">
+      <div className="taskComponentContainer">
         <form className="formRoot" autoComplete="off" id="formRootId">
             <FormControl className="formControl">
               <InputLabel htmlFor="TaskType">Task Type</InputLabel>

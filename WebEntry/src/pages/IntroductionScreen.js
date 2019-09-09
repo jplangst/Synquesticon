@@ -64,7 +64,7 @@ class IntroductionScreen extends Component {
     <div className="introductionScreenContainer">
       <div style={{backgroundColor:leftBG}} className="IntroViewer">
         <div style={{borderColor:'grey'}} className="IntroViewerTitle">
-          <div className="IntroViewerTitleText"><Typography color="textPrimary" variant="h5">Studies</Typography></div>
+          <div className="IntroViewerTitleText"><Typography color="textPrimary" variant="h4">Studies</Typography></div>
           <Button className="IntroDataExportBtnContainer" onClick={(e) => this.gotoPage("EditorMode")}
             style={{borderLeftStyle:'solid', borderWidth:'thin', borderRadius: 10, borderColor:'grey'}}>
             <EditIcon />
@@ -74,7 +74,7 @@ class IntroductionScreen extends Component {
       </div>
       <div style={{paddingLeft:5, backgroundColor:rightBG}} className="IntroContentWrapper">
         <div className="IntroContentTitle">
-          <div className="IntroTitleText"><Typography color="textPrimary" variant="h5">Observer</Typography></div>
+          <div className="IntroTitleText"><Typography color="textPrimary" variant="h4">Observer</Typography></div>
           <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1,
                   borderRadius:10, borderColor:'#BDBDBD', borderWidth:'thin', borderLeftStyle:'solid'}}
            onClick={this.onPauseAllPressed}>

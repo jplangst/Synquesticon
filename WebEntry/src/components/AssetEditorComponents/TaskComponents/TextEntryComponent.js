@@ -108,9 +108,8 @@ class TextEntryComponent extends Component {
         <FormControlLabel label="Treat Response as Global Variable"
           value="end"
           margin="dense"
-          style={{width:"50%"}}
           checked={this.state.globalVariable}
-          control={<Checkbox style={{width:"50px"}} color="primary" />}
+          control={<Checkbox style={{width:"50px"}} color="secondary" />}
           onChange={this.handleGlobalVariableChanged}
           labelPlacement="end"
         />

@@ -11,6 +11,8 @@ import CollapsableContainer from '../components/Containers/CollapsableContainer'
 import TaskListComponent from '../components/TaskList/TaskListComponent';
 import EditTaskComponent from '../components/AssetEditorComponents/EditTaskComponent';
 import EditSetComponent from '../components/AssetEditorComponents/EditSetComponent';
+import { withTheme } from '@material-ui/styles';
+import { Typography } from '@material-ui/core';
 
 import db_helper from '../core/db_helper.js';
 
@@ -175,9 +177,14 @@ class EditorMode extends Component {
 
   //Get the current asset editorObject
   getAssetEditorObject(){
+    let theme = this.props.theme;
+    let rightBG = theme.palette.type === "light" ? theme.palette.primary.main : theme.palette.primary.dark;
+
     var assetEditorObject =
-    <div className = "AssetEditor">
-      <div className="AssetEditorTitle"><div className="AssetEditorTitleText"> Asset editor</div></div>
+    <div className="AssetEditor" style={{paddingLeft:5, backgroundColor:rightBG}}>
+      <div className="AssetEditorTitle">
+        <div className="AssetEditorTitleText"><Typography color="textPrimary" variant="h4">Asset editor</Typography></div>
+      </div>
       <div className="AssetEditorContent">
         {this.state.assetEditorObject}
       </div>
@@ -191,9 +198,9 @@ class EditorMode extends Component {
 
     var filterButton = null;
     if(filterCallback !== null){
-      filterButton = <Button style={{width: '50%', height: '100%', minWidth: '30px', minHeight: '30px'}}
+      filterButton = <Button style={{width: '100%', height: '100%'}}
       className="collapsableHeaderBtns" size="small" onClick={filterCallback} >
-        <FilterList fontSize="large" className="addItemsIcon" />
+        <FilterList fontSize="large"/>
       </Button>;
     }
 
@@ -201,9 +208,8 @@ class EditorMode extends Component {
     <div className="collapsableHeaderBtnsContainer">
       <div className="searchWrapperDiv"><SearchBar onChange={searchCallback} searchID="taskSearch"/></div>
       <div className="collapsableBtns">
-        <Button style={{width: '50%', height: '100%', minWidth: '30px', minHeight: '30px'}}
-        className="collapsableHeaderBtns" size="small" onClick={addCallback} >
-          <AddCircleOutline fontSize="large" className="addItemsIcon" />
+        <Button style={{position:"relative", width: '100%', height: '100%', minWidth:0, minHeight:0}} size="small" onClick={addCallback} >
+          <AddCircleOutline fontSize="large"/>
         </Button>
         {filterButton}
       </div>
@@ -223,28 +229,37 @@ class EditorMode extends Component {
 */
 
   render() {
+    let theme = this.props.theme;
+    let leftBG = theme.palette.type === "light" ? theme.palette.primary.dark : theme.palette.primary.main;
+
     var collapsableTaskHeaderButtons = this.getCollapsableHeaderButtons(this.taskSearchCallback, this.addTaskCallback.bind(this), null);
     var collapsableSetHeaderButtons = this.getCollapsableHeaderButtons(this.taskSetSearchCallback, this.addSetCallback.bind(this), null);
 
     return (
-    <div className = "Background">
+    <div className = "editorScreenContainer">
       <CustomDragLayer />
-      <div className = "AssetViewer">
-        <div className="AssetViewerTitle"><div className="AssetViewerTitleText">Asset viewer</div></div>
+      <div style={{backgroundColor:leftBG}} className = "AssetViewer">
+
+        <div className="AssetViewerTitle">
+          <div className="AssetViewerTitleText"><Typography color="textPrimary" variant="h4">Asset viewer</Typography></div>
+        </div>
+
         <div className="AssetViewerContent">
-          <CollapsableContainer classNames="ContainerSeperator" style={{minHeight: 200}} headerTitle="Tasks"
+          <CollapsableContainer headerTitle="Tasks"
           headerComponents={collapsableTaskHeaderButtons} hideHeaderComponents={true} open={true}>
               < TaskListComponent reorderDisabled={true} placeholderName="TaskPlaceholder" reorderID="tasksReorder" taskList={ this.state.taskList }
                 selectTask={ this.selectTask.bind(this) } selectedTask={this.state.selectedTask} dragDropCallback={this.onDragDropCallback.bind(this)}
                 reactDND={false} itemType="Task"/ >
           </CollapsableContainer>
-          <CollapsableContainer classNames="ContainerSeperator" headerTitle="Sets"
+
+          <CollapsableContainer headerTitle="Sets"
           headerComponents={collapsableSetHeaderButtons} hideHeaderComponents={true}
           open={true}>
               < TaskListComponent selectedTask={this.state.selectedTaskSet} reorderDisabled={false} placeholderName="TaskSetPlaceholder" reorderID="taskSetsReorder"
                 taskList={ this.state.taskSetList } selectTask={ this.selectTaskSet.bind(this) } dragDropCallback={this.onDragDropCallback.bind(this)}
                 reactDND={false} itemType="TaskSet"/ >
           </CollapsableContainer>
+
         </div>
       </div>
 
@@ -254,4 +269,4 @@ class EditorMode extends Component {
   }
 }
 
-export default EditorMode;
+export default withTheme(EditorMode);

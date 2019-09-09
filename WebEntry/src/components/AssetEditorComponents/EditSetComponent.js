@@ -90,6 +90,11 @@ class EditSetComponent extends Component {
     if(target==="Tags"){
       this.set.tags = response;
     }
+    else if(target==="Repeat"){
+      response = response[0].replace(/\D/g,'');
+      response = response === "" ? "0" : response;
+      this.set.repeatSetThreshold = parseInt(response);
+    }
   }
 
   //Callback from checkbox pressed
@@ -350,26 +355,36 @@ class EditSetComponent extends Component {
           ref="tagsRef"
           onChange={(e)=> this.responseHandler(e, e.target.value, "Tags")}
         />
+        <TextField id="repeatSet"
+          autoFocus
+          margin="dense"
+          defaultValue={this.set.repeatSetThreshold}
+          placeholder="0"
+          helperText="The amount of tasks that must be completed, otherwise the set repeats"
+          label="Repeat Set Threshold"
+          ref="repeatRef"
+          onChange={(e)=> this.responseHandler(e, e.target.value, "Repeat")}
+        />
         <FormControlLabel label="Randomize Set Order"
           value="start"
           checked={this.state.randomizeSet}
-          control={<Checkbox color="primary" />}
+          control={<Checkbox color="secondary" />}
           onChange={this.handleSetTaskOrderChange}
-          labelPlacement="start"
+          labelPlacement="end"
         />
         <FormControlLabel label="Display on one page"
           value="start"
           checked={this.state.displayOnePage}
-          control={<Checkbox color="primary" />}
+          control={<Checkbox color="secondary" />}
           onChange={this.handleDisplayOnePageChange}
-          labelPlacement="start"
+          labelPlacement="end"
         />
         <FormControlLabel label="Log on one line"
           value="start"
           checked={this.state.logOneLine}
-          control={<Checkbox color="primary" />}
+          control={<Checkbox color="secondary" />}
           onChange={this.handleLogOneLineChange}
-          labelPlacement="start"
+          labelPlacement="end"
         />
         <TextField id="requiredCorrect"
           margin="dense"
@@ -395,7 +410,7 @@ class EditSetComponent extends Component {
     }
 
     return(
-      <div className="componentContainer">
+      <div className="setComponentContainer">
         <div className="setFormContainer">
           <form className="setFormRoot" autoComplete="off" id="formRootId">
               {setContent}

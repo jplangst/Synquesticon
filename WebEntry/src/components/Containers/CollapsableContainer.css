@@ -1,5 +1,5 @@
 .collpasedContainer{
-  position: absolute;
+  position: relative;
   width: 100%;
   height: auto;
 }
@@ -8,80 +8,54 @@
 .containerHeader{
   position: relative;
   width: 100%;
-  height: 55px;
+  display: inline-flex;
+  flex-direction: row;
+
+  border-bottom-width: thin;
+  border-bottom-style: solid;
+  border-color: grey;
+}
+@media only screen and (max-width: 1100px) {
+  .containerHeader {
+    flex-direction: column;
+  }
+  .customHeaderComponents{
+    padding-left: 20px;
+    margin-bottom: 10px;
+  }
 }
 
 .leftHeaderContent{
-  position: absolute;
-  width: 30%;
-  height: 100%;
+  position: relative;
+  display: flex;
+  flex-grow: 1;
+  height: 50px;
 }
 .collapseBtnContainer{
-  position: absolute;
-  width: 65px;
+  position: relative;
   height: 100%;
 }
-.collapseBtn{
-  width: 65px;
-  height: 100%;
-}
-.collapsableIcon{
-  height: 100%;
-}
+
 .rotateIcon{
   transform: rotate(90deg);
 }
 .titleContainer{
-  position: absolute;
-  left: 65px;
-  width: calc(100% - 65px);
+  position: relative;
+  width: 55px;
   height: 100%;
-
   display:flex;
   align-items: center; /* Vertical center alignment */
 }
-.dropdownTitle{
-  font-size: large;
-  font-weight: bold;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 
 .customHeaderComponents{
-  position: absolute;
+  position: relative;
+  display: flex;
+  flex-grow: 1;
   height: 100%;
-  width: 70%;
-  top: 0;
-  left: 30%;
 }
 
 /**** Content ******/
 .collapsableContent{
-  width: 90%;
+  width: 100%;
   height: auto;
-  margin-left: 5%;
-}
-
-.collapsableContentSpacer{
-  padding-top: 4px;
-  /*padding-bottom: 4px;*/
-}
-
-
-/****** Overrides from Edit Set Component list *******/
-.editSetCompContainer{
-  position: relative;
-  margin-bottom: 4px;
-}
-
-.editSetCompHeader{
-  background-color: #F5F5F5;
-  border: 1px solid #BDBDBD;
-  min-height: 40px;
-  height: 40px;
-}
-
-.editSetCompContent{
-  width: 95%;
 }

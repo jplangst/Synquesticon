@@ -6,6 +6,8 @@ import DragIcon from '@material-ui/icons/ControlCamera';
 import './TaskItemComponent.css';
 
 import { DragSource } from 'react-dnd'
+import { Typography } from '@material-ui/core';
+import { withTheme } from '@material-ui/styles';
 
 const Types = {
  ITEM: 'taskItemComp'
@@ -50,14 +52,15 @@ class TaskItemComponent extends Component {
   }
 
   render() {
+    const { theme, connectDragSource} = this.props; //connectDragPreview, isDragging
 
-    const { connectDragSource} = this.props; //connectDragPreview, isDragging
+    let bgColor = this.props.highlight ? theme.palette.secondary.main + "22" : null;
 
     //const opacityValue = isDragging ? 0.8 : 1;
     var content = <div  className={"listItem "} onClick={()=>this.props.onSelectedCallback(this.props.task)}>
-          <div className={"listItemTextContainer " +this.props.highlight}>
+          <div className="listItemTextContainer" style={{backgroundColor:bgColor}}>
             <div className="listItemText dotLongText">
-              {this.props.content}
+              <Typography color="textPrimary"> {this.props.content} </Typography>
             </div>
           </div>
           {connectDragSource(
@@ -73,4 +76,4 @@ class TaskItemComponent extends Component {
   }
 }
 
-export default DragSource(Types.ITEM, itemSource, collect)(TaskItemComponent);
+export default withTheme(DragSource(Types.ITEM, itemSource, collect)(TaskItemComponent));

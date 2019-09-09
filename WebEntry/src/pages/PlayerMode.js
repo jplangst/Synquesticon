@@ -121,7 +121,7 @@ class PlayerMode extends Component {
       <div className="PlayerViewerContent">
         <div className="TaskSetContainer">
           < PlayableSetListComponent taskList={ this.state.taskSets }
-                  runSetCallback={ this.onPlayButtonClick.bind(this) } />
+                  runSetCallback={ this.onPlayButtonClick.bind(this) } showEditButton={false}/>
         </div>
         <div className="RemoteTrackerContainer">
           <FormControl className="textinput">
