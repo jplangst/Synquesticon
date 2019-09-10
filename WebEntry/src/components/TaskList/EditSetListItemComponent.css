@@ -1,16 +1,10 @@
 .editListItem {
-  border: 1px solid #BDBDBD;
-  background-color: #F5F5F5;
+  border-bottom: 1px solid grey;
   margin-right: 2.5%;
   min-height: 40px;
   position: relative;
   width: 100%;
-  margin-bottom: 4px;
   opacity: 1;
-}
-
-.collapsedItemListWrapper:last-child {
-  margin-bottom: 0;
 }
 
 .editListItemTextContainer{
@@ -33,10 +27,10 @@
   cursor:move;
   height: 100%;
 
-  border-left-style: solid;
+  /*border-left-style: solid;
   border-width: thin;
   border-radius: 10px;
-  border-color: grey;
+  border-color: grey;*/
 }
 
 .editListItemDragBtn{
@@ -61,10 +55,10 @@
   cursor: pointer;
   height: 100%;
 
-  border-left-style: solid;
+  /*border-left-style: solid;
   border-width: thin;
   border-radius: 10px;
-  border-color: grey;
+  border-color: grey;*/
 }
 
 .editListItemDelBtn{
@@ -80,14 +74,4 @@
   cursor:pointer;
   width: 100%;
   height: 100%;
-}
-
-.highlightBG{
-  background-color: #AEA;
-}
-
-.dotLongText{
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
