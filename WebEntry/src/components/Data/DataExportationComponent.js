@@ -95,9 +95,9 @@ class DataExportationComponent extends Component {
 
   render() {
     return(
-      <div>
-        <Button onClick={this.onDataExportationButtonClicked.bind(this)} >
-          <ExportationIcon />
+      <div style={{height:'100%'}}>
+        <Button style={{height:'100%'}} onClick={this.onDataExportationButtonClicked.bind(this)} >
+          <ExportationIcon style={{display:'flex', position: 'absolute', height: '75%', width: 'auto', maxWidth: '75%', flexGrow: 1}}/>
         </Button>
         <Dialog open={this.state.open} onClose={this.handleClose.bind(this)}>
           <DialogTitle>Choose an experiment to export</DialogTitle>
