@@ -1,3 +1,8 @@
+Enable touch drag into sets, and touch drag to reorder sets. (Fixed)
+Enable touch drag to create rectangular AOI.
+
+Recursive check is detecting false recursion when adding the same set more than once.
+
 TODO remove warnings and errors
 
 the export data button is smaller than the pause/play button

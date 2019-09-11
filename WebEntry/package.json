@@ -19,6 +19,7 @@
     "react-css-modules": "^4.7.11",
     "react-dnd": "^7.4.5",
     "react-dnd-html5-backend": "^7.4.4",
+    "react-dnd-touch-backend": "^9.3.4",
     "react-dom": "^16.4.1",
     "react-redux": "^5.1.1",
     "react-reorder": "^3.0.0-alpha.7",
