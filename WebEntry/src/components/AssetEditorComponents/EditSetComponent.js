@@ -30,7 +30,6 @@ class EditSetComponent extends Component {
     //If we got a taskObject passed as a prop we use it, otherwise we init with a default constructed object
     //Clone the array via JSON. Otherwise we would operate directly on the original objects which we do not want
     this.set = this.props.isEditing ? JSON.parse(JSON.stringify(this.props.setObject)) : new dbObjects.TaskSetObject();
-    console.log("this set", this.set);
     if (this.set.repeatSetThreshold === undefined) {
       this.set.repeatSetThreshold = 0;
     }
@@ -64,14 +63,12 @@ class EditSetComponent extends Component {
   }
 
   onDBCallback(setDBID){
-    console.log("Set saved: ", setDBID);
     //TODO close and reopen as editing instead. Highlight the set in the left menu
     this.closeSetComponent(true);
   }
 
   onChangeSetSettings(){
     if(this.props.isEditing){
-      console.log("saving", this.set);
       db_helper.updateTaskSetFromDb(this.set._id, this.set, this.handleDBCallback);
     }
     else{
@@ -194,7 +191,6 @@ class EditSetComponent extends Component {
             }
           }
           //No circular reference detected
-          console.log("Task added");
           this.handleAddTaskAllowed(true, task);
         }
         //Otherwise we do not add as we don't know if it will be ok
@@ -205,7 +201,6 @@ class EditSetComponent extends Component {
       });
     }
     else{
-      console.log("Task added");
       this.handleAddTaskAllowed(true, task);
     }
   }
@@ -213,8 +208,6 @@ class EditSetComponent extends Component {
   getChildSetIDs(setObject, childSets){
     //Add the object to the list
     childSets.push(setObject._id);
-
-    console.log(setObject);
 
     //Iterate over the sets children
     for(var i = 0; i<setObject.data.length; i++){
@@ -228,7 +221,6 @@ class EditSetComponent extends Component {
   //Add a task to the list of tasks in the set
   addTask(task, objType){
     if(this.set._id === task._id){
-      console.log("Can't add set to itself. It would result in a circular reference");
       this.setState({
         snackbarOpen: true
       });
@@ -333,7 +325,7 @@ class EditSetComponent extends Component {
       <div>
         <TextField id="questionText"
           required
-          
+
           padding="dense"
           defaultValue={this.set.name}
           placeholder="Valve questions"
@@ -345,7 +337,7 @@ class EditSetComponent extends Component {
         />
         <TextField id="tags"
           required
-          
+
           padding="dense"
           defaultValue={this.set.tags.join(',')}
           placeholder="SillyWalks, Swallows"
@@ -356,7 +348,7 @@ class EditSetComponent extends Component {
           onChange={(e)=> this.responseHandler(e, e.target.value, "Tags")}
         />
         <TextField id="repeatSet"
-          
+
           padding="dense"
           defaultValue={this.set.repeatSetThreshold}
           placeholder="0"

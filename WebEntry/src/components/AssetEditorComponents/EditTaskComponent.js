@@ -61,7 +61,6 @@ class EditTaskComponent extends Component {
       db_helper.updateTaskFromDb(this.task._id, this.task, this.handleQuestionCallback);
     }
     else{
-      console.log(this.task);
       db_helper.addTaskToDb(this.task, this.handleQuestionCallback);
     }
   }
@@ -101,7 +100,6 @@ class EditTaskComponent extends Component {
 
   //Called from the MultipleChoice component when the user interacts with the single choice checkbox //TODO this and the related changes are a hack. Not a good solution
   onSingleChoiceChanged(singleChoice){
-    console.log(singleChoice);
     this.setState({
       taskType: singleChoice ? "Single Choice" : "Multiple Choice",
     });

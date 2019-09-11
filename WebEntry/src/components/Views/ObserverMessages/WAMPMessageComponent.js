@@ -32,7 +32,6 @@ class WAMPMessageComponent extends React.Component {
 
   onCommentRecieved(comment){
     if (comment !== "") {
-      console.log("close comment dialog", comment);
       //TODO process comment here, might need to pass task id etc to the observermessage as needed
       db_helper.addNewObserverMessageToDb(new dbObjects.ObserverMessage(myStorage.getItem('deviceID'),
                                                                      myStorage.getItem('deviceRole'),

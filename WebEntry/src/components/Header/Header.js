@@ -48,7 +48,6 @@ class Header extends Component {
           <BackArrowNavigation fontSize='large'/>
         </Button>
 
-    console.log(this.props.location.pathname);
     let storeState = store.getState();
     if (storeState.showHeader) {
       //var fontSize = Math.max(28, Math.min(storeState.windowSize.height * 0.04, storeState.windowSize.width * 0.04));
