@@ -2,6 +2,8 @@ TODO remove warnings and errors
 
 Observer gaze container is broken on tablet.
 
+the export data button is smaller than the pause/play button
+Add a label to the pause/play button
 
 low prio:
 show player stimilus in observer gaze window
