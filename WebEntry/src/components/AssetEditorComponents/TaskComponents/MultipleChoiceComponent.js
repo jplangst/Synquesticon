@@ -70,12 +70,35 @@ class MultipleChoiceComponent extends Component {
     }
   }
 
+  /*<TextField label="Unit"
+
+    padding="dense"
+    style={{marginRight:"10px", width:"calc(50% - 5px)"}}
+    id="unit"
+    defaultValue={this.props.task.responseUnit}
+    placeholder="%"
+    helperText="The unit of the responses if they are numerical"
+    ref="unitRef"
+    onChange={(e)=> this.props.task.responseUnit = e.target.value}
+  />
+  <TextField label="AOIs"
+
+    padding="dense"
+    id="aoisText"
+    defaultValue={this.props.task.aois.join(',')}
+    placeholder="Screen A, Screen B"
+    helperText="AOIs seperated by a comma"
+    ref="aoisTextRef"
+    fullWidth
+    onChange={(e)=> this.responseHandler(e, e.target.value, "AOIs")}
+  />*/
+
   render() {
     var objectiveResponseContent =
       <div className="questionTypeContainer">
         <TextField label="Question"
           required
-          
+
           padding="dense"
           fullWidth
           id="questionText"
@@ -88,7 +111,7 @@ class MultipleChoiceComponent extends Component {
         />
         <TextField label="Responses"
           required
-          
+
           padding="dense"
           style={{marginRight:"10px", width:"calc(40% - 15px)"}}
           id="responses"
@@ -100,7 +123,7 @@ class MultipleChoiceComponent extends Component {
         />
         <TextField label="Correct Responses"
           required
-          
+
           padding="dense"
           style={{marginRight:"10px", width:"calc(40% - 15px)"}}
           id="tags"
@@ -119,20 +142,9 @@ class MultipleChoiceComponent extends Component {
           onChange={this.handleSingleChoiceChanged}
           labelPlacement="end"
         />
-        <TextField label="Unit"
-          
-          padding="dense"
-          style={{marginRight:"10px", width:"calc(50% - 5px)"}}
-          id="unit"
-          defaultValue={this.props.task.responseUnit}
-          placeholder="%"
-          helperText="The unit of the responses if they are numerical"
-          ref="unitRef"
-          onChange={(e)=> this.props.task.responseUnit = e.target.value}
-        />
         <TextField label="Tags"
           required
-          
+
           padding="dense"
           style={{width:"calc(50% - 5px)"}}
           id="tags"
@@ -141,17 +153,6 @@ class MultipleChoiceComponent extends Component {
           helperText="Tags seperated by a comma"
           ref="tagsRef"
           onChange={(e)=> this.responseHandler(e, e.target.value, "Tags")}
-        />
-        <TextField label="AOIs"
-          
-          padding="dense"
-          id="aoisText"
-          defaultValue={this.props.task.aois.join(',')}
-          placeholder="Screen A, Screen B"
-          helperText="AOIs seperated by a comma"
-          ref="aoisTextRef"
-          fullWidth
-          onChange={(e)=> this.responseHandler(e, e.target.value, "AOIs")}
         />
         <FormControlLabel label="Treat Response as Global Variable"
           value="end"

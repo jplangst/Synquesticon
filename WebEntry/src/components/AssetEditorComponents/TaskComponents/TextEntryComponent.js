@@ -55,12 +55,38 @@ class TextEntryComponent extends Component {
     }
   }
 
+  /*<TextField label="AOIs"
+
+    padding="dense"
+    id="aoisText"
+    defaultValue={this.props.task.aois.join(',')}
+    placeholder="Screen A, Screen B"
+    helperText="AOIs seperated by a comma"
+    ref="aoisTextRef"
+    fullWidth
+    onChange={(e)=> this.responseHandler(e, e.target.value, "AOIs")}
+  />
+
+  <TextField label="Text Entry Rows"
+    required
+
+    padding="dense"
+    fullWidth
+    id="freeTextRows"
+    defaultValue={this.props.task.freeTextRows}
+    placeholder="Enter how many rows you want the text entry to be"
+    ref="entryRowsRef"
+    onChange={(e)=>{this.props.task.freeTextRows = e.target.value}}
+  />
+
+  */
+
   render() {
     var textEntryContent =
       <div className="questionTypeContainer">
         <TextField label="Question"
           required
-          
+
           padding="dense"
           fullWidth
           id="questionText"
@@ -71,31 +97,9 @@ class TextEntryComponent extends Component {
           rows="3"
           onChange={(e)=>{this.props.task.question = e.target.value}}
         />
-        <TextField label="Text Entry Rows"
-          required
-          
-          padding="dense"
-          fullWidth
-          id="freeTextRows"
-          defaultValue={this.props.task.freeTextRows}
-          placeholder="Enter how many rows you want the text entry to be"
-          ref="entryRowsRef"
-          onChange={(e)=>{this.props.task.freeTextRows = e.target.value}}
-        />
-        <TextField label="AOIs"
-          
-          padding="dense"
-          id="aoisText"
-          defaultValue={this.props.task.aois.join(',')}
-          placeholder="Screen A, Screen B"
-          helperText="AOIs seperated by a comma"
-          ref="aoisTextRef"
-          fullWidth
-          onChange={(e)=> this.responseHandler(e, e.target.value, "AOIs")}
-        />
         <TextField label="Tags"
           required
-          
+
           padding="dense"
           fullWidth
           id="tags"
