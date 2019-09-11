@@ -57,9 +57,22 @@ function prepareMUITheme(themeType){
         // E.g., shift from Red 500 to Red 300 or Red 700.
         tonalOffset: 0.1,
         type: themeType,
+
       }
     });
   }
+
+  let actionDisabledBG = theme.palette.secondary.light;
+  if(theme.palette.secondary.light.includes("#")){
+    actionDisabledBG = actionDisabledBG + "66";
+  }
+  else{
+    actionDisabledBG = actionDisabledBG.replace("rgb", "rgba");
+    actionDisabledBG = actionDisabledBG.replace(")", ",0.25)");
+
+  }
+
+  theme.palette.action.disabledBackground = actionDisabledBG;
 
   theme.overrides = {
     MuiSlider:{

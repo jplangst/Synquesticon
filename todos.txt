@@ -1,5 +1,7 @@
 TODO remove warnings and errors
 
+hide speech settings.
+
 low prio:
 show player stimilus in observer gaze window
 
@@ -18,3 +20,7 @@ TODO go over all input forms and use reasonable placeholders etc...
 
 Use flexbox for the content on the editor and observer 
 so that the whole page can scroll and not collapse horribly.
+
+
+Bugs:
+on tablet mode the edit set task completely collapses.

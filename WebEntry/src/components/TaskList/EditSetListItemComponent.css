@@ -1,6 +1,5 @@
 .editListItem {
   border-bottom: 1px solid grey;
-  padding-right: 2.5%;
   min-height: 40px;
   position: relative;
   width: 100%;
@@ -17,7 +16,8 @@
 }
 
 .editListItemText{
-  padding-left: 5px;
+  padding-left: 10px;
+
 }
 
 .editListItemDragBtnContainer{
@@ -26,11 +26,6 @@
   width: 60px;
   cursor:move;
   height: 100%;
-
-  /*border-left-style: solid;
-  border-width: thin;
-  border-radius: 10px;
-  border-color: grey;*/
 }
 
 .editListItemDragBtn{

@@ -129,6 +129,13 @@ class Menu extends Component {
     if (!deviceName || deviceName === "") {
       deviceName="Anonymous";
     }
+
+    let speechSettings = this.props.showSpeechSettings ?
+          <ListItem button key="Speech Settings" onClick={this.onOpenSpeechSettings.bind(this)}>
+            <ListItemText primary="Speech Settings" />
+          </ListItem> :
+          null;
+
     return(
       <div >
         <Drawer anchor="right" open={this.props.showMenu} onClose={this.props.closeSettingsMenu}>
@@ -144,9 +151,7 @@ class Menu extends Component {
               <ListItem button key="Crossbar Settings" onClick={this.onOpenCrossbarSettings.bind(this)}>
                 <ListItemText primary="Crossbar Settings" />
               </ListItem>
-              <ListItem button key="Speech Settings" onClick={this.onOpenSpeechSettings.bind(this)}>
-                <ListItemText primary="Speech Settings" />
-              </ListItem>
+              {speechSettings}
             </List>
             <Divider />
             <List>

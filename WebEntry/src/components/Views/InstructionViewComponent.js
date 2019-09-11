@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import Button from '@material-ui/core/Button';
+import { Typography } from '@material-ui/core';
 
 import './InstructionViewComponent.css';
 
@@ -23,7 +24,7 @@ class InstructionViewComponent extends Component {
   render() {
     return (
       <div className="commonContainer">
-        {this.props.task.instruction}
+        <Typography color="textPrimary">{this.props.task.instruction}</Typography>
       </div>
     );
   }
