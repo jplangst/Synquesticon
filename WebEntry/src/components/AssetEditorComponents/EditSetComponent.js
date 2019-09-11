@@ -420,19 +420,19 @@ class EditSetComponent extends Component {
         </div>
 
         <Snackbar
-        style = {{bottom: 120}}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }}
-        open={this.state.snackbarOpen}
-        onClose={this.handleCloseSnackbar.bind(this)}
-        autoHideDuration={2000}
-        ContentProps={{
-          'aria-describedby': 'message-id',
-        }}
-        message={<span id="message-id">Illegal Action: Adding set would cause a circular reference!</span>}
-      />
+          style = {{bottom: 120}}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          open={this.state.snackbarOpen}
+          onClose={this.handleCloseSnackbar.bind(this)}
+          autoHideDuration={2000}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span id="message-id">Illegal Action: Adding set would cause a circular reference!</span>}
+        />
       </div>
     );
   }
