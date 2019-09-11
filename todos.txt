@@ -1,18 +1,13 @@
-Enable touch drag into sets, and touch drag to reorder sets. (Fixed)
 Enable touch drag to create rectangular AOI.
 
 Recursive check is detecting false recursion when adding the same set more than once.
 
 TODO remove warnings and errors
 
-the export data button is smaller than the pause/play button
-Add a label to the pause/play button
-
 low prio:
 show player stimilus in observer gaze window
 Some error when using the sliders in the speech dialog
 
-the AOI list in the task objects does not make sense currently
 Missing tags for image and instruction tasks
 
 errors with dialogs, p is indise a p. Fix...
