@@ -1,13 +1,13 @@
 .formRoot{
-  position: absolute;
+  position: relative;
   height: 100%;
   width: 100%;
 }
 
 .editTaskFormButtons{
-  padding-top: 20px;
   width: 100%;
-  height: 10%;
+  height: 9%;
+  margin-top:1%;
 }
 
 .questionTypeContainer{
@@ -16,13 +16,12 @@
 }
 
 .taskComponentContainer{
-  padding-top: 1%;
-  position: absolute;
-  width: 94%;
-  height: 98%;
-  left: 3%;
+  padding-left: 20px;
+  padding-right: 20px;
+  position: relative;
+  width: 100%;
+  height: 100%;
   overflow-y:auto;
-  overflow-x: hidden;
 }
 
 .formControl{

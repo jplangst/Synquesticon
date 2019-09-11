@@ -6,9 +6,8 @@ class InstructionComponent extends Component {
     return(
         <TextField
           required
-          
+
           padding="dense"
-          style={{width:"calc(96% + 10px)"}}
           id="instructionText"
           defaultValue={this.props.task.instruction}
           placeholder="Write your instruction here"
