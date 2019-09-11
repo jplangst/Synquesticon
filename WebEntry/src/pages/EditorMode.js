@@ -113,7 +113,6 @@ class EditorMode extends Component {
   }
 
   removeTaskSet(taskSet) {
-    console.log("deleteTaskSet", taskSet);
     db_helper.deleteTaskSetFromDb(taskSet._id);
   }
 

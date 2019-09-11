@@ -113,7 +113,7 @@ class TaskSetComponent extends React.Component {
           multiline
           className="textField"
           fullWidth
-          margin="normal"
+          padding="normal"
         />
         </CardContent>
         <CardActions>
@@ -151,7 +151,7 @@ class TaskSetComponent extends React.Component {
             multiline
             className="textField"
             fullWidth
-            margin="normal"
+            padding="normal"
             variant="outlined"
             value={this.props.task.instructions}
                       onChange={(e) => {this.props.task.instructions = e.target.value; this.forceUpdate()}}

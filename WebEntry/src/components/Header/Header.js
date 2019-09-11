@@ -11,6 +11,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 
 import { Typography } from '@material-ui/core';
 import { withTheme } from '@material-ui/styles';
+import {withRouter} from 'react-router-dom';
 
 //Icons
 import Settings from '@material-ui/icons/Settings';
@@ -40,21 +41,25 @@ class Header extends Component {
   }
 
   render() {
+    let backNavigation = this.props.location.pathname === "/" ?
+        <div style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:150, height:'100%'}}/> :
+        <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:150, height:'100%'}}
+         onClick={this.handleBackwardsNavigation.bind(this)} >
+          <BackArrowNavigation fontSize='large'/>
+        </Button>
+
     let storeState = store.getState();
     if (storeState.showHeader) {
       //var fontSize = Math.max(28, Math.min(storeState.windowSize.height * 0.04, storeState.windowSize.width * 0.04));
 
       return(
-          <AppBar style={{ backgroundColor:this.props.theme.palette.primary.light, margin: 0, padding: 0, display:'flex', flexGrow: 1, flexShrink:1, position: 'relative', minHeight:50, maxHeight:'6%', width:'100%'}}>
-            <Toolbar variant="dense" style={{margin: 0, padding: 0, display:'flex', flexDirection:'row', position:'relative', width:'100%', height:'100%'}}>
-               <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:150, height:'100%'}}
-                onClick={this.handleBackwardsNavigation.bind(this)} >
-                 <BackArrowNavigation style={{display:'flex', position: 'absolute', height: '100%', width: 'auto', maxWidth: '100%', flexGrow: 1}} />
-               </Button>
+          <AppBar style={{ backgroundColor:this.props.theme.palette.primary.light, padding: 0, padding: 0, display:'flex', flexGrow: 1, position: 'relative', minHeight:50, maxHeight:'6%', width:'100%'}}>
+            <Toolbar variant="dense" style={{padding: 0, padding: 0, display:'flex', flexDirection:'row', position:'relative', width:'100%', height:'100%'}}>
+               {backNavigation}
                <div className="AppName"><Typography color='textPrimary' variant="h3">Synquesticon</Typography></div>
                <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:150, height:"100%"}}
                  onClick={this.openSettingsMenu.bind(this)}>
-                 <Settings size='large' style={{display:'flex', position: 'absolute', height: '100%', width: 'auto', maxWidth: '100%', flexGrow: 1}} />
+                 <Settings fontSize='large' />
                </Button>
               <Menu openSettingsMenu={this.openSettingsMenu.bind(this)}
                     closeSettingsMenu={this.closeSettingsMenu.bind(this)}
@@ -68,4 +73,4 @@ class Header extends Component {
     }
   }
 }
-export default withTheme(Header);
+export default withRouter(withTheme(Header));

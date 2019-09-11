@@ -70,17 +70,15 @@
 }
 
 .ViewerGaze{
+  position: relative;
   display: flex;
 
   /* Only use if single participant displayed */
   justify-content: center;
   align-items: center;
 
-  min-height: 50px;
-  max-height: 200px;
+  height: 200px;
 
   width: 100%;
-  overflow-x: scroll;
-
-  flex: 1 0 auto;
+  overflow-x: auto;
 }

@@ -127,9 +127,10 @@ class PlayerMode extends Component {
         </div>
         <div className="RemoteTrackerContainer">
           <FormControl className="textinput">
-            <InputLabel style={{marginLeft: theme.spacing(1)}} htmlFor="outlined-age-simple"><Typography color={textColor} variant="h6">Remote Eye Tracker</Typography></InputLabel>
+            <InputLabel style={{paddingLeft: theme.spacing(1)}} htmlFor="outlined-age-simple"><Typography color={textColor} variant="h6">Eye Tracker</Typography></InputLabel>
             <Select
-              style={{width:'100%', height:'100%', marginRight: theme.spacing(1)}}
+              style={{width:'100%', height:'100%', position:'relative', outlined:{height:'100%', width:'100%'}}}
+              autoWidth={true}
               value={this.state.selectedTracker}
               onChange={this.onSelectRemoteTracker.bind(this)}
               input={<OutlinedInput style={{marginRight: theme.spacing(1)}} name="selectedTracker" id="selectedTracker-helper" />}

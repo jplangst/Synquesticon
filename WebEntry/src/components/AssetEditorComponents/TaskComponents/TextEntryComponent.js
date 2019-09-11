@@ -60,8 +60,8 @@ class TextEntryComponent extends Component {
       <div className="questionTypeContainer">
         <TextField label="Question"
           required
-          autoFocus
-          margin="dense"
+          
+          padding="dense"
           fullWidth
           id="questionText"
           defaultValue={this.props.task.question}
@@ -73,8 +73,8 @@ class TextEntryComponent extends Component {
         />
         <TextField label="Text Entry Rows"
           required
-          autoFocus
-          margin="dense"
+          
+          padding="dense"
           fullWidth
           id="freeTextRows"
           defaultValue={this.props.task.freeTextRows}
@@ -83,8 +83,8 @@ class TextEntryComponent extends Component {
           onChange={(e)=>{this.props.task.freeTextRows = e.target.value}}
         />
         <TextField label="AOIs"
-          autoFocus
-          margin="dense"
+          
+          padding="dense"
           id="aoisText"
           defaultValue={this.props.task.aois.join(',')}
           placeholder="Screen A, Screen B"
@@ -95,8 +95,8 @@ class TextEntryComponent extends Component {
         />
         <TextField label="Tags"
           required
-          autoFocus
-          margin="dense"
+          
+          padding="dense"
           fullWidth
           id="tags"
           defaultValue={this.props.task.tags.join(',')}
@@ -107,7 +107,7 @@ class TextEntryComponent extends Component {
         />
         <FormControlLabel label="Treat Response as Global Variable"
           value="end"
-          margin="dense"
+          padding="dense"
           checked={this.state.globalVariable}
           control={<Checkbox style={{width:"50px"}} color="secondary" />}
           onChange={this.handleGlobalVariableChanged}

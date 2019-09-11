@@ -46,8 +46,8 @@ class AOINameDialog extends Component {
           <DialogContent>
             <TextField
               required
-              autoFocus
-              margin="dense"
+              
+              padding="dense"
               id="taskComment"
               defaultValue={this.name}
               label="Comment"

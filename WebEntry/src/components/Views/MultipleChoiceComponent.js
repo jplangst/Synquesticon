@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 
 import Button from '@material-ui/core/Button';
+import { Typography } from '@material-ui/core';
+import { withTheme } from '@material-ui/styles';
 
 import './MultipleChoiceComponent.css';
 
@@ -40,18 +42,19 @@ class MultipleChoiceComponent extends Component {
   }
 
   render() {
+    let theme = this.props.theme;
     this.reset();
     return (
       <div className={this.props.className}>
         <div className="questionDisplay">
-          {this.props.task.question}
+          <Typography color="textPrimary">{this.props.task.question}</Typography>
         </div>
         <div className="responsesButtons">
           {
             this.props.task.responses.map((item, index)=>{
               if (this.pickedItems.includes(item)) {
                 return (
-                  <span className="inputButton" key={index}><Button  variant="contained" color="primary" disabled={true} onClick={() => this.onAnswer(item)}>{item}</Button></span>)
+                  <span className="inputButton" key={index}><Button  variant="contained" style={{color:theme.palette.text.secondary}} disabled={true} onClick={() => this.onAnswer(item)}>{item}</Button></span>)
               }
               return (<span className="inputButton" key={index}><Button  variant="contained" onClick={() => this.onAnswer(item)}>{item}</Button></span>);
             })
@@ -62,4 +65,4 @@ class MultipleChoiceComponent extends Component {
   }
 }
 
-export default MultipleChoiceComponent;
+export default withTheme(MultipleChoiceComponent);

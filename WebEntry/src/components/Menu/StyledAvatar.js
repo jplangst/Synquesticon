@@ -4,7 +4,7 @@ import { deepOrange, deepPurple } from '@material-ui/core/colors';
 import Avatar from '@material-ui/core/Avatar';
 
 const BlueAvatar = styled(Avatar)({
-  margin: 10,
+  padding: 10,
   color: '#fff',
   backgroundColor: deepPurple[500],
 });

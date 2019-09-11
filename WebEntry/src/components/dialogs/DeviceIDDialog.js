@@ -8,6 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+import { withTheme } from '@material-ui/styles';
 
 import Button from '@material-ui/core/Button';
 
@@ -80,7 +81,7 @@ class DeviceIDDialog extends Component {
                   defaultValue={this.deviceName}
                   id="outlined-dense"
                   label="ID"
-                  margin="dense"
+                  padding="dense"
                   variant="outlined"
                   onChange={(e)=>{this.deviceName = e.target.value}}
                 />
@@ -90,11 +91,13 @@ class DeviceIDDialog extends Component {
                  <InputLabel htmlFor="uncontrolled-native">Role</InputLabel>
                  <NativeSelect
                     defaultValue={this.selectedRole}
-                    input={<Input name="role" id="role-selector" />}
+                    input={<Input style={{backgroundColor:this.props.theme.palette.primary.main, color:this.props.theme.palette.text.primary}} name="role" id="role-selector" />}
                     onChange={(e)=>{this.selectedRole = e.target.value}}
+
                   >
                     {this.state.roles.map((role, index) => {
-                      return <option value={role} key={index}>{role}</option>
+                      return <option style={{backgroundColor:this.props.theme.palette.primary.main, color:this.props.theme.palette.text.primary}}
+                      value={role} key={index}>{role}</option>
                     })}
                  </NativeSelect>
                </FormControl>
@@ -113,4 +116,4 @@ class DeviceIDDialog extends Component {
   }
 }
 
-export default DeviceIDDialog;
+export default withTheme(DeviceIDDialog);

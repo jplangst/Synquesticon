@@ -57,7 +57,6 @@ class GazeCursor extends React.Component {
   }
 
   toggleVisibility(){
-    console.log("Gaze cursor visibility: " + !this.state.visible);
     this.setState(
       {
         visible: !this.state.visible

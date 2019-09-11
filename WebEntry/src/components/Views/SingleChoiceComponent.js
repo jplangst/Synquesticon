@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 
 import Button from '@material-ui/core/Button';
+import { Typography } from '@material-ui/core';
+import { withTheme } from '@material-ui/styles';
 
 import './SingleChoiceComponent.css';
 
@@ -43,18 +45,19 @@ class SingleChoiceComponent extends Component {
     }
   }
   render() {
+    let theme=this.props.theme;
     this.reset();
     return (
       <div className={this.props.className}>
         <div className="questionDisplay">
-          {this.props.task.question}
+          <Typography color="textPrimary">{this.props.task.question}</Typography>
         </div>
         <div className="responsesButtons">
           {
             this.props.task.responses.map((item, index)=>{
               if (item === this.pickedItem) {
                 return (
-                  <span className="inputButton" key={index}><Button  variant="contained"  disabled={this.hasBeenAnswered} onClick={() => this.onAnswer(item)}>{item}</Button></span>)
+                  <span className="inputButton" key={index}><Button  variant="contained" classes={{color:theme.palette.text.secondary}} disabled={this.hasBeenAnswered} onClick={() => this.onAnswer(item)}>{item}</Button></span>)
               }
               return (<span className="inputButton" key={index}><Button  variant="contained" onClick={() => this.onAnswer(item)}>{item}</Button></span>);
             })
@@ -65,4 +68,4 @@ class SingleChoiceComponent extends Component {
   }
 }
 
-export default SingleChoiceComponent;
+export default withTheme(SingleChoiceComponent);
