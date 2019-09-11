@@ -105,7 +105,7 @@ class ObserverTab extends Component {
     }
 
     return(
-          <div style={{...shouldHighlight,...{ zIndex:1, margin:'0 0 0 10px', display:'flex', flexDirection:'column', cursor:'pointer', position:'relative', flexShrink:1, minHeight:20, maxHeight:150, minWidth:150, maxWidth:250}}}>
+          <div style={{...shouldHighlight,...{ zIndex:1, padding:'0 0 0 10px', display:'flex', flexDirection:'column', cursor:'pointer', position:'relative', flexShrink:1, minHeight:20, maxHeight:150, minWidth:150, maxWidth:250}}}>
             <div onClick={this.onTabPress} style={{display:'flex', flexDirection:'column', position:'relative', width:"100%", height:"100%"}}>
               <div style={{...activeTextStyle, ...{display:'flex', flexDirection:'row', position: 'relative'}, ...dotText}}>
                 {participantSmallScreen}<p style={{ textAlign:'center'}}>{this.props.label}</p>

@@ -1,6 +1,6 @@
 .listItemPreview {
   border: 1px solid grey;
-  margin-right: 2.5%;
+  padding-right: 2.5%;
   min-height: 40px;
   position: relative;
   opacity: 1;

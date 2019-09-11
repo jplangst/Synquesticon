@@ -161,7 +161,7 @@ class EditSetListItemComponent extends Component {
           </div>));
       }
       return(
-        <div style={{marginLeft:20*this.props.componentDepth}}>
+        <div style={{paddingLeft:20*this.props.componentDepth}}>
         <CollapsableContainer  classNames="editSetCompContainer" contentClassNames="editSetCompContent" headerComponents={dragSource} open={false}
         headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={this.props.item.name} headerHeight={40}
         headerWidth={{flexGrow:1}} titleVariant="body1" indentContent={10}>

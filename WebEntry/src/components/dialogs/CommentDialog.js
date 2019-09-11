@@ -37,8 +37,8 @@ class CommentDialog extends Component {
           <DialogContent>
             <TextField
               required
-              autoFocus
-              margin="dense"
+              
+              padding="dense"
               id="taskComment"
               defaultValue=""
               label="Comment"

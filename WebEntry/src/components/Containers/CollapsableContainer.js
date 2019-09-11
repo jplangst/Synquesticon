@@ -62,7 +62,7 @@ class CollapsableContainer extends Component {
         </div>
         <div className={this.props.contentClassNames+" collapsableContent"}>
           <Collapse in={this.state.open} timeout="auto" unmountOnExit >
-            <div style={{marginLeft:this.props.indentContent?this.props.indentContent:0}}>
+            <div style={{paddingLeft:this.props.indentContent?this.props.indentContent:0}}>
               {this.props.children}
             </div>
           </Collapse>

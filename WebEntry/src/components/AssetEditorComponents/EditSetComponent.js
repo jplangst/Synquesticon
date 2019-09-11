@@ -333,8 +333,8 @@ class EditSetComponent extends Component {
       <div>
         <TextField id="questionText"
           required
-          autoFocus
-          margin="dense"
+          
+          padding="dense"
           defaultValue={this.set.name}
           placeholder="Valve questions"
           label="Set Name"
@@ -345,8 +345,8 @@ class EditSetComponent extends Component {
         />
         <TextField id="tags"
           required
-          autoFocus
-          margin="dense"
+          
+          padding="dense"
           defaultValue={this.set.tags.join(',')}
           placeholder="SillyWalks, Swallows"
           helperText="Tags seperated by a comma"
@@ -356,8 +356,8 @@ class EditSetComponent extends Component {
           onChange={(e)=> this.responseHandler(e, e.target.value, "Tags")}
         />
         <TextField id="repeatSet"
-          autoFocus
-          margin="dense"
+          
+          padding="dense"
           defaultValue={this.set.repeatSetThreshold}
           placeholder="0"
           fullWidth

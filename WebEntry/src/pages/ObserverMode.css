@@ -70,6 +70,7 @@
 }
 
 .ViewerGaze{
+  position: relative;
   display: flex;
 
   /* Only use if single participant displayed */
@@ -80,7 +81,7 @@
   max-height: 200px;
 
   width: 100%;
-  overflow-x: scroll;
+  overflow-x: auto;
 
   flex: 1 0 auto;
 }

@@ -75,8 +75,8 @@ class MultipleChoiceComponent extends Component {
       <div className="questionTypeContainer">
         <TextField label="Question"
           required
-          autoFocus
-          margin="dense"
+          
+          padding="dense"
           fullWidth
           id="questionText"
           defaultValue={this.props.task.question}
@@ -88,8 +88,8 @@ class MultipleChoiceComponent extends Component {
         />
         <TextField label="Responses"
           required
-          autoFocus
-          margin="dense"
+          
+          padding="dense"
           style={{marginRight:"10px", width:"calc(40% - 15px)"}}
           id="responses"
           defaultValue={this.props.task.responses.join(',')}
@@ -100,8 +100,8 @@ class MultipleChoiceComponent extends Component {
         />
         <TextField label="Correct Responses"
           required
-          autoFocus
-          margin="dense"
+          
+          padding="dense"
           style={{marginRight:"10px", width:"calc(40% - 15px)"}}
           id="tags"
           defaultValue={this.props.task.correctResponses.join(',')}
@@ -112,7 +112,7 @@ class MultipleChoiceComponent extends Component {
         />
         <FormControlLabel label="Single Choice"
           value="end"
-          margin="dense"
+          padding="dense"
 
           checked={this.state.singleChoice}
           control={<Checkbox style={{width:"50%"}} color="secondary" />}
@@ -120,8 +120,8 @@ class MultipleChoiceComponent extends Component {
           labelPlacement="end"
         />
         <TextField label="Unit"
-          autoFocus
-          margin="dense"
+          
+          padding="dense"
           style={{marginRight:"10px", width:"calc(50% - 5px)"}}
           id="unit"
           defaultValue={this.props.task.responseUnit}
@@ -132,8 +132,8 @@ class MultipleChoiceComponent extends Component {
         />
         <TextField label="Tags"
           required
-          autoFocus
-          margin="dense"
+          
+          padding="dense"
           style={{width:"calc(50% - 5px)"}}
           id="tags"
           defaultValue={this.props.task.tags.join(',')}
@@ -143,8 +143,8 @@ class MultipleChoiceComponent extends Component {
           onChange={(e)=> this.responseHandler(e, e.target.value, "Tags")}
         />
         <TextField label="AOIs"
-          autoFocus
-          margin="dense"
+          
+          padding="dense"
           id="aoisText"
           defaultValue={this.props.task.aois.join(',')}
           placeholder="Screen A, Screen B"
@@ -155,7 +155,7 @@ class MultipleChoiceComponent extends Component {
         />
         <FormControlLabel label="Treat Response as Global Variable"
           value="end"
-          margin="dense"
+          padding="dense"
           checked={this.state.globalVariable}
           control={<Checkbox style={{width:"50px"}} color="secondary" />}
           onChange={this.handleGlobalVariableChanged}

@@ -14,7 +14,7 @@ const styles = theme => ({
     flexGrow: 1,
   },
   menuButton: {
-    marginLeft: -12,
+    paddingLeft: -12,
     marginRight: 20,
   },
   title: {
@@ -29,11 +29,11 @@ const styles = theme => ({
     /*'&:hover': {
       backgroundColor: fade( theme.palette.type==="light"?theme.palette.primary.dark:theme.palette.primary.main , 0.1),
     },*/
-    marginLeft: 0,
+    paddingLeft: 0,
     width: '100%',
     height: '100%',
     [theme.breakpoints.up('sm')]: {
-      marginLeft: 0,
+      paddingLeft: 0,
       width: 'auto',
     },
   },

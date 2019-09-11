@@ -57,10 +57,11 @@
   -ms-flex-direction: column;
   flex-direction: column;
 
-  position: absolute;
+  position: relative;
   width: 75%;
   height: 100%;
-  left: 25%;
+
+  overflow: auto;
 }
 
 .IntroContentTitle{

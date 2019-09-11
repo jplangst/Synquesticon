@@ -51,8 +51,8 @@ class CrossbarDialog extends Component {
             <DialogContentText><Typography color="textPrimary">Change crossbar Router information</Typography></DialogContentText>
             <TextField
               required
-              autoFocus
-              margin="normal"
+              
+              padding="normal"
               id="crossbarIP"
               defaultValue={this.crossbar.ip}
               label="Crossbar IP Address"
@@ -61,8 +61,8 @@ class CrossbarDialog extends Component {
             />
             <TextField
               required
-              autoFocus
-              margin="normal"
+              
+              padding="normal"
               id="crossbarPort"
               defaultValue={this.crossbar.port}
               label="Crossbar port"
@@ -72,8 +72,8 @@ class CrossbarDialog extends Component {
             />
             <TextField
               required
-              autoFocus
-              margin="dense"
+              
+              padding="dense"
               id="crossbarRealm"
               defaultValue={this.crossbar.realm}
               label="Crossbar Realm"

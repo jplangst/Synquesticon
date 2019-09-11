@@ -27,7 +27,7 @@ class PlayableSetComponent extends Component {
             </div>
           </div>
           {editButton}
-          <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:buttonSize, maxWidth:buttonSize, marginLeft:4}}
+          <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:buttonSize, maxWidth:buttonSize, paddingLeft:4}}
                   size="small" className="playableSetButton"
                   onClick={()=>{this.props.runSetCallback(this.props.task)}} >
             <PlayIcon style={{display:'flex', position: 'absolute', maxHeight:25, width: '100%'}}/>

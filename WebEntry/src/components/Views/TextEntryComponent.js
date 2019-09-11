@@ -78,7 +78,7 @@ class TextEntryComponent extends Component {
       InputProps={{
                 readOnly: true
               }}
-      margin="normal"
+      padding="normal"
       variant="outlined"
       onClick={(e)=>{e.preventDefault(); e.stopPropagation()}}
     />

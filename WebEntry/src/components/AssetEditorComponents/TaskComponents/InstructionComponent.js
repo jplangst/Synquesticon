@@ -6,8 +6,8 @@ class InstructionComponent extends Component {
     return(
         <TextField
           required
-          autoFocus
-          margin="dense"
+          
+          padding="dense"
           style={{width:"calc(96% + 10px)"}}
           id="instructionText"
           defaultValue={this.props.task.instruction}

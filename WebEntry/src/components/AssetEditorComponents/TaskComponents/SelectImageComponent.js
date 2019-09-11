@@ -34,8 +34,8 @@ class SelectImageComponent extends Component {
     var imageTaskName =
     <TextField
         required
-        autoFocus
-        margin="dense"
+        
+        padding="dense"
         style={{width:"calc(96% + 10px)"}}
         id="imageName"
         defaultValue={this.props.task.question}
