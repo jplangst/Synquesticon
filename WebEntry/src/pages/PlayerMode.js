@@ -50,6 +50,7 @@ class PlayerMode extends Component {
     db_helper.getAllParticipantsFromDb((participants) => {
       console.log("all participants", participants);
     });
+    console.log("player did mount");
     db_helper.queryTasksFromDb(false, "experiment", this.dbTaskSetCallback);
   }
 
@@ -70,6 +71,7 @@ class PlayerMode extends Component {
 
   //query all tasksets with experiment tag
   dbTaskSetCallbackFunction(queryTasks, data) {
+    console.log("all tasksets", data);
     this.setState({taskSets: data.tasks});
   }
 

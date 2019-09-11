@@ -90,6 +90,7 @@ const initialState = {
   remoteEyeTrackers: [],
   gazeCursorRadius: 0,
   gazeData: {},
+  aois: [],
   showHeader: true,
   experimentInfo: null,
   windowSize: {
@@ -137,6 +138,12 @@ const store = createStore ((state = initialState, action) => {
       theme = prepareMUITheme(type)
       window.localStorage.setItem('theme', JSON.stringify(type));
       return {...state, theme: theme}
+    }
+    case 'ADD_AOIS': {
+      return {...state, aois: state.aois.concat(action.aois)};
+    }
+    case 'RESET_AOIS': {
+      return {...state, aois: []};
     }
     default:
       return state;

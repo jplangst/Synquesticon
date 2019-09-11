@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 
 import Button from '@material-ui/core/Button';
 
@@ -55,11 +56,10 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
       currentTaskIndex: 0,
       hasBeenAnswered: false
     }
+    this.progressCount = 0;
     this.numCorrectAnswers = 0;
     this.currentTask = null;
     this.currentLineOfData = null;
-    this.gazeDataArray = [];
-    this.handleGazeLocUpdate = this.updateCursorLocation.bind(this);
   }
 
   /*
@@ -72,19 +72,11 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 
 
   componentDidMount() {
-    if (!(store.getState().experimentInfo.participantId === "TESTING")) {
-      console.log("set up interval");
-      this.timer = setInterval(this.handleGazeLocUpdate, 4.5); //Update the gaze cursor location every 2ms
-    }
 
-    this.gazeDataArray = [];
   }
 
   componentWillUnmount() {
-    if (!store.getState().experimentInfo.participantId === "TESTING") {
-      console.log("clear interval");
-      clearInterval(this.timer);
-    }
+
   }
 
   /*
@@ -108,35 +100,6 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
     }
   }
 
-  //Updates the location of the Gaze Cursor. And checks if any of the AOIs were looked at
-  updateCursorLocation(){
-    if (this.currentTask) {
-      try {
-        let gazeLoc = store.getState().gazeData[store.getState().experimentInfo.selectedTracker];
-        if (this.currentTask.aois !== undefined && this.currentTask.aois.length > 0) {
-          for (var i = 0; i < this.currentTask.aois.length; i++) {
-            var item = this.currentTask.aois[i];
-            if (gazeLoc.locX > item.boundingbox[0][0] && gazeLoc.locX < item.boundingbox[1][0]
-              && gazeLoc.locY > item.boundingbox[0][1] && gazeLoc.locY < item.boundingbox[3][1]
-              && item.checked === undefined) {
-              item.checked = true;
-              console.log("aoi checking", this.currentTask.aois);
-            }
-          }
-        }
-
-        var timestamp = playerUtils.getCurrentTime();
-        if (!this.gazeDataArray.includes(gazeLoc)) {
-          this.gazeDataArray.push(gazeLoc);
-        }
-
-
-      } catch (err) {
-
-      }
-    }
-  }
-
   /*
    ██████  █████  ██      ██      ██████   █████   ██████ ██   ██ ███████
   ██      ██   ██ ██      ██      ██   ██ ██   ██ ██      ██  ██  ██
@@ -147,9 +110,14 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
   onClickNext() {
     if (!(store.getState().experimentInfo.participantId === "TESTING")) {
       //save gaze data
-      var copiedGazeData = this.gazeDataArray.slice();
-      this.gazeDataArray = [];
-      db_helper.saveGazeData(store.getState().experimentInfo.participantId, copiedGazeData);
+
+      var action = {
+        type: 'RESET_AOIS'
+      }
+
+      store.dispatch(action);
+
+      this.props.saveGazeData(dbObjectsUtilityFunctions.getTaskContent(this.currentTask));
 
 
       if (this.currentTask.objType === "Task") {
@@ -182,8 +150,12 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
         progressCount += this.currentLineOfData.size;
         this.currentLineOfData.forEach((line, index) => {
           if (line.isGlobalVariable !== undefined) {
+            var globalVariableObj = {
+              label: line.question,
+              value: line.responses
+            };
             db_helper.addNewGlobalVariableToParticipantDB(store.getState().experimentInfo.participantId,
-                                                          JSON.stringify(line.obj));
+                                                          JSON.stringify(globalVariableObj));
           }
           else {
             line.timeToCompletion = playerUtils.getCurrentTime() - line.startTimestamp;
@@ -199,6 +171,8 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
         if (!(store.getState().experimentInfo.participantId === "TESTING")) {
           alert("you did not meet the required number of correct answers. This set will be repeated now.");
 
+          console.log("currentTask", this.currentTask);
+          progressCount -= this.currentTask.data.length;
           //reset state
           this.setState({
             hasBeenAnswered: false,
@@ -215,6 +189,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
       if (this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage && this.currentTask.numCorrectAnswers < this.currentTask.repeatSetThreshold) {
         if (!(store.getState().experimentInfo.participantId === "TESTING")) {
           alert("you did not meet the required number of correct answers.");
+          progressCount -= this.currentTask.data.length;
           return;
         }
       }
@@ -245,7 +220,6 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
         this.currentLineOfData = answer.linesOfData;
         if (answer.correctlyAnswered === "correct") {
           this.currentTask.numCorrectAnswers += 1;
-          console.log("on answer multi item", this.currentTask, this.currentTask.numCorrectAnswers);
         }
       }
     }
@@ -288,6 +262,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
         return <DisplayTaskHelper tasksFamilyTree={trackingTaskSetNames}
                                   taskSet={updatedTaskSet}
                                   onFinished={this.onFinishedRecursion.bind(this)}
+                                  saveGazeData={this.props.saveGazeData}
                                   repeatSetThreshold={updatedTaskSet.repeatSetThreshold}/>
       }
       else {
@@ -327,7 +302,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
               return <MultipleChoiceComponent className="commonContainer" task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered}/>;
             }
             if((this.currentTask.taskType === "Image")) {
-              return <ImageViewComponent className="commonContainer" task={this.currentTask}/>;
+              return <ImageViewComponent className="imageViewWrapper" task={this.currentTask} taskIndex={this.state.currentTaskIndex}/>;
             }
           } else {
 
@@ -376,6 +351,10 @@ class DisplayTaskComponent extends Component {
       isPaused : false
     }
     this.handleNewCommandEvent = this.onNewCommandEvent.bind(this);
+
+    this.gazeDataArray = [];
+    this.frameDiv = React.createRef();
+    this.cursorRadius = 20;
   }
 
   componentWillMount() {
@@ -395,8 +374,19 @@ class DisplayTaskComponent extends Component {
     wampStore.addNewCommandListener(this.handleNewCommandEvent);
   }
 
-  componentWillUnmount() {
+  componentDidMount() {
+    if (store.getState().experimentInfo.participantId !== "TESTING" && (store.getState().experimentInfo.selectedTracker !== "")) {
+      console.log("set up interval");
+      this.gazeDataArray = [];
+      this.timer = setInterval(this.updateCursorLocation.bind(this), 4.5); //Update the gaze cursor location every 2ms
+    }
+  }
 
+  componentWillUnmount() {
+    if (store.getState().experimentInfo.participantId !== "TESTING" && (store.getState().experimentInfo.selectedTracker !== "")) {
+      console.log("clear interval");
+      clearInterval(this.timer);
+    }
     var layoutAction = {
       type: 'SET_SHOW_HEADER',
       showHeader: true,
@@ -405,6 +395,56 @@ class DisplayTaskComponent extends Component {
 
     store.dispatch(layoutAction);
     wampStore.removeNewCommandListener(this.handleNewCommandEvent);
+  }
+
+  saveGazeData(task) {
+    console.log("save gaze display", this.gazeDataArray);
+    if (this.gazeDataArray.length > 0) {
+      var copiedGazeData = this.gazeDataArray.slice();
+      this.gazeDataArray = [];
+      db_helper.saveGazeData(store.getState().experimentInfo.participantId, task, copiedGazeData);
+    }
+  }
+
+  //Updates the location of the Gaze Cursor. And checks if any of the AOIs were looked at
+  updateCursorLocation(){
+    try {
+      let gazeLoc = store.getState().gazeData[store.getState().experimentInfo.selectedTracker];
+      if(this.frameDiv){
+        var cursorX = (gazeLoc.locX*this.frameDiv.current.offsetWidth-this.cursorRadius);
+        var cursorY = (gazeLoc.locY*this.frameDiv.current.offsetHeight-this.cursorRadius);
+
+        var aois = store.getState().aois;
+
+
+        for (var i = 0; i < aois.length; i++) {
+          var a = aois[i];
+
+          //console.log("imageDiv", a.imageRef.ge, a.imageWrapper.current);
+          var imageDivRect = a.imageRef.current.getBoundingClientRect();
+          var polygon = [];
+          a.boundingbox.map((p, ind) => {
+            var x = p[0]*imageDivRect.width/100 + imageDivRect.x;
+            var y = p[1]*imageDivRect.height/100 + imageDivRect.y;
+            polygon.push([x, y]);
+          });
+          if (playerUtils.pointIsInPoly([cursorX, cursorY], polygon)){
+            gazeLoc.target = a.name;
+            break;
+          }
+        }
+
+        var timestamp = playerUtils.getCurrentTime();
+        if (!this.gazeDataArray.includes(gazeLoc)) {
+          this.gazeDataArray.push(gazeLoc);
+        }
+      }
+
+
+
+    } catch (err) {
+
+    }
   }
 
   /*
@@ -458,7 +498,6 @@ class DisplayTaskComponent extends Component {
 */
   onNewCommandEvent() {
     var args = JSON.parse(wampStore.getCurrentCommand());
-    console.log("new command", args);
     var shouldProcess = false;
 
     if (args.participantId === -1 || args.participantId === store.getState().experimentInfo.participantId) {
@@ -497,9 +536,10 @@ class DisplayTaskComponent extends Component {
       var renderObj = <DisplayTaskHelper tasksFamilyTree={[store.getState().experimentInfo.mainTaskSetId]}
                                          taskSet={store.getState().experimentInfo.taskSet}
                                          onFinished={this.onFinished.bind(this)}
+                                         saveGazeData={this.saveGazeData.bind(this)}
                                          repeatSetThreshold={store.getState().experimentInfo.taskSet.repeatSetThreshold}/>;
       return (
-          <div className="page">
+          <div className="page" ref={this.frameDiv}>
             {renderObj}
             <PauseDialog openDialog={this.state.isPaused}/>
           </div>

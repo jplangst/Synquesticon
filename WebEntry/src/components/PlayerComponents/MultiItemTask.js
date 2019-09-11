@@ -40,22 +40,15 @@ class MultiItemTask extends Component {
   onAnswer(answerObj) {
     //Update the map with the resonse to the task, overwriting any existing answer for that task
     var lineOfData = this.taskResponses.get(answerObj.taskID+answerObj.mapID);
-    if (lineOfData.isGlobalVariable !== undefined) {
-      lineOfData.obj = {
-        label: lineOfData.question,
-        value: answerObj.responses
-      }
-    }
-    else {
-      if (lineOfData.firstResponseTimestamp === -1) { //log the timeToFirstAnswer
-        lineOfData.firstResponseTimestamp = playerUtils.getCurrentTime();
-        lineOfData.timeToFirstAnswer = lineOfData.firstResponseTimestamp - lineOfData.startTimestamp;
-      }
 
-      //update answers
-      lineOfData.responses = answerObj.responses;
-      lineOfData.correctlyAnswered = answerObj.correctlyAnswered;
+    if (lineOfData.firstResponseTimestamp === -1) { //log the timeToFirstAnswer
+      lineOfData.firstResponseTimestamp = playerUtils.getCurrentTime();
+      lineOfData.timeToFirstAnswer = lineOfData.firstResponseTimestamp - lineOfData.startTimestamp;
     }
+
+    //update answers
+    lineOfData.responses = answerObj.responses;
+    lineOfData.correctlyAnswered = answerObj.correctlyAnswered;
 
     this.taskResponses.set(answerObj.taskID+answerObj.mapID, lineOfData);
     this.props.answerCallback({linesOfData: this.taskResponses, correctlyAnswered: answerObj.correctlyAnswered});

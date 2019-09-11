@@ -8,7 +8,14 @@ ObserverMessages.createIndexes({queryString: "text", tags: "text"});
 
 var exports = module.exports = {};
 
+var DATA_DIRECTORY = "exported_data/";
+var GAZE_DATA_PREFIX = "gaze_data_";
+var RAW_GAZE_DATA_DIRECTORY = "raw_gaze_data/";
+
 exports.save_to_csv = async function(p) {
+    if (!fs.existsSync(DATA_DIRECTORY)){
+      fs.mkdirSync(DATA_DIRECTORY);
+    }
     var header = "";
     var globalVariables = "";
     var file_name = "";
@@ -19,14 +26,14 @@ exports.save_to_csv = async function(p) {
     }
 
     //prepare the header
-    header += "familyTree, startTimestamp, firstResponseTimestamp, timeToFirstAnswer, timeToCompletion, correctlyAnswered, comments";
+    header += "familyTree,task,startTimestamp,firstResponseTimestamp,timeToFirstAnswer,timeToCompletion,correctlyAnswered,comments";
 
     if (file_name === "") {
       file_name = "Anonymous";
     }
 
-    var gazeDataFile = "gaze_data_" + p._id;
-    var newGazeDataFile = "gaze_data_" + file_name + ".csv";
+    var gazeDataFile = RAW_GAZE_DATA_DIRECTORY + GAZE_DATA_PREFIX + p._id;
+    var newGazeDataFile = DATA_DIRECTORY + GAZE_DATA_PREFIX + file_name + ".csv";
 
     if (fs.existsSync(gazeDataFile)) {
       if (!fs.existsSync(newGazeDataFile)) {
@@ -38,11 +45,11 @@ exports.save_to_csv = async function(p) {
 
     file_name += ".csv";
 
-    if (fs.existsSync(file_name)) {
-      fs.unlinkSync(file_name);
+    if (fs.existsSync(DATA_DIRECTORY + file_name)) {
+      fs.unlinkSync(DATA_DIRECTORY + file_name);
     }
 
-    var logger = fs.createWriteStream(file_name, {
+    var logger = fs.createWriteStream(DATA_DIRECTORY + file_name, {
       flags: 'a' // 'a' means appending (old data will be preserved)
     });
     logger.write(header + os.EOL);
@@ -82,6 +89,7 @@ exports.save_to_csv = async function(p) {
       }
 
       let text = globalVariables + line.tasksFamilyTree.join('_') + ',' +
+                                   line.taskContent + ',' +
                                    line.displayType + ',' +
                                    line.startTimestamp + ',' +
                                    line.firstResponseTimestamp + ',' +
@@ -95,14 +103,17 @@ exports.save_to_csv = async function(p) {
     logger.end();
   }
 
-exports.save_gaze_data = function (participantId, gazeData) {
-  var file_name = "gaze_data_" + participantId;
+exports.save_gaze_data = function (participantId, task, gazeData) {
+  if (!fs.existsSync(RAW_GAZE_DATA_DIRECTORY)){
+    fs.mkdirSync(RAW_GAZE_DATA_DIRECTORY);
+  }
+  var file_name = RAW_GAZE_DATA_DIRECTORY + GAZE_DATA_PREFIX + participantId;
   var logger = fs.createWriteStream(file_name, {
     flags: 'a' // 'a' means appending (old data will be preserved)
   });
 
   if (!fs.existsSync(file_name)) {
-    var header = "timestamp,X,Y,leftPupilRadius,rightPupilRadius";
+    var header = "timestamp,X,Y,leftPupilRadius,rightPupilRadius,task,target";
     logger.write(header + os.EOL);
   }
 
@@ -111,7 +122,9 @@ exports.save_gaze_data = function (participantId, gazeData) {
                  row.locX + ',' +
                  row.locY + ',' +
                  row.leftPupilRadius + ',' +
-                 row.rightPupilRadius + os.EOL);
+                 row.rightPupilRadius + ',' +
+                 task + ',' +
+                 row.target + ',' + os.EOL);
   })
   logger.end();
 }

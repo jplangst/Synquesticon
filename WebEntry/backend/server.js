@@ -453,6 +453,7 @@ router.post("/addNewLineToParticipant", (req, res) => {
 
 router.post("/addNewGlobalVariableToParticipant", (req, res) => {
   const { participantId, globalVariableJSON} = req.body;
+  console.log("add global variables", participantId, globalVariableJSON, req.body);
   var globalVariable = JSON.parse(globalVariableJSON);
 
   Participants.updateOne({_id: participantId}, { $addToSet: {globalVariables: globalVariable}}, (err, participant) => {
@@ -759,10 +760,10 @@ router.post("/deleteAllMessages", (req, res) => {
 */
 
 router.post("/saveGazeData", (req, res) => {
-  const { participantId, gazeData } = req.body;
+  const { participantId, task, gazeData } = req.body;
   var gazeDataObj = JSON.parse(gazeData);
 
-  data_exportation.save_gaze_data(participantId, gazeDataObj);
+  data_exportation.save_gaze_data(participantId, task, gazeDataObj);
 });
 
 // append /api for our http requests

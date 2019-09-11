@@ -32,7 +32,10 @@ class EditTaskComponent extends Component {
     super(props);
 
     //If we got a taskObject passed as a prop we use it, otherwise we init with a default constructed object
-    var copiedTask = JSON.parse(JSON.stringify(this.props.taskObject));
+    var copiedTask = new dbObjects.TaskObject();
+    if (this.props.isEditing) {
+      copiedTask = JSON.parse(JSON.stringify(this.props.taskObject));
+    }
     this.task = this.props.isEditing ? {...(new dbObjects.TaskObject()), ...copiedTask} : new dbObjects.TaskObject();
 
     this.state = { //We keep these fields in the state as they affect how the component is rendered

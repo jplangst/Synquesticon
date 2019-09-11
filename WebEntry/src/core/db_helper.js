@@ -314,7 +314,7 @@ class db_helper {
    */
    queryTasksFromDb(queryTasks, queryString,callback){
     var queryCollection = queryTasks ? 'Tasks' : 'TaskSets';
-
+    console.log("query tasksets");
     axios.post("/api/getAllTasksContaining", {
       queryCollection: queryCollection,
       queryString: queryString,
@@ -624,9 +624,11 @@ class db_helper {
  ██████  ██   ██ ███████ ███████     ██████  ██   ██    ██    ██   ██
 */
 
-    saveGazeData(participantId, gazeData) {
+    saveGazeData(participantId, task, gazeData) {
+      console.log("save gaze", gazeData);
       axios.post("/api/saveGazeData", {
         participantId: participantId,
+        task: task,
         gazeData: JSON.stringify(gazeData)
       });
     }
