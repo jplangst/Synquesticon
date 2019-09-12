@@ -10,9 +10,6 @@ import SingleChoiceComponent from '../Views/SingleChoiceComponent';
 import MultipleChoiceComponent from '../Views/MultipleChoiceComponent';
 import ImageViewComponent from '../Views/ImageViewComponent';
 
-import { withTheme } from '@material-ui/styles';
-import { Typography } from '@material-ui/core';
-
 import MultiItemTask from './MultiItemTask';
 
 import PauseDialog from '../dialogs/PauseDialog';
@@ -28,20 +25,23 @@ import * as playerUtils from '../../core/player_utility_functions';
 
 import './DisplayTaskComponent.css';
 
-var progressCount = 0;
-
-function stringifyWAMPMessage(task, lineOfData, eventType) {
-  return JSON.stringify({
-                          eventType: eventType,
-                          participantId: store.getState().experimentInfo.participantId,
-                          participantLabel: store.getState().experimentInfo.participantLabel,
-                          startTimestamp: store.getState().experimentInfo.startTimestamp,
-                          selectedTracker: store.getState().experimentInfo.selectedTracker,
-                          task: task,
-                          lineOfData: lineOfData,
-                          taskSetCount: store.getState().experimentInfo.taskSetCount,
-                          progressCount: progressCount,
-                        });
+function stringifyWAMPMessage(task, lineOfData, eventType, progressCount) {
+  try {
+    return JSON.stringify({
+                            eventType: eventType,
+                            participantId: store.getState().experimentInfo.participantId,
+                            participantLabel: store.getState().experimentInfo.participantLabel,
+                            startTimestamp: store.getState().experimentInfo.startTimestamp,
+                            selectedTracker: store.getState().experimentInfo.selectedTracker,
+                            task: task,
+                            lineOfData: lineOfData,
+                            taskSetCount: store.getState().experimentInfo.taskSetCount,
+                            progressCount: progressCount,
+                          });
+  } catch (err) {
+    console.log("stringify error", task);
+    console.log(err);
+  }
 }
 
 /*
@@ -78,8 +78,9 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 
   }
 
-  componentWillUnmount() {
-
+  componentWillMount() {
+    this.progressCount = this.props.progressCount;
+    console.log("progressCount", this.progressCount, this.props.progressCount);
   }
 
   /*
@@ -99,7 +100,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
                                                         dbObjectsUtilityFunctions.getTaskContent(this.currentTask),
                                                         this.currentTask.correctResponses,
                                                         "SingleItem");
-      wamp.broadcastEvents(stringifyWAMPMessage(this.currentTask, this.currentLineOfData, "START"));
+      wamp.broadcastEvents(stringifyWAMPMessage(this.currentTask, this.currentLineOfData, "START", this.progressCount));
     }
   }
 
@@ -127,7 +128,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
         if (this.currentLineOfData.correctlyAnswered === "correct") {
           this.numCorrectAnswers += 1;
         }
-        progressCount += 1;
+        this.progressCount += 1;
         if (this.currentLineOfData) {
           if (!this.currentTask.globalVariable) {
             //complete line of data before saving to DB
@@ -145,12 +146,13 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
           }
 
           wamp.broadcastEvents(stringifyWAMPMessage(null, this.currentLineOfData,
-                                                    (this.currentLineOfData.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED"));
+                                                    (this.currentLineOfData.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED",
+                                                    this.progressCount));
         }
 
       }
       else if (this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage) {
-        progressCount += this.currentLineOfData.size;
+        this.progressCount += this.currentLineOfData.size;
         this.currentLineOfData.forEach((line, index) => {
           if (line.isGlobalVariable !== undefined) {
             var globalVariableObj = {
@@ -166,7 +168,8 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
                                                 JSON.stringify(line));
           }
           wamp.broadcastEvents(stringifyWAMPMessage(null, line,
-                                                    (line.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED"));
+                                                    (line.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED",
+                                                    this.progressCount));
         });
       }
 
@@ -175,7 +178,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
           alert("you did not meet the required number of correct answers. This set will be repeated now.");
 
           console.log("currentTask", this.currentTask);
-          progressCount -= this.currentTask.data.length;
+          this.progressCount = this.props.progressCount;
           //reset state
           this.setState({
             hasBeenAnswered: false,
@@ -192,7 +195,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
       if (this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage && this.currentTask.numCorrectAnswers < this.currentTask.repeatSetThreshold) {
         if (!(store.getState().experimentInfo.participantId === "TESTING")) {
           alert("you did not meet the required number of correct answers.");
-          progressCount -= this.currentTask.data.length;
+          this.progressCount = this.props.progressCount;
           return;
         }
       }
@@ -232,7 +235,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
   }
 
   onFinishedRecursion() {
-    //progressCount -= 1;
+    this.progressCount += this.currentTask.data.length;
     this.onClickNext();
   }
 
@@ -266,12 +269,14 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
                                   taskSet={updatedTaskSet}
                                   onFinished={this.onFinishedRecursion.bind(this)}
                                   saveGazeData={this.props.saveGazeData}
+                                  progressCount={this.progressCount}
                                   repeatSetThreshold={updatedTaskSet.repeatSetThreshold}/>
       }
       else {
         //log the start
         if (!this.state.hasBeenAnswered
-              && !(store.getState().experimentInfo.participantId === "TESTING")) {
+            && !(store.getState().experimentInfo.participantId === "TESTING")
+            && !this.currentLineOfData) {
           this.logTheStartOfTask();
         }
 
@@ -289,7 +294,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
                                       this.currentLineOfData = taskResponses;
                                     }}
                                     logTheStartOfTask={(task, log) => {
-                                      wamp.broadcastEvents(stringifyWAMPMessage(task, log, "START"))
+                                      wamp.broadcastEvents(stringifyWAMPMessage(task, log, "START", this.progressCount))
                                     }}/>
             }
             if((this.currentTask.taskType === "Instruction")) {
@@ -361,7 +366,6 @@ class DisplayTaskComponent extends Component {
   }
 
   componentWillMount() {
-    progressCount = 0;
     if (!(store.getState().experimentInfo.participantId === "TESTING")) {
       this.broadcastStartEvent();
     }
@@ -535,25 +539,25 @@ class DisplayTaskComponent extends Component {
   }
 
   render() {
-    let theme=this.props.theme;
-    let rightBG = theme.palette.type === "light" ? theme.palette.primary.main : theme.palette.primary.dark;
     try {
       var renderObj = <DisplayTaskHelper tasksFamilyTree={[store.getState().experimentInfo.mainTaskSetId]}
                                          taskSet={store.getState().experimentInfo.taskSet}
                                          onFinished={this.onFinished.bind(this)}
                                          saveGazeData={this.saveGazeData.bind(this)}
+                                         progressCount={0}
                                          repeatSetThreshold={store.getState().experimentInfo.taskSet.repeatSetThreshold}/>;
       return (
-		  <div className="page" style={{backgroundColor:rightBG}} ref={this.frameDiv}>            {renderObj}
+          <div className="page" ref={this.frameDiv}>
+            {renderObj}
             <PauseDialog openDialog={this.state.isPaused}/>
           </div>
       );
     }
     catch(err) {
       alert("something went wrong!");
-      return <div style={{backgroundColor:rightBG}}/>;
+      return <div/>;
     }
   }
 }
 
-export default withTheme(DisplayTaskComponent);
+export default DisplayTaskComponent;

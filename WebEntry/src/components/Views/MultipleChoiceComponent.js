@@ -46,9 +46,7 @@ class MultipleChoiceComponent extends Component {
     this.reset();
     return (
       <div className={this.props.className}>
-        <div className="questionDisplay">
-          <Typography color="textPrimary">{this.props.task.question}</Typography>
-        </div>
+        <Typography color="textPrimary">{this.props.task.question}</Typography>
         <div className="responsesButtons">
           {
             this.props.task.responses.map((item, index)=>{
