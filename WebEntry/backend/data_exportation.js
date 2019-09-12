@@ -122,7 +122,10 @@ exports.save_gaze_data = function (participantId, task, gazeData) {
   if (!fs.existsSync(RAW_GAZE_DATA_DIRECTORY)){
     fs.mkdirSync(RAW_GAZE_DATA_DIRECTORY);
   }
-  var file_name = RAW_GAZE_DATA_DIRECTORY + GAZE_DATA_PREFIX + participantId;
+
+  var gaze_timestamp = gazeData ? gazeData[0].timestamp : "";
+
+  var file_name = RAW_GAZE_DATA_DIRECTORY + gaze_timestamp + GAZE_DATA_PREFIX + participantId;
   var logger = fs.createWriteStream(file_name, {
     flags: 'a' // 'a' means appending (old data will be preserved)
   });
