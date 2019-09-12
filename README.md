@@ -1,6 +1,6 @@
 # Synquesticon
 
-<p>Dependencies:</p>
+<p>Dependencies that must be installed:</p>
 <ul>
   <li>Node.js (https://nodejs.org/en/)</li>
   <li>MongoDB (https://www.mongodb.com/)</li>
