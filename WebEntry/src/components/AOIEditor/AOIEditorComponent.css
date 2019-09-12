@@ -21,7 +21,6 @@
   position: relative;
   display: inline-block;
   transition: transform 150ms ease-in-out;
-  background-color: pink;
 }
 
 .imageViewWithAOIs {

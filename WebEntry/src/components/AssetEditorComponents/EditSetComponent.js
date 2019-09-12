@@ -320,6 +320,14 @@ class EditSetComponent extends Component {
 ██   ██ ███████ ██   ████ ██████  ███████ ██   ██
 */
 
+/*<FormControlLabel label="Log on one line"
+  value="start"
+  checked={this.state.logOneLine}
+  control={<Checkbox color="secondary" />}
+  onChange={this.handleLogOneLineChange}
+  labelPlacement="end"
+/>*/
+
   render() {
     var setContent =
       <div>
@@ -370,13 +378,6 @@ class EditSetComponent extends Component {
           checked={this.state.displayOnePage}
           control={<Checkbox color="secondary" />}
           onChange={this.handleDisplayOnePageChange}
-          labelPlacement="end"
-        />
-        <FormControlLabel label="Log on one line"
-          value="start"
-          checked={this.state.logOneLine}
-          control={<Checkbox color="secondary" />}
-          onChange={this.handleLogOneLineChange}
           labelPlacement="end"
         />
       </div>;

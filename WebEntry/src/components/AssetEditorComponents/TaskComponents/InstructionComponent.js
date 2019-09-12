@@ -6,7 +6,6 @@ class InstructionComponent extends Component {
     return(
         <TextField
           required
-
           padding="dense"
           id="instructionText"
           defaultValue={this.props.task.instruction}

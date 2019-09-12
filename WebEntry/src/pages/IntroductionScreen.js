@@ -49,11 +49,14 @@ class IntroductionScreen extends Component {
     let theme = this.props.theme;
 
     var buttonIcon = null;
-    if(this.state.isParticipantsPaused){
-      buttonIcon = <PauseIcon style={{display:'flex', position: 'absolute', height: '75%', width: 'auto', maxWidth: '75%', flexGrow: 1}} />;
+    var buttonLabel = "";
+    if(!this.state.isParticipantsPaused){
+      buttonIcon = <PauseIcon style={{display:'flex', position: 'relative', height: '100%', width:'25%'}} />;
+      buttonLabel = "Pause all";
     }
     else{
-      buttonIcon = <PlayIcon style={{display:'flex', position: 'absolute', height: '75%', width: 'auto', maxWidth: '75%', flexGrow: 1}} />;
+      buttonIcon = <PlayIcon style={{display:'flex', position: 'relative', height: '100%', width: '25%'}} />;
+      buttonLabel = "Resume all";
     }
 
     let leftBG = theme.palette.type === "light" ? theme.palette.primary.dark : theme.palette.primary.main;
@@ -75,9 +78,10 @@ class IntroductionScreen extends Component {
       <div style={{paddingLeft:5, backgroundColor:rightBG}} className="IntroContentWrapper">
         <div className="IntroContentTitle">
           <div className="IntroTitleText"><Typography color="textPrimary" variant="h4">Observer</Typography></div>
-          <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1,
+          <Button style={{display:'flex', position: 'relative', flexGrow: 1, width: 190,
                   borderRadius:10, borderColor:'#BDBDBD', borderWidth:'thin', borderLeftStyle:'solid'}}
            onClick={this.onPauseAllPressed}>
+            {buttonLabel}
             {buttonIcon}
           </Button>
           <div className="IntroDataExportBtnContainer">

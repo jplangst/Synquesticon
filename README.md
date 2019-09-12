@@ -1,19 +1,17 @@
 # Synquesticon
 
-Dependencies:
-MongoDB
-NPM
+<p>Dependencies that must be installed:</p>
+<ul>
+  <li>Node.js (https://nodejs.org/en/)</li>
+  <li>MongoDB (https://www.mongodb.com/)</li>
+  <li>Crossbar (https://crossbar.io/)</li>
+</ul>
 
-Installation instructions:
-In the WebEntry dir - cmd npm install
-In the WebEntry/backend dir - cmd npm install
+<p>Installation instructions:</p>
+<ul>
+  <li>In the WebEntry dir - cmd npm install</li>
+  <li>In the WebEntry/backend dir - cmd npm install</li>
+</ul>
 
 How to run:
 Use the launcher.bat file.
-
-
-Current Design Plan:
-
-<p align="center">
-  <img width="460" height="300" src="20190515_110515.jpg">
-</p>

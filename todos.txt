@@ -1,17 +1,31 @@
+Enable touch drag to create rectangular AOI.
+
+Recursive check is detecting false recursion when adding the same set more than once.
+
 TODO remove warnings and errors
-
-Observer gaze container is broken on tablet.
-
-the export data button is smaller than the pause/play button
-Add a label to the pause/play button
 
 low prio:
 show player stimilus in observer gaze window
 Some error when using the sliders in the speech dialog
 
-the AOI list in the task objects does not make sense currently
 Missing tags for image and instruction tasks
 
 errors with dialogs, p is indise a p. Fix...
 
 TODO go over all input forms and use reasonable placeholders etc...
+
+
+Exportation:
+Export all crashes when item is named the same (e.g. no global vars)
+The exportation dialog component should be refreshed when it is opened, not on construction.
+___
+pName is set to be the first global variable
+
+picked participants are collected in list when pressed. 
+Both experiment data and eye data is written to and then appended with new data. 
+
+loggedData is in this format:
+globalVariables, tasksFamilyTree, taskContent, displayType, startTimestamp, firstResponseTimestamp,timeToFirstAnswer,timeToCompletion,correctlyAnswered,comments
+
+gaze data is in this format:
+timestamp,X,Y,leftPupilRadius,rightPupilRadius,task,target

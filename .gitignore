@@ -1,5 +1,6 @@
 WebEntry/backend/node_modules/*
 WebEntry/node_modules/*
+WebEntry/build/*
 WebEntry/public/Images/*
 WebEntry/docs/*
 Documents/~$SynquesticonUI-v1.pptx

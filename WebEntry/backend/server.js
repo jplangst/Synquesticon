@@ -69,6 +69,7 @@ router.post("/exportToCSV", (req, res) => {
   const { data } = req.body;
   var obj = JSON.parse(data);
   data_exportation.save_to_csv(obj);
+  return res.json({success: true});
 });
 
 router.post("/exportAllToCSVs", (req, res) => {
