@@ -104,19 +104,36 @@ class DataExportationComponent extends Component {
           <DialogTitle>Choose an experiment to export</DialogTitle>
           <List>
             {this.state.participants.map((p, index) => {
-              return(
-              <ListItem button onClick={() => {
-                  // if (this.pickedParticipants.includes(p)) {
-                  //   this.pickedParticipants.splice(this.pickedParticipants.indexOf(p));
-                  // }
-                  // else {
-                    this.pickedParticipants.push(p);
-                  // }
 
-                }} key={index} >
-                {this.getParticipantName(p)}
-              </ListItem>
-            );
+              if(this.pickedParticipants.includes(p)){
+                return(<ListItem selected button onClick={() => {
+                    if (this.pickedParticipants.includes(p)) {
+                      this.pickedParticipants.splice(this.pickedParticipants.indexOf(p));
+                    }
+                    else {
+                      this.pickedParticipants.push(p);
+                    }
+                    this.forceUpdate();
+
+                  }} key={index} >
+                  <Typography color="textSecondary">{this.getParticipantName(p)}</Typography>
+                </ListItem>);
+              }else{
+                return(
+                  <ListItem button onClick={() => {
+                      if (this.pickedParticipants.includes(p)) {
+                        this.pickedParticipants.splice(this.pickedParticipants.indexOf(p));
+                      }
+                      else {
+                        this.pickedParticipants.push(p);
+                      }
+                      this.forceUpdate();
+
+                    }} key={index} >
+                    <Typography color="textPrimary">{this.getParticipantName(p)}</Typography>
+                  </ListItem>
+                );
+              }
             })}
           </List>
           <DialogActions>

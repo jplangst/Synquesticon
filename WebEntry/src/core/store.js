@@ -69,10 +69,18 @@ function prepareMUITheme(themeType){
   else{
     actionDisabledBG = actionDisabledBG.replace("rgb", "rgba");
     actionDisabledBG = actionDisabledBG.replace(")", ",0.25)");
-
   }
 
   theme.palette.action.disabledBackground = actionDisabledBG;
+
+  let selectedItemBGColor = theme.palette.secondary.light;
+  if(theme.palette.secondary.light.includes("#")){
+    selectedItemBGColor = selectedItemBGColor + "66";
+  }
+  else{
+    selectedItemBGColor = selectedItemBGColor.replace("rgb", "rgba");
+    selectedItemBGColor = selectedItemBGColor.replace(")", ",0.25)");
+  }
 
   theme.overrides = {
     MuiSlider:{
@@ -90,6 +98,11 @@ function prepareMUITheme(themeType){
     },
     MuiFormControlLabel:{
       root:{color: theme.palette.text.primary}
+    },
+    MuiListItem:{
+      root:{"&.Mui-selected": {
+        backgroundColor: selectedItemBGColor
+      }}
     }
   };
 
