@@ -16,17 +16,17 @@ exports.save_to_csv = async function(p) {
     if (!fs.existsSync(DATA_DIRECTORY)){
       fs.mkdirSync(DATA_DIRECTORY);
     }
-    var header = "";
+    //var header = "";
     var globalVariables = "";
     var file_name = "";
     for (let i = 0; i < p.globalVariables.length; i++) {
-      header += p.globalVariables[i].label + ",";
-      globalVariables += p.globalVariables[i].value + ",";
+      /*header += p.globalVariables[i].label + ",";*/
+      globalVariables += p.globalVariables[i].value + ":"; /* Was "," but that does not make sense*/
       file_name += p.globalVariables[i].label + '_' + p.globalVariables[i].value + '_';
     }
 
     //prepare the header
-    header += "familyTree,task,startTimestamp,firstResponseTimestamp,timeToFirstAnswer,timeToCompletion,correctlyAnswered,comments";
+    var header = "Global variables,Family Tree,Task type,Task content,Start timestamp,First response timestamp,Time to first answer,Time to completion,Answer,Correctly answered,Comments";
 
     if (file_name === "") {
       file_name = "Anonymous";
@@ -74,6 +74,7 @@ exports.save_to_csv = async function(p) {
     });
 
     p.linesOfData.map((line, index) => {
+      console.log(line);
       var comments = [];
       if (line.comments != undefined) {
         line.comments.map((obs, obsInd) => {
@@ -88,15 +89,22 @@ exports.save_to_csv = async function(p) {
         commentText = comments.join(';');
       }
 
-      let text = globalVariables + line.tasksFamilyTree.join('_') + ',' +
-                                   line.taskContent + ',' +
-                                   line.displayType + ',' +
-                                   line.startTimestamp + ',' +
-                                   line.firstResponseTimestamp + ',' +
-                                   line.timeToFirstAnswer + ',' +
-                                   line.timeToCompletion + ',' +
-                                   line.correctlyAnswered + ',' +
-                                   commentText + os.EOL;
+      var participantResponse = "";
+      if(line.responses.length > 0){
+        participantResponse = line.responses.join(';');
+      }
+
+      let text = globalVariables + ',' +
+                   line.tasksFamilyTree.join('_') + ',' +
+                   line.displayType + ',' +
+                   line.taskContent + ',' +
+                   line.startTimestamp + ',' +
+                   line.firstResponseTimestamp + ',' +
+                   line.timeToFirstAnswer + ',' +
+                   line.timeToCompletion + ',' +
+                   participantResponse + ',' +
+                   line.correctlyAnswered + ',' +
+                   commentText + os.EOL;
       logger.write(text);
     });
 
@@ -113,7 +121,7 @@ exports.save_gaze_data = function (participantId, task, gazeData) {
   });
 
   if (!fs.existsSync(file_name)) {
-    var header = "timestamp,X,Y,leftPupilRadius,rightPupilRadius,task,target";
+    var header = "Timestamp,X,Y,Left pupil radius,Right pupil radius,Task,Target";
     logger.write(header + os.EOL);
   }
 
@@ -124,7 +132,7 @@ exports.save_gaze_data = function (participantId, task, gazeData) {
                  row.leftPupilRadius + ',' +
                  row.rightPupilRadius + ',' +
                  task + ',' +
-                 row.target + ',' + os.EOL);
+                 row.target + os.EOL);
   })
   logger.end();
 }

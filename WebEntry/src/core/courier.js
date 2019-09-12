@@ -7,13 +7,13 @@ class courier {
       data: JSON.stringify(data)
     })
     .then((response) => {
-      callback(response.status);
+      callback(response.status + " " + response.statusText);
     });
  };
 
  exportAllToCSVs(callback) {
    axios.post("/api/exportAllToCSVs").then((response) => {
-     callback(response.status);
+     callback(response.status + " " + response.statusText);
    });
  }
 }

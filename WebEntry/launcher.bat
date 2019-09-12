@@ -1,3 +1,4 @@
+start crossbar start
 cd backend
 start node server.js
 cd ..

@@ -9,6 +9,8 @@ import Button from '@material-ui/core/Button';
 
 import ExportationIcon from '@material-ui/icons/Archive';
 
+import { withTheme } from '@material-ui/styles';
+import { Typography } from '@material-ui/core';
 
 import db_helper from '../../core/db_helper';
 import courier from '../../core/courier';
@@ -50,14 +52,11 @@ class DataExportationComponent extends Component {
 
   handleExport() {
     if (this.pickedParticipants.length != 0) {
-      //TODO
       courier.exportToCSV(this.pickedParticipants[0], (s) => {
         alert(s);
         this.handleClose();
       });
     }
-
-
   }
 
   handleExportAll() {
@@ -94,6 +93,8 @@ class DataExportationComponent extends Component {
   }
 
   render() {
+    let theme=this.props.theme;
+
     return(
       <div style={{height:'100%'}}>
         <Button style={{height:'100%'}} onClick={this.onDataExportationButtonClicked.bind(this)} >
@@ -119,9 +120,6 @@ class DataExportationComponent extends Component {
             })}
           </List>
           <DialogActions>
-            <Button onClick={this.handleDeleteAll.bind(this)} variant="outlined">
-              Delete All
-            </Button>
             <Button onClick={this.handleClose.bind(this)} variant="outlined">
               Cancel
             </Button>
@@ -131,6 +129,10 @@ class DataExportationComponent extends Component {
             <Button onClick={this.handleExportAll.bind(this)} variant="outlined">
               Export All
             </Button>
+            <div style={{width:100}} />
+            <Button onClick={this.handleDeleteAll.bind(this)} variant="outlined">
+              Delete All
+            </Button>
           </DialogActions>
         </Dialog>
       </div>
@@ -138,4 +140,4 @@ class DataExportationComponent extends Component {
   }
 }
 
-export default DataExportationComponent;
+export default withTheme(DataExportationComponent);

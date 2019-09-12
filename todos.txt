@@ -13,3 +13,19 @@ Missing tags for image and instruction tasks
 errors with dialogs, p is indise a p. Fix...
 
 TODO go over all input forms and use reasonable placeholders etc...
+
+
+Exportation:
+Export all crashes when item is named the same (e.g. no global vars)
+The exportation dialog component should be refreshed when it is opened, not on construction.
+___
+pName is set to be the first global variable
+
+picked participants are collected in list when pressed. 
+Both experiment data and eye data is written to and then appended with new data. 
+
+loggedData is in this format:
+globalVariables, tasksFamilyTree, taskContent, displayType, startTimestamp, firstResponseTimestamp,timeToFirstAnswer,timeToCompletion,correctlyAnswered,comments
+
+gaze data is in this format:
+timestamp,X,Y,leftPupilRadius,rightPupilRadius,task,target
