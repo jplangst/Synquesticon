@@ -16,9 +16,17 @@ exports.save_to_csv = async function(p) {
     if (!fs.existsSync(DATA_DIRECTORY)){
       fs.mkdirSync(DATA_DIRECTORY);
     }
+
+    console.log(p);
+
     //var header = "";
     var globalVariables = "";
     var file_name = "";
+
+    if(p.linesOfData && p.linesOfData.length > 0){
+      file_name = p.linesOfData[0].startTimestamp+"_";
+    }
+
     for (let i = 0; i < p.globalVariables.length; i++) {
       /*header += p.globalVariables[i].label + ",";*/
       globalVariables += p.globalVariables[i].value + ":"; /* Was "," but that does not make sense*/
@@ -74,7 +82,6 @@ exports.save_to_csv = async function(p) {
     });
 
     p.linesOfData.map((line, index) => {
-      console.log(line);
       var comments = [];
       if (line.comments != undefined) {
         line.comments.map((obs, obsInd) => {

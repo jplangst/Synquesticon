@@ -51,12 +51,12 @@ class DataExportationComponent extends Component {
   }
 
   handleExport() {
-    if (this.pickedParticipants.length != 0) {
-      courier.exportToCSV(this.pickedParticipants[0], (s) => {
+    this.pickedParticipants.map((p, index) => {
+      courier.exportToCSV(p, (s) => {
         alert(s);
         this.handleClose();
       });
-    }
+    });
   }
 
   handleExportAll() {
@@ -67,6 +67,7 @@ class DataExportationComponent extends Component {
   }
 
   handleClose() {
+    this.pickedParticipants = [];
     this.setState({
       open: false
     });
@@ -104,11 +105,10 @@ class DataExportationComponent extends Component {
           <DialogTitle>Choose an experiment to export</DialogTitle>
           <List>
             {this.state.participants.map((p, index) => {
-
               if(this.pickedParticipants.includes(p)){
                 return(<ListItem selected button onClick={() => {
                     if (this.pickedParticipants.includes(p)) {
-                      this.pickedParticipants.splice(this.pickedParticipants.indexOf(p));
+                      this.pickedParticipants.splice(index,1);
                     }
                     else {
                       this.pickedParticipants.push(p);
@@ -122,7 +122,7 @@ class DataExportationComponent extends Component {
                 return(
                   <ListItem button onClick={() => {
                       if (this.pickedParticipants.includes(p)) {
-                        this.pickedParticipants.splice(this.pickedParticipants.indexOf(p));
+                        this.pickedParticipants.splice(index,1);
                       }
                       else {
                         this.pickedParticipants.push(p);
