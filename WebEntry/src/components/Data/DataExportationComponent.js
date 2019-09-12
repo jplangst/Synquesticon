@@ -108,7 +108,7 @@ class DataExportationComponent extends Component {
               if(this.pickedParticipants.includes(p)){
                 return(<ListItem selected button onClick={() => {
                     if (this.pickedParticipants.includes(p)) {
-                      this.pickedParticipants.splice(index,1);
+                      this.pickedParticipants.splice(this.pickedParticipants.indexOf(p),1);
                     }
                     else {
                       this.pickedParticipants.push(p);
@@ -122,7 +122,7 @@ class DataExportationComponent extends Component {
                 return(
                   <ListItem button onClick={() => {
                       if (this.pickedParticipants.includes(p)) {
-                        this.pickedParticipants.splice(index,1);
+                        this.pickedParticipants.splice(this.pickedParticipants.indexOf(p),1);
                       }
                       else {
                         this.pickedParticipants.push(p);
