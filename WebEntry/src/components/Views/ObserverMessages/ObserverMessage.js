@@ -81,10 +81,17 @@ class ObserverMessage extends React.Component {
                   store.getState().experimentInfo.selectedTracker,
                   obj.timeToCompletion
       */
-        displayText = <Typography variant="body1" color="textPrimary">
-                        <b>Skipped </b>
-                        Time to completion: {args.lineOfData.timeToCompletion/1000} s.
-                      </Typography>;
+        if (args.lineOfData.timeToCompletion < 0) {
+          displayText = <Typography variant="body1" color="textPrimary">
+                          <b>Skipped </b>
+                        </Typography>;
+        }
+        else {
+          displayText = <Typography variant="body1" color="textPrimary">
+                          <b>Skipped </b>
+                          Time to completion: {args.lineOfData.timeToCompletion/1000} s.
+                        </Typography>;
+        }
         break;
       case "FINISHED":
       /*
