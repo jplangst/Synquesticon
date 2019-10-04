@@ -10,12 +10,12 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { Typography } from '@material-ui/core';
 
-import {restartWAMP} from '../../core/wamp';
+import * as wamp from '../../core/wamp';
 
 class CrossbarDialog extends Component {
   componentWillMount() {
     this.crossbarConfigurations();
-    restartWAMP(this.crossbar);
+    wamp.startWAMP(this.crossbar);
   }
 
   componentWillUnmount() {
@@ -33,7 +33,7 @@ class CrossbarDialog extends Component {
 
   onChangeCrossbarSettings(e) {
     this.props.myStorage.setItem('crossbar', JSON.stringify(this.crossbar));
-    restartWAMP(this.crossbar);
+    wamp.restartWAMP(this.crossbar);
 
     //Callback to close the dialog from the header
     this.props.closeCrossbarSettings();
@@ -51,7 +51,7 @@ class CrossbarDialog extends Component {
             <DialogContentText><Typography color="textPrimary">Change crossbar Router information</Typography></DialogContentText>
             <TextField
               required
-              
+
               padding="normal"
               id="crossbarIP"
               defaultValue={this.crossbar.ip}
@@ -61,7 +61,7 @@ class CrossbarDialog extends Component {
             />
             <TextField
               required
-              
+
               padding="normal"
               id="crossbarPort"
               defaultValue={this.crossbar.port}
@@ -72,7 +72,7 @@ class CrossbarDialog extends Component {
             />
             <TextField
               required
-              
+
               padding="dense"
               id="crossbarRealm"
               defaultValue={this.crossbar.realm}

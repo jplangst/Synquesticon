@@ -12,20 +12,12 @@ try {
 //var dat = [dat0, dat1, dat2];
 var connection = null;
 var glob_session = null;
+var last_config = null;
 var SynquesticonTopic = "Synquesticon.Task";
 var SynquesticonCommandTopic = "Synquesticon.Command";
 var RemoteEyeTrackingTopic = "RETDataSample";
 
-function startWAMP(config) {
-  if(connection) {
-    try {
-      connection.close();
-    }
-    catch (err) {
-      console.log("error when close connection", err);
-    }
-
-  }
+function _startWAMP(config) {
   connection = new autobahn.Connection({url: 'ws://'+config.ip+':'+config.port+'/ws', realm: config.realm});
   connection.onopen = function (session) {
 
@@ -35,6 +27,7 @@ function startWAMP(config) {
     // }
      // 2) publish an event
      glob_session = session;
+     last_config = config;
      console.log("connected to router");
 
      function onRETData(args) {
@@ -103,17 +96,45 @@ module.exports = {
   changeImageAndAOIs: function (image, aois) {
 
   },
+
   broadcastEvents(info) {
-    if(glob_session) {
-      glob_session.publish(SynquesticonTopic, [info]);
+    try {
+      if(glob_session) {
+        glob_session.publish(SynquesticonTopic, [info]);
+      }
+    }
+    catch (err) {
+      if (last_config) {
+        _startWAMP(last_config);
+      }
     }
   },
   broadcastCommands(command) {
-    if(glob_session) {
-      glob_session.publish(SynquesticonCommandTopic, [command]);
+    try {
+      if(glob_session) {
+        glob_session.publish(SynquesticonCommandTopic, [command]);
+      }
+    }
+    catch (err) {
+      if (last_config) {
+        _startWAMP(last_config);
+      }
     }
   },
   restartWAMP(config) {
-    startWAMP(config);
+    if(connection) {
+      try {
+        console.log("WAMP: close connection");
+        connection.close();
+      }
+      catch (err) {
+        console.log("error when close connection", err);
+      }
+
+    }
+    _startWAMP(config);
+  },
+  startWAMP(config) {
+    _startWAMP(config);
   }
 };
