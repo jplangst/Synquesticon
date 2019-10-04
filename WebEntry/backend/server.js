@@ -464,8 +464,8 @@ router.post("/addNewGlobalVariableToParticipant", (req, res) => {
 });
 
 router.post("/deleteParticipant", (req, res) => {
+  console.log(req);
   const { id } = req.body;
-
   Experiments.updateOne({ childIds: id }, { $pull: {childIds: id}}, err => {
 
   })

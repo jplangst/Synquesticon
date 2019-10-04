@@ -36,6 +36,18 @@ class DataExportationComponent extends Component {
     })
   }
 
+  handleDeleteSelected() {
+    if(this.pickedParticipants.length>0){
+      Promise.all(this.pickedParticipants.map(p => db_helper.deleteParticipantFromDb(p._id, ()=>{return Promise.resolve('ok');})));
+      this.pickedParticipants = [];
+      db_helper.getAllParticipantsFromDb((ids) => {
+        this.setState({
+          participants: ids
+        });
+      });
+    }
+  }
+
   handleDeleteAll() {
     db_helper.deleteAllParticipantsFromDb(() => {
       db_helper.getAllParticipantsFromDb((ids) => {
@@ -141,12 +153,15 @@ class DataExportationComponent extends Component {
               Cancel
             </Button>
             <Button onClick={this.handleExport.bind(this)} variant="outlined">
-              Export
+              Export Selected
             </Button>
             <Button onClick={this.handleExportAll.bind(this)} variant="outlined">
               Export All
             </Button>
-            <div style={{width:100}} />
+            <div style={{width:50}} />
+            <Button onClick={this.handleDeleteSelected.bind(this)} variant="outlined">
+              Delete Selected
+            </Button>
             <Button onClick={this.handleDeleteAll.bind(this)} variant="outlined">
               Delete All
             </Button>

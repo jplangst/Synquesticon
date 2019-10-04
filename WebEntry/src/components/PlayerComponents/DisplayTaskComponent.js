@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 
 import Button from '@material-ui/core/Button';
 
+import { Typography } from '@material-ui/core';
+import { withTheme } from '@material-ui/styles';
+
 //view components
 import InstructionViewComponent from '../Views/InstructionViewComponent';
 import TextEntryComponent from '../Views/TextEntryComponent';
@@ -539,6 +542,9 @@ class DisplayTaskComponent extends Component {
   }
 
   render() {
+    let theme = this.props.theme;
+    let rightBG = theme.palette.type === "light" ? theme.palette.primary.main : theme.palette.primary.dark;
+
     try {
       var renderObj = <DisplayTaskHelper tasksFamilyTree={[store.getState().experimentInfo.mainTaskSetId]}
                                          taskSet={store.getState().experimentInfo.taskSet}
@@ -547,7 +553,7 @@ class DisplayTaskComponent extends Component {
                                          progressCount={0}
                                          repeatSetThreshold={store.getState().experimentInfo.taskSet.repeatSetThreshold}/>;
       return (
-          <div className="page" ref={this.frameDiv}>
+          <div style={{backgroundColor:rightBG}} className="page" ref={this.frameDiv}>
             {renderObj}
             <PauseDialog openDialog={this.state.isPaused}/>
           </div>
@@ -555,9 +561,9 @@ class DisplayTaskComponent extends Component {
     }
     catch(err) {
       alert("something went wrong!");
-      return <div/>;
+      return <div style={{backgroundColor:rightBG}}/>;
     }
   }
 }
 
-export default DisplayTaskComponent;
+export default withTheme(DisplayTaskComponent);

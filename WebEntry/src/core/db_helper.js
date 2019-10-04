@@ -21,6 +21,7 @@ class db_helper {
    getAllTasksFromDb(callback){
     fetch("/api/getAllTasks")
       .then((response) => {
+        console.log(response);
         if(response.ok) {
           return response.json();
         }
@@ -490,6 +491,16 @@ class db_helper {
    deleteAllParticipantsFromDb(callback) {
     axios.delete("/api/deleteAllParticipants").then(() => callback());
    }
+
+   /*
+    * deleteAllParticipantsFromDb - Deletes all the participants from the DB. Use with care.
+    *
+    */
+    deleteParticipantFromDb(participantId, callback) {
+     axios.post("/api/deleteParticipant", {
+       id:participantId
+     }).then(() => callback());
+    }
 
    /*
 ██████   ██████  ██      ███████ ███████
