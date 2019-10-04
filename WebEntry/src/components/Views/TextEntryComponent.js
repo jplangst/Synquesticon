@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 //import TextField from '@material-ui/core/TextField';
 import InputBase from '@material-ui/core/InputBase';
-
+import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 
 import './TextEntryComponent.css';
@@ -105,7 +105,7 @@ class TextEntryComponent extends Component {
     return (
       <div className={this.props.className + " TextEntry"} >
         <div className="questionDisplay">
-          {this.props.task.question}
+          <Typography variant="h3" color="textPrimary">{this.props.task.question}</Typography>
         </div>
         <div className="inputField">
           {this.textEntry}

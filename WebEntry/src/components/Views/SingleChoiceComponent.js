@@ -50,7 +50,7 @@ class SingleChoiceComponent extends Component {
     return (
       <div className={this.props.className}>
         <div className="questionDisplay">
-          <Typography color="textPrimary">{this.props.task.question}</Typography>
+          <Typography variant="h3" color="textPrimary">{this.props.task.question}</Typography>
         </div>
         <div className="responsesButtons">
           {
