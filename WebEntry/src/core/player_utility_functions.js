@@ -9,6 +9,17 @@ export function getFormattedCurrentTime() {
   return currentTime;
 }
 
+export function getFormattedTime(dt) {
+  var date = new Date(dt);
+  var hours = date.getHours();
+  var minutes = "0" + date.getMinutes();
+  var seconds = "0" + date.getSeconds();
+  var milliseconds = date.getMilliseconds();
+
+  var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2) + '.' + milliseconds;
+  return formattedTime;
+}
+
 var myStorage = window.localStorage;
 export function getDeviceName() {
   return myStorage.getItem('deviceID');

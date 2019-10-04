@@ -388,9 +388,10 @@ class EditSetComponent extends Component {
       deleteTaskBtn = <Button onClick={this.removeSet.bind(this)} variant="outlined">
         Delete Set
         </Button>;
-      playTaskBtn = <Button onClick={this.onPlaySet.bind(this)} variant="outlined">
-        Play
-        </Button>;
+      playTaskBtn = null;
+      // playTaskBtn = <Button onClick={this.onPlaySet.bind(this)} variant="outlined">
+      //   Play
+      //   </Button>;
     }
 
     return(
