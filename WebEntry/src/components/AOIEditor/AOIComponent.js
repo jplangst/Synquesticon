@@ -23,6 +23,7 @@ class AOIComponent extends Component {
     });
 
     var color = this.props.aoi.isSelected ? "red" : theme.palette.secondary.main;
+    var textColor = theme.palette.text.primary;
     var path = pathData.join(' ');
     var p1 = this.props.aoi.boundingbox[0];
 
@@ -36,7 +37,7 @@ class AOIComponent extends Component {
             {this.props.aoi.boundingbox.map((p, ind) => {
               return <circle key={ind} cx={p[0]} cy={p[1]} r="0.75" stroke="black" fill="white" strokeWidth={strokeWidth}/>
             })}
-          <text className="AOIName" x={p1[0]} y={p1[1]} dy="-1" fill={color}>{this.props.aoi.name}</text>
+          <text className="AOIName" x={p1[0]} y={p1[1]} dy="-1" fill={textColor}>{this.props.aoi.name}</text>
         </g>
       );
     }
@@ -45,7 +46,7 @@ class AOIComponent extends Component {
         <g onClick={this.props.onSelected} fontSize="3" fontFamily="sans-serif" fill="black" stroke="none">
           <polygon points={path} stroke={color} strokeWidth={strokeWidth}
             fill="none" />
-          <text className="AOIName" x={p1[0]} y={p1[1]} dy="-1">{this.props.aoi.name}</text>
+          <text className="AOIName" x={p1[0]} y={p1[1]} dy="-1" fill={textColor}> {this.props.aoi.name} </text>
         </g>
       );
     }
