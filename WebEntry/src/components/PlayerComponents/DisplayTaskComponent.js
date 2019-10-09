@@ -204,6 +204,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
       }
 
       //reset state
+      console.log("increase index", this.state.currentTaskIndex);
       this.setState({
         hasBeenAnswered: false,
         answerItem: null,
@@ -239,7 +240,11 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 
   onFinishedRecursion() {
     this.progressCount += this.currentTask.data.length;
-    this.onClickNext();
+    // this.setState({
+    //   currentTaskIndex: this.state.currentTaskIndex - 1
+    // });
+    console.log("finished recursion", this.state.currentTaskIndex);
+    this.onClickNext(false);
   }
 
   /*
@@ -252,6 +257,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 
 
   render() {
+    console.log("currentTaskindex", this.state.currentTaskIndex, this.props.taskSet);
     //check if we should enter a new level or leave
     if(this.props.taskSet.data.length > 0 && this.state.currentTaskIndex < this.props.taskSet.data.length) {
       this.currentTask = this.props.taskSet.data[this.state.currentTaskIndex];
@@ -268,7 +274,10 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
         updatedTaskSet.data = runThisTaskSet;
 
         //recursion
-        return <DisplayTaskHelper tasksFamilyTree={trackingTaskSetNames}
+        let id = this.currentTask._id + "_" + this.progressCount;
+        console.log("recursion", id);
+        return <DisplayTaskHelper key={id}
+                                  tasksFamilyTree={trackingTaskSetNames}
                                   taskSet={updatedTaskSet}
                                   onFinished={this.onFinishedRecursion.bind(this)}
                                   saveGazeData={this.props.saveGazeData}
