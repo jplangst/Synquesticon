@@ -108,11 +108,11 @@ class TextEntryComponent extends Component {
           <Typography variant="h3" color="textPrimary">{this.props.task.question}</Typography>
         </div>
         <div className="inputField">
-          {this.textEntry}
+          <Typography color="textPrimary">{this.textEntry}</Typography>
         </div>
         {getKeyboardLine(first_line_keyboard, "firstLine")}
         {getKeyboardLine(second_line_keyboard, "firstLine")}
-        {getKeyboardLine(third_line_keyboard, "firstLine")}
+        {getKeyboardLine(third_line_keyboard, "thirdLine")}
       </div>
     );
   }

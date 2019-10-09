@@ -3,6 +3,10 @@
   height: 100%;
 }
 
+.questionDisplay{
+  margin-bottom: 10px;
+}
+
 .inputField {
   border-radius: 5px;
   border: 1px solid gray;
@@ -11,7 +15,8 @@
   height: 40px;
 
   text-align: left;
-  font-size: 0.5em;
+  align-items: center;
+  display: flex;
 
   padding-left: 10px;
   line-height: 40px;
@@ -19,6 +24,8 @@
   position: relative;
   left: 50%;
   transform: translateX(-50%);
+
+  margin-bottom: 10px;
 }
 
 .inputButton {
@@ -30,10 +37,15 @@
   position: relative;
   left: 50%;
   transform: translateX(-50%);
+  margin-bottom: 10px;
 }
 
 .secondLine {
 }
 
 .thirdLine {
+  width: fit-content;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
 }
