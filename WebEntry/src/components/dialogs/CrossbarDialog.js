@@ -25,7 +25,7 @@ class CrossbarDialog extends Component {
   crossbarConfigurations() {
     var crossbarConfig = JSON.parse(this.props.myStorage.getItem('crossbar'));
     this.crossbar = (crossbarConfig && crossbarConfig !== undefined && crossbarConfig.ip !== undefined) ? crossbarConfig : {
-      ip: "127.0.0.1",
+      ip: "syn.ife.no",
       port: 8080,
       realm: "realm1"
     }
