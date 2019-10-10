@@ -18,6 +18,11 @@ var SynquesticonCommandTopic = "Synquesticon.Command";
 var RemoteEyeTrackingTopic = "RETDataSample";
 
 function _startWAMP(config) {
+  if (last_config && (last_config.ip === config.ip &&
+                      last_config.port === config.port &&
+                      last_config.realm === config.realm)) {
+    return;
+  }
   connection = new autobahn.Connection({url: 'ws://'+config.ip+':'+config.port+'/ws', realm: config.realm});
   connection.onopen = function (session) {
 
@@ -71,10 +76,11 @@ function _startWAMP(config) {
       }
     session.subscribe(RemoteEyeTrackingTopic, onRETData);
 
-    function onWAMPEvent(args) {
+    function onWAMPEvent(args, kwargs, details) {
       wampStore.default.setCurrentMessage(args);
       wampStore.default.emitNewWAMPEvent();
     }
+    console.log("subscribe to the wamp events");
     session.subscribe(SynquesticonTopic, onWAMPEvent);
 
     function onCommandEvent(args) {
