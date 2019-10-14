@@ -62,7 +62,7 @@ class App extends Component {
               <Switch>
                 <Route exact path="/" component={IntroductionScreen} />
                 <Route path="/EditorMode" component={EditorMode} />
-                <Route path="/DisplayTaskComponent" component={DisplayTaskComponent}/>} />
+                <Route path="/study" component={DisplayTaskComponent}/>} />
               </Switch>
             </div>
           </div>

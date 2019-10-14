@@ -305,55 +305,68 @@ router.post("/getCompleteTaskSetObject", async (req, res) => {
 });
 
 router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
-  const { wrapperSetJson } = req.body;
-  var wrapperSet = JSON.parse(wrapperSetJson);
-  const ids = wrapperSet.childIds;
+  const { wrapperSetId } = req.body;
+  const id = JSON.parse(wrapperSetId);
 
-  var count = 0;
+  await TaskSets.findOne({_id: id}, async (err, wrapperSet) => {
+    try {
+      if (err) {
+        return res.json({success: false, error: err});
+      }
+      const ids = wrapperSet.childIds;
 
-  var recursionForArray = async function(targetArray) {
-    const childs = targetArray.map(async item => {
-      const dat = await recursion(item);
-      return dat;
-    });
-    const temp = await Promise.all(childs);
-    return temp;
-  }
+      var count = 0;
 
-  var recursion = async function(target) {
-    if (target.objType === "Task") {
-      var taskFromDb = await Tasks.findOne({_id: target.id}, async (err, task) => {
-        count = count + 1;
-        return task;
-      });
+      var recursionForArray = async function(targetArray) {
+        const childs = targetArray.map(async item => {
+          const dat = await recursion(item);
+          return dat;
+        });
+        const temp = await Promise.all(childs);
+        return temp;
+      }
 
-      return taskFromDb;
+      var recursion = async function(target) {
+        if (target.objType === "Task") {
+          var taskFromDb = await Tasks.findOne({_id: target.id}, async (err, task) => {
+            count = count + 1;
+            return task;
+          });
+
+          return taskFromDb;
+        }
+        else if (target.objType === "TaskSet") {
+          var setData = await TaskSets.findOne({_id: target.id}, async (err, obj) => {
+            return obj;
+          });
+
+          var childs = setData.childIds.map(async item => {
+            var data = await recursion(item);
+            return data;
+          });
+          // if (setData.displayOnePage) {
+          //   count = count - setData.childIds.length + 1;
+          // }
+
+          var childrenData = await Promise.all(childs);
+
+          //For some reason the resulting javascript object has a lot of unecessary information so I only extract what we need
+          var setCleanedData = setData._doc;
+          setCleanedData.data = childrenData;
+          return setCleanedData;
+        }
+      }
+
+      const results = await recursionForArray(ids);
+      var returnedResult = JSON.parse(JSON.stringify(wrapperSet));
+      returnedResult.data = results;
+      console.log("wrapperSet", returnedResult);
+      return res.json({success: true, data: returnedResult, count: count, mainTaskSetName: returnedResult.name});
+    } catch (e) {
+      console.log(e);
+      return res.json({success: false, error: e});
     }
-    else if (target.objType === "TaskSet") {
-      var setData = await TaskSets.findOne({_id: target.id}, async (err, obj) => {
-        return obj;
-      });
-
-      var childs = setData.childIds.map(async item => {
-        var data = await recursion(item);
-        return data;
-      });
-      // if (setData.displayOnePage) {
-      //   count = count - setData.childIds.length + 1;
-      // }
-
-      var childrenData = await Promise.all(childs);
-
-      //For some reason the resulting javascript object has a lot of unecessary information so I only extract what we need
-      var setCleanedData = setData._doc;
-      setCleanedData.data = childrenData;
-      return setCleanedData;
-    }
-  }
-
-  const results = await recursionForArray(ids);
-  wrapperSet.data = results;
-  return res.json({success: true, data: wrapperSet, count: count});
+  });
 });
 
 router.post("/getImage", (req, res) => {

@@ -15,6 +15,7 @@
     "material-ui": "^1.0.0-beta.47",
     "mongodb": "^3.1.9",
     "multer": "^1.4.1",
+    "query-string": "^6.8.3",
     "react": "^16.4.1",
     "react-css-modules": "^4.7.11",
     "react-device-detect": "^1.7.5",

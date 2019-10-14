@@ -16,6 +16,8 @@ import OutlinedInput from '@material-ui/core/OutlinedInput';
 
 import PlayableSetListComponent from '../components/TaskList/PlayableSetListComponent';
 
+import ShareExperimentDialog from '../components/dialogs/ShareExperimentDialog';
+
 import { Typography } from '@material-ui/core';
 
 import store from '../core/store';
@@ -23,7 +25,6 @@ import store from '../core/store';
 import wampStore from '../core/wampStore';
 import db_helper from '../core/db_helper.js';
 import * as dbObjects from '../core/db_objects';
-import * as playerUtils from '../core/player_utility_functions';
 
 import './PlayerMode.css';
 
@@ -33,7 +34,8 @@ class PlayerMode extends Component {
 
     this.state = {
       selectedTracker: '',
-      taskSets: []
+      taskSets: [],
+      openGetLinkDialog: false
     }
 
     this.remoteEyeTrackers = store.getState().remoteEyeTrackers;
@@ -47,10 +49,7 @@ class PlayerMode extends Component {
   componentWillMount() {
     wampStore.addNewRemoteTrackerListener(this.onNewRemoteTracker.bind(this));
     //save data into DB before closing
-    db_helper.getAllParticipantsFromDb((participants) => {
-      console.log("all participants", participants);
-    });
-    console.log("player did mount");
+
     db_helper.queryTasksFromDb(false, "experiment", this.dbTaskSetCallback);
   }
 
@@ -59,8 +58,6 @@ class PlayerMode extends Component {
   }
 
   onNewRemoteTracker() {
-    console.log("new tracker coming in", wampStore.getCurrentRemoteTracker());
-
     if (!this.remoteEyeTrackers.includes(wampStore.getCurrentRemoteTracker())) {
       wampStore.confirmRecevingRemoteTracker();
       this.remoteEyeTrackers.push(wampStore.getCurrentRemoteTracker());
@@ -71,42 +68,46 @@ class PlayerMode extends Component {
 
   //query all tasksets with experiment tag
   dbTaskSetCallbackFunction(queryTasks, data) {
-    console.log("all tasksets", data);
     this.setState({taskSets: data.tasks});
   }
 
   //bottom button handler
   onPlayButtonClick(taskSet) {
     this.selectedTaskSet = taskSet;
-    db_helper.getTasksOrTaskSetsWithIDs(this.selectedTaskSet, (dbQueryResult, count) => {
-      db_helper.addParticipantToDb(new dbObjects.ParticipantObject(this.selectedTaskSet._id), (returnedIdFromDB)=> {
-        var action = {
-          type: 'SET_EXPERIMENT_INFO',
-          experimentInfo: {
-            experimentId: "",
-            participantLabel: playerUtils.getDeviceName(),
-            startTimestamp: playerUtils.getFormattedCurrentTime(),
-            participantId: returnedIdFromDB,
-            mainTaskSetId: this.selectedTaskSet.name,
-            taskSet: dbQueryResult,
-            taskSetCount: count,
-            selectedTaskSetObject: this.selectedTaskSet,
-            selectedTracker: this.state.selectedTracker
-          }
-        }
-
-        store.dispatch(action);
-
-        var layoutAction = {
-          type: 'SET_SHOW_HEADER',
-          showHeader: false
-        }
-
-        store.dispatch(layoutAction);
-
-        this.props.gotoPage('/DisplayTaskComponent');
-      })
-    });
+    // db_helper.getTasksOrTaskSetsWithIDs(this.selectedTaskSet, (dbQueryResult, count) => {
+    //   db_helper.addParticipantToDb(new dbObjects.ParticipantObject(this.selectedTaskSet._id), (returnedIdFromDB)=> {
+    //     var action = {
+    //       type: 'SET_EXPERIMENT_INFO',
+    //       experimentInfo: {
+    //         experimentId: "",
+    //         participantLabel: playerUtils.getDeviceName(),
+    //         startTimestamp: playerUtils.getFormattedCurrentTime(),
+    //         participantId: returnedIdFromDB,
+    //         mainTaskSetId: this.selectedTaskSet.name,
+    //         taskSet: dbQueryResult,
+    //         taskSetCount: count,
+    //         selectedTaskSetObject: this.selectedTaskSet,
+    //         selectedTracker: this.state.selectedTracker
+    //       }
+    //     }
+    //
+    //     store.dispatch(action);
+    //
+    //     var layoutAction = {
+    //       type: 'SET_SHOW_HEADER',
+    //       showHeader: false
+    //     }
+    //
+    //     store.dispatch(layoutAction);
+    //
+    //     this.props.gotoPage('/study');
+    //   })
+    // });
+    var url = '/study?id=' + this.selectedTaskSet._id;
+    if (this.state.selectedTracker != "" && this.state.selectedTracker != undefined) {
+      url += '&tracker=' + this.state.selectedTracker;
+    }
+    this.props.gotoPage(url);
   }
 
   onSelectRemoteTracker(e) {
@@ -115,15 +116,39 @@ class PlayerMode extends Component {
     });
   }
 
+  onGetLinkCallback(taskSet) {
+    this.selectedTaskSet = taskSet;
+
+    this.setState({
+      openGetLinkDialog: true
+    });
+  }
+
+  closeGetLinkDialog() {
+    this.setState({
+      openGetLinkDialog: false
+    });
+  }
+
   render() {
     let theme = this.props.theme;
     let textColor = theme.palette.type === "light" ? "textSecondary" : "textPrimary";
+
+    var url = 'https://syn.ife.no/study?id=';
+    if (this.selectedTaskSet) {
+       url += this.selectedTaskSet._id;
+      if (this.state.selectedTracker != "" && this.state.selectedTracker != undefined) {
+        url += '&tracker=' + this.state.selectedTracker;
+      }
+    }
 
     return (
       <div className="PlayerViewerContent">
         <div className="TaskSetContainer">
           < PlayableSetListComponent taskList={ this.state.taskSets }
-                  runSetCallback={ this.onPlayButtonClick.bind(this) } showEditButton={false}/>
+                  runSetCallback={ this.onPlayButtonClick.bind(this) }
+                  getLinkCallback={ this.onGetLinkCallback.bind(this) }
+                  showEditButton={false}/>
         </div>
         <div className="RemoteTrackerContainer">
           <FormControl className="textinput">
@@ -143,6 +168,9 @@ class PlayerMode extends Component {
             </Select>
           </FormControl>
         </div>
+        <ShareExperimentDialog link={url}
+                               openDialog={this.state.openGetLinkDialog}
+                               closeDialog={this.closeGetLinkDialog.bind(this)}/>
       </div>
       );
   }
