@@ -181,9 +181,6 @@ class EditorMode extends Component {
 
     var assetEditorObject =
     <div className="AssetEditor" style={{paddingLeft:5, backgroundColor:rightBG}}>
-      <div className="AssetEditorTitle">
-        <div className="AssetEditorTitleText"><Typography color="textPrimary" variant="h4">Asset editor</Typography></div>
-      </div>
       <div className="AssetEditorContent">
         {this.state.assetEditorObject}
       </div>
@@ -238,11 +235,6 @@ class EditorMode extends Component {
     <div className = "editorScreenContainer">
       <CustomDragLayer />
       <div style={{backgroundColor:leftBG}} className = "AssetViewer">
-
-        <div className="AssetViewerTitle">
-          <div className="AssetViewerTitleText"><Typography color="textPrimary" variant="h4">Asset viewer</Typography></div>
-        </div>
-
         <div className="AssetViewerContent">
           <CollapsableContainer headerTitle="Tasks" useMediaQuery={true}
           headerComponents={collapsableTaskHeaderButtons} hideHeaderComponents={true} open={true}>
