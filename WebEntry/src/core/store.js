@@ -137,6 +137,12 @@ const store = createStore ((state = initialState, action) => {
       }
       return state;
     }
+    case 'SET_PARTICIPANT_ID': {
+      return { ... state, experimentInfo: {... state.experimentInfo, participantId: action.participantId}};
+    }
+    case 'SET_SHOULD_SAVE': {
+      return { ... state, experimentInfo: {... state.experimentInfo, shouldSave: action.shouldSave}};
+    }
     case 'ADD_PARTICIPANT': {
       state.participants[action.participant] = action.tracker;
       return state;

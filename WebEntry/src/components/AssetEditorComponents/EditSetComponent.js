@@ -294,7 +294,7 @@ class EditSetComponent extends Component {
 
   refreshSetChildList(){
     if(this.state.taskList && this.state.taskList.length > 0){
-      db_helper.getTasksOrTaskSetsWithIDs(this.set, this.handleRetrieveSetChildTasks);
+      db_helper.getTasksOrTaskSetsWithIDs(this.set._id, this.handleRetrieveSetChildTasks);
     }
     else{ //If the list is empty we clear the list in the state
       this.setState({taskListObjects: []});

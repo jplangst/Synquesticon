@@ -338,11 +338,11 @@ class db_helper {
    * @param  {string}   objIds   The ids to retrieve, should be in a list/array format.
    * @param  {function} callback This function is called with the result of the query. Should take one parameter.
    */
-   getTasksOrTaskSetsWithIDs(wrapperSet, callback) {
+   getTasksOrTaskSetsWithIDs(wrapperSetId, callback) {
     axios.post("/api/getTasksOrTaskSetsWithIDs", {
-        wrapperSetJson: JSON.stringify(wrapperSet)
+        wrapperSetId: JSON.stringify(wrapperSetId)
     }).then(response => {
-      callback(response.data.data, response.data.count);
+      callback(response.data.data, response.data.count, response.data.mainTaskSetName);
     });
   };
 
@@ -462,6 +462,9 @@ class db_helper {
    * @param  {LineOfData} newLineJSON   The data to add to the participant. Should use LineOfData object defined in db_objects.js.
    */
    addNewLineToParticipantDB(participantId, newLineJSON){
+    if (participantId == undefined) {
+      return;
+    }
     axios.post("/api/addNewLineToParticipant", {
       participantId: participantId,
       newLineJSON: newLineJSON
@@ -477,6 +480,9 @@ class db_helper {
    * @param  {type}   globalVariableJSON The global variable object.
    */
    addNewGlobalVariableToParticipantDB(participantId, globalVariableJSON){
+    if (participantId == undefined) {
+      return;
+    }
     axios.post("/api/addNewGlobalVariableToParticipant", {
       participantId: participantId,
       globalVariableJSON: globalVariableJSON //please stringify before calling this function

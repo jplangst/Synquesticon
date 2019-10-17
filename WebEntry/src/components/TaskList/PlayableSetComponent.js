@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import EditIcon from '@material-ui/icons/Edit';
 import PlayIcon from '@material-ui/icons/PlayArrow';
+import LinkIcon from '@material-ui/icons/Link';
 import { Typography } from '@material-ui/core';
 import { withTheme } from '@material-ui/styles';
 
@@ -17,7 +18,7 @@ class PlayableSetComponent extends Component {
     var editButton = this.props.showEditButton ? <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:buttonSize, maxWidth:buttonSize}}
             size="small" className="playableSetButton" >
       <EditIcon style={{display:'flex', position: 'absolute', minHeight:'25', maxHeight:25, width: '100%'}}/>
-    </Button> : null;
+    </Button> : null;    
 
     var content =
         <div  className={"listItem "}>
@@ -27,6 +28,11 @@ class PlayableSetComponent extends Component {
             </div>
           </div>
           {editButton}
+          <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:buttonSize, maxWidth:buttonSize}}
+                  size="small" className="playableSetButton"
+                  onClick={()=>{this.props.getLinkCallback(this.props.task)}}>
+            <LinkIcon fontSize="default"/>
+          </Button>
           <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:buttonSize, maxWidth:buttonSize, paddingLeft:4}}
                   size="small" className="playableSetButton"
                   onClick={()=>{this.props.runSetCallback(this.props.task)}} >

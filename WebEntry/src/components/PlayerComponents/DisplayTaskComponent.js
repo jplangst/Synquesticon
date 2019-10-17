@@ -25,6 +25,7 @@ import db_helper from '../../core/db_helper';
 import * as dbObjects from '../../core/db_objects';
 import * as dbObjectsUtilityFunctions from '../../core/db_objects_utility_functions';
 import * as playerUtils from '../../core/player_utility_functions';
+import queryString from 'query-string';
 
 import './DisplayTaskComponent.css';
 
@@ -83,7 +84,6 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 
   componentWillMount() {
     this.progressCount = this.props.progressCount;
-    console.log("progressCount", this.progressCount, this.props.progressCount);
   }
 
   /*
@@ -95,6 +95,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 */
 
   logTheStartOfTask() {
+    console.log("create currentLineOfData");
     var startTimestamp = playerUtils.getCurrentTime();
     if (this.currentTask.objType === "Task") {
       this.currentLineOfData = new dbObjects.LineOfData(startTimestamp,
@@ -114,15 +115,28 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
   ██      ██   ██ ██      ██      ██   ██ ██   ██ ██      ██  ██       ██
    ██████ ██   ██ ███████ ███████ ██████  ██   ██  ██████ ██   ██ ███████
   */
-  onClickNext() {
-    if (!(store.getState().experimentInfo.participantId === "TESTING")) {
-      //save gaze data
+  checkShouldRecordData(label, responses) {
+    if (label.toLowerCase().includes("record data")) {
+      for(var i = 0; i < responses.length; i++) {
+          if(responses[i].toLowerCase() === "no") {
+            var saveAction = {
+              type: 'SET_SHOULD_SAVE',
+              shouldSave: false
+            }
+            store.dispatch(saveAction);
+          }
+      }
+    }
+  }
 
-      var action = {
+  onClickNext() {
+    var savingData = (participantId) => {
+
+      var aoiAction = {
         type: 'RESET_AOIS'
       }
 
-      store.dispatch(action);
+      store.dispatch(aoiAction);
 
       this.props.saveGazeData(dbObjectsUtilityFunctions.getTaskContent(this.currentTask));
 
@@ -136,16 +150,14 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
           if (!this.currentTask.globalVariable) {
             //complete line of data before saving to DB
             this.currentLineOfData.timeToCompletion = playerUtils.getCurrentTime() - this.currentLineOfData.startTimestamp;
-            db_helper.addNewLineToParticipantDB(store.getState().experimentInfo.participantId,
-                                                  JSON.stringify(this.currentLineOfData));
+            db_helper.addNewLineToParticipantDB(participantId, JSON.stringify(this.currentLineOfData));
           }
           else {
             var globalVariableObj = {
               label: this.currentTask.question,
               value: this.currentLineOfData.responses
             };
-            db_helper.addNewGlobalVariableToParticipantDB(store.getState().experimentInfo.participantId,
-                                                            JSON.stringify(globalVariableObj));
+            db_helper.addNewGlobalVariableToParticipantDB(participantId, JSON.stringify(globalVariableObj));
           }
 
           wamp.broadcastEvents(stringifyWAMPMessage(null, this.currentLineOfData,
@@ -162,13 +174,11 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
               label: line.question,
               value: line.responses
             };
-            db_helper.addNewGlobalVariableToParticipantDB(store.getState().experimentInfo.participantId,
-                                                          JSON.stringify(globalVariableObj));
+            db_helper.addNewGlobalVariableToParticipantDB(participantId, JSON.stringify(globalVariableObj));
           }
           else {
             line.timeToCompletion = playerUtils.getCurrentTime() - line.startTimestamp;
-            db_helper.addNewLineToParticipantDB(store.getState().experimentInfo.participantId,
-                                                JSON.stringify(line));
+            db_helper.addNewLineToParticipantDB(participantId, JSON.stringify(line));
           }
           wamp.broadcastEvents(stringifyWAMPMessage(null, line,
                                                     (line.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED",
@@ -180,8 +190,10 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
         if (!(store.getState().experimentInfo.participantId === "TESTING")) {
           alert("you did not meet the required number of correct answers. This set will be repeated now.");
 
-          console.log("currentTask", this.currentTask);
           this.progressCount = this.props.progressCount;
+
+          this.numCorrectAnswers = 0;
+          this.currentLineOfData = null;
           //reset state
           this.setState({
             hasBeenAnswered: false,
@@ -189,8 +201,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
             currentTaskIndex: 0
           });
 
-          this.numCorrectAnswers = 0;
-          this.currentLineOfData = null;
+
           return;
         }
       }
@@ -203,21 +214,43 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
         }
       }
 
+      console.log("resetCurrentLineOfData");
+      this.currentLineOfData = null;
+
       //reset state
-      console.log("increase index", this.state.currentTaskIndex);
+      console.log("reset State");
       this.setState({
         hasBeenAnswered: false,
         answerItem: null,
         currentTaskIndex: (this.state.currentTaskIndex + 1)
       });
+    }
 
-      this.currentLineOfData = null;
+    if (store.getState().experimentInfo.shouldSave) {
+      if (store.getState().experimentInfo.participantId == undefined) {
+        db_helper.addParticipantToDb(new dbObjects.ParticipantObject(store.getState().experimentInfo.taskSet._id), (returnedIdFromDB)=> {
+          var idAction = {
+            type: 'SET_PARTICIPANT_ID',
+            participantId: returnedIdFromDB
+          };
+          store.dispatch(idAction);
+
+          savingData(returnedIdFromDB);
+        });
+      }
+      else {
+        savingData(store.getState().experimentInfo.participantId);
+      }
+    }
+    else {
+      savingData(undefined);
     }
   }
 
   onAnswer(answer) {
     if(!(store.getState().experimentInfo.participantId === "TESTING")) {
       if (this.currentTask.objType === "Task") {
+        this.checkShouldRecordData(this.currentTask.question, answer.responses);
         if (this.currentLineOfData.firstResponseTimestamp === -1) { //log the timeToFirstAnswer
           this.currentLineOfData.firstResponseTimestamp = playerUtils.getCurrentTime();
           this.currentLineOfData.timeToFirstAnswer = this.currentLineOfData.firstResponseTimestamp - this.currentLineOfData.startTimestamp;
@@ -240,10 +273,6 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 
   onFinishedRecursion() {
     this.progressCount += this.currentTask.data.length;
-    // this.setState({
-    //   currentTaskIndex: this.state.currentTaskIndex - 1
-    // });
-    console.log("finished recursion", this.state.currentTaskIndex);
     this.onClickNext(false);
   }
 
@@ -257,7 +286,6 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 
 
   render() {
-    console.log("currentTaskindex", this.state.currentTaskIndex, this.props.taskSet);
     //check if we should enter a new level or leave
     if(this.props.taskSet.data.length > 0 && this.state.currentTaskIndex < this.props.taskSet.data.length) {
       this.currentTask = this.props.taskSet.data[this.state.currentTaskIndex];
@@ -275,7 +303,6 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 
         //recursion
         let id = this.currentTask._id + "_" + this.progressCount;
-        console.log("recursion", id);
         return <DisplayTaskHelper key={id}
                                   tasksFamilyTree={trackingTaskSetNames}
                                   taskSet={updatedTaskSet}
@@ -286,6 +313,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
       }
       else {
         //log the start
+        console.log("hasBeenAnswered", this.state.hasBeenAnswered, this.currentLineOfData);
         if (!this.state.hasBeenAnswered
             && !(store.getState().experimentInfo.participantId === "TESTING")
             && !this.currentLineOfData) {
@@ -378,10 +406,6 @@ class DisplayTaskComponent extends Component {
   }
 
   componentWillMount() {
-    if (!(store.getState().experimentInfo.participantId === "TESTING")) {
-      this.broadcastStartEvent();
-    }
-
     var layoutAction = {
       type: 'SET_SHOW_HEADER',
       showHeader: false,
@@ -390,11 +414,42 @@ class DisplayTaskComponent extends Component {
 
     store.dispatch(layoutAction);
 
-    wampStore.addNewCommandListener(this.handleNewCommandEvent);
+    var parsed = queryString.parse(this.props.location.search);
+    var mainTaskSetId = parsed.id;
+    console.log(typeof(mainTaskSetId));
+    var tracker = parsed.tracker;
+
+    if (mainTaskSetId != undefined) {
+      console.log("trying to get data for this set", mainTaskSetId);
+      db_helper.getTasksOrTaskSetsWithIDs(mainTaskSetId, (dbQueryResult, count, mainTaskSetName) => {
+        console.log("received data from DB", dbQueryResult, count);
+        var action = {
+          type: 'SET_EXPERIMENT_INFO',
+          experimentInfo: {
+            participantLabel: playerUtils.getDeviceName(),
+            participantId: undefined,
+            shouldSave: true,
+            startTimestamp: playerUtils.getFormattedCurrentTime(),
+            mainTaskSetId: mainTaskSetName,
+            taskSet: dbQueryResult,
+            taskSetCount: count,
+            selectedTracker: tracker,
+          }
+        }
+
+        store.dispatch(action);
+
+        this.forceUpdate();
+      });
+
+      //this.broadcastStartEvent();
+
+      wampStore.addNewCommandListener(this.handleNewCommandEvent);
+    }
   }
 
   componentDidMount() {
-    if (store.getState().experimentInfo.participantId !== "TESTING" && (store.getState().experimentInfo.selectedTracker !== "")) {
+    if (store.getState().experimentInfo && store.getState().experimentInfo.participantId !== "TESTING" && (store.getState().experimentInfo.selectedTracker !== "")) {
       console.log("set up interval");
       this.gazeDataArray = [];
       this.timer = setInterval(this.updateCursorLocation.bind(this), 4.5); //Update the gaze cursor location every 2ms
@@ -551,27 +606,30 @@ class DisplayTaskComponent extends Component {
   }
 
   render() {
-    let theme = this.props.theme;
-    let rightBG = theme.palette.type === "light" ? theme.palette.primary.main : theme.palette.primary.dark;
+    if (store.getState().experimentInfo) {
+      let theme = this.props.theme;
+      let rightBG = theme.palette.type === "light" ? theme.palette.primary.main : theme.palette.primary.dark;
 
-    try {
-      var renderObj = <DisplayTaskHelper tasksFamilyTree={[store.getState().experimentInfo.mainTaskSetId]}
-                                         taskSet={store.getState().experimentInfo.taskSet}
-                                         onFinished={this.onFinished.bind(this)}
-                                         saveGazeData={this.saveGazeData.bind(this)}
-                                         progressCount={0}
-                                         repeatSetThreshold={store.getState().experimentInfo.taskSet.repeatSetThreshold}/>;
-      return (
-          <div style={{backgroundColor:rightBG}} className="page" ref={this.frameDiv}>
-            {renderObj}
-            <PauseDialog openDialog={this.state.isPaused}/>
-          </div>
-      );
+      try {
+        var renderObj = <DisplayTaskHelper tasksFamilyTree={[store.getState().experimentInfo.mainTaskSetId]}
+                                           taskSet={store.getState().experimentInfo.taskSet}
+                                           onFinished={this.onFinished.bind(this)}
+                                           saveGazeData={this.saveGazeData.bind(this)}
+                                           progressCount={0}
+                                           repeatSetThreshold={store.getState().experimentInfo.taskSet.repeatSetThreshold}/>;
+        return (
+            <div style={{backgroundColor:rightBG}} className="page" ref={this.frameDiv}>
+              {renderObj}
+              <PauseDialog openDialog={this.state.isPaused}/>
+            </div>
+        );
+      }
+      catch(err) {
+        //alert("something went wrong!");
+        return <div style={{backgroundColor:rightBG}}/>;
+      }
     }
-    catch(err) {
-      alert("something went wrong!");
-      return <div style={{backgroundColor:rightBG}}/>;
-    }
+    return <div>Loading...</div>;
   }
 }
 
