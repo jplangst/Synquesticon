@@ -18,7 +18,7 @@ var SynquesticonCommandTopic = "Synquesticon.Command";
 var RemoteEyeTrackingTopic = "RETDataSample";
 
 function _startWAMP(config) {
-  connection = new autobahn.Connection({url: 'ws://'+config.ip+':'+config.port+'/ws', realm: config.realm});
+  connection = new autobahn.Connection({url: 'wss://'+config.ip+':'+config.port+'/ws', realm: config.realm});
   connection.onopen = function (session) {
 
      // 1) subscribe to a topic
