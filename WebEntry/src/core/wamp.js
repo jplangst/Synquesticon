@@ -25,18 +25,21 @@ function _startWAMP(config) {
     return;
   }
 
+  var wsString = 'wss://';
+
   var configString = "";
   if(config.ip !== ""){
     configString += config.ip;
   }
   if(config.port !== ""){
     configString += ':' + config.port;
+    wsString = 'ws://';
   }
   else{
     configString += '/crossbarproxy'
   }
 
-  connection = new autobahn.Connection({url: 'wss://'+configString+'/ws', realm: config.realm});
+  connection = new autobahn.Connection({url: wsString+configString+'/ws', realm: config.realm});
 
   connection.onopen = function (session) {
 
