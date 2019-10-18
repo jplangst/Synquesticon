@@ -24,7 +24,7 @@ class AOIComponent extends Component {
 
     var color = this.props.aoi.isSelected ? "red" : theme.palette.secondary.main;
     var textColor = theme.palette.text.primary; //theme.palette.text.primary;
-    var textBGColor = theme.palette.primary.dark;
+    var textBGColor = theme.palette.primary.main;
     var path = pathData.join(' ');
     var p1 = this.props.aoi.boundingbox[0];
 
@@ -47,7 +47,7 @@ class AOIComponent extends Component {
         <g onClick={this.props.onSelected} fontSize="3" fontFamily="sans-serif" fill="black" stroke="none">
           <polygon points={path} stroke={color} strokeWidth={strokeWidth}
             fill="none" />
-            <text className="AOIName" x={p1[0]} y={p1[1]} dy="-1" stroke={textBGColor} strokeWidth="0.6em">{this.props.aoi.name}</text>
+            <text className="AOIName" x={p1[0]} y={p1[1]} dy="-1" stroke={textBGColor} strokeWidth="0.4em">{this.props.aoi.name}</text>
             <text className="AOIName" x={p1[0]} y={p1[1]} dy="-1" fill={textColor}> {this.props.aoi.name} </text>
         </g>
       );

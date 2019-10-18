@@ -508,6 +508,25 @@ class db_helper {
      }).then(() => callback());
     }
 
+    /**
+     * getTasksOrTaskSetsWithIDsPromise - Async Get tasks or sets with the specified ids. Can be made Synchronous by using await.
+     *
+     * @param  {string}   objIds   The ids to retrieve, should be in a list/array format.
+     *
+     * @return {list} Returns a list of Task and Set objects.
+     */
+    async deleteParticipantFromDbPromise(participantId) {
+        return new Promise((resolve, reject) => {
+          axios.post("/api/deleteParticipant", {
+            id:participantId
+          }).then(response => {
+              resolve();
+          }, (errorResponse) => {
+            reject(errorResponse);
+          });
+      })
+    };
+
    /*
 ██████   ██████  ██      ███████ ███████
 ██   ██ ██    ██ ██      ██      ██
