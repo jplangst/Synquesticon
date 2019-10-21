@@ -94,8 +94,11 @@ class ObserverMode extends Component {
     var gazeObject = null;
     if (this.state.currentParticipant >= 0) {
       wampMessage = this.state.participants[this.state.currentParticipant].messages;
-      gazeObject = <GazeCursor tracker={this.state.participants[this.state.currentParticipant].tracker}
-                  id={this.state.currentParticipant} participant={this.state.participants[this.state.currentParticipant].name} />;
+
+      console.log(this.state.participants[this.state.currentParticipant].tracker);
+      var tracker = this.state.participants[this.state.currentParticipant].tracker;
+      gazeObject = tracker ? <GazeCursor tracker={tracker}
+                  id={this.state.currentParticipant} participant={this.state.participants[this.state.currentParticipant].name} /> : null;
     }
 
     var showScroll = window.matchMedia("(any-pointer: coarse)").matches ? "" : "ShowScrollBar";
