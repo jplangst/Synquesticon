@@ -18,12 +18,29 @@ var SynquesticonCommandTopic = "Synquesticon.Command";
 var RemoteEyeTrackingTopic = "RETDataSample";
 
 function _startWAMP(config) {
+
   if (last_config && (last_config.ip === config.ip &&
                       last_config.port === config.port &&
                       last_config.realm === config.realm)) {
     return;
   }
-  connection = new autobahn.Connection({url: 'ws://'+config.ip+':'+config.port+'/ws', realm: config.realm});
+
+  var wsString = 'wss://';
+
+  var configString = "";
+  if(config.ip !== ""){
+    configString += config.ip;
+  }
+  if(config.port !== ""){
+    configString += ':' + config.port;
+    wsString = 'ws://';
+  }
+  else{
+    configString += '/crossbarproxy'
+  }
+
+  connection = new autobahn.Connection({url: wsString+configString+'/ws', realm: config.realm});
+
   connection.onopen = function (session) {
 
      // 1) subscribe to a topic

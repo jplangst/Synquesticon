@@ -7,7 +7,6 @@ import store from './core/store';
 import 'babel-polyfill'; //for Object.entries that is not supported in Safari
 
 import App from './App';
-import registerServiceWorker from './registerServiceWorker';
 
 var doubleTouchStartTimestamp = 0;
 document.addEventListener("touchstart", function(event){
@@ -22,4 +21,3 @@ ReactDOM.render(
   <Provider store={store} >
     <App />
   </Provider>, document.getElementById('root'));
-registerServiceWorker();

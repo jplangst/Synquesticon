@@ -50,16 +50,66 @@ class EditSetComponent extends Component {
     this.responseHandler = this.onResponsesChanged;
     this.handleDBCallback = this.onDBCallback.bind(this);
     this.handleRetrieveSetChildTasks = this.onRetrievedSetChildTasks.bind(this);
+    this.handleUpdateSetChildTasks = this.onRetrievedSetChildTasksAddToSet.bind(this);
 
     this.handleSetTaskOrderChange = this.onSetTaskOrderChanged.bind(this);
     this.handleDisplayOnePageChange = this.onDisplayOnePageChanged.bind(this);
     this.handleLogOneLineChange = this.onLogOneLineChanged.bind(this);
+  }
 
+  componentDidMount(){
     this.refreshSetChildList();
   }
 
+  //OLD
   onRetrievedSetChildTasks(retrievedObjects){
     this.setState({taskListObjects: retrievedObjects.data});
+  }
+
+  //OLD
+  refreshSetChildList(){
+    if(this.state.taskList && this.state.taskList.length > 0){
+      db_helper.getTasksOrTaskSetsWithIDs(this.set._id, this.handleRetrieveSetChildTasks);
+    }
+    else{ //If the list is empty we clear the list in the state
+      this.setState({taskListObjects: []});
+    }
+  }
+
+  //NEW
+  onRetrievedSetChildTasksAddToSet(retrievedObject){
+    var newObjects = [];
+    newObjects.push(retrievedObject);
+
+    //Add to front
+    var updatedObjects = newObjects.concat(this.state.taskListObjects);
+    //Add to end
+    //var updatedObjects = this.state.taskListObjects.concat(newObjects);
+
+    var newTasks = [];
+    newTasks.push({id:retrievedObject._id, objType:retrievedObject.objType});
+
+    //Add to front
+    var updatedTaskList = newTasks.concat(this.state.taskList);
+    //Add to end
+    //var updatedTaskList = this.state.taskList.concat(newTasks);
+
+    this.setState({
+      taskListObjects: updatedObjects,
+      taskList: updatedTaskList
+    });
+
+    this.set.childIds = updatedTaskList;
+  }
+
+  //NEW
+  updateSetChildList(taskToAdd){
+    if(taskToAdd.objType === "Task"){
+      db_helper.getTaskWithID(taskToAdd._id, this.handleUpdateSetChildTasks);
+    }
+    else{
+      db_helper.getTasksOrTaskSetsWithIDs(taskToAdd, this.handleUpdateSetChildTasks);
+    }
   }
 
   onDBCallback(setDBID){
@@ -91,7 +141,7 @@ class EditSetComponent extends Component {
     else if(target==="Repeat"){
       response = response[0].replace(/\D/g,'');
       response = response === "" ? "0" : response;
-      this.set.repeatSetThreshold = parseInt(response);
+      this.set.repeatSetThreshold = Number(response);
     }
   }
 
@@ -158,6 +208,7 @@ class EditSetComponent extends Component {
       var query = {id: task._id, objType: task.objType};
       var queryList = [];
       queryList.push(query);
+
       db_helper.getTasksOrTaskSetsWithIDsPromise(task).then(data =>{
         //If the query was successful
         if(data){
@@ -231,15 +282,10 @@ class EditSetComponent extends Component {
     }
   }
 
+
   handleAddTaskAllowed(allowed, task){
     if(allowed){
-      var newTasks = [];
-      newTasks.push({id:task._id, objType:task.objType});
-      var updatedTaskList = this.state.taskList.concat(newTasks);
-
-      this.set.childIds = updatedTaskList;
-      this.setState({taskList:updatedTaskList});
-      this.refreshSetChildList();
+      this.updateSetChildList(task);
     }
     else{
       this.setState({
@@ -256,17 +302,27 @@ class EditSetComponent extends Component {
 
   //Remove a task from the list of tasks in the set
   removeTask(taskId){
-    var newList = this.state.taskList;
+    var newList = [...this.state.taskList];
     for( var i = 0; i < newList.length; i++){
       if ( newList[i].id === taskId) {
        newList.splice(i, 1);
        break;
       }
     }
+    var newObjectList = [...this.state.taskListObjects];
+    for( var i = 0; i < newObjectList.length; i++){
+      if ( newObjectList[i]._id === taskId) {
+       newObjectList.splice(i, 1);
+       break;
+      }
+    }
+
     this.set.childIds = newList;
 
-    this.setState({taskList:newList});
-    this.refreshSetChildList();
+    this.setState({
+      taskList:newList,
+      taskListObjects: newObjectList
+    });
   }
 
   moveTask(dragIndex, hoverIndex) {
@@ -290,15 +346,6 @@ class EditSetComponent extends Component {
     }));
 
     this.set.childIds = this.state.taskList;
-  }
-
-  refreshSetChildList(){
-    if(this.state.taskList && this.state.taskList.length > 0){
-      db_helper.getTasksOrTaskSetsWithIDs(this.set._id, this.handleRetrieveSetChildTasks);
-    }
-    else{ //If the list is empty we clear the list in the state
-      this.setState({taskListObjects: []});
-    }
   }
 
   //Removes the selected set from the database

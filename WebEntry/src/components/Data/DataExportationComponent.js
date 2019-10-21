@@ -36,10 +36,36 @@ class DataExportationComponent extends Component {
     })
   }
 
-  handleDeleteSelected() {
+  /*handleDeleteSelected() {
     if(this.pickedParticipants.length>0){
+      //
       Promise.all(this.pickedParticipants.map(p => db_helper.deleteParticipantFromDb(p._id, ()=>{return Promise.resolve('ok');})));
       this.pickedParticipants = [];
+
+      //Update the list after the deletion have been completed
+      db_helper.getAllParticipantsFromDb((ids) => {
+        this.setState({
+          participants: ids
+        });
+      });
+
+    }
+  }*/
+
+  async handleDeleteSelected() {
+    if(this.pickedParticipants.length>0){
+
+      /*this.pickedParticipants.map( p =>
+         db_helper.deleteParticipantFromDbPromise(p._id)
+      );*/
+
+      for (var i = 0; i < this.pickedParticipants.length; i++) {
+        await db_helper.deleteParticipantFromDbPromise(this.pickedParticipants[i]._id);
+      }
+
+      this.pickedParticipants = [];
+
+      //Update the list after the deletion have been completed
       db_helper.getAllParticipantsFromDb((ids) => {
         this.setState({
           participants: ids
@@ -108,6 +134,11 @@ class DataExportationComponent extends Component {
   render() {
     let theme=this.props.theme;
 
+    var deleteAllButton = null;
+    //<Button onClick={this.handleDeleteAll.bind(this)} variant="outlined">
+    //  Delete All
+    //</Button>
+
     return(
       <div style={{height:'100%'}}>
         <Button style={{height:'100%'}} onClick={this.onDataExportationButtonClicked.bind(this)} >
@@ -150,7 +181,7 @@ class DataExportationComponent extends Component {
           </List>
           <DialogActions>
             <Button onClick={this.handleClose.bind(this)} variant="outlined">
-              Cancel
+              Cancel 
             </Button>
             <Button onClick={this.handleExport.bind(this)} variant="outlined">
               Export Selected
@@ -162,9 +193,7 @@ class DataExportationComponent extends Component {
             <Button onClick={this.handleDeleteSelected.bind(this)} variant="outlined">
               Delete Selected
             </Button>
-            <Button onClick={this.handleDeleteAll.bind(this)} variant="outlined">
-              Delete All
-            </Button>
+            {deleteAllButton}
           </DialogActions>
         </Dialog>
       </div>
