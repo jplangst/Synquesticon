@@ -292,9 +292,6 @@ class EditSetComponent extends Component {
     }
 
     this.setState({
-      snackbarOpen: false
-    });
-    this.setState({
       snackbarOpen: true,
       snackbarMessage: message
     });

@@ -20,7 +20,8 @@ const taskListTarget = {
 function collect(connect, monitor) {
  return {
    canDrop: monitor.canDrop(),
-   connectDropTarget: connect.dropTarget()
+   connectDropTarget: connect.dropTarget(),
+   isOver: monitor.isOver()
  }
 }
 

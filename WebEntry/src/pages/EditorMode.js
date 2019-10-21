@@ -246,7 +246,7 @@ class EditorMode extends Component {
           <CollapsableContainer headerTitle="Sets" useMediaQuery={true}
           headerComponents={collapsableSetHeaderButtons} hideHeaderComponents={true}
           open={true}>
-              < TaskListComponent selectedTask={this.state.selectedTaskSet} reorderDisabled={false} placeholderName="TaskSetPlaceholder" reorderID="taskSetsReorder"
+              < TaskListComponent selectedTask={this.state.selectedTaskSet} reorderDisabled={true} placeholderName="TaskSetPlaceholder" reorderID="taskSetsReorder"
                 taskList={ this.state.taskSetList } selectTask={ this.selectTaskSet.bind(this) } dragDropCallback={this.onDragDropCallback.bind(this)}
                 reactDND={false} itemType="TaskSet"/ >
           </CollapsableContainer>
