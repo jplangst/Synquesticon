@@ -36,7 +36,7 @@ function collect(connect, monitor) {
  return {
    connectDragSource: connect.dragSource(),
    isDragging: monitor.isDragging(),
-   connectDragPreview: connect.dragPreview(),
+   connectDragPreview: connect.dragPreview()
  }
 }
 
@@ -54,7 +54,8 @@ class TaskItemComponent extends Component {
   render() {
     const { theme, connectDragSource} = this.props; //connectDragPreview, isDragging
 
-    let bgColor = this.props.highlight ? theme.palette.secondary.main + "22" : null;
+
+    let bgColor = this.props.highlight ? theme.palette.secondary.main + "66" : null;
     let leftBG = theme.palette.type === "light" ? theme.palette.primary.dark : theme.palette.primary.main;
     //const opacityValue = isDragging ? 0.8 : 1;
     var content =

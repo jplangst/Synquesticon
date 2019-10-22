@@ -46,12 +46,11 @@ class CrossbarDialog extends Component {
           onClose={this.props.closeCrossbarSettings}
           aria-labelledby="form-dialog-title"
         >
-          <DialogTitle id="form-dialog-title"><Typography variant="h5" color="textPrimary">Crossbar Settings</Typography></DialogTitle>
+          <DialogTitle id="form-dialog-title" variant="h5">Crossbar Settings</DialogTitle>
           <DialogContent>
-            <DialogContentText><Typography color="textPrimary">Change crossbar Router information</Typography></DialogContentText>
+            <DialogContentText color="textPrimary">Change crossbar Router information</DialogContentText>
             <TextField
               required
-
               padding="normal"
               id="crossbarIP"
               defaultValue={this.crossbar.ip}
@@ -61,7 +60,6 @@ class CrossbarDialog extends Component {
             />
             <TextField
               required
-
               padding="normal"
               id="crossbarPort"
               defaultValue={this.crossbar.port}
@@ -72,7 +70,6 @@ class CrossbarDialog extends Component {
             />
             <TextField
               required
-
               padding="dense"
               id="crossbarRealm"
               defaultValue={this.crossbar.realm}

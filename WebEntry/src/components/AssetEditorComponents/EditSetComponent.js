@@ -218,10 +218,11 @@ class EditSetComponent extends Component {
           //Check that we are not adding a set containing the set we are editing now
           if(addingTaskChildSets.includes(this.set._id)){
             //If we are it would cause a circular reference
-            this.handleAddTaskAllowed(false, task);
+            this.handleAddTaskAllowed(false, task, "The set you are trying to add already includes this set and would cause a circular reference");
             return;
           }
 
+          /*
           //Get the task set list that is currently being edited
           var outerList = this.state.taskListObjects;
 
@@ -235,24 +236,26 @@ class EditSetComponent extends Component {
               //Check if the set we are adding already references any of these sets
               for(var z = 0; z < taskSetChildrenSets.length; z++){
                 if(addingTaskChildSets.includes(taskSetChildrenSets[z])){
+                  console.log("Illegal because the set we are adding has references to other sets?")
                   this.handleAddTaskAllowed(false, task);
                   return;
                 }
               }
             }
           }
+          */
           //No circular reference detected
-          this.handleAddTaskAllowed(true, task);
+          var result_message = task.objType === "TaskSet" ? "Set successfully added" : "Task successfully added";
+          this.handleAddTaskAllowed(true, task, result_message);
         }
         //Otherwise we do not add as we don't know if it will be ok
         else{
-          console.log("Did not add, unable to query the database");
-          this.handleAddTaskAllowed(false, task);
+          this.handleAddTaskAllowed(false, task, "Unable to query the database, did not add " + task.objType === "TaskSet" ? "set" : "task");
         }
       });
     }
     else{
-      this.handleAddTaskAllowed(true, task);
+      this.handleAddTaskAllowed(true, task, "Task successfully added");
     }
   }
 
@@ -273,7 +276,8 @@ class EditSetComponent extends Component {
   addTask(task, objType){
     if(this.set._id === task._id){
       this.setState({
-        snackbarOpen: true
+        snackbarOpen: true,
+        snackbarMessage: "Cannot add the same set to itself"
       });
     }
     else{
@@ -282,16 +286,15 @@ class EditSetComponent extends Component {
     }
   }
 
-
-  handleAddTaskAllowed(allowed, task){
+  handleAddTaskAllowed(allowed, task, message){
     if(allowed){
       this.updateSetChildList(task);
     }
-    else{
-      this.setState({
-        snackbarOpen: true
-      });
-    }
+
+    this.setState({
+      snackbarOpen: true,
+      snackbarMessage: message
+    });
   }
 
   handleCloseSnackbar(event, reason) {
@@ -302,6 +305,10 @@ class EditSetComponent extends Component {
 
   //Remove a task from the list of tasks in the set
   removeTask(taskId){
+    this.setState({
+      snackbarOpen: false
+    });
+
     var newList = [...this.state.taskList];
     for( var i = 0; i < newList.length; i++){
       if ( newList[i].id === taskId) {
@@ -321,7 +328,9 @@ class EditSetComponent extends Component {
 
     this.setState({
       taskList:newList,
-      taskListObjects: newObjectList
+      taskListObjects: newObjectList,
+      snackbarOpen: true,
+      snackbarMessage: "Successfully removed"
     });
   }
 
@@ -469,18 +478,18 @@ class EditSetComponent extends Component {
         </div>
 
         <Snackbar
-          style = {{bottom: 120}}
+          style = {{bottom: 200}}
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'center',
           }}
           open={this.state.snackbarOpen}
           onClose={this.handleCloseSnackbar.bind(this)}
-          autoHideDuration={2000}
+          autoHideDuration={4000}
           ContentProps={{
             'aria-describedby': 'message-id',
           }}
-          message={<span id="message-id">Illegal Action: Adding set would cause a circular reference!</span>}
+          message={<div style={{width: '100%', height: '100%'}} id="message-id">{this.state.snackbarMessage}</div>}
         />
       </div>
     );

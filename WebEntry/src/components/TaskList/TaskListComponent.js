@@ -18,7 +18,7 @@ const taskListTarget = {
 
   canDrop(props, monitor) {
     return props.reactDND;
-  }
+  }  
 };
 function collect(connect, monitor) {
  return {
