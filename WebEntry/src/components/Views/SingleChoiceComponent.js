@@ -4,8 +4,6 @@ import Button from '@material-ui/core/Button';
 import { Typography } from '@material-ui/core';
 import { withTheme } from '@material-ui/styles';
 
-import './SingleChoiceComponent.css';
-
 class SingleChoiceComponent extends Component {
   constructor() {
     super();
@@ -57,7 +55,7 @@ class SingleChoiceComponent extends Component {
             this.props.task.responses.map((item, index)=>{
               if (item === this.pickedItem) {
                 return (
-                  <span className="inputButton" key={index}><Button  variant="contained" classes={{color:theme.palette.text.secondary}} disabled={this.hasBeenAnswered} onClick={() => this.onAnswer(item)}>{item}</Button></span>)
+                  <span className="inputButton" key={index}><Button  variant="contained" style={{color:theme.palette.text.secondary}} disabled={this.hasBeenAnswered} onClick={() => this.onAnswer(item)}>{item}</Button></span>)
               }
               return (<span className="inputButton" key={index}><Button  variant="contained" onClick={() => this.onAnswer(item)}>{item}</Button></span>);
             })

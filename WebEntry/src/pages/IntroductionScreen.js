@@ -13,7 +13,6 @@ import './IntroductionScreen.css';
 import './ObserverMode.css';
 
 import { withTheme } from '@material-ui/styles';
-import { Typography } from '@material-ui/core';
 
 class IntroductionScreen extends Component {
   constructor(props) {
@@ -47,11 +46,11 @@ class IntroductionScreen extends Component {
     var buttonIcon = null;
     var buttonLabel = "";
     if(!this.state.isParticipantsPaused){
-      buttonIcon = <PauseIcon style={{display:'flex', position: 'relative', height: '100%', width:'25%'}} />;
+      buttonIcon = <PauseIcon fontSize="large" />;
       buttonLabel = "Pause all";
     }
     else{
-      buttonIcon = <PlayIcon style={{display:'flex', position: 'relative', height: '100%', width: '25%'}} />;
+      buttonIcon = <PlayIcon fontSize="large" />;
       buttonLabel = "Resume all";
     }
 
@@ -65,15 +64,12 @@ class IntroductionScreen extends Component {
         <PlayerMode gotoPage={this.gotoPage.bind(this)}/>
       </div>
       <div style={{paddingLeft:5, backgroundColor:rightBG}} className="IntroContentWrapper">
-        <div className="IntroContentTitle">
-          <div className="IntroTitleText"><Typography color="textPrimary" variant="h4">Observer</Typography></div>
-          <Button style={{display:'flex', position: 'relative', flexGrow: 1, width: 190,
-                  borderRadius:10, borderColor:'#BDBDBD', borderWidth:'thin', borderLeftStyle:'solid'}}
-           onClick={this.onPauseAllPressed}>
-            {buttonLabel}
-            {buttonIcon}
-          </Button>
-        </div>
+        <Button style={{display:'flex', position: 'relative', left: 'calc(100% - 150px)', width: 150, height: 50,
+                borderRadius:10, borderColor:'#BDBDBD', borderWidth:'thin', borderLeftStyle:'solid'}}
+                onClick={this.onPauseAllPressed}>
+          {buttonLabel}
+          {buttonIcon}
+        </Button>
         <div className="IntroContent">
           <ObserverMode isParticipantsPaused={this.state.isParticipantsPaused}/>
         </div>
