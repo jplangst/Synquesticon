@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-
-import Button from '@material-ui/core/Button';
-
 import AOIComponent from '../AOIEditor/AOIComponent';
 
 import db_helper from '../../core/db_helper.js';
@@ -54,7 +51,7 @@ class ImageViewComponent extends Component {
     if (this.state.imageSrc) {
       return (
         <div className={this.props.className} >
-          <img className="imageView" src={this.state.imageSrc} alt="Can't find image" ref={this.imageRef}/>
+          <img className="imageView" src={this.state.imageSrc} alt="" ref={this.imageRef}/>
           <svg id="AOICanvas" className="imageViewWithAOIs" width='100%' height='100%' viewBox="0 0 100 100" preserveAspectRatio="none">
             {this.props.task.aois.map((aoi, index) => {
               return <AOIComponent aoi={aoi} key={index}/>

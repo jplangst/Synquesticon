@@ -9,10 +9,6 @@ import RenameIcon from '@material-ui/icons/TextFormatOutlined';
 import './AOIEditorComponent.css';
 
 class SelectAOIToolBox extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div>

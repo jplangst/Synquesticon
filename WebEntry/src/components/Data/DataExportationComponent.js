@@ -102,6 +102,7 @@ class DataExportationComponent extends Component {
         this.handleClose();
         //alert();
       });
+      return 1;
     });
   }
 
@@ -148,8 +149,6 @@ class DataExportationComponent extends Component {
   }
 
   render() {
-    let theme=this.props.theme;
-
     var deleteAllButton = null;
     //<Button onClick={this.handleDeleteAll.bind(this)} variant="outlined">
     //  Delete All

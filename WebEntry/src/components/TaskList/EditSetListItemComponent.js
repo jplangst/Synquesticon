@@ -82,7 +82,7 @@ class EditSetListItemComponent extends Component {
   }
 
   render() {
-    const { theme, connectDragSource, connectDropTarget, isOver } = this.props;
+    const { connectDragSource, connectDropTarget, isOver } = this.props;
 
     var opacity = 1;
     if(isOver){

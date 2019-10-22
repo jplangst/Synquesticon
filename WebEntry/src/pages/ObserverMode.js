@@ -37,14 +37,14 @@ class ObserverMode extends Component {
     var isComment = (args.eventType === "COMMENT"); // &&
                           // args.observerName != myStorage.getItem('deviceID') &&
                           // args.observerRole != myStorage.getItem('deviceRole'));
-    if (args.taskSetCount != undefined) {
+    if (args.taskSetCount !== undefined) {
       this.totalTasks[args.participantId] = args.taskSetCount;
     }
-    if (args.progressCount != undefined) {
+    if (args.progressCount !== undefined) {
       this.completedTasks[args.participantId] = args.progressCount;
     }
 
-    if (store.getState().participants[args.participantId] == undefined && !isComment) {
+    if (store.getState().participants[args.participantId] === undefined && !isComment) {
       var action = {
         type: 'ADD_PARTICIPANT',
         participant: args.participantId,
@@ -66,7 +66,7 @@ class ObserverMode extends Component {
       }
     }
     if (!existed) {
-      var label = (!args.participantLabel || args.participantLabel == "") ? args.startTimestamp : (args.participantLabel + "   " + args.startTimestamp);
+      var label = (!args.participantLabel || args.participantLabel === "") ? args.startTimestamp : (args.participantLabel + "   " + args.startTimestamp);
       this.state.participants.push({
         id: args.participantId,
         name: label,

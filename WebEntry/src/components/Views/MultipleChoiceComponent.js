@@ -19,7 +19,7 @@ class MultipleChoiceComponent extends Component {
   }
 
   checkAnswer() {
-    if (this.props.task.correctResponses === undefined || this.props.task.correctResponses.length == 0) {
+    if (this.props.task.correctResponses === undefined || this.props.task.correctResponses.length === 0) {
       return "notApplicable";
     }
     for (var i = 0; i < this.props.task.correctResponses.length; i++) {

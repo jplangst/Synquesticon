@@ -463,7 +463,7 @@ class db_helper {
    * @param  {LineOfData} newLineJSON   The data to add to the participant. Should use LineOfData object defined in db_objects.js.
    */
    addNewLineToParticipantDB(participantId, newLineJSON){
-    if (participantId == undefined) {
+    if (participantId === undefined) {
       return;
     }
     axios.post("/api/addNewLineToParticipant", {
@@ -481,7 +481,7 @@ class db_helper {
    * @param  {type}   globalVariableJSON The global variable object.
    */
    addNewGlobalVariableToParticipantDB(participantId, globalVariableJSON){
-    if (participantId == undefined) {
+    if (participantId === undefined) {
       return;
     }
     axios.post("/api/addNewGlobalVariableToParticipant", {

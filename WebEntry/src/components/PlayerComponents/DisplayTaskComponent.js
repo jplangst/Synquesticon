@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 
 import Button from '@material-ui/core/Button';
 
-import { Typography } from '@material-ui/core';
 import { withTheme } from '@material-ui/styles';
 
 //view components
@@ -31,7 +29,7 @@ import './DisplayTaskComponent.css';
 
 function stringifyWAMPMessage(task, lineOfData, eventType, progressCount) {
   try {
-    if (store.getState().experimentInfo.participantId == undefined) {
+    if (store.getState().experimentInfo.participantId === undefined) {
       return null;
     }
     return JSON.stringify({
@@ -230,7 +228,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
     }
 
     if (store.getState().experimentInfo.shouldSave) {
-      if (store.getState().experimentInfo.participantId == undefined) {
+      if (store.getState().experimentInfo.participantId === undefined) {
         db_helper.addParticipantToDb(new dbObjects.ParticipantObject(store.getState().experimentInfo.taskSet._id), (returnedIdFromDB)=> {
           var idAction = {
             type: 'SET_PARTICIPANT_ID',
@@ -422,7 +420,7 @@ class DisplayTaskComponent extends Component {
     console.log(typeof(mainTaskSetId));
     var tracker = parsed.tracker;
 
-    if (mainTaskSetId != undefined) {
+    if (mainTaskSetId !== undefined) {
       console.log("trying to get data for this set", mainTaskSetId);
       db_helper.getTasksOrTaskSetsWithIDs(mainTaskSetId, (dbQueryResult, count, mainTaskSetName) => {
         console.log("received data from DB", dbQueryResult, count);
@@ -504,6 +502,7 @@ class DisplayTaskComponent extends Component {
             var x = p[0]*imageDivRect.width/100 + imageDivRect.x;
             var y = p[1]*imageDivRect.height/100 + imageDivRect.y;
             polygon.push([x, y]);
+            return 1;
           });
           if (playerUtils.pointIsInPoly([cursorX, cursorY], polygon)){
             gazeLoc.target = a.name;
@@ -511,7 +510,7 @@ class DisplayTaskComponent extends Component {
           }
         }
 
-        var timestamp = playerUtils.getCurrentTime();
+        //var timestamp = playerUtils.getCurrentTime();
         if (!this.gazeDataArray.includes(gazeLoc)) {
           this.gazeDataArray.push(gazeLoc);
         }

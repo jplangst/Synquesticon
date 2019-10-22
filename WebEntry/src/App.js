@@ -13,7 +13,6 @@ import EditorMode from './pages/EditorMode';
 import IntroductionScreen from './pages/IntroductionScreen';
 import DisplayTaskComponent from './components/PlayerComponents/DisplayTaskComponent';
 
-import { DndProvider } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend' /* Does not support touch events */
 import TouchBackend from 'react-dnd-touch-backend' /* Supports touch events, but can be buggy with miouse events */
 import { DragDropContext } from 'react-dnd'
@@ -53,7 +52,6 @@ class App extends Component {
   render() {
     let theme = store.getState().theme;
     return (
-
         <Router>
           <ThemeProvider theme={theme}>
           <div style={{backgroundColor:theme.palette.background.default}} className="App">
@@ -68,7 +66,6 @@ class App extends Component {
           </div>
           </ThemeProvider>
         </Router>
-
     );
   }
 }

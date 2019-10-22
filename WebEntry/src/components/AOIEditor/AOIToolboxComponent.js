@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-import Button from '@material-ui/core/Button';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { withTheme } from '@material-ui/styles';
@@ -25,22 +24,17 @@ class AOIToolboxComponent extends Component {
   render() {
     let theme = this.props.theme;
 
-    var rectBtnColor = "default";
-    var polyBtnColor = "default";
-    var selectBtnColor = "default";
+
     var toolbox = null;
     switch (this.props.mode) {
       case "RECTANGLE":
-        rectBtnColor = "primary";
         break;
       case "POLYGON":
-        polyBtnColor = "primary";
         toolbox = <PolygonToolBox onRemoveLastPoint={this.props.callbacks.onRemoveLastPoint}
                                   onFinished={this.props.callbacks.onFinished}
                                   onCancel={this.props.callbacks.onCancel}/>
         break;
       case "SELECT":
-        selectBtnColor = "primary";
         toolbox = <SelectAOIToolBox onRename={this.props.callbacks.onRename}
                                     onRemove={this.props.callbacks.onRemove}/>
         break;

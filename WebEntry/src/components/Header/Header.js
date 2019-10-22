@@ -71,15 +71,10 @@ class Header extends Component {
   render() {
     let storeState = store.getState();
     if (storeState.showHeader) {
-
-      //Used to highlight the currently active mode
-      var activeModeButton = this.props.history.location.pathname;
-
       return(
-          <AppBar style={{ backgroundColor:this.props.theme.palette.primary.light, padding: 0, padding: 0, display:'flex', flexGrow: 1, position: 'relative', minHeight:50, maxHeight:'6%', width:'100%'}}>
-            <Toolbar variant="dense" style={{padding: 0, padding: 0, display:'flex', flexDirection:'row', position:'relative', width:'100%', height:'100%'}}>
+          <AppBar style={{ backgroundColor:this.props.theme.palette.primary.light, padding: 0, display:'flex', flexGrow: 1, position: 'relative', minHeight:50, maxHeight:'6%', width:'100%'}}>
+            <Toolbar variant="dense" style={{padding: 0, display:'flex', flexDirection:'row', position:'relative', width:'100%', height:'100%'}}>
                {this.getModeButtons()}
-
 
                <div className="AppName"><Typography color='textPrimary' variant="h3">Synquesticon</Typography></div>
 

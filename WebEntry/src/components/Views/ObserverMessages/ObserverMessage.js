@@ -65,12 +65,11 @@ class ObserverMessage extends React.Component {
                       </Typography>;
 
 
-        var aoisList = "";
-
+        /*var aoisList = "";
         args.lineOfData.aoiCheckedList.map((item, index) => {
           aoisList += "\t" + item["name"] + ":" + (item["checked"] !== undefined ? "checked" : "unchecked");
         });
-        //displayText += aoisList;
+        //displayText += aoisList;*/
 
         break;
       case "SKIPPED":
@@ -109,7 +108,7 @@ class ObserverMessage extends React.Component {
         this.showCommentButton = false;
         break;
       case "COMMENT":
-        var commentTime = new Date(args.timestamp);
+        //var commentTime = new Date(args.timestamp);
         displayText = <Typography variant="body1" color="textPrimary">
                         <b>Comment from {args.observerName}: </b>
                         {args.comment} at {playerUtils.getFormattedTime(args.timestamp)}

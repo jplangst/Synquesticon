@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 
-//import TextField from '@material-ui/core/TextField';
-import InputBase from '@material-ui/core/InputBase';
 import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 
@@ -49,7 +47,7 @@ class TextEntryComponent extends Component {
   }
 
   checkAnswer() {
-    if (this.props.task.correctResponses === undefined || this.props.task.correctResponses.length == 0) {
+    if (this.props.task.correctResponses === undefined || this.props.task.correctResponses.length === 0) {
       return "notApplicable";
     }
 

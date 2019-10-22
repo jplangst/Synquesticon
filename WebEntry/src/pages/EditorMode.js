@@ -12,7 +12,6 @@ import TaskListComponent from '../components/TaskList/TaskListComponent';
 import EditTaskComponent from '../components/AssetEditorComponents/EditTaskComponent';
 import EditSetComponent from '../components/AssetEditorComponents/EditSetComponent';
 import { withTheme } from '@material-ui/styles';
-import { Typography } from '@material-ui/core';
 
 import db_helper from '../core/db_helper.js';
 

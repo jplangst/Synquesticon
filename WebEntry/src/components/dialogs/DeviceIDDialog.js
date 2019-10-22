@@ -42,17 +42,20 @@ class DeviceIDDialog extends Component {
         //init the roles
         DEFAULT_ROLES.map((item, index) => {
           db_helper.addRoleToDb({name: item});
+          return 1;
         });
       }
       else {
         var roleArray = [];
         receivedRoles.map((role, index) => {
           roleArray.push(role.name);
+          return 1;
         })
         this.setState({
           roles: roleArray
         });
       }
+      return 1;
     });
   }
 

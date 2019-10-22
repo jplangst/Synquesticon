@@ -5,10 +5,6 @@ import { withTheme } from '@material-ui/styles';
 import './AOIEditorComponent.css';
 
 class AOIComponent extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     let theme = this.props.theme;
 
@@ -20,6 +16,7 @@ class AOIComponent extends Component {
 
     this.props.aoi.boundingbox.map((point, index) => {
       pathData.push(point[0] + ' ' + point[1]);
+      return 1;
     });
 
     var color = this.props.aoi.isSelected ? "red" : theme.palette.secondary.main;
