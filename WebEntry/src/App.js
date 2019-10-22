@@ -52,7 +52,6 @@ class App extends Component {
   render() {
     let theme = store.getState().theme;
     return (
-
         <Router>
           <ThemeProvider theme={theme}>
           <div style={{backgroundColor:theme.palette.background.default}} className="App">
@@ -67,7 +66,6 @@ class App extends Component {
           </div>
           </ThemeProvider>
         </Router>
-
     );
   }
 }
