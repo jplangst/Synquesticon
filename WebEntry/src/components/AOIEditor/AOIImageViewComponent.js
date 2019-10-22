@@ -17,12 +17,13 @@ class AOIImageViewComponent extends Component {
 
   render() {
     var tempAOI = this.props.mode !== "SELECT" ? <AOIComponent aoi={this.props.tempAOI}/> : null;
+    var url = URL.createObjectURL(this.props.image);
     return (
       <div className="imagePreviewContainer"
         onMouseDown={this.props.onMouseDown}
         onMouseUp={this.props.onMouseUp}
         onMouseMove={this.props.onMouseMove}>
-        <img className="imageContainer" src={"Images/"+this.props.image} alt="Task"
+        <img className="imageContainer" src={url} alt="Task"
               />
         <svg id="AOICanvas" className="imageViewWithAOIs" width='100%' height='100%' viewBox="0 0 100 100" preserveAspectRatio="none">
           {tempAOI}

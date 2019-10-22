@@ -31,6 +31,9 @@ import './DisplayTaskComponent.css';
 
 function stringifyWAMPMessage(task, lineOfData, eventType, progressCount) {
   try {
+    if (store.getState().experimentInfo.participantId == undefined) {
+      return null;
+    }
     return JSON.stringify({
                             eventType: eventType,
                             participantId: store.getState().experimentInfo.participantId,

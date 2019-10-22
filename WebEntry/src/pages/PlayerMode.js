@@ -104,7 +104,7 @@ class PlayerMode extends Component {
     let theme = this.props.theme;
     let textColor = theme.palette.type === "light" ? "textSecondary" : "textPrimary";
 
-    var url = 'https://syn.ife.no/study?id=';
+    var url = window.location.href + 'study?id=';
     if (this.selectedTaskSet) {
        url += this.selectedTaskSet._id;
        this.appendEyeTrackerInfo(url);

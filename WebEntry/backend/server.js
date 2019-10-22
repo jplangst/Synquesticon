@@ -4,6 +4,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
 const fs = require("fs");
+const multer = require("multer");
+const path = require("path");
 //var ObjectID = require('mongodb').ObjectID;
 
 
@@ -57,6 +59,31 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(logger("dev"));
+app.use('/uploads', express.static('Images'));
+app.use(express.static(path.join(__dirname, 'public')));
+
+const storage = multer.diskStorage({
+  destination: "./public/Images",
+  filename: function(req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/jpg') {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+}
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 1024*1024*5
+  },
+  fileFilter: fileFilter
+}).single("images");
 
 /*
 ██████   █████  ████████  █████      ███████ ██   ██ ██████   ██████  ██████  ████████  █████  ████████ ██  ██████  ███    ██
@@ -371,7 +398,7 @@ router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
 
 router.post("/getImage", (req, res) => {
   const { file } = req.body;
-  var filepath = "../public/Images/" + file;
+  var filepath = "./public/Images/" + file;
   console.log("received request for image:", filepath);
   fs.readFile(filepath, (err, data) => {
     if (err) {
@@ -778,6 +805,25 @@ router.post("/saveGazeData", (req, res) => {
   var gazeDataObj = JSON.parse(gazeData);
 
   data_exportation.save_gaze_data(participantId, task, gazeDataObj);
+});
+
+/*
+██ ███    ███  █████   ██████  ███████     ██    ██ ██████  ██       ██████   █████  ██████  ██ ███    ██  ██████
+██ ████  ████ ██   ██ ██       ██          ██    ██ ██   ██ ██      ██    ██ ██   ██ ██   ██ ██ ████   ██ ██
+██ ██ ████ ██ ███████ ██   ███ █████       ██    ██ ██████  ██      ██    ██ ███████ ██   ██ ██ ██ ██  ██ ██   ███
+██ ██  ██  ██ ██   ██ ██    ██ ██          ██    ██ ██      ██      ██    ██ ██   ██ ██   ██ ██ ██  ██ ██ ██    ██
+██ ██      ██ ██   ██  ██████  ███████      ██████  ██      ███████  ██████  ██   ██ ██████  ██ ██   ████  ██████
+*/
+
+router.post("/uploadImage", (req, res) => {
+  upload(req, res, (err) => {
+    console.log("Request ---", req.body);
+    console.log("Request file ---", req.file);
+    if (err) {
+      return res.json({ success: false });
+    }
+    return res.json({ success: true });
+  });
 });
 
 // append /api for our http requests

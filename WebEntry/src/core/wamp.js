@@ -122,7 +122,7 @@ module.exports = {
 
   broadcastEvents(info) {
     try {
-      if(glob_session) {
+      if(glob_session && info) {
         glob_session.publish(SynquesticonTopic, [info]);
       }
     }

@@ -217,6 +217,7 @@ class AOIEditorComponent extends Component {
                                                aois={this.props.task.aois}
                                                mode={this.state.mode}
                                                onSelectAOI={this.onSelectAOI.bind(this)}
+                                               preview={this.props.preview}
                                                />
     }
     else {
@@ -226,7 +227,9 @@ class AOIEditorComponent extends Component {
                                                tempAOI={this.tempAOI}
                                                onMouseDown={this.onMouseDown.bind(this)}
                                                onMouseUp={this.onMouseUp.bind(this)}
-                                               onMouseMove={this.onMouseMove.bind(this)}/>
+                                               onMouseMove={this.onMouseMove.bind(this)}
+                                               preview={this.props.preview}
+                                               />
     }
 
     return (

@@ -662,12 +662,26 @@ class db_helper {
 */
 
     saveGazeData(participantId, task, gazeData) {
-      console.log("save gaze", gazeData);
       axios.post("/api/saveGazeData", {
         participantId: participantId,
         task: task,
         gazeData: JSON.stringify(gazeData)
       });
     }
+
+    /*
+    ██ ███    ███  █████   ██████  ███████     ██    ██ ██████  ██       ██████   █████  ██████  ██ ███    ██  ██████
+    ██ ████  ████ ██   ██ ██       ██          ██    ██ ██   ██ ██      ██    ██ ██   ██ ██   ██ ██ ████   ██ ██
+    ██ ██ ████ ██ ███████ ██   ███ █████       ██    ██ ██████  ██      ██    ██ ███████ ██   ██ ██ ██ ██  ██ ██   ███
+    ██ ██  ██  ██ ██   ██ ██    ██ ██          ██    ██ ██      ██      ██    ██ ██   ██ ██   ██ ██ ██  ██ ██ ██    ██
+    ██ ██      ██ ██   ██  ██████  ███████      ██████  ██      ███████  ██████  ██   ██ ██████  ██ ██   ████  ██████
+    */
+
+    uploadImage(fileName, image, config, callback) {
+      axios.post("/api/uploadImage", image, config).then(response => {
+        console.log("upload image: ", response);
+      });
+    }
+
 }
 export default new db_helper();
