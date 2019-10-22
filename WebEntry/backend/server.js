@@ -95,22 +95,11 @@ const upload = multer({
 router.post("/exportToCSV", (req, res) => {
   const { data } = req.body;
   var obj = JSON.parse(data);
-  data_exportation.save_to_csv(obj);
-  return res.json({success: true});
+  data_exportation.save_to_csv(obj).then(output => {
+    var gaze_data = data_exportation.get_gaze_data(obj._id);
+    return res.json({success: true, file_name: output[0], csv_string: output[1], gaze_data: gaze_data});
+  })
 });
-
-router.post("/exportAllToCSVs", (req, res) => {
-  Participants.find((err, data) => {
-    if (err) {
-      return res.json({ success: false, error: err });
-    }
-    data.map((p, index) => {
-      data_exportation.save_to_csv(p);
-    });
-    return res.json({ success: true});
-  });
-
-})
 /*
 ████████  █████  ███████ ██   ██ ███████
    ██    ██   ██ ██      ██  ██  ██
