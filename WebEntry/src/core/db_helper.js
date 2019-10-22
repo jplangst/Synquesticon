@@ -21,7 +21,6 @@ class db_helper {
    getAllTasksFromDb(callback){
     fetch("/api/getAllTasks")
       .then((response) => {
-        console.log(response);
         if(response.ok) {
           return response.json();
         }
@@ -315,7 +314,6 @@ class db_helper {
    */
    queryTasksFromDb(queryTasks, queryString,callback){
     var queryCollection = queryTasks ? 'Tasks' : 'TaskSets';
-    console.log("query tasksets");
     axios.post("/api/getAllTasksContaining", {
       queryCollection: queryCollection,
       queryString: queryString,

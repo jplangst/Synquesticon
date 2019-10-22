@@ -139,31 +139,17 @@ class DataExportationComponent extends Component {
     //  Delete All
     //</Button>
 
-    return(
-      <div style={{height:'100%'}}>
-        <Button style={{height:'100%'}} onClick={this.onDataExportationButtonClicked.bind(this)} >
-          <ExportationIcon style={{display:'flex', position: 'absolute', height: '75%', width: 'auto', maxWidth: '75%', flexGrow: 1}}/>
-        </Button>
-        <Dialog open={this.state.open} onClose={this.handleClose.bind(this)}>
-          <DialogTitle>Choose an experiment to export</DialogTitle>
-          <List>
-            {this.state.participants.map((p, index) => {
-              if(this.pickedParticipants.includes(p)){
-                return(<ListItem selected button onClick={() => {
-                    if (this.pickedParticipants.includes(p)) {
-                      this.pickedParticipants.splice(this.pickedParticipants.indexOf(p),1);
-                    }
-                    else {
-                      this.pickedParticipants.push(p);
-                    }
-                    this.forceUpdate();
+    //<div style={{height:'100%'}}>
 
-                  }} key={index} >
-                  <Typography color="textSecondary">{this.getParticipantName(p)}</Typography>
-                </ListItem>);
-              }else{
-                return(
-                  <ListItem button onClick={() => {
+    return(
+        <Button style={this.props.exportButtonStyle} onClick={this.onDataExportationButtonClicked.bind(this)} >
+          <ExportationIcon fontSize="large" />
+          <Dialog open={this.state.open} onClose={this.handleClose.bind(this)}>
+            <DialogTitle>Choose an experiment to export</DialogTitle>
+            <List>
+              {this.state.participants.map((p, index) => {
+                if(this.pickedParticipants.includes(p)){
+                  return(<ListItem selected button onClick={() => {
                       if (this.pickedParticipants.includes(p)) {
                         this.pickedParticipants.splice(this.pickedParticipants.indexOf(p),1);
                       }
@@ -173,30 +159,44 @@ class DataExportationComponent extends Component {
                       this.forceUpdate();
 
                     }} key={index} >
-                    <Typography color="textPrimary">{this.getParticipantName(p)}</Typography>
-                  </ListItem>
-                );
-              }
-            })}
-          </List>
-          <DialogActions>
-            <Button onClick={this.handleClose.bind(this)} variant="outlined">
-              Cancel 
-            </Button>
-            <Button onClick={this.handleExport.bind(this)} variant="outlined">
-              Export Selected
-            </Button>
-            <Button onClick={this.handleExportAll.bind(this)} variant="outlined">
-              Export All
-            </Button>
-            <div style={{width:50}} />
-            <Button onClick={this.handleDeleteSelected.bind(this)} variant="outlined">
-              Delete Selected
-            </Button>
-            {deleteAllButton}
-          </DialogActions>
-        </Dialog>
-      </div>
+                    <Typography color="textSecondary">{this.getParticipantName(p)}</Typography>
+                  </ListItem>);
+                }else{
+                  return(
+                    <ListItem button onClick={() => {
+                        if (this.pickedParticipants.includes(p)) {
+                          this.pickedParticipants.splice(this.pickedParticipants.indexOf(p),1);
+                        }
+                        else {
+                          this.pickedParticipants.push(p);
+                        }
+                        this.forceUpdate();
+
+                      }} key={index} >
+                      <Typography color="textPrimary">{this.getParticipantName(p)}</Typography>
+                    </ListItem>
+                  );
+                }
+              })}
+            </List>
+            <DialogActions>
+              <Button onClick={this.handleClose.bind(this)} variant="outlined">
+                Cancel
+              </Button>
+              <Button onClick={this.handleExport.bind(this)} variant="outlined">
+                Export Selected
+              </Button>
+              <Button onClick={this.handleExportAll.bind(this)} variant="outlined">
+                Export All
+              </Button>
+              <div style={{width:50}} />
+              <Button onClick={this.handleDeleteSelected.bind(this)} variant="outlined">
+                Delete Selected
+              </Button>
+              {deleteAllButton}
+            </DialogActions>
+          </Dialog>
+        </Button>
     );
   }
 }

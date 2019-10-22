@@ -55,7 +55,7 @@ class TaskItemComponent extends Component {
     const { theme, connectDragSource} = this.props; //connectDragPreview, isDragging
 
 
-    let bgColor = this.props.highlight ? theme.palette.secondary.main + "22" : null;
+    let bgColor = this.props.highlight ? theme.palette.secondary.main + "66" : null;
     let leftBG = theme.palette.type === "light" ? theme.palette.primary.dark : theme.palette.primary.main;
     //const opacityValue = isDragging ? 0.8 : 1;
     var content =
