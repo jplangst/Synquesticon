@@ -398,7 +398,7 @@ router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
 
 router.post("/getImage", (req, res) => {
   const { file } = req.body;
-  var filepath = "../public/Images/" + file;
+  var filepath = "./public/Images/" + file;
   console.log("received request for image:", filepath);
   fs.readFile(filepath, (err, data) => {
     if (err) {

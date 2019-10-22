@@ -19,7 +19,7 @@ class SelectImageComponent extends Component {
       selectedImage: this.props.task ? this.props.task.image : "",
     };
 
-    this.image = null;
+    this.preview = false;
 
     this.handleImageSelectedCallback = this.onImageFileSelected.bind(this);
   }
@@ -27,6 +27,7 @@ class SelectImageComponent extends Component {
   onImageFileSelected(selectedFile){
     this.props.task.image = selectedFile;
     this.props.task.aois = [];
+    this.preview = true;
     this.setState({selectedImage: this.props.task.image});
   }
 
@@ -48,7 +49,7 @@ class SelectImageComponent extends Component {
   render() {
     var previewImage = <Typography color="textPrimary"> "No Image selected" </Typography>;
     if(this.props.task.image && this.props.task.image !== ""){
-      previewImage = <AOIEditorComponent task={this.props.task}/>//<img className="imageContainer" src={"Images/"+this.props.task.image} alt="Task" />;
+      previewImage = <AOIEditorComponent preview={this.preview} task={this.props.task}/>//<img className="imageContainer" src={"Images/"+this.props.task.image} alt="Task" />;
     }
 
     var imageTaskName =
@@ -68,11 +69,11 @@ class SelectImageComponent extends Component {
       <div className="imageInputContainer">
         {imageTaskName}
       </div>
-      <Button variant="outlined" onClick={this.onUploadImages.bind(this)}>Upload</Button>
       {previewImage}
       <div className="fileSelectorContainer">
         <FileSelector handleSelectionCallback={this.handleImageSelectedCallback}/>
-        </div>
+      </div>
+      <Button variant="outlined" onClick={this.onUploadImages.bind(this)}>Upload</Button>
     </div>;
 
     return(
