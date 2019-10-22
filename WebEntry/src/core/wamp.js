@@ -53,7 +53,7 @@ function _startWAMP(config) {
      console.log("connected to router");
 
      function onRETData(args) {
-        let gazeRadius = store.default.getState().gazeCursorRadius;
+        //let gazeRadius = store.default.getState().gazeCursorRadius;
 
         let gazeData = args[1];
         let gazeX = gazeData[12];

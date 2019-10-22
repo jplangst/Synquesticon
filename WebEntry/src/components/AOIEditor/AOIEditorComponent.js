@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 import AOIToolboxComponent from './AOIToolboxComponent';
 import AOIImageViewComponent from './AOIImageViewComponent';
-import AOIComponent from './AOIComponent';
 import AOINameDialog from '../dialogs/AOINameDialog';
 
 import './AOIEditorComponent.css';
@@ -212,8 +211,9 @@ class AOIEditorComponent extends Component {
   }
 
   render() {
+    var imageReview = null;
     if (this.state.mode === "SELECT") {
-      var imageReview = <AOIImageViewComponent image={this.props.task.image}
+      imageReview = <AOIImageViewComponent image={this.props.task.image}
                                                aois={this.props.task.aois}
                                                mode={this.state.mode}
                                                onSelectAOI={this.onSelectAOI.bind(this)}
@@ -221,7 +221,7 @@ class AOIEditorComponent extends Component {
                                                />
     }
     else {
-      var imageReview = <AOIImageViewComponent image={this.props.task.image}
+      imageReview = <AOIImageViewComponent image={this.props.task.image}
                                                aois={this.props.task.aois}
                                                mode={this.state.mode}
                                                tempAOI={this.tempAOI}

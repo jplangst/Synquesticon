@@ -21,7 +21,7 @@ class SingleChoiceComponent extends Component {
   }
 
   checkAnswer() {
-    if (this.props.task.correctResponses === undefined || this.props.task.correctResponses.length == 0) {
+    if (this.props.task.correctResponses === undefined || this.props.task.correctResponses.length === 0) {
       return "notApplicable";
     }
 

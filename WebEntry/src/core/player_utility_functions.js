@@ -45,7 +45,7 @@ export function pointIsInPoly(p, polygon) {
     //copyright: https://wrf.ecse.rpi.edu/Research/Short_Notes/pnpoly.html
     var i = 0, j = polygon.length - 1;
     for (i, j; i < polygon.length; j = i++) {
-        if ( (polygon[i][1] > p[1]) != (polygon[j][1] > p[1]) &&
+        if ( (polygon[i][1] > p[1]) !== (polygon[j][1] > p[1]) &&
                 p[0] < (polygon[j][0] - polygon[i][0]) * (p[1] - polygon[i][1]) / (polygon[j][1] - polygon[i][1]) + polygon[i][0] ) {
             isInside = !isInside;
         }

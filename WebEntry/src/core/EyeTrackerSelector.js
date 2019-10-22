@@ -2,14 +2,10 @@ import React, { Component } from 'react';
 
 import { withTheme } from '@material-ui/styles';
 
-import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-
-import Input from '@material-ui/core/Input';
-import FilledInput from '@material-ui/core/FilledInput';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 
 import { Typography } from '@material-ui/core';

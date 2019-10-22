@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 
 import Button from '@material-ui/core/Button';
-import EditIcon from '@material-ui/icons/Edit';
 import PauseIcon from '@material-ui/icons/PauseCircleOutline';
 import PlayIcon from '@material-ui/icons/PlayCircleOutline';
-
-import DataExportationComponent from '../components/Data/DataExportationComponent';
 
 import ObserverMode from './ObserverMode';
 import PlayerMode from './PlayerMode';
@@ -15,7 +12,6 @@ import wamp from '../core/wamp';
 import './IntroductionScreen.css';
 import './ObserverMode.css';
 
-import ThemeProvider from '@material-ui/styles/ThemeProvider';
 import { withTheme } from '@material-ui/styles';
 import { Typography } from '@material-ui/core';
 
@@ -66,15 +62,6 @@ class IntroductionScreen extends Component {
 
     <div className="introductionScreenContainer">
       <div style={{backgroundColor:leftBG}} className="IntroViewer">
-        {/*
-        <div style={{borderColor:'grey'}} className="IntroViewerTitle">
-          <div className="IntroViewerTitleText"><Typography color="textPrimary" variant="h4">Studies</Typography></div>
-          <Button className="IntroDataExportBtnContainer" onClick={(e) => this.gotoPage("EditorMode")}
-            style={{borderLeftStyle:'solid', borderWidth:'thin', borderRadius: 10, borderColor:'grey'}}>
-            <EditIcon />
-          </Button>
-        </div>
-        */}
         <PlayerMode gotoPage={this.gotoPage.bind(this)}/>
       </div>
       <div style={{paddingLeft:5, backgroundColor:rightBG}} className="IntroContentWrapper">

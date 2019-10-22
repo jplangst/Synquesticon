@@ -5,10 +5,6 @@ import AOIComponent from './AOIComponent';
 import './AOIEditorComponent.css';
 
 class AOIImageViewComponent extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   onSelectAOI(aoi) {
     if(this.props.onSelectAOI !== undefined) {
       this.props.onSelectAOI(aoi);

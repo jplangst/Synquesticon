@@ -310,14 +310,14 @@ class EditSetComponent extends Component {
     });
 
     var newList = [...this.state.taskList];
-    for( var i = 0; i < newList.length; i++){
+    for( let i = 0; i < newList.length; i++){
       if ( newList[i].id === taskId) {
        newList.splice(i, 1);
        break;
       }
     }
     var newObjectList = [...this.state.taskListObjects];
-    for( var i = 0; i < newObjectList.length; i++){
+    for( let i = 0; i < newObjectList.length; i++){
       if ( newObjectList[i]._id === taskId) {
        newObjectList.splice(i, 1);
        break;

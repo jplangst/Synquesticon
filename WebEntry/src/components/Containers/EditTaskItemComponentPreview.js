@@ -6,11 +6,6 @@ import { withTheme } from '@material-ui/styles';
 import './EditTaskItemComponentPreview.css';
 
 class EditTaskItemComponentPreview extends Component {
-
-  constructor(props){
-    super(props);
-  }
-
   render() {
     let theme = this.props.theme;
     var content =

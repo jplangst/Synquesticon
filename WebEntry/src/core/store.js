@@ -2,15 +2,11 @@ import { createStore } from 'redux';
 import wampStore from './wampStore';
 
 import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
-import lightPrimary from '@material-ui/core/colors/grey';
-import lightPrimary2 from '@material-ui/core/colors/blueGrey';
-import lightSecondary from '@material-ui/core/colors/orange';
 import darkSecondary from '@material-ui/core/colors/amber';
 
 /*
 * The store is responsible for storing data that needs to be shared between different parts of the application.
 */
-
 var savedThemeType = JSON.parse(window.localStorage.getItem('theme'));
 
 if(savedThemeType === null || savedThemeType === undefined){
@@ -139,20 +135,20 @@ const store = createStore ((state = initialState, action) => {
       return state;
     }
     case 'SET_SELECTED_EYETRACKER': {
-      return { ... state, selectedEyeTracker: action.selectedEyeTracker};
+      return { ...state, selectedEyeTracker:action.selectedEyeTracker};
     }
     case 'SET_PARTICIPANT_ID': {
-      return { ... state, experimentInfo: {... state.experimentInfo, participantId: action.participantId}};
+      return { ...state, experimentInfo:{...state.experimentInfo, participantId: action.participantId}};
     }
     case 'SET_SHOULD_SAVE': {
-      return { ... state, experimentInfo: {... state.experimentInfo, shouldSave: action.shouldSave}};
+      return { ...state, experimentInfo:{...state.experimentInfo, shouldSave: action.shouldSave}};
     }
     case 'ADD_PARTICIPANT': {
       state.participants[action.participant] = action.tracker;
       return state;
     }
     case 'REMOVE_PARTICIPANT': {
-      if (state.participants[action.participant] != undefined) {
+      if (state.participants[action.participant] !== undefined) {
         delete state.participants[action.participant];
       }
       return state;

@@ -6,12 +6,9 @@ import PlayableSetListComponent from '../components/TaskList/PlayableSetListComp
 
 import ShareExperimentDialog from '../components/dialogs/ShareExperimentDialog';
 
-import { Typography } from '@material-ui/core';
-
 import store from '../core/store';
 
 import db_helper from '../core/db_helper.js';
-import * as dbObjects from '../core/db_objects';
 
 import './PlayerMode.css';
 
@@ -43,7 +40,7 @@ class PlayerMode extends Component {
   appendEyeTrackerInfo(url){
     let storeState = store.getState();
 
-    if (storeState.selectedEyeTracker != "" && storeState.selectedEyeTracker != undefined) {
+    if (storeState.selectedEyeTracker !== "" && storeState.selectedEyeTracker !== undefined) {
       url += '&tracker=' + storeState.selectedEyeTracker;
     }
     return url;
@@ -101,9 +98,6 @@ class PlayerMode extends Component {
   }
 
   render() {
-    let theme = this.props.theme;
-    let textColor = theme.palette.type === "light" ? "textSecondary" : "textPrimary";
-
     var url = window.location.href + 'study?id=';
     if (this.selectedTaskSet) {
        url += this.selectedTaskSet._id;

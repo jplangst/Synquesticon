@@ -9,10 +9,6 @@ import CancelIcon from '@material-ui/icons/ClearOutlined';
 import './AOIEditorComponent.css';
 
 class PolygonToolBox extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div>

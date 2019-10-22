@@ -96,6 +96,9 @@ class MultiItemTask extends Component {
         else if(item.taskType === "Image") {
             return <ImageViewComponent className="itemContainer" key={key} task={item} mapID={mapIndex}/>;
         }
+        else{
+          return null;
+        }
       }
       else{ //If it is a set we recursively call this function to render the set children
         return this.getDisplayedContent(item.data, mapIndex*1000);

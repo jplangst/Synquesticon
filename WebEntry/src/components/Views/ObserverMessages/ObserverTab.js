@@ -9,7 +9,6 @@ import PlayIcon from '@material-ui/icons/PlayCircleOutline';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { Typography } from '@material-ui/core';
 import { withTheme } from '@material-ui/styles';
-import ButtonBase from '@material-ui/core/ButtonBase';
 
 import wamp from '../../../core/wamp';
 
