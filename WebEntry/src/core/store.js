@@ -114,6 +114,7 @@ let theme = prepareMUITheme(savedThemeType);
 const initialState = {
   participants: {},
   remoteEyeTrackers: [],
+  selectedEyeTracker: "",
   gazeCursorRadius: 0,
   gazeData: {},
   aois: [],
@@ -136,6 +137,9 @@ const store = createStore ((state = initialState, action) => {
         wampStore.emitNewRemoteTrackerListener();
       }
       return state;
+    }
+    case 'SET_SELECTED_EYETRACKER': {
+      return { ... state, selectedEyeTracker: action.selectedEyeTracker};
     }
     case 'SET_PARTICIPANT_ID': {
       return { ... state, experimentInfo: {... state.experimentInfo, participantId: action.participantId}};

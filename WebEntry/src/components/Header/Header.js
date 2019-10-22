@@ -80,7 +80,6 @@ class Header extends Component {
             <Toolbar variant="dense" style={{padding: 0, padding: 0, display:'flex', flexDirection:'row', position:'relative', width:'100%', height:'100%'}}>
                {this.getModeButtons()}
 
-
                <div className="AppName"><Typography color='textPrimary' variant="h3">Synquesticon</Typography></div>
 
                <DataExportationComponent exportButtonStyle={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:100, height:"100%"}}/>

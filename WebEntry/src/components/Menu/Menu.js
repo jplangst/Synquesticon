@@ -6,6 +6,7 @@ import './Menu.css';
 import DeviceIDDialog from '../dialogs/DeviceIDDialog';
 import CrossbarDialog from '../dialogs/CrossbarDialog';
 import SpeechDialog from '../dialogs/SpeechDialog';
+import EyeTrackerSelector from '../../core/EyeTrackerSelector';
 
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
@@ -137,12 +138,13 @@ class Menu extends Component {
           null;
 
     return(
-      <div >
+      <span >
         <Drawer anchor="right" open={this.props.showMenu} onClose={this.props.closeSettingsMenu}>
           <div
             tabIndex={0}
             role="button"
             onClick={this.props.openSettingsMenu}
+            style={{minWidth: 200}}
           >
             <List>
               <ListItem button key="Device ID" onClick={this.onOpenDeviceIDSettings.bind(this)}>
@@ -170,13 +172,14 @@ class Menu extends Component {
               <ListItem button key="Fullscreen" onClick={this.onFullscreen.bind(this)}>
                 <ListItemText primary="Fullscreen" />
               </ListItem>
+              <EyeTrackerSelector />
               </List>
           </div>
         </Drawer>
         <DeviceIDDialog openDeviceIDSettings={this.state.openDeviceIDSettings} closeDeviceIDSettings={this.onCloseDeviceIDSettings.bind(this)} myStorage={myStorage} />
         <CrossbarDialog openCrossbarSettings={this.state.openCrossbarSettings} closeCrossbarSettings={this.onCloseCrossbarSettings.bind(this)} myStorage={myStorage}/>
         <SpeechDialog openSpeechSettings={this.state.openSpeechSettings} closeSpeechSettings={this.onCloseSpeechSettings.bind(this)} myStorage={myStorage}/>
-      </div>
+      </span>
     );
   }
 }
