@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
 import FileSelector from '../../../core/fileSelector';
 import { Typography } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 //import Button from '@material-ui/core/Button';
 
 import AOIEditorComponent from '../../AOIEditor/AOIEditorComponent';
+
+import db_helper from '../../../core/db_helper';
 
 import './SelectImageComponent.css';
 
@@ -16,13 +19,30 @@ class SelectImageComponent extends Component {
       selectedImage: this.props.task ? this.props.task.image : "",
     };
 
+    this.image = null;
+
     this.handleImageSelectedCallback = this.onImageFileSelected.bind(this);
   }
 
   onImageFileSelected(selectedFile){
-    this.props.task.image = selectedFile.name;
+    this.props.task.image = selectedFile;
     this.props.task.aois = [];
     this.setState({selectedImage: this.props.task.image});
+  }
+
+  onUploadImages() {
+    console.log(this.props.task.image);
+    if (this.props.task.image !== undefined) {
+      const formData = new FormData();
+      formData.append('images',this.props.task.image);
+
+      const config = {
+          headers: {
+              'content-type': 'multipart/form-data'
+          }
+      };
+      db_helper.uploadImage(this.props.task.image, formData, config, null);
+    }
   }
 
   render() {
@@ -33,7 +53,7 @@ class SelectImageComponent extends Component {
 
     var imageTaskName =
     <TextField
-        required      
+        required
         padding="dense"
         id="imageName"
         defaultValue={this.props.task.question}
@@ -48,6 +68,7 @@ class SelectImageComponent extends Component {
       <div className="imageInputContainer">
         {imageTaskName}
       </div>
+      <Button variant="outlined" onClick={this.onUploadImages.bind(this)}>Upload</Button>
       {previewImage}
       <div className="fileSelectorContainer">
         <FileSelector handleSelectionCallback={this.handleImageSelectedCallback}/>
