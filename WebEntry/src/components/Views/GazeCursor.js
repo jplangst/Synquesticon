@@ -28,7 +28,7 @@ class GazeCursor extends React.Component {
   }
 
   componentDidMount() {
-    this.timer = setInterval(this.handleGazeLocUpdate, 4.5); //Update the gaze cursor location every 2ms
+    this.timer = setInterval(this.handleGazeLocUpdate, 1); //Update the gaze cursor location every 2ms
   }
 
   componentWillUnmount(){
