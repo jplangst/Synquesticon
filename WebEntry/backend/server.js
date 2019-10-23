@@ -29,6 +29,8 @@ const API_PORT = 3001;
 const app = express();
 const router = express.Router();
 
+const IMAGE_FOLDER = "Images";
+
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/webEntryDb";
 
@@ -59,13 +61,13 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(logger("dev"));
-app.use('/uploads', express.static('Images'));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(IMAGE_FOLDER));
+app.use(express.static(path.join(__dirname, '../public')));
 
 const storage = multer.diskStorage({
-  destination: "./public/Images",
+  destination: "../public/" + IMAGE_FOLDER,
   filename: function(req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
+    cb(null, file.originalname);
   }
 });
 
@@ -387,7 +389,7 @@ router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
 
 router.post("/getImage", (req, res) => {
   const { file } = req.body;
-  var filepath = "./public/Images/" + file;
+  var filepath = "./public/" + IMAGE_FOLDER + "/" + file;
   console.log("received request for image:", filepath);
   fs.readFile(filepath, (err, data) => {
     if (err) {
@@ -812,6 +814,15 @@ router.post("/uploadImage", (req, res) => {
       return res.json({ success: false });
     }
     return res.json({ success: true });
+  });
+});
+
+router.get("/getAllImages", (req, res) => {
+  const fs = require('fs');
+
+  fs.readdir("../public/" + IMAGE_FOLDER, (err, files) => {
+    console.log(files);
+    return res.json({ success: true , images: files})
   });
 });
 

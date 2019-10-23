@@ -677,10 +677,22 @@ class db_helper {
     ██ ██      ██ ██   ██  ██████  ███████      ██████  ██      ███████  ██████  ██   ██ ██████  ██ ██   ████  ██████
     */
 
-    uploadImage(fileName, image, config, callback) {
-      axios.post("/api/uploadImage", image, config).then(response => {
+    uploadImage(fileName, image, config, name, callback) {
+      axios.post("/api/uploadImage", image, name, config).then(response => {
         console.log("upload image: ", response);
       });
+    }
+
+    getAllImages(callback) {
+      fetch("/api/getAllImages")
+       .then((response) => {
+          if(response.ok) {
+            return response.json();
+          }
+        })
+        .then(res => {
+          callback(res.images);
+        }).catch((err) => {})
     }
 
     /*

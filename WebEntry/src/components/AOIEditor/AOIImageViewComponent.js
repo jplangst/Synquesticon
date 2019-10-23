@@ -13,7 +13,12 @@ class AOIImageViewComponent extends Component {
 
   render() {
     var tempAOI = this.props.mode !== "SELECT" ? <AOIComponent aoi={this.props.tempAOI}/> : null;
-    var url = URL.createObjectURL(this.props.image);
+    var url = "/Images/" + this.props.imageName;
+    if (this.props.image) {
+      url = URL.createObjectURL(this.props.image);
+    }
+
+
     return (
       <div className="imagePreviewContainer"
         onMouseDown={this.props.onMouseDown}
