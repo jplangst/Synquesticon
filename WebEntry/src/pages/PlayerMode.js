@@ -39,9 +39,9 @@ class PlayerMode extends Component {
 
   appendEyeTrackerInfo(url){
     let storeState = store.getState();
-
+    console.log(storeState);
     if (storeState.selectedEyeTracker !== "" && storeState.selectedEyeTracker !== undefined) {
-      url += '&tracker=' + storeState.selectedEyeTracker;
+      url = url + '&tracker=' + storeState.selectedEyeTracker;
     }
     return url;
   }
@@ -79,7 +79,8 @@ class PlayerMode extends Component {
     //   })
     // }); */
     var url = '/study?id=' + this.selectedTaskSet._id;
-    this.appendEyeTrackerInfo(url);
+    console.log("HELLO I'm FROM SPACE");
+    url = this.appendEyeTrackerInfo(url);
     this.props.gotoPage(url);
   }
 
@@ -101,7 +102,7 @@ class PlayerMode extends Component {
     var url = window.location.href + 'study?id=';
     if (this.selectedTaskSet) {
        url += this.selectedTaskSet._id;
-       this.appendEyeTrackerInfo(url);
+       url = this.appendEyeTrackerInfo(url);
     }
 
     return (

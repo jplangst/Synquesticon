@@ -46,6 +46,7 @@ class EyeTrackerSelector extends Component {
       type: 'SET_SELECTED_EYETRACKER',
       selectedEyeTracker: e.target.value
     };
+    console.log(setETAction);
     store.dispatch(setETAction);
 
     this.setState({
