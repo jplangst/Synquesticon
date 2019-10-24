@@ -8,8 +8,6 @@ import Button from '@material-ui/core/Button';
 import AOIEditorComponent from '../../AOIEditor/AOIEditorComponent';
 import BrowseImagesDialog from '../../dialogs/BrowseImagesDialog';
 
-import db_helper from '../../../core/db_helper';
-
 import './SelectImageComponent.css';
 
 class SelectImageComponent extends Component {
@@ -32,7 +30,18 @@ class SelectImageComponent extends Component {
     this.image = selectedFile;
     this.props.task.aois = [];
     this.preview = true;
+    this.props.selectImageCallback(true);
     this.setState({selectedImage: this.props.task.image});
+  }
+
+  onPickImageBrowseImages(img) {
+    this.props.task.image = img;
+    this.image = null;
+    this.props.task.aois = [];
+    this.preview = true;
+    this.props.selectImageCallback(false);
+    this.setState({selectedImage: this.props.task.image});
+    this.onCloseBrowseImages();
   }
 
   onBrowseImages() {
@@ -45,30 +54,6 @@ class SelectImageComponent extends Component {
     this.setState({
       openBrowseImage: false
     });
-  }
-
-  onUploadImages() {
-    if (this.image) {
-      const formData = new FormData();
-      formData.append('images',this.image);
-      //formData.set('filename', this.props.task.image);
-
-      const config = {
-          headers: {
-              'content-type': 'multipart/form-data'
-          }
-      };
-      db_helper.uploadImage(this.props.task.image, formData, config, null);
-    }
-  }
-
-  onPickImageBrowseImages(img) {
-    this.props.task.image = img;
-    this.image = null;
-    this.props.task.aois = [];
-    this.preview = true;
-    this.setState({selectedImage: this.props.task.image});
-    this.onCloseBrowseImages();
   }
 
   render() {
@@ -94,17 +79,14 @@ class SelectImageComponent extends Component {
       <div className="imageInputContainer">
         {imageTaskName}
       </div>
-      <div>
-        <Button variant="outlined" onClick={this.onBrowseImages.bind(this)}>Browse</Button>
-        <Button variant="outlined" onClick={this.onUploadImages.bind(this)}>Upload</Button>
-      </div>
+      <Button variant="outlined" onClick={this.onBrowseImages.bind(this)}>Browse</Button>
 
       {previewImage}
 
       <div className="fileSelectorContainer">
         <FileSelector handleSelectionCallback={this.handleImageSelectedCallback}/>
       </div>
-      
+
       <BrowseImagesDialog openDialog={this.state.openBrowseImage}
                           closeDialog={this.onCloseBrowseImages.bind(this)}
                           onPickImage={this.onPickImageBrowseImages.bind(this)}/>

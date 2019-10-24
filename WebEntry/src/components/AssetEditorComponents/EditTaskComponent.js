@@ -44,6 +44,8 @@ class EditTaskComponent extends Component {
 
     this.responseHandler = this.onResponsesChanged;
     this.handleQuestionCallback = this.onDBCallback.bind(this);
+
+    this.shouldUpload = false;
   }
 
   handleChange = event => {
@@ -63,6 +65,10 @@ class EditTaskComponent extends Component {
     }
     else{
       db_helper.addTaskToDb(this.task, this.handleQuestionCallback);
+    }
+
+    if (this.task.taskType === "Image" && this.shouldUpload) {
+      this.uploadImages();
     }
   }
 
@@ -90,6 +96,10 @@ class EditTaskComponent extends Component {
     }
   }
 
+  onSelectImage(should) {
+    this.shouldUpload = should;
+  }
+
   removeTask() {
     //TODO Dialog prompt "Are you sure you want to delete "Task", it will also be removed from the data base...
     db_helper.deleteTaskFromDb(this.state.task._id, this.handleQuestionCallback);
@@ -104,6 +114,21 @@ class EditTaskComponent extends Component {
     this.setState({
       taskType: singleChoice ? "Single Choice" : "Multiple Choice",
     });
+  }
+
+  uploadImages() {
+    if (this.task.image !== undefined) {
+      const formData = new FormData();
+      formData.append('images',this.task.image);
+      //formData.set('filename', this.props.task.image);
+
+      const config = {
+          headers: {
+              'content-type': 'multipart/form-data'
+          }
+      };
+      db_helper.uploadImage(this.task.image, formData, config, null);
+    }
   }
 
   /*
@@ -127,7 +152,7 @@ class EditTaskComponent extends Component {
                                     <InstructionComponent task={this.task}/> : null;
 
     var imageTypeContent = (this.state.taskType === "Image" || this.state.taskType === "Complex") ?
-                                    <SelectImageComponent task={this.task} /> : null;
+                                    <SelectImageComponent task={this.task} selectImageCallback={this.onSelectImage.bind(this)}/> : null;
 
     var deleteTaskBtn = this.props.isEditing ?
       <Button onClick={this.removeTask.bind(this)} variant="outlined">Delete Task </Button> : null;

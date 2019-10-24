@@ -74,10 +74,15 @@ class AOIEditorComponent extends Component {
 
   onCloseAOINameDialog (name) {
     if (name !== "") {
-      this.tempAOI.name = name;
-      this.tempAOI.isSelected = false;
-      var newAOI = JSON.parse(JSON.stringify(this.tempAOI));
-      this.props.task.aois.push(newAOI);
+      try {
+        this.tempAOI.name = name;
+        this.tempAOI.isSelected = false;
+        var newAOI = JSON.parse(JSON.stringify(this.tempAOI));
+        this.props.task.aois.push(newAOI);
+      }
+      catch (exp) {
+        alert("something went wrong, please try again");
+      }
     }
     this.tempAOI = new AOI();
     //this.imageRect = null;

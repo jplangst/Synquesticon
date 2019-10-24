@@ -161,9 +161,11 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
             db_helper.addNewGlobalVariableToParticipantDB(participantId, JSON.stringify(globalVariableObj));
           }
 
-          wamp.broadcastEvents(stringifyWAMPMessage(null, this.currentLineOfData,
-                                                    (this.currentLineOfData.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED",
-                                                    this.progressCount));
+          if (!this.currentTask.question.toLowerCase().includes("record data") && this.progressCount > 1) {
+            wamp.broadcastEvents(stringifyWAMPMessage(null, this.currentLineOfData,
+                                                      (this.currentLineOfData.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED",
+                                                      this.progressCount));
+          }
         }
 
       }
