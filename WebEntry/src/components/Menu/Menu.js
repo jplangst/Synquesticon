@@ -128,7 +128,7 @@ class Menu extends Component {
   render() {
     var deviceName = myStorage.getItem('deviceID');
     if (!deviceName || deviceName === "") {
-      deviceName="Anonymous";
+      deviceName="Device ID";
     }
 
     let speechSettings = this.props.showSpeechSettings ?

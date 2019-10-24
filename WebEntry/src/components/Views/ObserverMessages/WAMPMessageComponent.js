@@ -65,7 +65,6 @@ class WAMPMessageComponent extends React.Component {
         <div className="messages">
           {this.props.messages.map((item, index) => {
             return <ObserverMessage message={item} key={index} commentCallback={this.onCommentPressed.bind(this)} />
-            //return (<div>{item}<br /></div>);
           })}
         </div>
 
