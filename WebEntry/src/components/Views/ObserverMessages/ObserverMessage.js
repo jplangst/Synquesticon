@@ -27,7 +27,7 @@ class ObserverMessage extends React.Component {
                     timestamp]
         */
 
-        displayText = <Typography variant="body1" color="textPrimary">
+        displayText = <Typography display="inline" variant="body1" color="textPrimary">
                         <b>New experiment - Task set: </b>
                         <i>{args.mainTaskSetId} </i>
                         started at {playerUtils.getFormattedTime(args.startTimestamp)}
@@ -35,7 +35,7 @@ class ObserverMessage extends React.Component {
         this.showCommentButton = false;
         break;
       case "START":
-        displayText = <Typography variant="body1" color="textPrimary">
+        displayText = <Typography display="inline" variant="body1" color="textPrimary">
                           <b>{args.task.taskType} </b>
                           <i>{args.lineOfData.taskContent} </i>
                           {(args.task.globalVariable ? " (global variable) " : "") + " - start at: " + playerUtils.getFormattedTime(args.lineOfData.startTimestamp)}
@@ -58,7 +58,7 @@ class ObserverMessage extends React.Component {
 
         var responses = args.lineOfData.responses.join(', ');
         var timeToCompletion = args.lineOfData.timeToCompletion < 0 ? "s" : "s. Time to completion: " + args.lineOfData.timeToCompletion/1000 + "s";
-        displayText = <Typography variant="body1" color="textPrimary">
+        displayText = <Typography display="inline" variant="body1" color="textPrimary">
                         <b>Answered </b>
                         <i>{responses} </i>
                          - {args.lineOfData.correctlyAnswered}. Time to first answer: {args.lineOfData.timeToFirstAnswer/1000}{timeToCompletion}. First answered at {playerUtils.getFormattedTime(args.lineOfData.firstResponseTimestamp)}.
@@ -81,12 +81,12 @@ class ObserverMessage extends React.Component {
                   obj.timeToCompletion
       */
         if (args.lineOfData.timeToCompletion < 0) {
-          displayText = <Typography variant="body1" color="textPrimary">
+          displayText = <Typography display="inline" variant="body1" color="textPrimary">
                           <b>Skipped </b>
                         </Typography>;
         }
         else {
-          displayText = <Typography variant="body1" color="textPrimary">
+          displayText = <Typography display="inline" variant="body1" color="textPrimary">
                           <b>Skipped </b>
                           Time to completion: {args.lineOfData.timeToCompletion/1000} s.
                         </Typography>;
@@ -101,7 +101,7 @@ class ObserverMessage extends React.Component {
                   store.getState().experimentInfo.mainTaskSetId,
                   timestamp
       */
-        displayText = <Typography variant="body1" color="textPrimary">
+        displayText = <Typography display="inline" variant="body1" color="textPrimary">
                         <b>Experiment finished at </b>
                         {playerUtils.getFormattedTime(args.timestamp)}
                       </Typography>;
@@ -109,7 +109,7 @@ class ObserverMessage extends React.Component {
         break;
       case "COMMENT":
         //var commentTime = new Date(args.timestamp);
-        displayText = <Typography variant="body1" color="textPrimary">
+        displayText = <Typography display="inline" variant="body1" color="textPrimary">
                         <b>Comment from {args.observerName}: </b>
                         {args.comment} at {playerUtils.getFormattedTime(args.timestamp)}
                       </Typography>;

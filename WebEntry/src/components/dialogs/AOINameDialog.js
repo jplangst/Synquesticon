@@ -42,7 +42,7 @@ class AOINameDialog extends Component {
           fullWidth={true}
           maxWidth='md'
         >
-          <DialogTitle id="form-dialog-title"><Typography variant="h5" color="textPrimary">Enter AOI's Name</Typography></DialogTitle>
+          <DialogTitle id="form-dialog-title" variant="h5">Enter AOI's Name</DialogTitle>
           <DialogContent>
             <TextField
               required
