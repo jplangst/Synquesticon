@@ -459,7 +459,7 @@ class EditSetComponent extends Component {
         </div>
 
         <div className="setTaskListContainer">
-          <div className="setTaskListTitle"><div className="setTaskListTitleText"><Typography color="textPrimary">Set Tasks</Typography></div></div>
+          <div className="setTaskListTitle"><div className="setTaskListTitleText"><Typography color="textPrimary">Task sequence</Typography></div></div>
           <div className="setTaskListViewer">
             < EditSetListComponent removeCallback={this.removeTaskFromListCallback} taskListObjects={this.state.taskListObjects} reactDND={true}
               removeTaskCallback={this.removeTaskFromListCallback} moveTaskCallback={this.moveTaskCallback} / >
