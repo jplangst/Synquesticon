@@ -17,7 +17,7 @@
 
 .editListItemText{
   padding-left: 10px;
-
+  width: calc(100% - 10px);
 }
 
 .editListItemDragBtnContainer{

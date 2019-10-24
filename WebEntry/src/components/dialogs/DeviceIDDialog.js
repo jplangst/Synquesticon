@@ -76,9 +76,9 @@ class DeviceIDDialog extends Component {
              onClose={this.props.closeDeviceIDSettings}
              aria-labelledby="form-dialog-title"
        >
-          <DialogTitle id="form-dialog-title"><Typography variant="h5" color="textPrimary" >Device's ID</Typography></DialogTitle>
+          <DialogTitle id="form-dialog-title" variant="h5">Device's ID</DialogTitle>
           <DialogContent>
-             <DialogContentText><Typography color="textPrimary" >Enter this device's ID</Typography></DialogContentText>
+             <DialogContentText>Enter this device's ID</DialogContentText>
              <div className="textField">
                <TextField
                   defaultValue={this.deviceName}
