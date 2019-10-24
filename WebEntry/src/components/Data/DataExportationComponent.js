@@ -37,33 +37,14 @@ class DataExportationComponent extends Component {
     })
   }
 
-  /*handleDeleteSelected() {
-    if(this.pickedParticipants.length>0){
-      //
-      Promise.all(this.pickedParticipants.map(p => db_helper.deleteParticipantFromDb(p._id, ()=>{return Promise.resolve('ok');})));
-      this.pickedParticipants = [];
-
-      //Update the list after the deletion have been completed
-      db_helper.getAllParticipantsFromDb((ids) => {
-        this.setState({
-          participants: ids
-        });
-      });
-
-    }
-  }*/
-
   async handleDeleteSelected() {
     if(this.pickedParticipants.length>0){
-
-      /*this.pickedParticipants.map( p =>
-         db_helper.deleteParticipantFromDbPromise(p._id)
-      );*/
-
+      //Delete each selection synchronously
       for (var i = 0; i < this.pickedParticipants.length; i++) {
         await db_helper.deleteParticipantFromDbPromise(this.pickedParticipants[i]._id);
       }
 
+      //Empty the user selection
       this.pickedParticipants = [];
 
       //Update the list after the deletion have been completed
@@ -83,10 +64,6 @@ class DataExportationComponent extends Component {
         });
       })
     });
-  }
-
-  handlePick() {
-
   }
 
   handleExport() {
@@ -154,14 +131,15 @@ class DataExportationComponent extends Component {
     //  Delete All
     //</Button>
 
-    //<div style={{height:'100%'}}>
+    var buttonContainerHeight = 60;
+    var buttonHeight = buttonContainerHeight - 4;
 
     return(
         <Button style={this.props.exportButtonStyle} onClick={this.onDataExportationButtonClicked.bind(this)} >
           <ExportationIcon fontSize="large" />
           <Dialog open={this.state.open} onClose={this.handleClose.bind(this)}>
-            <DialogTitle>Choose an experiment to export</DialogTitle>
-            <List>
+            <DialogTitle style={{height:30}}>Choose an experiment to export</DialogTitle>
+            <List style={{display:'flex', flexDirection:'column', flexGrow:1, minHeight:100, maxHeight:'80%', overflowY:'auto'}}>
               {this.state.participants.map((p, index) => {
                 if(this.pickedParticipants.includes(p)){
                   return(<ListItem selected button onClick={() => {
@@ -194,18 +172,18 @@ class DataExportationComponent extends Component {
                 }
               })}
             </List>
-            <DialogActions>
-              <Button onClick={this.handleClose.bind(this)} variant="outlined">
+            <DialogActions style={{height:buttonContainerHeight}}>
+              <Button style={{height:buttonHeight}} onClick={this.handleClose.bind(this)} variant="outlined">
                 Cancel
               </Button>
-              <Button onClick={this.handleExport.bind(this)} variant="outlined">
+              <Button style={{height:buttonHeight}} onClick={this.handleExport.bind(this)} variant="outlined">
                 Export Selected
               </Button>
-              <Button onClick={this.handleExportAll.bind(this)} variant="outlined">
+              <Button style={{height:buttonHeight}} onClick={this.handleExportAll.bind(this)} variant="outlined">
                 Export All
               </Button>
               <div style={{width:50}} />
-              <Button onClick={this.handleDeleteSelected.bind(this)} variant="outlined">
+              <Button style={{height:buttonHeight}} onClick={this.handleDeleteSelected.bind(this)} variant="outlined">
                 Delete Selected
               </Button>
               {deleteAllButton}
