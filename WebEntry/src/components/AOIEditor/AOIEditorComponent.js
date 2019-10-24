@@ -213,7 +213,8 @@ class AOIEditorComponent extends Component {
   render() {
     var imageReview = null;
     if (this.state.mode === "SELECT") {
-      imageReview = <AOIImageViewComponent image={this.props.task.image}
+      imageReview = <AOIImageViewComponent     imageName={this.props.task.image}
+                                               image={this.props.image}
                                                aois={this.props.task.aois}
                                                mode={this.state.mode}
                                                onSelectAOI={this.onSelectAOI.bind(this)}
@@ -221,7 +222,8 @@ class AOIEditorComponent extends Component {
                                                />
     }
     else {
-      imageReview = <AOIImageViewComponent image={this.props.task.image}
+      imageReview = <AOIImageViewComponent     imageName={this.props.task.image}
+                                               image={this.props.image}
                                                aois={this.props.task.aois}
                                                mode={this.state.mode}
                                                tempAOI={this.tempAOI}

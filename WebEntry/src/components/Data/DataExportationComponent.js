@@ -12,8 +12,9 @@ import ExportationIcon from '@material-ui/icons/Archive';
 import { withTheme } from '@material-ui/styles';
 import { Typography } from '@material-ui/core';
 
+import FileSaver from 'file-saver';
+
 import db_helper from '../../core/db_helper';
-import courier from '../../core/courier';
 
 class DataExportationComponent extends Component {
   constructor(props){
@@ -90,18 +91,33 @@ class DataExportationComponent extends Component {
 
   handleExport() {
     this.pickedParticipants.map((p, index) => {
-      courier.exportToCSV(p, (s) => {
-        alert(s);
+      db_helper.exportToCSV(p, (res) => {
+        console.log("receive file", res.data.file_name);
+        var blob = new Blob([res.data.csv_string], {type: 'text/csv'});
+        FileSaver.saveAs(blob, res.data.file_name + '.csv');
+        if (res.data.gaze_data !== undefined) {
+          var gaze_blob = new Blob([res.data.gaze_data], {type: 'text/csv'});
+          FileSaver.saveAs(gaze_blob, res.data.file_name + '_gaze.csv');
+        }
         this.handleClose();
+        //alert();
       });
       return 1;
     });
   }
 
   handleExportAll() {
-    courier.exportAllToCSVs((s) => {
-      this.handleClose();
-      alert(s);
+    this.state.participants.map((p, ind) => {
+      db_helper.exportToCSV(p, (res) => {
+        var blob = new Blob([res.data.csv_string], {type: 'text/csv'});
+        FileSaver.saveAs(blob, res.data.file_name + '.csv');
+        if (res.data.gaze_data !== undefined) {
+          var gaze_blob = new Blob([res.data.gaze_data], {type: 'text/csv'});
+          FileSaver.saveAs(gaze_blob, res.data.file_name + '_gaze.csv');
+        }
+        this.handleClose();
+        //alert();
+      });
     })
   }
 

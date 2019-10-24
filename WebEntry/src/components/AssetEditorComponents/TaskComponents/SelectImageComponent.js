@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 //import Button from '@material-ui/core/Button';
 
 import AOIEditorComponent from '../../AOIEditor/AOIEditorComponent';
+import BrowseImagesDialog from '../../dialogs/BrowseImagesDialog';
 
 import db_helper from '../../../core/db_helper';
 
@@ -17,25 +18,40 @@ class SelectImageComponent extends Component {
 
     this.state = { //We keep these fields in the state as they affect how the component is rendered
       selectedImage: this.props.task ? this.props.task.image : "",
+      openBrowseImage: false,
     };
 
     this.preview = false;
+    this.image = null;
 
     this.handleImageSelectedCallback = this.onImageFileSelected.bind(this);
   }
 
   onImageFileSelected(selectedFile){
-    this.props.task.image = selectedFile;
+    this.props.task.image = selectedFile.name;
+    this.image = selectedFile;
     this.props.task.aois = [];
     this.preview = true;
     this.setState({selectedImage: this.props.task.image});
   }
 
+  onBrowseImages() {
+    this.setState({
+      openBrowseImage: true
+    });
+  }
+
+  onCloseBrowseImages() {
+    this.setState({
+      openBrowseImage: false
+    });
+  }
+
   onUploadImages() {
-    console.log(this.props.task.image);
-    if (this.props.task.image !== undefined) {
+    if (this.image) {
       const formData = new FormData();
-      formData.append('images',this.props.task.image);
+      formData.append('images',this.image);
+      //formData.set('filename', this.props.task.image);
 
       const config = {
           headers: {
@@ -46,10 +62,19 @@ class SelectImageComponent extends Component {
     }
   }
 
+  onPickImageBrowseImages(img) {
+    this.props.task.image = img;
+    this.image = null;
+    this.props.task.aois = [];
+    this.preview = true;
+    this.setState({selectedImage: this.props.task.image});
+    this.onCloseBrowseImages();
+  }
+
   render() {
     var previewImage = <Typography color="textPrimary"> "No Image selected" </Typography>;
-    if(this.props.task.image && this.props.task.image !== ""){
-      previewImage = <AOIEditorComponent preview={this.preview} task={this.props.task}/>//<img className="imageContainer" src={"Images/"+this.props.task.image} alt="Task" />;
+    if(this.state.selectedImage !== ""){
+      previewImage = <AOIEditorComponent preview={this.preview} task={this.props.task} image={this.image}/>//<img className="imageContainer" src={"Images/"+this.props.task.image} alt="Task" />;
     }
 
     var imageTaskName =
@@ -65,15 +90,24 @@ class SelectImageComponent extends Component {
     />;
 
     var imageTypeContent =
-    <div className="imageTypeContainer" onScroll={(e)=>{console.log("scroll")}}>
+    <div className="imageTypeContainer">
       <div className="imageInputContainer">
         {imageTaskName}
       </div>
+      <div>
+        <Button variant="outlined" onClick={this.onBrowseImages.bind(this)}>Browse</Button>
+        <Button variant="outlined" onClick={this.onUploadImages.bind(this)}>Upload</Button>
+      </div>
+
       {previewImage}
+
       <div className="fileSelectorContainer">
         <FileSelector handleSelectionCallback={this.handleImageSelectedCallback}/>
       </div>
-      <Button variant="outlined" onClick={this.onUploadImages.bind(this)}>Upload</Button>
+      
+      <BrowseImagesDialog openDialog={this.state.openBrowseImage}
+                          closeDialog={this.onCloseBrowseImages.bind(this)}
+                          onPickImage={this.onPickImageBrowseImages.bind(this)}/>
     </div>;
 
     return(
