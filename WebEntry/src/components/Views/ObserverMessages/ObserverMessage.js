@@ -12,6 +12,7 @@ class ObserverMessage extends React.Component {
   constructor(props) {
     super(props);
     this.showCommentButton = true;
+    this.marginTop = false;
   }
   parseMessage(args) {
     var displayText = '';
@@ -39,7 +40,7 @@ class ObserverMessage extends React.Component {
                           <b>{args.progressCount}. </b>
                           <b>{args.lineOfData.taskContent} </b>
                       </Typography>
-
+        this.marginTop = true;
         break;
       case "ANSWERED":
        /*
@@ -103,6 +104,7 @@ class ObserverMessage extends React.Component {
                         <b>Experiment finished! </b>
                       </Typography>;
         this.showCommentButton = false;
+        this.marginTop = true;
         break;
       case "COMMENT":
         //var commentTime = new Date(args.timestamp);
@@ -130,8 +132,8 @@ class ObserverMessage extends React.Component {
                                                 <CommentIcon className="flippedCommentIcon" style={{display:'flex', position: 'absolute', height: '100%', width: '100%'}} />
                                                </Button> : null;
     return (
-      <div className="observerMessageWrapper" style={{display:'flex', position: 'relative', flexDirection:'row', flexGrow: 1, flexShrink:1, minWidth:10, minHeight:50, marginBottom:10}}>
-        <div className="observerMessageText" style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, height:'100%'}}>
+      <div style={{display:'flex', position: 'relative', flexDirection:'row', flexGrow: 1, flexShrink:1, minWidth:10, marginTop:this.marginTop?20:0}}>
+        <div style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, height:'100%'}}>
           {this.parseMessage(this.props.message)}
         </div>
         {commentButton}
