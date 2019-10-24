@@ -21,7 +21,7 @@ class InstructionViewComponent extends Component {
   render() {
     return (
       <div className={this.props.className}>
-        <Typography variant="h3" color="textPrimary">{this.props.task.instruction}</Typography>
+        <Typography variant="h3" color="textPrimary" style={{whiteSpace:"pre-line"}}>{this.props.task.instruction}</Typography>
       </div>
     );
   }
