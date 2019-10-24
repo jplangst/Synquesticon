@@ -74,7 +74,7 @@ class ObserverMessage extends React.Component {
           aoisList += "\t" + item["name"] + ":" + (item["checked"] !== undefined ? "checked" : "unchecked");
         });
         //displayText += aoisList;*/
-
+        this.showCommentButton = false;
         break;
       case "SKIPPED":
       /*
@@ -88,6 +88,7 @@ class ObserverMessage extends React.Component {
         displayText = <Typography variant="body1" color="textPrimary">
                         <font color="red">Skipped </font> (NA / {timeToCompletion}s)
                       </Typography>;
+        this.showCommentButton = false;
         break;
       case "FINISHED":
       /*

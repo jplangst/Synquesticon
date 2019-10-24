@@ -30,7 +30,7 @@ class SelectImageComponent extends Component {
     this.image = selectedFile;
     this.props.task.aois = [];
     this.preview = true;
-    this.props.selectImageCallback(true);
+    this.props.selectImageCallback(true, this.image);
     this.setState({selectedImage: this.props.task.image});
   }
 
@@ -39,7 +39,7 @@ class SelectImageComponent extends Component {
     this.image = null;
     this.props.task.aois = [];
     this.preview = true;
-    this.props.selectImageCallback(false);
+    this.props.selectImageCallback(false, this.image);
     this.setState({selectedImage: this.props.task.image});
     this.onCloseBrowseImages();
   }

@@ -46,6 +46,7 @@ class EditTaskComponent extends Component {
     this.handleQuestionCallback = this.onDBCallback.bind(this);
 
     this.shouldUpload = false;
+    this.imageToUpload = null;
   }
 
   handleChange = event => {
@@ -67,6 +68,7 @@ class EditTaskComponent extends Component {
       db_helper.addTaskToDb(this.task, this.handleQuestionCallback);
     }
 
+    console.log("on save", this.task.taskType, this.shouldUpload);
     if (this.task.taskType === "Image" && this.shouldUpload) {
       this.uploadImages();
     }
@@ -96,8 +98,9 @@ class EditTaskComponent extends Component {
     }
   }
 
-  onSelectImage(should) {
+  onSelectImage(should, image) {
     this.shouldUpload = should;
+    this.imageToUpload = image;
   }
 
   removeTask() {
@@ -117,9 +120,9 @@ class EditTaskComponent extends Component {
   }
 
   uploadImages() {
-    if (this.task.image !== undefined) {
+    if (this.imageToUpload) {
       const formData = new FormData();
-      formData.append('images',this.task.image);
+      formData.append('images',this.imageToUpload);
       //formData.set('filename', this.props.task.image);
 
       const config = {
@@ -127,7 +130,7 @@ class EditTaskComponent extends Component {
               'content-type': 'multipart/form-data'
           }
       };
-      db_helper.uploadImage(this.task.image, formData, config, null);
+      db_helper.uploadImage(this.imageToUpload, formData, config, null);
     }
   }
 
