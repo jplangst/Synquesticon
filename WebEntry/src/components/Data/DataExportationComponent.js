@@ -93,8 +93,9 @@ class DataExportationComponent extends Component {
           FileSaver.saveAs(gaze_blob, res.data.file_name + '_gaze.csv');
         }
         this.handleClose();
-        //alert();
+        return 1;
       });
+      return 1;
     })
   }
 

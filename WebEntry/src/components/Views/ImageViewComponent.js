@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import AOIComponent from '../AOIEditor/AOIComponent';
 
-import db_helper from '../../core/db_helper.js';
 import store from '../../core/store';
 
 import './ImageViewComponent.css';

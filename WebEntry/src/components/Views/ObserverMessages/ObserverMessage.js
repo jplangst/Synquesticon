@@ -16,7 +16,7 @@ class ObserverMessage extends React.Component {
   }
   parseMessage(args) {
     var displayText = '';
-
+    var timeToCompletion = 0;
     switch (args.eventType) {
       case "NEW EXPERIMENT":
         /*
@@ -57,7 +57,7 @@ class ObserverMessage extends React.Component {
        */
 
         var responses = args.lineOfData.responses.join(', ');
-        var timeToCompletion = args.lineOfData.timeToCompletion < 0 ? 0 : args.lineOfData.timeToCompletion/1000;
+        timeToCompletion = args.lineOfData.timeToCompletion < 0 ? 0 : args.lineOfData.timeToCompletion/1000;
         var color = "black";
         if (args.lineOfData.correctlyAnswered === "correct") {
           color = "green";
@@ -85,7 +85,7 @@ class ObserverMessage extends React.Component {
                   store.getState().experimentInfo.selectedTracker,
                   obj.timeToCompletion
       */
-        var timeToCompletion = args.lineOfData.timeToCompletion < 0 ? 0 : args.lineOfData.timeToCompletion/1000;
+        timeToCompletion = args.lineOfData.timeToCompletion < 0 ? 0 : args.lineOfData.timeToCompletion/1000;
         displayText = <Typography variant="body1" color="textPrimary">
                         <font color="red">Skipped </font> (NA / {timeToCompletion}s)
                       </Typography>;

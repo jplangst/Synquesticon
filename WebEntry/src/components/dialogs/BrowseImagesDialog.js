@@ -8,7 +8,6 @@ import Dialog from '@material-ui/core/Dialog';
 import { withTheme } from '@material-ui/styles';
 
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 
 import db_helper from '../../core/db_helper';
 
@@ -67,7 +66,6 @@ class BrowseImagesDialog extends Component {
           <DialogContent style={{display:'flex', flexDirection:'row', flexGrow:1, minHeight:100, maxHeight:'80%', overflowY:'auto'}}>
           {
             this.state.images.map((img, ind) => {
-
               var url = "Images/" + img;
 
               var borderStyle=null;
@@ -76,12 +74,12 @@ class BrowseImagesDialog extends Component {
               }
 
 
-              rowContent.push(<img key={ind} src={url}
+              rowContent.push(<img src={url}
                           alt="Task" className="image"
                           style={borderStyle} key={"img"+ind}
                           onClick={(e) => this.onPickImage(img)}/>);
 
-              if(ind+1%4==0){
+              if(ind+1%4===0){
                 //return <span>imageRow</span>
                 imageRow.push(<span key={"ispan"+ind}>{rowContent}</span>);
                 rowContent=[];
@@ -91,6 +89,7 @@ class BrowseImagesDialog extends Component {
                   imageRow.push(<span key={"ispan"+ind}>{rowContent}</span>);
                 return imageRow;
               }
+              return null;
             })
           }
           </DialogContent>
