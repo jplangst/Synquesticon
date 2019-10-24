@@ -27,7 +27,7 @@ class ObserverMessage extends React.Component {
                     timestamp]
         */
 
-        displayText = <Typography variant="body1" color="textPrimary">
+        displayText = <Typography display="inline" variant="body1" color="textPrimary">
                         <b>New experiment - Task set: </b>
                         <i>{args.mainTaskSetId} </i>
                         started at {playerUtils.getFormattedTime(args.startTimestamp)}
@@ -35,7 +35,7 @@ class ObserverMessage extends React.Component {
         this.showCommentButton = false;
         break;
       case "START":
-        displayText = <Typography variant="body1" color="textPrimary">
+        displayText = <Typography display="inline" variant="body1" color="textPrimary">
                           <b>{args.progressCount}. </b>
                           <b>{args.lineOfData.taskContent} </b>
                       </Typography>
@@ -64,7 +64,7 @@ class ObserverMessage extends React.Component {
         else if (args.lineOfData.correctlyAnswered === "incorrect") {
           color = "red";
         }
-        displayText = <Typography variant="body1" color="textPrimary">
+        displayText = <Typography display="inline" variant="body1" color="textPrimary">
                       <font color={color}>"{responses}"</font> ({args.lineOfData.timeToFirstAnswer/1000}s /{timeToCompletion}s)
                       </Typography>;
 
@@ -98,14 +98,14 @@ class ObserverMessage extends React.Component {
                   store.getState().experimentInfo.mainTaskSetId,
                   timestamp
       */
-        displayText = <Typography variant="body1" color="textPrimary">
+        displayText = <Typography display="inline" variant="body1" color="textPrimary">
                         <b>Experiment finished! </b>
                       </Typography>;
         this.showCommentButton = false;
         break;
       case "COMMENT":
         //var commentTime = new Date(args.timestamp);
-        displayText = <Typography variant="body1" color="textPrimary">
+        displayText = <Typography display="inline" variant="body1" color="textPrimary">
                         <b>Comment from {args.observerName}: </b>
                         {args.comment}
                       </Typography>;

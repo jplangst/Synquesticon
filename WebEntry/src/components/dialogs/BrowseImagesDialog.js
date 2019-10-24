@@ -5,7 +5,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
 
-import { Typography } from '@material-ui/core';
+import { withTheme } from '@material-ui/styles';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -49,6 +49,12 @@ class BrowseImagesDialog extends Component {
   }
 
   render() {
+
+    var buttonContainerHeight = 60;
+    var buttonHeight = buttonContainerHeight - 4;
+    var imageRow = [];
+    var rowContent = [];
+
     return(
       <Dialog
           open={this.props.openDialog}
@@ -57,27 +63,42 @@ class BrowseImagesDialog extends Component {
           fullWidth={true}
           maxWidth='md'
         >
-          <DialogTitle id="form-dialog-title">Select Image</DialogTitle>
-          <DialogContent>
+          <DialogTitle style={{height:30}} id="form-dialog-title">Select Image</DialogTitle>
+          <DialogContent style={{display:'flex', flexDirection:'row', flexGrow:1, minHeight:100, maxHeight:'80%', overflowY:'auto'}}>
           {
             this.state.images.map((img, ind) => {
+
               var url = "Images/" + img;
-              var className = "image";
+
+              var borderStyle=null;
               if (this.state.pickedImage === img) {
-                className += " pickedImage";
+                borderStyle={borderWidth:3, borderStyle:'solid', borderColor:this.props.theme.palette.secondary.main};
               }
-              console.log("classname", className);
-              return <img key={ind} src={url}
-                          alt="Task" className={className}
-                          onClick={(e) => this.onPickImage(img)}/>
+
+
+              rowContent.push(<img key={ind} src={url}
+                          alt="Task" className="image"
+                          style={borderStyle} key={"img"+ind}
+                          onClick={(e) => this.onPickImage(img)}/>);
+
+              if(ind+1%4==0){
+                //return <span>imageRow</span>
+                imageRow.push(<span key={"ispan"+ind}>{rowContent}</span>);
+                rowContent=[];
+              }
+              if(this.state.images.length-1 === ind){
+                if(rowContent.length > 0)
+                  imageRow.push(<span key={"ispan"+ind}>{rowContent}</span>);
+                return imageRow;
+              }
             })
           }
           </DialogContent>
-          <DialogActions>
-            <Button onClick={this.props.closeDialog} variant="outlined">
+          <DialogActions style={{height:buttonContainerHeight}}>
+            <Button style={{height:buttonHeight}} onClick={this.props.closeDialog} variant="outlined">
               CANCEL
             </Button>
-            <Button onClick={this.onOKAction.bind(this)} variant="outlined">
+            <Button style={{height:buttonHeight}} onClick={this.onOKAction.bind(this)} variant="outlined">
               OK
             </Button>
           </DialogActions>
@@ -86,4 +107,4 @@ class BrowseImagesDialog extends Component {
   }
 }
 
-export default BrowseImagesDialog;
+export default withTheme(BrowseImagesDialog);
