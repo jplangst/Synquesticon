@@ -125,6 +125,9 @@ const initialState = {
 
 const store = createStore ((state = initialState, action) => {
   switch(action.type) {
+    case 'RESET_EXPERIMENT': {
+      return { ...state, experimentInfo: {} };
+    }
     case 'SET_GAZE_DATA': {
       state.gazeData[action.tracker] = action.gazeData;
       if (!state.remoteEyeTrackers.includes(action.tracker)) {

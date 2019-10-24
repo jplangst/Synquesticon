@@ -36,7 +36,7 @@ class ObserverMessage extends React.Component {
         break;
       case "START":
         displayText = <Typography display="inline" variant="body1" color="textPrimary">
-                          <b>{args.progressCount}. </b>
+                          <b>{args.progressCount+1}. </b>
                           <b>{args.lineOfData.taskContent} </b>
                       </Typography>
 

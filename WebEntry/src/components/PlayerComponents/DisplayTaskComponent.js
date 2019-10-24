@@ -27,8 +27,11 @@ import queryString from 'query-string';
 
 import './DisplayTaskComponent.css';
 
+var checkShouldSave = true;
+
 function stringifyWAMPMessage(task, lineOfData, eventType, progressCount) {
   try {
+    console.log("broadcast", store.getState().experimentInfo.participantId)
     if (store.getState().experimentInfo.participantId === undefined) {
       return null;
     }
@@ -96,7 +99,6 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
 */
 
   logTheStartOfTask() {
-    console.log("create currentLineOfData");
     var startTimestamp = playerUtils.getCurrentTime();
     if (this.currentTask.objType === "Task") {
       this.currentLineOfData = new dbObjects.LineOfData(startTimestamp,
@@ -117,137 +119,133 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
    ██████ ██   ██ ███████ ███████ ██████  ██   ██  ██████ ██   ██ ███████
   */
   checkShouldRecordData(label, responses) {
-    if (label.toLowerCase().includes("record data")) {
-      for(var i = 0; i < responses.length; i++) {
-          if(responses[i].toLowerCase() === "no") {
-            var saveAction = {
-              type: 'SET_SHOULD_SAVE',
-              shouldSave: false
+    if (checkShouldSave) {
+      if (label.toLowerCase().includes("record data")) {
+        for(var i = 0; i < responses.length; i++) {
+            if(responses[i].toLowerCase() === "no") {
+              var saveAction = {
+                type: 'SET_SHOULD_SAVE',
+                shouldSave: false
+              }
+              store.dispatch(saveAction);
+              db_helper.deleteParticipantFromDb(store.getState().experimentInfo.participantId, () => {});
             }
-            store.dispatch(saveAction);
-          }
+        }
       }
+      checkShouldSave = false;
     }
   }
 
+  /*
+███    ██ ███████ ██   ██ ████████
+████   ██ ██       ██ ██     ██
+██ ██  ██ █████     ███      ██
+██  ██ ██ ██       ██ ██     ██
+██   ████ ███████ ██   ██    ██
+*/
   onClickNext() {
-    var savingData = (participantId) => {
+    //===========reset aoi list===========
+    var aoiAction = {
+      type: 'RESET_AOIS'
+    }
 
-      var aoiAction = {
-        type: 'RESET_AOIS'
+    store.dispatch(aoiAction);
+
+    //===========save gazedata===========
+    this.props.saveGazeData(dbObjectsUtilityFunctions.getTaskContent(this.currentTask));
+
+    //===========save logging data===========
+    //single task
+    if (this.currentTask.objType === "Task") {
+      if (this.currentLineOfData.correctlyAnswered === "correct") {
+        this.numCorrectAnswers += 1;
       }
-
-      store.dispatch(aoiAction);
-
-      this.props.saveGazeData(dbObjectsUtilityFunctions.getTaskContent(this.currentTask));
-
-
-      if (this.currentTask.objType === "Task") {
-        if (this.currentLineOfData.correctlyAnswered === "correct") {
-          this.numCorrectAnswers += 1;
+      this.progressCount += 1;
+      if (this.currentLineOfData) {
+        if (!this.currentTask.globalVariable) {
+          //complete line of data before saving to DB
+          this.currentLineOfData.timeToCompletion = playerUtils.getCurrentTime() - this.currentLineOfData.startTimestamp;
+          if (store.getState().experimentInfo.shouldSave) {
+            db_helper.addNewLineToParticipantDB(store.getState().experimentInfo.participantId, JSON.stringify(this.currentLineOfData));
+          }
         }
-        this.progressCount += 1;
-        if (this.currentLineOfData) {
-          if (!this.currentTask.globalVariable) {
-            //complete line of data before saving to DB
-            this.currentLineOfData.timeToCompletion = playerUtils.getCurrentTime() - this.currentLineOfData.startTimestamp;
-            db_helper.addNewLineToParticipantDB(participantId, JSON.stringify(this.currentLineOfData));
-          }
-          else {
-            var globalVariableObj = {
-              label: this.currentTask.question,
-              value: this.currentLineOfData.responses
-            };
-            db_helper.addNewGlobalVariableToParticipantDB(participantId, JSON.stringify(globalVariableObj));
-          }
-
-          if (!this.currentTask.question.toLowerCase().includes("record data") && this.progressCount > 1) {
-            wamp.broadcastEvents(stringifyWAMPMessage(null, this.currentLineOfData,
-                                                      (this.currentLineOfData.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED",
-                                                      this.progressCount));
+        else {
+          var globalVariableObj = {
+            label: this.currentTask.question,
+            value: this.currentLineOfData.responses
+          };
+          if (store.getState().experimentInfo.shouldSave) {
+            db_helper.addNewGlobalVariableToParticipantDB(store.getState().experimentInfo.participantId, JSON.stringify(globalVariableObj));
           }
         }
 
+        wamp.broadcastEvents(stringifyWAMPMessage(null, this.currentLineOfData,
+                                                  (this.currentLineOfData.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED",
+                                                  this.progressCount));
       }
-      else if (this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage) {
-        this.progressCount += this.currentLineOfData.size;
-        this.currentLineOfData.forEach((line, index) => {
-          if (line.isGlobalVariable !== undefined) {
-            var globalVariableObj = {
-              label: line.question,
-              value: line.responses
-            };
-            db_helper.addNewGlobalVariableToParticipantDB(participantId, JSON.stringify(globalVariableObj));
+    }
+    //multi-item page
+    else if (this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage) {
+      this.progressCount += this.currentLineOfData.size;
+      this.currentLineOfData.forEach((line, index) => {
+        if (line.isGlobalVariable !== undefined) {
+          var globalVariableObj = {
+            label: line.question,
+            value: line.responses
+          };
+          if (store.getState().experimentInfo.shouldSave) {
+            db_helper.addNewGlobalVariableToParticipantDB(store.getState().experimentInfo.participantId, JSON.stringify(globalVariableObj));
           }
-          else {
-            line.timeToCompletion = playerUtils.getCurrentTime() - line.startTimestamp;
-            db_helper.addNewLineToParticipantDB(participantId, JSON.stringify(line));
+        }
+        else {
+          line.timeToCompletion = playerUtils.getCurrentTime() - line.startTimestamp;
+          if (store.getState().experimentInfo.shouldSave) {
+            db_helper.addNewLineToParticipantDB(store.getState().experimentInfo.participantId, JSON.stringify(line));
           }
-          wamp.broadcastEvents(stringifyWAMPMessage(null, line,
-                                                    (line.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED",
-                                                    this.progressCount));
-        });
-      }
-
-      if ((this.state.currentTaskIndex + 1) >= this.props.taskSet.data.length && this.numCorrectAnswers < this.props.repeatSetThreshold){
-        if (!(store.getState().experimentInfo.participantId === "TESTING")) {
-          alert("you did not meet the required number of correct answers. This set will be repeated now.");
-
-          this.progressCount = this.props.progressCount;
-
-          this.numCorrectAnswers = 0;
-          this.currentLineOfData = null;
-          //reset state
-          this.setState({
-            hasBeenAnswered: false,
-            answerItem: null,
-            currentTaskIndex: 0
-          });
-
-
-          return;
         }
-      }
-
-      if (this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage && this.currentTask.numCorrectAnswers < this.currentTask.repeatSetThreshold) {
-        if (!(store.getState().experimentInfo.participantId === "TESTING")) {
-          alert("you did not meet the required number of correct answers.");
-          this.progressCount = this.props.progressCount;
-          return;
-        }
-      }
-
-      console.log("resetCurrentLineOfData");
-      this.currentLineOfData = null;
-
-      //reset state
-      console.log("reset State");
-      this.setState({
-        hasBeenAnswered: false,
-        answerItem: null,
-        currentTaskIndex: (this.state.currentTaskIndex + 1)
+        wamp.broadcastEvents(stringifyWAMPMessage(null, line,
+                                                  (line.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED",
+                                                  this.progressCount));
       });
     }
 
-    if (store.getState().experimentInfo.shouldSave) {
-      if (store.getState().experimentInfo.participantId === undefined) {
-        db_helper.addParticipantToDb(new dbObjects.ParticipantObject(store.getState().experimentInfo.taskSet._id), (returnedIdFromDB)=> {
-          var idAction = {
-            type: 'SET_PARTICIPANT_ID',
-            participantId: returnedIdFromDB
-          };
-          store.dispatch(idAction);
+    //===========check requirement of number of correct answers===========
+    if ((this.state.currentTaskIndex + 1) >= this.props.taskSet.data.length && this.numCorrectAnswers < this.props.repeatSetThreshold){
+      if (!(store.getState().experimentInfo.participantId === "TESTING")) {
+        alert("you did not meet the required number of correct answers. This set will be repeated now.");
 
-          savingData(returnedIdFromDB);
+        this.progressCount = this.props.progressCount;
+
+        this.numCorrectAnswers = 0;
+        this.currentLineOfData = null;
+        //reset state
+        this.setState({
+          hasBeenAnswered: false,
+          answerItem: null,
+          currentTaskIndex: 0
         });
-      }
-      else {
-        savingData(store.getState().experimentInfo.participantId);
+
+        return;
       }
     }
-    else {
-      savingData(undefined);
+
+    if (this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage && this.currentTask.numCorrectAnswers < this.currentTask.repeatSetThreshold) {
+      if (!(store.getState().experimentInfo.participantId === "TESTING")) {
+        alert("you did not meet the required number of correct answers.");
+        this.progressCount = this.props.progressCount;
+        return;
+      }
     }
+
+    //===========reset===========
+    this.currentLineOfData = null;
+
+    //reset state
+    this.setState({
+      hasBeenAnswered: false,
+      answerItem: null,
+      currentTaskIndex: (this.state.currentTaskIndex + 1)
+    });
   }
 
   onAnswer(answer) {
@@ -419,13 +417,10 @@ class DisplayTaskComponent extends Component {
 
     var parsed = queryString.parse(this.props.location.search);
     var mainTaskSetId = parsed.id;
-    console.log(typeof(mainTaskSetId));
     var tracker = parsed.tracker;
 
     if (mainTaskSetId !== undefined) {
-      console.log("trying to get data for this set", mainTaskSetId);
       db_helper.getTasksOrTaskSetsWithIDs(mainTaskSetId, (dbQueryResult, count, mainTaskSetName) => {
-        console.log("received data from DB", dbQueryResult, count);
         var action = {
           type: 'SET_EXPERIMENT_INFO',
           experimentInfo: {
@@ -442,7 +437,16 @@ class DisplayTaskComponent extends Component {
 
         store.dispatch(action);
 
-        this.forceUpdate();
+        if (store.getState().experimentInfo.participantId === undefined) {
+          db_helper.addParticipantToDb(new dbObjects.ParticipantObject(store.getState().experimentInfo.taskSet._id), (returnedIdFromDB)=> {
+            var idAction = {
+              type: 'SET_PARTICIPANT_ID',
+              participantId: returnedIdFromDB
+            };
+            store.dispatch(idAction);
+            this.forceUpdate();
+          });
+        }
       });
 
       //this.broadcastStartEvent();
@@ -457,6 +461,7 @@ class DisplayTaskComponent extends Component {
       this.gazeDataArray = [];
       this.timer = setInterval(this.updateCursorLocation.bind(this), 4.5); //Update the gaze cursor location every 2ms
     }
+    checkShouldSave = true;
   }
 
   componentWillUnmount() {
@@ -472,7 +477,27 @@ class DisplayTaskComponent extends Component {
 
     store.dispatch(layoutAction);
     wampStore.removeNewCommandListener(this.handleNewCommandEvent);
+
+    // console.log("should we save?", store.getState().experimentInfo.shouldSave);
+    // if (!store.getState().experimentInfo.shouldSave) {
+    //   console.log("remove participant");
+    //   db_helper.deleteParticipantFromDb(store.getState().experimentInfo.participantId, () => {});
+    // }
+
+    var resetExperimentAction = {
+      type: 'RESET_EXPERIMENT'
+    }
+    store.dispatch(resetExperimentAction);
   }
+
+  /*
+   ██████   █████  ███████ ███████
+  ██       ██   ██    ███  ██
+  ██   ███ ███████   ███   █████
+  ██    ██ ██   ██  ███    ██
+   ██████  ██   ██ ███████ ███████
+  */
+
 
   saveGazeData(task) {
     console.log("save gaze display", this.gazeDataArray);
