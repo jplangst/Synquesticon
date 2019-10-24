@@ -116,6 +116,7 @@ const initialState = {
   aois: [],
   showHeader: true,
   experimentInfo: null,
+  shouldSave: true,
   windowSize: {
     width: window.innerWidth,
     height: window.innerHeight

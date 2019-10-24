@@ -19,7 +19,6 @@ class TextEntryComponent extends Component {
   }
 
   onMyKeyboardPressed(key) {
-
     if (key === "<--") {
       var lastChar = this.textEntry[this.textEntry.length -1];
       if (lastChar === '.') {
