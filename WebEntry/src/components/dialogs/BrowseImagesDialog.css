@@ -1,0 +1,9 @@
+.image {
+  max-width: 200px;
+  max-height: 200px;
+  padding: 5px;
+}
+
+.pickedImage {
+  border: 3px solid blue;
+}
