@@ -51,6 +51,10 @@ class App extends Component {
 
   render() {
     let theme = store.getState().theme;
+
+    let scrollBgColor = theme.palette.type==="light"?"lightscroll":"darkscroll";
+    document.body.classList.add(scrollBgColor);
+
     return (
         <Router>
           <ThemeProvider theme={theme}>
