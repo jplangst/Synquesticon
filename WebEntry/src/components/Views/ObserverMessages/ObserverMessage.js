@@ -3,6 +3,7 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import CommentIcon from '@material-ui/icons/ModeCommentOutlined';
 import { Typography } from '@material-ui/core';
+import { withTheme } from '@material-ui/styles';
 
 import * as playerUtils from '../../../core/player_utility_functions';
 
@@ -15,6 +16,9 @@ class ObserverMessage extends React.Component {
     this.marginTop = false;
   }
   parseMessage(args) {
+    var redColor = "#E94B3C";
+    var greenColor = "#006B38";
+
     var displayText = '';
     var timeToCompletion = 0;
     switch (args.eventType) {
@@ -58,12 +62,12 @@ class ObserverMessage extends React.Component {
 
         var responses = args.lineOfData.responses.join(', ');
         timeToCompletion = args.lineOfData.timeToCompletion < 0 ? 0 : args.lineOfData.timeToCompletion/1000;
-        var color = "black";
+        var color = this.props.theme.palette.textPrimary;
         if (args.lineOfData.correctlyAnswered === "correct") {
-          color = "green";
+          color = greenColor;
         }
         else if (args.lineOfData.correctlyAnswered === "incorrect") {
-          color = "red";
+          color = redColor;
         }
         displayText = <Typography display="inline" variant="body1" color="textPrimary">
                       <font color={color}>"{responses}"</font> ({args.lineOfData.timeToFirstAnswer/1000}s /{timeToCompletion}s)
@@ -87,7 +91,7 @@ class ObserverMessage extends React.Component {
       */
         timeToCompletion = args.lineOfData.timeToCompletion < 0 ? 0 : args.lineOfData.timeToCompletion/1000;
         displayText = <Typography variant="body1" color="textPrimary">
-                        <font color="red">Skipped </font> (NA / {timeToCompletion}s)
+                        <font color={redColor}>Skipped </font> (NA / {timeToCompletion}s)
                       </Typography>;
         this.showCommentButton = false;
         break;
@@ -142,4 +146,4 @@ class ObserverMessage extends React.Component {
   }
 }
 
-export default ObserverMessage;
+export default withTheme(ObserverMessage);

@@ -7,7 +7,6 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContentText from '@material-ui/core/DialogContentText';
 
 import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
 import { withTheme } from '@material-ui/styles';
 
 import Button from '@material-ui/core/Button';
