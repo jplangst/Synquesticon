@@ -77,7 +77,11 @@ class AOIEditorComponent extends Component {
       try {
         this.tempAOI.name = name;
         this.tempAOI.isSelected = false;
-        var newAOI = JSON.parse(JSON.stringify(this.tempAOI));
+        var newAOI = {
+          name: this.tempAOI.name,
+          boundingbox: this.tempAOI.boundingbox
+          //JSON.parse(JSON.stringify(this.tempAOI));
+        }
         this.props.task.aois.push(newAOI);
       }
       catch (exp) {

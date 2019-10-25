@@ -98,3 +98,26 @@ export class ObserverMessage {
     this.messages = [message];
   }
 }
+
+export function removeCircular(orgTask) {
+  var copiedTask = new TaskObject();
+  copiedTask.taskType = orgTask.taskType;
+  copiedTask.question = orgTask.question;
+  copiedTask.globalVariable = orgTask.globalVariable;
+  copiedTask.instruction = orgTask.instruction;
+  copiedTask.image = orgTask.image;
+  copiedTask.aois = [];
+  copiedTask.tags = orgTask.tags;
+  copiedTask.responses = orgTask.responses;
+  copiedTask.correctResponses = orgTask.correctResponses;
+  copiedTask.responseUnit = orgTask.responseUnit;
+  copiedTask.objType = orgTask.objType;
+
+  orgTask.aois.map((a, ind) => {
+    copiedTask.aois.push({
+      name: a.name,
+      boundingbox: a.boundingbox
+    });
+  })
+  return copiedTask;
+}

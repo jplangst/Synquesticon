@@ -29,9 +29,9 @@ import './DisplayTaskComponent.css';
 
 var checkShouldSave = true;
 
-function stringifyWAMPMessage(task, lineOfData, eventType, progressCount) {
+function stringifyWAMPMessage(task, lineOfData, eventType, progressCount, taskIndex) {
   try {
-    console.log("broadcast", store.getState().experimentInfo.participantId)
+
     if (store.getState().experimentInfo.participantId === undefined) {
       return null;
     }
@@ -45,10 +45,21 @@ function stringifyWAMPMessage(task, lineOfData, eventType, progressCount) {
                             lineOfData: lineOfData,
                             taskSetCount: store.getState().experimentInfo.taskSetCount,
                             progressCount: progressCount,
+                            taskIndex: taskIndex
                           });
   } catch (err) {
-    console.log("stringify error", task);
-    console.log(err);
+    return JSON.stringify({
+                            eventType: eventType,
+                            participantId: store.getState().experimentInfo.participantId,
+                            participantLabel: store.getState().experimentInfo.participantLabel,
+                            startTimestamp: store.getState().experimentInfo.startTimestamp,
+                            selectedTracker: store.getState().experimentInfo.selectedTracker,
+                            task: dbObjects.removeCircular(task),
+                            lineOfData: lineOfData,
+                            taskSetCount: store.getState().experimentInfo.taskSetCount,
+                            progressCount: progressCount,
+                            taskIndex: taskIndex
+                          });
   }
 }
 
@@ -107,7 +118,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
                                                         dbObjectsUtilityFunctions.getTaskContent(this.currentTask),
                                                         this.currentTask.correctResponses,
                                                         "SingleItem");
-      wamp.broadcastEvents(stringifyWAMPMessage(this.currentTask, this.currentLineOfData, "START", this.progressCount));
+      wamp.broadcastEvents(stringifyWAMPMessage(this.currentTask, this.currentLineOfData, "START", this.progressCount, this.progressCount+1));
     }
   }
 
@@ -179,9 +190,10 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
           }
         }
 
-        wamp.broadcastEvents(stringifyWAMPMessage(null, this.currentLineOfData,
+        wamp.broadcastEvents(stringifyWAMPMessage(this.currentTask, this.currentLineOfData,
                                                   (this.currentLineOfData.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED",
-                                                  this.progressCount));
+                                                  this.progressCount,
+                                                 -1));
       }
     }
     //multi-item page
@@ -203,9 +215,9 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
             db_helper.addNewLineToParticipantDB(store.getState().experimentInfo.participantId, JSON.stringify(line));
           }
         }
-        wamp.broadcastEvents(stringifyWAMPMessage(null, line,
+        wamp.broadcastEvents(stringifyWAMPMessage({_id:line.taskId}, line,
                                                   (line.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED",
-                                                  this.progressCount));
+                                                  this.progressCount, -1));
       });
     }
 
@@ -314,7 +326,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
       }
       else {
         //log the start
-        console.log("hasBeenAnswered", this.state.hasBeenAnswered, this.currentLineOfData);
+
         if (!this.state.hasBeenAnswered
             && !(store.getState().experimentInfo.participantId === "TESTING")
             && !this.currentLineOfData) {
@@ -334,8 +346,8 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
                                     initCallback={(taskResponses) => {
                                       this.currentLineOfData = taskResponses;
                                     }}
-                                    logTheStartOfTask={(task, log) => {
-                                      wamp.broadcastEvents(stringifyWAMPMessage(task, log, "START", this.progressCount))
+                                    logTheStartOfTask={(task, log, ind) => {
+                                      wamp.broadcastEvents(stringifyWAMPMessage(task, log, "START", this.progressCount, this.progressCount+ind+1))
                                     }}/>
             }
             if((this.currentTask.taskType === "Instruction")) {
@@ -457,7 +469,7 @@ class DisplayTaskComponent extends Component {
 
   componentDidMount() {
     if (store.getState().experimentInfo && store.getState().experimentInfo.participantId !== "TESTING" && (store.getState().experimentInfo.selectedTracker !== "")) {
-      console.log("set up interval");
+
       this.gazeDataArray = [];
       this.timer = setInterval(this.updateCursorLocation.bind(this), 4.5); //Update the gaze cursor location every 2ms
     }
@@ -466,7 +478,7 @@ class DisplayTaskComponent extends Component {
 
   componentWillUnmount() {
     if (store.getState().experimentInfo.participantId !== "TESTING" && (store.getState().experimentInfo.selectedTracker !== "")) {
-      console.log("clear interval");
+
       clearInterval(this.timer);
     }
     var layoutAction = {
@@ -500,7 +512,7 @@ class DisplayTaskComponent extends Component {
 
 
   saveGazeData(task) {
-    console.log("save gaze display", this.gazeDataArray);
+
     if (this.gazeDataArray.length > 0) {
       var copiedGazeData = this.gazeDataArray.slice();
       this.gazeDataArray = [];
@@ -589,7 +601,7 @@ class DisplayTaskComponent extends Component {
                                 mainTaskSetId: store.getState().experimentInfo.mainTaskSetId,
                                 timestamp: timestamp
                               });
-    wamp.broadcastEvents(info);
+    //wamp.broadcastEvents(info);
   }
 
   /*
