@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import Button from '@material-ui/core/Button';
 
+import { Typography } from '@material-ui/core';
 import { withTheme } from '@material-ui/styles';
 
 //view components
@@ -363,7 +364,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
               return <MultipleChoiceComponent className="commonContainer" task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered}/>;
             }
             if((this.currentTask.taskType === "Image")) {
-              return <ImageViewComponent className="imageViewWrapper" task={this.currentTask} taskIndex={this.state.currentTaskIndex}/>;
+              return <ImageViewComponent className="commonContainer" task={this.currentTask} taskIndex={this.state.currentTaskIndex}/>;
             }
           } else {
 
@@ -670,7 +671,7 @@ class DisplayTaskComponent extends Component {
         return <div style={{backgroundColor:rightBG}}/>;
       }
     }
-    return <div>Loading...</div>;
+    return <Typography variant="h2" color="textPrimary" style={{position:'absolute', left:'50%', top:'50%'}}>Loading...</Typography>;
   }
 }
 

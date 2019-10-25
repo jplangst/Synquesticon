@@ -13,6 +13,7 @@
 }
 .mainDisplay{
   position: relative;
+  display: flex;
   width: 60%;
   height: 100%;
 
@@ -20,9 +21,23 @@
   transform: translateX(-50%);
 
   font-size: 1em;
+
+  align-items: center;
+  justify-content: center;
+  /*background-color: red;*/
 }
 
 .commonContainer{
+  position: relative;
+  
+  width: 100%;
+  height: auto;
+  max-height: 96%;
+
+  overflow-y: auto;
+}
+
+.commonContainerOrig{
   position: relative;
   height: auto;
 
