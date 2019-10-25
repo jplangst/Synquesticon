@@ -102,7 +102,7 @@ class TextEntryComponent extends Component {
     return (
       <div className={this.props.className + " TextEntry"} >
         <div className="questionDisplay">
-          <Typography variant="h3" color="textPrimary">{this.props.task.question}</Typography>
+          <Typography variant="h3" align="center" style={{whiteSpace:"pre-line"}} color="textPrimary">{this.props.task.question}</Typography>
         </div>
         <div className="inputField">
           <Typography color="textPrimary">{this.textEntry}</Typography>
