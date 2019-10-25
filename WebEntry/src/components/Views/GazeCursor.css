@@ -6,7 +6,7 @@
   pointer-events: none;
 }
 
-.wrapper {
+.ETwrapper {
   border: 1px solid grey;
   box-sizing: border-box;
   position: relative;
@@ -21,15 +21,16 @@
 
 .gazeCursorContainer {
   position: relative;
-  height: 84%;
+  height: calc(100% - 30px);
   width: 100%;
+  top: 30px;
 }
 
 .title {
   position: absolute;
   box-sizing: border-box;
   border-bottom: 1px solid grey;
-  height: 16%;
+  height: 30px;
   width: 100%;
   padding: 5px;
 
