@@ -32,6 +32,16 @@ class ObserverMode extends Component {
     wampStore.removeEventListener(this.handleNewWAMPEvent);
   }
 
+  getPairingID(msgArray, msg) {
+    for (var i = 0; i < msgArray.length; i++) {
+      if (msgArray[i].lineOfData.startTimestamp === msg.lineOfData.startTimestamp
+          && msgArray[i].task._id === msg.task._id) {
+            return i+1;
+          }
+    }
+    return msgArray.length;
+  }
+
   onNewWAMPEvent() {
     var args = JSON.parse(wampStore.getCurrentMessage());
     var isComment = (args.eventType === "COMMENT"); // &&
@@ -56,7 +66,8 @@ class ObserverMode extends Component {
     for (let i = 0; i < this.state.participants.length; i++) {
       if (this.state.participants[i].id === args.participantId) {
         var newMessage = this.state.participants[i].messages;
-        newMessage.push(args);
+        var pairingID = this.getPairingID(newMessage, args);
+        newMessage.splice(pairingID, 0, args);
         this.state.participants[i] = {
           ...this.state.participants[i],
           messages: newMessage

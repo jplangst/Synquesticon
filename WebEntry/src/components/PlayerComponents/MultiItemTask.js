@@ -68,7 +68,7 @@ class MultiItemTask extends Component {
       newLine.question = task.question;
     }
     this.taskResponses.set(task._id + ind, newLine);
-    this.props.logTheStartOfTask(task, newLine);
+    this.props.logTheStartOfTask(task, newLine, ind);
   }
 
   getDisplayedContent(taskList, mapIndex){

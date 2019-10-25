@@ -123,6 +123,7 @@ module.exports = {
   broadcastEvents(info) {
     try {
       if(glob_session && info) {
+        console.log(info);
         glob_session.publish(SynquesticonTopic, [info]);
       }
     }
