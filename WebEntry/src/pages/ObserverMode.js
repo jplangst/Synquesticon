@@ -63,17 +63,11 @@ class ObserverMode extends Component {
       store.dispatch(action);
     }
     var existed = false;
-    console.log(args);
     for (let i = 0; i < this.state.participants.length; i++) {
       if (this.state.participants[i].id === args.participantId) {
         var newMessage = this.state.participants[i].messages;
-        //newMessage.push(args);
-        // console.log("push new messages", args, newMessage);
         var pairingID = this.getPairingID(newMessage, args);
-        console.log("pairingID", pairingID);
         newMessage.splice(pairingID, 0, args);
-        // console.log("new messages", args, newMessage);
-        //newMessage = this.pairingMessages(newMessage, args);
         this.state.participants[i] = {
           ...this.state.participants[i],
           messages: newMessage

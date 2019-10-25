@@ -125,20 +125,21 @@ class ObserverMessage extends React.Component {
   }
 
   onCommentButtonClicked() {
+    console.log(this.props.message);
     this.props.commentCallback(this.props.message);
   }
 
   render() {
-
+    var message = this.parseMessage(this.props.message);
     //TODO make the comment button size and the text size responsive
-  var commentButton = this.showCommentButton ? <Button style={{display:'flex', position: 'relative', flexGrow: 0, flexShrink:0, height:25, width:25, maxWidth:25}}
+    var commentButton = this.showCommentButton ? <Button style={{display:'flex', position: 'relative', flexGrow: 0, flexShrink:0, height:25, width:25, maxWidth:25}}
                                                 onClick={this.onCommentButtonClicked.bind(this)} >
                                                 <CommentIcon className="flippedCommentIcon" style={{display:'flex', position: 'absolute', height: '100%', width: '100%'}} />
                                                </Button> : null;
     return (
       <div style={{display:'flex', position: 'relative', flexDirection:'row', flexGrow: 1, flexShrink:1, minWidth:10, marginTop:this.marginTop?20:0}}>
         <div style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, height:'100%'}}>
-          {this.parseMessage(this.props.message)}
+          {message}
         </div>
         {commentButton}
       </div>

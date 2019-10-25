@@ -601,7 +601,7 @@ class DisplayTaskComponent extends Component {
                                 mainTaskSetId: store.getState().experimentInfo.mainTaskSetId,
                                 timestamp: timestamp
                               });
-    //wamp.broadcastEvents(info);
+    wamp.broadcastEvents(info);
   }
 
   /*
