@@ -49,37 +49,7 @@ class PlayerMode extends Component {
   //bottom button handler TODO get the information from the store instead of the state for the eye tracker
   onPlayButtonClick(taskSet) {
     this.selectedTaskSet = taskSet;
-    /* db_helper.getTasksOrTaskSetsWithIDs(this.selectedTaskSet, (dbQueryResult, count) => {
-    //   db_helper.addParticipantToDb(new dbObjects.ParticipantObject(this.selectedTaskSet._id), (returnedIdFromDB)=> {
-    //     var action = {
-    //       type: 'SET_EXPERIMENT_INFO',
-    //       experimentInfo: {
-    //         experimentId: "",
-    //         participantLabel: playerUtils.getDeviceName(),
-    //         startTimestamp: playerUtils.getFormattedCurrentTime(),
-    //         participantId: returnedIdFromDB,
-    //         mainTaskSetId: this.selectedTaskSet.name,
-    //         taskSet: dbQueryResult,
-    //         taskSetCount: count,
-    //         selectedTaskSetObject: this.selectedTaskSet,
-    //         selectedTracker: this.state.selectedTracker
-    //       }
-    //     }
-    //
-    //     store.dispatch(action);
-    //
-    //     var layoutAction = {
-    //       type: 'SET_SHOW_HEADER',
-    //       showHeader: false
-    //     }
-    //
-    //     store.dispatch(layoutAction);
-    //
-    //     this.props.gotoPage('/study');
-    //   })
-    // }); */
     var url = '/study?id=' + this.selectedTaskSet._id;
-    console.log("HELLO I'm FROM SPACE");
     url = this.appendEyeTrackerInfo(url);
     this.props.gotoPage(url);
   }

@@ -18,6 +18,7 @@ class ObserverMessage extends React.Component {
   parseMessage(args) {
     var redColor = "#E94B3C";
     var greenColor = "#006B38";
+    this.marginTop = false;
 
     var displayText = '';
     var timeToCompletion = 0;

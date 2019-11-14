@@ -52,9 +52,9 @@ class ImageViewComponent extends Component {
     var url = "/Images/" + this.props.task.image;
       return (
         <div className={this.props.className} >
-          <img className="imageView" src={url} alt="" ref={this.imageRef}/>
-
-
+          <div className="imageViewWrapper">
+            <img className="imageView" src={url} alt="" ref={this.imageRef}/>
+          </div>
         </div>
       );
     // }
