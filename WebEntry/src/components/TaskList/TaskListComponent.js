@@ -18,7 +18,7 @@ const taskListTarget = {
 
   canDrop(props, monitor) {
     return props.reactDND;
-  }  
+  }
 };
 function collect(connect, monitor) {
  return {
@@ -58,7 +58,7 @@ class TaskListComponent extends Component {
             if(item === this.props.selectedTask){
               highlightBG = "highlightBG";
             }
-
+            
             var content = listUtils.getTaskContent(item);
 
             return <div key={index}><TaskItemComponent highlight={highlightBG} placeholder={false} task={item} itemType={this.props.itemType}

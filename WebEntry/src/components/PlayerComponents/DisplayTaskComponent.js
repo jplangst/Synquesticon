@@ -10,6 +10,7 @@ import TextEntryComponent from '../Views/TextEntryComponent';
 import SingleChoiceComponent from '../Views/SingleChoiceComponent';
 import MultipleChoiceComponent from '../Views/MultipleChoiceComponent';
 import ImageViewComponent from '../Views/ImageViewComponent';
+import ComparisonViewComponent from '../Views/ComparisonViewComponent';
 
 import MultiItemTask from './MultiItemTask';
 
@@ -365,6 +366,9 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
             if((this.currentTask.taskType === "Image")) {
               return <ImageViewComponent className="imageViewWrapper" task={this.currentTask} taskIndex={this.state.currentTaskIndex}/>;
             }
+            if((this.currentTask.taskType === "Comparison")) {
+              return <ComparisonViewComponent className="commonContainer" task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered}/>;
+            }
           } else {
 
             return <div/>;
@@ -544,7 +548,7 @@ class DisplayTaskComponent extends Component {
             return 1;
           });
           if (playerUtils.pointIsInPoly([cursorX, cursorY], polygon)){
-            gazeLoc.target = a.name;
+            gazeLoc.target = a;
             break;
           }
         }

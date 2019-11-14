@@ -127,8 +127,17 @@ router.post("/getTaskWithID", (req, res) => {
     if (err) {
       return res.json({success: false, error: err});
     }
-    console.log(err, obj);
     return res.json({success: true, question: obj});
+  });
+});
+
+router.post("/getManyTaskWithIDs", (req, res) => {
+  const { ids } = req.body;
+  Tasks.find({_id: { $in: ids }}, (err, obj) => {
+    if (err) {
+      return res.json({success: false, error: err});
+    }
+    return res.json({success: true, tasks: obj});
   });
 });
 
@@ -160,13 +169,37 @@ router.post("/addTask", (req, res) => {
   const { message } = req.body;
   var obj = JSON.parse(message);
   console.log("received obj", obj);
+  console.log(typeof(obj.subTasks));
   let task = new Tasks(obj);
 
   task.save((err, q) => {
     if (err) {
+      console.log(err);
       return res.json({ success: false, error: err });
     }
     return res.json({ success: true, _id: q._id });
+  });
+});
+
+router.post("/addTwoTasks", (req, res) => {
+  const { tasks } = req.body;
+  var objs = JSON.parse(tasks);
+  let task1 = new Tasks(objs[0]);
+  let task2 = new Tasks(objs[1]);
+  var ids = [];
+
+  task1.save((err1, q1) => {
+    if (err1) {
+      return res.json({ success: false, error: err1 });
+    }
+    ids.push(q1._id);
+    task2.save((err2, q2) => {
+      if (err2) {
+        return res.json({ success: false, error: err2});
+      }
+      ids.push(q2._id);
+      return res.json({ success: true, _ids: ids});
+    });
   });
 });
 
@@ -378,7 +411,6 @@ router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
       const results = await recursionForArray(ids);
       var returnedResult = JSON.parse(JSON.stringify(wrapperSet));
       returnedResult.data = results;
-      console.log("wrapperSet", returnedResult);
       return res.json({success: true, data: returnedResult, count: count, mainTaskSetName: returnedResult.name});
     } catch (e) {
       console.log(e);
@@ -390,7 +422,6 @@ router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
 router.post("/getImage", (req, res) => {
   const { file } = req.body;
   var filepath = "./public/" + IMAGE_FOLDER + "/" + file;
-  console.log("received request for image:", filepath);
   fs.readFile(filepath, (err, data) => {
     if (err) {
       return res.json({ success: false, error: err});
@@ -485,7 +516,6 @@ router.post("/addNewLineToParticipant", (req, res) => {
 
 router.post("/addNewGlobalVariableToParticipant", (req, res) => {
   const { participantId, globalVariableJSON} = req.body;
-  console.log("add global variables", participantId, globalVariableJSON, req.body);
   var globalVariable = JSON.parse(globalVariableJSON);
 
   Participants.updateOne({_id: participantId}, { $addToSet: {globalVariables: globalVariable}}, (err, participant) => {
@@ -495,7 +525,6 @@ router.post("/addNewGlobalVariableToParticipant", (req, res) => {
 });
 
 router.post("/deleteParticipant", (req, res) => {
-  console.log(req);
   const { id } = req.body;
   Experiments.updateOne({ childIds: id }, { $pull: {childIds: id}}, err => {
 
@@ -704,7 +733,6 @@ router.post("/addNewObserverMessage", async (req, res) => {
                                        taskId: obj.taskId,
                                        startTaskTime: obj.startTaskTime}, { $addToSet: {messages: obj.messages[0]}}, err => {
       if (err) {
-        console.log("updated");
         return res.json({ success: false, error: err });
       }
       return res.json({ success: true });
@@ -714,7 +742,6 @@ router.post("/addNewObserverMessage", async (req, res) => {
     let newMessage = new ObserverMessages(obj);
     newMessage.save((serr, m) => {
       if (serr) {
-        console.log("created a new one");
         return res.json({ success: false, error: serr });
       }
       return res.json({ success: true });
@@ -808,8 +835,6 @@ router.post("/saveGazeData", (req, res) => {
 
 router.post("/uploadImage", (req, res) => {
   upload(req, res, (err) => {
-    console.log("Request ---", req.body);
-    console.log("Request file ---", req.file);
     if (err) {
       return res.json({ success: false });
     }
@@ -821,7 +846,6 @@ router.get("/getAllImages", (req, res) => {
   const fs = require('fs');
 
   fs.readdir("../public/" + IMAGE_FOLDER, (err, files) => {
-    console.log(files);
     return res.json({ success: true , images: files})
   });
 });

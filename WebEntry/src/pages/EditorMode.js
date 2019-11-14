@@ -79,6 +79,7 @@ class EditorMode extends Component {
   //actions callbacks
   selectTask(task) {
     this.assetEditorCompKey += 1;
+
     var assetObject = <EditTaskComponent isEditing={true} taskObject={task}
       closeTaskCallback={this.assetEditorObjectClosed.bind(this)}
       key={this.assetEditorCompKey}

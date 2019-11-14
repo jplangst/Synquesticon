@@ -145,6 +145,17 @@ exports.save_gaze_data = function (participantId, task, gazeData) {
     logger.write(header + os.EOL);
   }
 
+  var target = "";
+  if (row.target != undefined) {
+    target = row.target.name + ',';
+    row.target.boundingbox.map((p, ind) => {
+      target += p[0] + '_' + p[1] + ';'
+    });
+  }
+  else {
+    target = ',';
+  }
+
   gazeData.map((row, index) => {
     logger.write(row.timestamp + ',' +
                  row.locX + ',' +
@@ -152,7 +163,7 @@ exports.save_gaze_data = function (participantId, task, gazeData) {
                  row.leftPupilRadius + ',' +
                  row.rightPupilRadius + ',' +
                  task + ',' +
-                 row.target + os.EOL);
+                 target + os.EOL);
   })
   logger.end();
 }

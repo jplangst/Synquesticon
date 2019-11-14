@@ -86,6 +86,34 @@ class db_helper {
     });
   };
 
+  addTwoTasksToDb(tasks, callback) {
+    axios.post("/api/addTwoTasks", {
+      tasks: JSON.stringify(tasks)
+    })
+    .then((response) => {
+      if(response.data.success) {
+        callback(response.data._ids);
+      }
+    });
+  }
+
+  getManyTaskWithIDs(ids, callback) {
+    axios.post("/api/getManyTaskWithIDs", {
+      ids: ids
+    }).then((response) => {
+      if(response.status === 200) {
+        callback(response.data.tasks);
+      }
+      else {
+        //alert("Cannot find task with this ID ", id);
+        throw new Error("Database connection failed");
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+    });
+  }
+
   /**
    * updateTaskFromDb - Asynch call to update an existing task in the DB.
    *

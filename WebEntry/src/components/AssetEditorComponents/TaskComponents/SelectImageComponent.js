@@ -62,16 +62,25 @@ class SelectImageComponent extends Component {
       previewImage = <AOIEditorComponent preview={this.preview} task={this.props.task} image={this.image}/>//<img className="imageContainer" src={"Images/"+this.props.task.image} alt="Task" />;
     }
 
+
+
     var imageTaskName =
     <TextField
         required
         padding="dense"
         id="imageName"
-        defaultValue={this.props.task.question}
+        defaultValue={this.props.task.label === undefined? this.props.task.question : this.props.task.label}
         placeholder="Task Name"
         label="Task Name"
         ref="imageTextRef"
-        onChange={(e)=>{this.props.task.question = e.target.value}}
+        onChange={(e)=>{
+          if (this.props.task.label === undefined) {
+            this.props.task.question = e.target.value;
+          }
+          else {
+            this.props.task.label = e.target.value;
+          }
+        }}
     />;
 
     var imageTypeContent =

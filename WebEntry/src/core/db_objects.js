@@ -9,6 +9,21 @@ export class TaskObject {
     this.globalVariable = false;
     this.instruction = "";
     this.image = "";
+    this.subTasks = [];
+    this.subTasks.push({
+      subType: "Text",
+      label: "",
+      image: "",
+      text: "",
+      aois: []
+    });
+    this.subTasks.push({
+      subType: "Text",
+      label: "",
+      image: "",
+      text: "",
+      aois: []
+    });
     this.aois = [];
     this.tags = [];
     this.responses = [];

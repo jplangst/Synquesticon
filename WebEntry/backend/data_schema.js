@@ -19,6 +19,18 @@ const TaskSchema = new Schema(
     globalVariable: Boolean, //If true the response of the task should be stored as a global var in the participant DB object
     instruction: String,
     image: String, //filepath
+    subTasks: [{
+      subType: String,
+      label: String,
+      image: String,
+      text: String,
+      aois: [{
+        name: String,
+        boundingbox: [[Number]],
+        _id: false
+      }],
+      _id: false
+    }],
     aois: [{
       name: String,
       boundingbox: [[Number]],

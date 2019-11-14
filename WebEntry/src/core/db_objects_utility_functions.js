@@ -23,6 +23,9 @@ export function getTaskContent(task){
     else if(task.taskType === "Image"){
       content = task.question;
     }
+    else if(task.taskType === "Comparison"){
+      content = task.question;
+    }
   }
   else if(task.objType === "TaskSet"){
     content = task.name;

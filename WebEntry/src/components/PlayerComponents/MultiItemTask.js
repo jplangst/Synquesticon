@@ -5,6 +5,7 @@ import TextEntryComponent from '../Views/TextEntryComponent';
 import SingleChoiceComponent from '../Views/SingleChoiceComponent';
 import MultipleChoiceComponent from '../Views/MultipleChoiceComponent';
 import ImageViewComponent from '../Views/ImageViewComponent';
+import ComparisonViewComponent from '../Views/ComparisonViewComponent';
 
 import shuffle from '../../core/shuffle';
 import * as dbObjects from '../../core/db_objects';
@@ -95,6 +96,9 @@ class MultiItemTask extends Component {
         }
         else if(item.taskType === "Image") {
             return <ImageViewComponent className="itemContainer" key={key} task={item} mapID={mapIndex}/>;
+        }
+        else if(item.taskType === "Comparison") {
+            return <ComparisonViewComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex}/>;
         }
         else{
           return null;
