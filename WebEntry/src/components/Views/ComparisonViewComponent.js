@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import ImageViewComponent from './ImageViewComponent';
 
 import { Typography } from '@material-ui/core';
+import { withTheme } from '@material-ui/styles';
 
 import store from '../../core/store';
 
@@ -21,10 +22,10 @@ class SubTaskViewComponent extends Component {
 
   render() {
     if(this.props.task.subType === "Text"){
-      return <Text className="itemContainer" task={this.props.task} answerCallback={(e)=>this.props.answerCallback(this.props.task)}/>;
+      return <Text className="itemContainer" task={this.props.task}/>;
     }
     else if(this.props.task.subType === "Image"){
-      return <ImageViewComponent className="itemContainer" task={this.props.task} answerCallback={(e)=>this.props.answerCallback(this.props.task)}/>;
+      return <ImageViewComponent className="itemContainer" task={this.props.task}/>;
     }
 
     return <div/>;
@@ -35,7 +36,7 @@ class ComparisonViewComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      imageSrc: null
+      picked: -1
     }
     this.image = null;
     this.imageRef = React.createRef();
@@ -47,17 +48,43 @@ class ComparisonViewComponent extends Component {
   componentDidMount() {
   }
 
-  answerCallback(task) {
+  checkAnswer(answer) {
+    if (this.props.task.correctResponses === undefined || this.props.task.correctResponses.length === 0) {
+      return "notApplicable";
+    }
+    if (this.props.task.correctResponses.includes(answer)) {
+      return "correct";
+    }
+    return "incorrect";
+  }
 
+  onPickingTask(task) {
+    this.setState({
+      picked: task
+    });
+
+    var answerObj = {
+      responses: [this.props.task.subTasks[task].label],
+      correctlyAnswered: this.checkAnswer(this.props.task.subTasks[task].label),
+      taskID: this.props.task._id,
+      mapID: this.props.mapID,
+    }
+    this.props.answerCallback(answerObj);
   }
 
   render() {
-    console.log("comparison task", this.props.task);
-    return <div>
-      <SubTaskViewComponent task={this.props.task.subTasks[0]} answerCallback={this.answerCallback.bind(this)}/>
-      <SubTaskViewComponent task={this.props.task.subTasks[1]} answerCallback={this.answerCallback.bind(this)}/>
+    var borderStyle={borderWidth:3, borderStyle:'solid', borderColor:this.props.theme.palette.secondary.main};
+    var borderStyle0 = this.state.picked === 0? borderStyle : null;
+    var borderStyle1 = this.state.picked === 1? borderStyle : null;
+    return <div className="comparisonTask">
+      <div className="firstTask" style={borderStyle0} onClick={(e)=>this.onPickingTask(0)}>
+        <SubTaskViewComponent task={this.props.task.subTasks[0]}/>
+      </div>
+      <div className="secondTask" style={borderStyle1} onClick={(e)=>this.onPickingTask(1)}>
+        <SubTaskViewComponent className="secondTask" task={this.props.task.subTasks[1]}/>
+      </div>
     </div>
   }
 }
 
-export default ComparisonViewComponent;
+export default withTheme(ComparisonViewComponent);

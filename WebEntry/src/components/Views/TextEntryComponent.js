@@ -10,12 +10,24 @@ const second_line_keyboard = [5, 6, 7, 8, 9]
 const third_line_keyboard = ['.', '<--']
 
 class TextEntryComponent extends Component {
-
   constructor() {
     super();
     this.textEntry = "";
     this.keyboardPressed = this.onMyKeyboardPressed.bind(this);
     this.decimalWasPressed = false;
+    this.textRef = React.createRef();
+  }
+
+  componentDidMount() {
+    var textAOIAction = {
+      type: 'ADD_AOIS',
+      aois: {
+        name: this.props.task.question,
+        boundingbox: [],
+        imageRef: this.textRef
+      }
+    }
+    store.dispatch(textAOIAction);
   }
 
   onMyKeyboardPressed(key) {
@@ -102,7 +114,7 @@ class TextEntryComponent extends Component {
     return (
       <div className={this.props.className + " TextEntry"} >
         <div className="questionDisplay">
-          <Typography variant="h3" align="center" style={{whiteSpace:"pre-line"}} color="textPrimary">{this.props.task.question}</Typography>
+          <Typography ref={this.textRef} variant="h3" align="center" style={{whiteSpace:"pre-line"}} color="textPrimary">{this.props.task.question}</Typography>
         </div>
         <div className="inputField">
           <Typography color="textPrimary">{this.textEntry}</Typography>

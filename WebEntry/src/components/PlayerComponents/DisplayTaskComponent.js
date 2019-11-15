@@ -368,7 +368,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
               return <ImageViewComponent className="commonContainer" task={this.currentTask} taskIndex={this.state.currentTaskIndex}/>;
             }
             if((this.currentTask.taskType === "Comparison")) {
-              return <ComparisonViewComponent className="commonContainer" task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered}/>;
+              return <ComparisonViewComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered}/>;
             }
           } else {
 
@@ -542,12 +542,20 @@ class DisplayTaskComponent extends Component {
           //console.log("imageDiv", a.imageRef.ge, a.imageWrapper.current);
           var imageDivRect = a.imageRef.current.getBoundingClientRect();
           var polygon = [];
-          a.boundingbox.map((p, ind) => {
-            var x = p[0]*imageDivRect.width/100 + imageDivRect.x;
-            var y = p[1]*imageDivRect.height/100 + imageDivRect.y;
-            polygon.push([x, y]);
-            return 1;
-          });
+          if (a.boundingbox.length > 0) {
+            a.boundingbox.map((p, ind) => {
+              var x = p[0]*imageDivRect.width/100 + imageDivRect.x;
+              var y = p[1]*imageDivRect.height/100 + imageDivRect.y;
+              polygon.push([x, y]);
+              return 1;
+            });
+          }
+          else {
+            polygon.push([imageDivRect.x, imageDivRect.y]);
+            polygon.push([imageDivRect.x + imageDivRect.width, imageDivRect.y]);
+            polygon.push([imageDivRect.x + imageDivRect.width, imageDivRect.y + imageDivRect.height]);
+            polygon.push([imageDivRect.x, imageDivRect.y + imageDivRect.height]);
+          }
           if (playerUtils.pointIsInPoly([cursorX, cursorY], polygon)){
             gazeLoc.target = a;
             break;

@@ -6,7 +6,21 @@ class InstructionViewComponent extends Component {
   constructor(props) {
     super(props);
     this.onAnswer();
+    this.textRef = React.createRef();
   }
+
+  componentDidMount() {
+    var textAOIAction = {
+      type: 'ADD_AOIS',
+      aois: {
+        name: this.props.task.question,
+        boundingbox: [],
+        imageRef: this.textRef
+      }
+    }
+    store.dispatch(textAOIAction);
+  }
+
   onAnswer() {
     if (this.props.newTask) {
       var answerObj = {
@@ -21,7 +35,7 @@ class InstructionViewComponent extends Component {
   render() {
     return (
       <div className={this.props.className}>
-        <Typography variant="h3" color="textPrimary" align="center" style={{whiteSpace:"pre-line"}}>{this.props.task.instruction}</Typography>
+        <Typography ref={this.textRef} variant="h3" color="textPrimary" align="center" style={{whiteSpace:"pre-line"}}>{this.props.task.instruction}</Typography>
       </div>
     );
   }

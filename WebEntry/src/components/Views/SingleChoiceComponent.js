@@ -9,6 +9,19 @@ class SingleChoiceComponent extends Component {
     super();
     this.pickedItem = null;
     this.hasBeenAnswered = false;
+    this.textRef = React.createRef();
+  }
+
+  componentDidMount() {
+    var textAOIAction = {
+      type: 'ADD_AOIS',
+      aois: {
+        name: this.props.task.question,
+        boundingbox: [],
+        imageRef: this.textRef
+      }
+    }
+    store.dispatch(textAOIAction);
   }
 
   reset() {
@@ -48,7 +61,7 @@ class SingleChoiceComponent extends Component {
     return (
       <div className={this.props.className}>
         <div className="questionDisplay">
-          <Typography variant="h3" color="textPrimary" align="center" style={{whiteSpace:"pre-line"}}>{this.props.task.question}</Typography>
+          <Typography ref={this.textRef} variant="h3" color="textPrimary" align="center" style={{whiteSpace:"pre-line"}}>{this.props.task.question}</Typography>
         </div>
         <div className="responsesButtons">
           {
