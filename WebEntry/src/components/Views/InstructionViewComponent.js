@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 
 import { Typography } from '@material-ui/core';
 
+import store from '../../core/store';
+
 class InstructionViewComponent extends Component {
   constructor(props) {
     super(props);
@@ -13,7 +15,7 @@ class InstructionViewComponent extends Component {
     var textAOIAction = {
       type: 'ADD_AOIS',
       aois: {
-        name: this.props.task.question,
+        name: this.props.parentSet + '_' + this.props.task.question,
         boundingbox: [],
         imageRef: this.textRef
       }

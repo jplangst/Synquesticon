@@ -190,14 +190,17 @@ exports.save_to_csv = async function(p) {
     var file_name = "";
 
     if(p.linesOfData && p.linesOfData.length > 0){
+      file_name = p.linesOfData[0].tasksFamilyTree[0] + '_';
       date = new Date(p.linesOfData[0].startTimestamp);
-      file_name = date.toUTCString().replace(/\s/g,'') +"_";
+      file_name += date.toUTCString().replace(/\s/g,'') +"_";
     }
 
     for (let i = 0; i < p.globalVariables.length; i++) {
       /*header += p.globalVariables[i].label + ",";*/
-      globalVariables += p.globalVariables[i].value + ":"; /* Was "," but that does not make sense*/
-      file_name += p.globalVariables[i].label + '_' + p.globalVariables[i].value + '_';
+      if (!p.globalVariables[i].label.toLowerCase().includes("record data")) {
+        globalVariables += p.globalVariables[i].label + '_' + p.globalVariables[i].value + ":"; /* Was "," but that does not make sense*/
+        file_name += p.globalVariables[i].label + '_' + p.globalVariables[i].value + '_';
+      }
     }
 
     //prepare the header

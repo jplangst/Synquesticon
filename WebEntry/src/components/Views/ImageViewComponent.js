@@ -35,7 +35,7 @@ class ImageViewComponent extends Component {
     var imageAOIAction = {
       type: 'ADD_AOIS',
       aois: {
-        name: this.props.task.question,
+        name: this.props.parentSet + '_' + this.props.task.question,
         boundingbox: [],
         imageRef: this.imageRef
       }

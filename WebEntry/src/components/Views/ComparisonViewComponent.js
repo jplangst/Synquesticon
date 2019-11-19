@@ -10,6 +10,22 @@ import store from '../../core/store';
 import './ComparisonViewComponent.css';
 
 class Text extends Component {
+  constructor(props) {
+    super(props);
+    this.textRef = React.createRef();
+  }
+  componentDidMount() {
+    var textAOIAction = {
+      type: 'ADD_AOIS',
+      aois: {
+        name: this.props.parentSet + '_' + this.props.task.label,
+        boundingbox: [],
+        imageRef: this.textRef
+      }
+    }
+    store.dispatch(textAOIAction);
+  }
+
   render() {
     return <Typography variant="h3" color="textPrimary" style={{whiteSpace:"pre-line"}}>{this.props.task.text}</Typography>;
   }
@@ -22,10 +38,10 @@ class SubTaskViewComponent extends Component {
 
   render() {
     if(this.props.task.subType === "Text"){
-      return <Text className="itemContainer" task={this.props.task}/>;
+      return <Text className="itemContainer" task={this.props.task} parentSet={this.props.parentSet}/>;
     }
     else if(this.props.task.subType === "Image"){
-      return <ImageViewComponent className="itemContainer" task={this.props.task}/>;
+      return <ImageViewComponent className="itemContainer" task={this.props.task} parentSet={this.props.parentSet}/>;
     }
 
     return <div/>;
@@ -78,10 +94,10 @@ class ComparisonViewComponent extends Component {
     var borderStyle1 = this.state.picked === 1? borderStyle : null;
     return <div className="comparisonTask">
       <div className="firstTask" style={borderStyle0} onClick={(e)=>this.onPickingTask(0)}>
-        <SubTaskViewComponent task={this.props.task.subTasks[0]}/>
+        <SubTaskViewComponent task={this.props.task.subTasks[0]} parentSet={this.props.parentSet}/>
       </div>
       <div className="secondTask" style={borderStyle1} onClick={(e)=>this.onPickingTask(1)}>
-        <SubTaskViewComponent className="secondTask" task={this.props.task.subTasks[1]}/>
+        <SubTaskViewComponent className="secondTask" task={this.props.task.subTasks[1]} parentSet={this.props.parentSet}/>
       </div>
     </div>
   }

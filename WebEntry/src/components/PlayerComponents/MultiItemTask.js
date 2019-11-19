@@ -83,22 +83,22 @@ class MultiItemTask extends Component {
         var key = item._id+"MultiItemTask";
 
         if(item.taskType === "Instruction"){
-            return <InstructionViewComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex}/>;
+            return <InstructionViewComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.taskSet.name}/>;
         }
         else if(item.taskType === "Text Entry"){
-            return <TextEntryComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex}/>;
+            return <TextEntryComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.taskSet.name}/>;
         }
         else if(item.taskType === "Single Choice"){
-            return <SingleChoiceComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex}/>;
+            return <SingleChoiceComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.taskSet.name}/>;
         }
         else if(item.taskType === "Multiple Choice"){
-            return <MultipleChoiceComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex}/>;
+            return <MultipleChoiceComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.taskSet.name}/>;
         }
         else if(item.taskType === "Image") {
-            return <ImageViewComponent className="itemContainer" key={key} task={item} mapID={mapIndex}/>;
+            return <ImageViewComponent className="itemContainer" key={key} task={item} mapID={mapIndex} parentSet={this.props.taskSet.name}/>;
         }
         else if(item.taskType === "Comparison") {
-            return <ComparisonViewComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex}/>;
+            return <ComparisonViewComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.taskSet.name}/>;
         }
         else{
           return null;

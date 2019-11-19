@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 
+import store from '../../core/store';
+
 import './TextEntryComponent.css';
 
 const first_line_keyboard = [0, 1, 2, 3, 4]
@@ -22,7 +24,7 @@ class TextEntryComponent extends Component {
     var textAOIAction = {
       type: 'ADD_AOIS',
       aois: {
-        name: this.props.task.question,
+        name: this.props.parentSet + '_' + this.props.task.question,
         boundingbox: [],
         imageRef: this.textRef
       }
