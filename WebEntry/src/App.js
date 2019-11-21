@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Switch  } from 'react-router-dom';
+import { HashRouter as Router, Route, Switch  } from 'react-router-dom';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
@@ -54,6 +54,8 @@ class App extends Component {
 
     let scrollBgColor = theme.palette.type==="light"?"lightscroll":"darkscroll";
     document.body.classList.add(scrollBgColor);
+
+
 
     return (
         <Router>
