@@ -115,15 +115,31 @@ class DataExportationComponent extends Component {
   }
 
   getParticipantName(p) {
-    if (p.globalVariables.length <= 0) {
+    if (!p.linesOfData || p.linesOfData.length <= 0 || p.globalVariables.length <= 0) {
       return "Anonymous";
     }
 
-    var name = p.globalVariables[0].label + "_" + p.globalVariables[0].value;
-    for (var i = 1; i < p.globalVariables.length; i++) {
-      name += ("-" + p.globalVariables[i].label + "_" + p.globalVariables[i].value);
+    // var name = p.globalVariables[0].label + "_" + p.globalVariables[0].value;
+    // for (var i = 1; i < p.globalVariables.length; i++) {
+    //   name += ("-" + p.globalVariables[i].label + "_" + p.globalVariables[i].value);
+    // }
+
+    var file_name = "";
+
+    if(p.linesOfData && p.linesOfData.length > 0){
+      file_name = p.linesOfData[0].tasksFamilyTree[0] + '_';
+      var date = new Date(p.linesOfData[0].startTimestamp);
+      file_name += date.toUTCString().replace(/\s/g,'') +"_";
     }
-    return name;
+
+    for (let i = 0; i < p.globalVariables.length; i++) {
+      /*header += p.globalVariables[i].label + ",";*/
+      if (!p.globalVariables[i].label.toLowerCase().includes("record data")) {
+        file_name += p.globalVariables[i].label + '_' + p.globalVariables[i].value + '_';
+      }
+    }
+
+    return file_name;
   }
 
   render() {

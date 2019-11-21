@@ -1,0 +1,36 @@
+.comparisonTask {
+  display: flex;
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.firstTask {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+
+  position: relative;
+  width: 50%;
+  height: 80%;
+  margin: 5%;
+  padding: 3%;
+}
+
+.secondTask {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+
+  position: relative;
+  width: 50%;
+  height: 80%;
+  margin: 5%;
+  padding: 3%;
+}

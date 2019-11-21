@@ -4,12 +4,27 @@ import Button from '@material-ui/core/Button';
 import { Typography } from '@material-ui/core';
 import { withTheme } from '@material-ui/styles';
 
+import store from '../../core/store';
+
 import './MultipleChoiceComponent.css';
 
 class MultipleChoiceComponent extends Component {
   constructor() {
     super();
     this.pickedItems = [];
+    this.textRef = React.createRef();
+  }
+
+  componentDidMount() {
+    var textAOIAction = {
+      type: 'ADD_AOIS',
+      aois: {
+        name: this.props.parentSet + '_' + this.props.task.question,
+        boundingbox: [],
+        imageRef: this.textRef
+      }
+    }
+    store.dispatch(textAOIAction);
   }
 
   reset() {
@@ -46,7 +61,7 @@ class MultipleChoiceComponent extends Component {
     this.reset();
     return (
       <div className={this.props.className}>
-        <Typography variant="h3" color="textPrimary" align="center" style={{whiteSpace:"pre-line"}}>{this.props.task.question}</Typography>
+        <Typography ref={this.textRef} variant="h3" color="textPrimary" align="center" style={{whiteSpace:"pre-line"}}>{this.props.task.question}</Typography>
         <div className="responsesButtons">
           {
             this.props.task.responses.map((item, index)=>{

@@ -51,19 +51,6 @@ class MultipleChoiceComponent extends Component {
     else if(target==="AOIs"){
       //this.task.aois = response;
       //TODO: implement interface for this functionality
-      this.props.task.aois = [{
-          name: "window1",
-          boundingbox: [[0.440425545, 0.156989247], [0.07234043, 0.156989247], [0.07234043, 0.56774193], [0.440425545, 0.56774193]]
-        },
-        {
-          name: "window2",
-          boundingbox: [[0.6, 0.156989247], [0.976595759, 0.156989247], [0.976595759, 0.688172042], [0.6, 0.688172042]]
-        },
-        {
-          name: "fish",
-          boundingbox: [[0.385106385, 0.677419364], [0.568085134, 0.677419364], [0.568085134, 0.8731183], [0.385106385, 0.8731183]]
-        }
-      ];
     }
     else if(target==="Correct Responses"){
       this.props.task.correctResponses = response;

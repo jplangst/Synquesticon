@@ -11,6 +11,7 @@ import TextEntryComponent from '../Views/TextEntryComponent';
 import SingleChoiceComponent from '../Views/SingleChoiceComponent';
 import MultipleChoiceComponent from '../Views/MultipleChoiceComponent';
 import ImageViewComponent from '../Views/ImageViewComponent';
+import ComparisonViewComponent from '../Views/ComparisonViewComponent';
 
 import MultiItemTask from './MultiItemTask';
 
@@ -305,6 +306,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
       this.currentTask = this.props.taskSet.data[this.state.currentTaskIndex];
       let trackingTaskSetNames = this.props.tasksFamilyTree.slice(); //clone array, since javascript passes by reference, we need to keep the orgin familyTree untouched
       trackingTaskSetNames.push(this.currentTask.name);
+      var parentSet = this.props.tasksFamilyTree[this.props.tasksFamilyTree.length - 1];
       if (this.currentTask.objType === "TaskSet" && !this.currentTask.displayOnePage) {
         //shuffle set if set was marked as "Random"
         var runThisTaskSet = this.currentTask.data;
@@ -352,19 +354,22 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
                                     }}/>
             }
             if((this.currentTask.taskType === "Instruction")) {
-              return <InstructionViewComponent className="commonContainer" task={this.currentTask} answerCallback={this.onAnswer.bind(this)}/>;
+              return <InstructionViewComponent className="commonContainer" task={this.currentTask} answerCallback={this.onAnswer.bind(this)} parentSet={parentSet}/>;
             }
             if(this.currentTask.taskType  === "Text Entry") {
-              return <TextEntryComponent className="commonContainer" task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered}/>;
+              return <TextEntryComponent className="commonContainer" task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered} parentSet={parentSet}/>;
             }
             if(this.currentTask.taskType === "Single Choice") {
-              return <SingleChoiceComponent className="commonContainer" task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered}/>;
+              return <SingleChoiceComponent className="commonContainer" task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered} parentSet={parentSet}/>;
             }
             if((this.currentTask.taskType === "Multiple Choice")) {
-              return <MultipleChoiceComponent className="commonContainer" task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered}/>;
+              return <MultipleChoiceComponent className="commonContainer" task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered} parentSet={parentSet}/>;
             }
             if((this.currentTask.taskType === "Image")) {
-              return <ImageViewComponent className="commonContainer" task={this.currentTask} taskIndex={this.state.currentTaskIndex}/>;
+              return <ImageViewComponent className="commonContainer" task={this.currentTask} taskIndex={this.state.currentTaskIndex} parentSet={parentSet}/>;
+            }
+            if((this.currentTask.taskType === "Comparison")) {
+              return <ComparisonViewComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered} parentSet={parentSet}/>;
             }
           } else {
 
@@ -538,14 +543,22 @@ class DisplayTaskComponent extends Component {
           //console.log("imageDiv", a.imageRef.ge, a.imageWrapper.current);
           var imageDivRect = a.imageRef.current.getBoundingClientRect();
           var polygon = [];
-          a.boundingbox.map((p, ind) => {
-            var x = p[0]*imageDivRect.width/100 + imageDivRect.x;
-            var y = p[1]*imageDivRect.height/100 + imageDivRect.y;
-            polygon.push([x, y]);
-            return 1;
-          });
+          if (a.boundingbox.length > 0) {
+            a.boundingbox.map((p, ind) => {
+              var x = p[0]*imageDivRect.width/100 + imageDivRect.x;
+              var y = p[1]*imageDivRect.height/100 + imageDivRect.y;
+              polygon.push([x, y]);
+              return 1;
+            });
+          }
+          else {
+            polygon.push([imageDivRect.x, imageDivRect.y]);
+            polygon.push([imageDivRect.x + imageDivRect.width, imageDivRect.y]);
+            polygon.push([imageDivRect.x + imageDivRect.width, imageDivRect.y + imageDivRect.height]);
+            polygon.push([imageDivRect.x, imageDivRect.y + imageDivRect.height]);
+          }
           if (playerUtils.pointIsInPoly([cursorX, cursorY], polygon)){
-            gazeLoc.target = a.name;
+            gazeLoc.target = a;
             break;
           }
         }

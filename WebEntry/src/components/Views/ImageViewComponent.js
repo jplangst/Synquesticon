@@ -32,7 +32,15 @@ class ImageViewComponent extends Component {
 
       store.dispatch(action);
     }
-
+    var imageAOIAction = {
+      type: 'ADD_AOIS',
+      aois: {
+        name: this.props.parentSet + '_' + this.props.task.question,
+        boundingbox: [],
+        imageRef: this.imageRef
+      }
+    }
+    store.dispatch(imageAOIAction);
   }
 
   onReceivedImage(img) {

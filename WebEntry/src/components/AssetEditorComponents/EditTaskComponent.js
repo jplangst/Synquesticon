@@ -15,6 +15,7 @@ import InstructionComponent from './TaskComponents/InstructionComponent';
 import SelectImageComponent from './TaskComponents/SelectImageComponent';
 import TextEntryComponent from './TaskComponents/TextEntryComponent';
 import MultipleChoiceComponent from './TaskComponents/MultipleChoiceComponent';
+import ComparisonComponent from './TaskComponents/ComparisonComponent';
 
 import './EditTaskComponent.css';
 
@@ -23,6 +24,7 @@ const taskTypeOptions = [
   'Multiple Choice',
   'Text Entry',
   'Image',
+  'Comparison'
 ];
 
 class EditTaskComponent extends Component {
@@ -60,6 +62,12 @@ class EditTaskComponent extends Component {
 
   onChangeTaskSettings(){
     this.task.taskType = this.state.taskType;
+
+    if(this.task.taskType !== "Comparison") {
+      this.task.subTasks = [];
+    }
+
+    console.log("save object", typeof(this.task.subTasks));
 
     if(this.props.isEditing){
       db_helper.updateTaskFromDb(this.task._id, this.task, this.handleQuestionCallback);
@@ -151,11 +159,14 @@ class EditTaskComponent extends Component {
       questionTypeContent = <TextEntryComponent task={this.task} />;
     }
 
-    var instructionTypeContent = (this.state.taskType === "Instruction" || this.state.taskType === "Complex") ?
+    var instructionTypeContent = (this.state.taskType === "Instruction") ?
                                     <InstructionComponent task={this.task}/> : null;
 
-    var imageTypeContent = (this.state.taskType === "Image" || this.state.taskType === "Complex") ?
+    var imageTypeContent = (this.state.taskType === "Image") ?
                                     <SelectImageComponent task={this.task} selectImageCallback={this.onSelectImage.bind(this)}/> : null;
+
+    var comparisonContent = (this.state.taskType === "Comparison") ?
+                                    <ComparisonComponent task={this.task} /> : null;
 
     var deleteTaskBtn = this.props.isEditing ?
       <Button onClick={this.removeTask.bind(this)} variant="outlined">Delete Task </Button> : null;
@@ -187,6 +198,7 @@ class EditTaskComponent extends Component {
             {instructionTypeContent}
             {questionTypeContent}
             {imageTypeContent}
+            {comparisonContent}
 
             <div className="editTaskFormButtons">
               <Button onClick={this.closeTaskComponent.bind(this, false)} variant="outlined">
