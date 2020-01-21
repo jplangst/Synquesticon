@@ -8,7 +8,7 @@
     "@material-ui/lab": "^3.0.0-alpha.21",
     "@material-ui/styles": "^4.3.3",
     "autobahn": "^18.3.2",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "babel-polyfill": "^6.26.0",
     "dnd": "^0.1.0",
     "file-saver": "^2.0.2",
