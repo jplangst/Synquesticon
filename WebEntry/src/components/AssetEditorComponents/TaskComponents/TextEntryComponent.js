@@ -17,6 +17,7 @@ class TextEntryComponent extends Component {
     this.handleGlobalVariableChanged = this.onGlobalVariableChanged.bind(this);
   }
 
+  //TODO this could be an interface implementable function
   onGlobalVariableChanged(e, checked){
     this.props.task.globalVariable = checked;
     this.setState({
@@ -24,12 +25,14 @@ class TextEntryComponent extends Component {
     });
   }
 
+  //TODO this could be an interface implementable function
   onResponsesChanged(e, response, target){
     response = response.replace(/\s+/g, " ");
     response = response.trim();
     response = response.split(",");
     response = response.map((value)=>{
-      return value.trim();
+      value = value.trim();
+      return value;
     });
     response = response.filter(Boolean); //Remove empty values
 
@@ -52,6 +55,9 @@ class TextEntryComponent extends Component {
           boundingbox: [[0.385106385, 0.677419364], [0.568085134, 0.677419364], [0.568085134, 0.8731183], [0.385106385, 0.8731183]]
         }
       ];
+    }
+    else if(target==="Correct Responses"){
+      this.props.task.correctResponses = response;
     }
   }
 
@@ -96,6 +102,18 @@ class TextEntryComponent extends Component {
           multiline
           rows="3"
           onChange={(e)=>{this.props.task.question = e.target.value}}
+        />
+        <TextField label="Correct Responses"
+          required
+
+          padding="dense"
+          style={{marginRight:"10px", width:"calc(40% - 15px)"}}
+          id="tags"
+          defaultValue={this.props.task.correctResponses.join(',')}
+          placeholder="Correct Answer, Threshold(Optional)"
+          helperText="Enter the correct answer and optionally a threshold seperated with a comma, +- that still allows a correct answer. E.g. 5,2"
+          ref="correctResponseRef"
+          onChange={(e)=> this.responseHandler(e, e.target.value, "Correct Responses")}
         />
         <TextField label="Tags"
           required

@@ -1,5 +1,5 @@
 {
-    "pid": 92464, 
+    "pid": 53188, 
     "argv": [
         "crossbar", 
         "start"
@@ -13,7 +13,7 @@
         "logformat": "standard", 
         "logdir": null, 
         "logtofile": false, 
-        "cbdir": "C:\\Git\\Biometrics-lab\\Synquesticon\\WebEntry", 
+        "cbdir": "D:\\Git\\Biometrics-lab\\Synquesticon\\WebEntry", 
         "config": "config.json", 
         "shutdownafter": null
     }

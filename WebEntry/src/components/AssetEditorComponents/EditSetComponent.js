@@ -138,7 +138,7 @@ class EditSetComponent extends Component {
     if(target==="Tags"){
       this.set.tags = response;
     }
-    else if(target==="Repeat"){
+    else if(target==="Repeat" && response[0]){
       response = response[0].replace(/\D/g,'');
       response = response === "" ? "0" : response;
       this.set.repeatSetThreshold = Number(response);
