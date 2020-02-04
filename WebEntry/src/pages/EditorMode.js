@@ -25,7 +25,7 @@ class EditorMode extends Component {
       showMenu: false,
       taskList: [],
       taskSetList: [],
-      allowRegex: false,
+      allowRegex: true,
       assetEditorContext: "empty",
       assetEditorObject: null,
     };
@@ -63,6 +63,7 @@ class EditorMode extends Component {
   }
 
   onDatabaseSearched(queryTasks, result){
+    console.log(result);
     if(queryTasks){
       this.setState({taskList: result.tasks});
     }
@@ -125,8 +126,21 @@ class EditorMode extends Component {
     var searchString = "";
     if(typeof(e)==='object'){
       searchString = e.target.value;
+
       if(!this.state.allowRegex){
         searchString = this.escapeRegExp(searchString);
+      }
+
+      if(searchString.includes(",")){
+        searchString = searchString.split(",");
+        searchString = searchString.map((value)=>{
+          return value.trim();
+        });
+        searchString = searchString.filter(Boolean); //Remove empty values
+
+        if(searchString.length === 1){
+          searchString = searchString[0];
+        }
       }
     }
 
@@ -136,8 +150,17 @@ class EditorMode extends Component {
     var searchString = "";
     if(typeof(e)==='object'){
       searchString = e.target.value;
+
       if(!this.state.allowRegex){
         searchString = this.escapeRegExp(searchString);
+      }
+
+      if(searchString.includes(",")){
+        searchString = searchString.split(",");
+        searchString = searchString.map((value)=>{
+          return value.trim();
+        });
+        searchString = searchString.filter(Boolean); //Remove empty values
       }
     }
 

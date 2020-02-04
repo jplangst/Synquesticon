@@ -64,12 +64,9 @@ class TextEntryComponent extends Component {
       return "notApplicable";
     }
 
-    //if the response matches a list of responses we are ok
-    if(this.props.task.correctResponses.includes(this.textEntry)) {
-      return "correct";
-    }
+
     //If the response has two values then we treat the second as how much the answer can differ and still be valid
-    else if(this.props.task.correctResponses.length > 1){
+    if(this.props.task.correctResponses.length > 1){
       let answer = parseFloat(this.textEntry);
       let correctAnswer = this.props.task.correctResponses[0];
       let threshold = this.props.task.correctResponses[1];
@@ -77,7 +74,11 @@ class TextEntryComponent extends Component {
         return "correct";
       }
     } //Otherwise we just check if it matches the correct response
-
+    else{
+      if(this.props.task.correctResponses.includes(this.textEntry)) {
+        return "correct";
+      }
+    }
     return "incorrect";
   }
 

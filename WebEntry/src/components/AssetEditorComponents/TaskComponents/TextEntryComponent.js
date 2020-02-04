@@ -103,15 +103,15 @@ class TextEntryComponent extends Component {
           rows="3"
           onChange={(e)=>{this.props.task.question = e.target.value}}
         />
-        <TextField label="Correct Responses"
+        <TextField label="Correct Response"
           required
 
           padding="dense"
           style={{marginRight:"10px", width:"calc(40% - 15px)"}}
           id="tags"
           defaultValue={this.props.task.correctResponses.join(',')}
-          placeholder="Correct Answer, Threshold(Optional)"
-          helperText="Enter the correct answer and optionally a threshold seperated with a comma, +- that still allows a correct answer. E.g. 5,2"
+          placeholder="Correct Answer, Margin(Optional)"
+          helperText="Enter the correct answer and optionally a margin seperated with a comma, +- that still allows a correct answer. E.g. 5,2 would let anything between 3-7 be a correct answer"
           ref="correctResponseRef"
           onChange={(e)=> this.responseHandler(e, e.target.value, "Correct Responses")}
         />

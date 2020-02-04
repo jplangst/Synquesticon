@@ -141,7 +141,22 @@ router.post("/getManyTaskWithIDs", (req, res) => {
   });
 });
 
-router.post("/getAllTasksContaining", (req, res) => {
+async function queryAsync(queryString, collection){
+  var result = await collection.find( {$or:[{'question': {"$regex" : queryString, "$options":"i"}},
+  {'name': {"$regex" : queryString, "$options":"i"}},
+  {'tags': {"$regex" : queryString, "$options":"i"}}]}, (err, data) => {
+    return new Promise( function(resolve, reject){
+      if(err){
+        console.log(err);
+        reject(err);
+      }
+      resolve(data);
+    })
+  }).catch(e=>console.log(e));
+  return await result;
+}
+
+router.post("/getAllTasksContaining", async (req, res) => {
   const { queryCollection, queryString } = req.body;
 
   var collection = null;
@@ -152,16 +167,40 @@ router.post("/getAllTasksContaining", (req, res) => {
     collection = TaskSets;
   }
 
-  collection.find( {$or:[{'question': {"$regex" : queryString, "$options":"i"}},
-  {'name': {"$regex" : queryString, "$options":"i"}},
-  {'tags': {"$regex" : queryString, "$options":"i"}}]}, (err, data) => {
-    if (err) {
-      console.log(err);
-      return res.json({success: false, error: err});
+  //Query a collection of queries, if a document matches one of the queries it is returned
+  /*if(Array.isArray(queryString)){
+    var results = [];
+    var queriesCompleted=0;
+    for(var i = 0; i < queryString.length; i++){
+      await queryAsync(queryString[i], collection).then( value => {results.push(value)});
     }
+    return res.json({success: true, tasks: [].concat.apply([], results)});
+  }*/
 
-    return res.json({success: true, tasks: data});
-  });
+  //Query with a combination of requirements, all must be matched for a document to be returned
+  if(Array.isArray(queryString)){
+    collection.find({
+      'tags': {"$all" : queryString}
+    }, (err, data) => {
+      if (err) {
+        console.log(err);
+        return res.json({success: false, error: err});
+      }
+      console.log(data);
+      return res.json({success: true, tasks: data});
+    }).collation({locale:'en',strength:2});
+  }
+  else{
+    collection.find( {$or:[{'question': {"$regex" : queryString, "$options":"i"}},
+    {'name': {"$regex" : queryString, "$options":"i"}},
+    {'tags': {"$regex" : queryString, "$options":"i"}}]}, (err, data) => {
+      if (err) {
+        console.log(err);
+        return res.json({success: false, error: err});
+      }
+      return res.json({success: true, tasks: data});
+    });
+  }
 });
 
 // this method adds new question in our database
