@@ -24,6 +24,7 @@ const subTaskTypeOptions = [
 class TextComponent extends Component {
   constructor(props) {
     super(props);
+    this.responseHandler = this.onResponsesChanged;
   }
 
   render() {
@@ -123,6 +124,30 @@ class ComparisonComponent extends Component {
     this.imageToUpload = image;
   }
 
+  onResponsesChanged(e, response, target){
+    response = response.replace(/\s+/g, " ");
+    response = response.trim();
+    response = response.split(",");
+    response = response.map((value)=>{
+      return value.trim();
+    });
+    response = response.filter(Boolean); //Remove empty values
+
+    if(target==="Responses"){
+      this.props.task.responses = response;
+    }
+    else if(target==="Tags"){
+      this.props.task.tags = response;
+    }
+    else if(target==="AOIs"){
+      //this.task.aois = response;
+      //TODO: implement interface for this functionality
+    }
+    else if(target==="Correct Responses"){
+      this.props.task.correctResponses = response;
+    }
+  }
+
   uploadImages() {
     if (this.imageToUpload) {
       const formData = new FormData();
@@ -165,7 +190,20 @@ class ComparisonComponent extends Component {
         />
         <SubTaskComponent task={this.props.task.subTasks[0]} />
         <SubTaskComponent task={this.props.task.subTasks[1]} />
+        <TextField label="Tags"
+          required
+
+          padding="dense"
+          style={{width:"calc(50% - 5px)"}}
+          id="tags"
+          defaultValue={this.props.task.tags.join(',')}
+          placeholder="Valve, Steam Engine"
+          helperText="Tags seperated by a comma"
+          ref="tagsRef"
+          onChange={(e)=> this.responseHandler(e, e.target.value, "Tags")}
+        />
       </div>
+
     );
   }
 }
