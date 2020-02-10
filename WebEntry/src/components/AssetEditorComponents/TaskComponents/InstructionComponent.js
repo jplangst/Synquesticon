@@ -33,7 +33,7 @@ class InstructionComponent extends Component {
 
   render() {
     return(
-      <div className="taskComponentContainer">
+      <div className="instructionTaskContainer">
         <TextField
           required
           padding="dense"
@@ -53,7 +53,7 @@ class InstructionComponent extends Component {
           padding="dense"
           style={{width:"calc(50% - 5px)"}}
           id="tags"
-          defaultValue={this.props.task.tags.join(',')}
+          defaultValue={this.props.task.tags?this.props.task.tags.join(','):""}
           placeholder="Valve, Steam Engine"
           helperText="Tags seperated by a comma"
           ref="tagsRef"

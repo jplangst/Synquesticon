@@ -80,7 +80,7 @@ class SubTaskComponent extends Component {
       taskContent = <TextComponent task={this.props.task}/>;
     }
     else if(this.props.task.subType === "Image"){
-      taskContent = <SelectImageComponent task={this.props.task} selectImageCallback={this.onSelectImage.bind(this)}/>;
+      taskContent = <SelectImageComponent task={this.props.task} hideTags={true} selectImageCallback={this.onSelectImage.bind(this)}/>;
     }
     return (<div>
         <FormControl className="formControl">
@@ -174,7 +174,7 @@ class ComparisonComponent extends Component {
   render() {
     console.log("ComparisonComponent", this.props.task);
     return(
-      <div className="taskComponentContainer">
+      <div className="comparisonContainer">
         <TextField label="Question"
           required
 
@@ -196,7 +196,7 @@ class ComparisonComponent extends Component {
           padding="dense"
           style={{width:"calc(50% - 5px)"}}
           id="tags"
-          defaultValue={this.props.task.tags.join(',')}
+          defaultValue={this.props.task.tags?this.props.task.tags.join(','):""}
           placeholder="Valve, Steam Engine"
           helperText="Tags seperated by a comma"
           ref="tagsRef"

@@ -108,6 +108,20 @@ class SelectImageComponent extends Component {
         }}
     />;
 
+    var tags = this.props.hideTags ? null:
+    <TextField label="Tags"
+      required
+
+      padding="dense"
+      style={{width:"calc(50% - 5px)"}}
+      id="tags"
+      defaultValue={this.props.task.tags?this.props.task.tags.join(','):""}
+      placeholder="Valve, Steam Engine"
+      helperText="Tags seperated by a comma"
+      ref="tagsRef"
+      onChange={(e)=> this.responseHandler(e, e.target.value, "Tags")}
+    />;
+
     var imageTypeContent =
     <div className="imageTypeContainer">
       <div className="imageInputContainer">
@@ -124,18 +138,7 @@ class SelectImageComponent extends Component {
       <BrowseImagesDialog openDialog={this.state.openBrowseImage}
                           closeDialog={this.onCloseBrowseImages.bind(this)}
                           onPickImage={this.onPickImageBrowseImages.bind(this)}/>
-      <TextField label="Tags"
-        required
-
-        padding="dense"
-        style={{width:"calc(50% - 5px)"}}
-        id="tags"
-        defaultValue={this.props.task.tags.join(',')}
-        placeholder="Valve, Steam Engine"
-        helperText="Tags seperated by a comma"
-        ref="tagsRef"
-        onChange={(e)=> this.responseHandler(e, e.target.value, "Tags")}
-      />
+      {tags}
     </div>;
 
     return(
