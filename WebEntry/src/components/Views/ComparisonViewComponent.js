@@ -92,12 +92,17 @@ class ComparisonViewComponent extends Component {
     var borderStyle={borderWidth:3, borderStyle:'solid', borderColor:this.props.theme.palette.secondary.main};
     var borderStyle0 = this.state.picked === 0? borderStyle : null;
     var borderStyle1 = this.state.picked === 1? borderStyle : null;
+
     return <div className="comparisonTask">
-      <div className="firstTask" style={borderStyle0} onClick={(e)=>this.onPickingTask(0)}>
-        <SubTaskViewComponent task={this.props.task.subTasks[0]} parentSet={this.props.parentSet}/>
-      </div>
-      <div className="secondTask" style={borderStyle1} onClick={(e)=>this.onPickingTask(1)}>
-        <SubTaskViewComponent className="secondTask" task={this.props.task.subTasks[1]} parentSet={this.props.parentSet}/>
+      <div className="comparisonTaskText"><Typography variant="h3" align="center" color="textPrimary" style={{whiteSpace:"pre-line"}}>{this.props.task.question}</Typography></div>
+      <div className="comparisonBox">
+        <div className="firstTask" style={borderStyle0} onClick={(e)=>this.onPickingTask(0)}>
+          <SubTaskViewComponent task={this.props.task.subTasks[0]} parentSet={this.props.parentSet}/>
+        </div>
+        <div className="taskSpacer"/>
+        <div className="secondTask" style={borderStyle1} onClick={(e)=>this.onPickingTask(1)}>
+          <SubTaskViewComponent className="secondTask" task={this.props.task.subTasks[1]} parentSet={this.props.parentSet}/>
+        </div>
       </div>
     </div>
   }

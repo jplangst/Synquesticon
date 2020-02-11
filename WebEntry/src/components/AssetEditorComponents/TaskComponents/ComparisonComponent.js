@@ -22,11 +22,6 @@ const subTaskTypeOptions = [
 ];
 
 class TextComponent extends Component {
-  constructor(props) {
-    super(props);
-    this.responseHandler = this.onResponsesChanged;
-  }
-
   render() {
     return (<div>
       <TextField
@@ -60,10 +55,6 @@ class TextComponent extends Component {
 }
 
 class SubTaskComponent extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   onPickingTaskType(e) {
     this.props.task.subType = e.target.value;
     this.forceUpdate();
@@ -109,7 +100,7 @@ class SubTaskComponent extends Component {
 class ComparisonComponent extends Component {
   constructor(props){
     super(props);
-
+    this.responseHandler = this.onResponsesChanged;
     //If we got a taskObject passed as a prop we use it, otherwise we init with a default constructed object
     this.state = { //We keep these fields in the state as they affect how the component is rendered
       selectedImage: this.props.taskObject ? this.props.taskObject.image : "",

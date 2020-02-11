@@ -59,11 +59,9 @@ class ImageViewComponent extends Component {
     //if (this.state.imageSrc) {
     var url = "/Images/" + this.props.task.image;
       return (
-        <div className={this.props.className} >
           <div className="imageViewWrapper">
             <img className="imageView" src={url} alt="" ref={this.imageRef}/>
           </div>
-        </div>
       );
     // }
     // else {

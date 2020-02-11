@@ -304,6 +304,8 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
     //check if we should enter a new level or leave
     if(this.props.taskSet.data.length > 0 && this.state.currentTaskIndex < this.props.taskSet.data.length) {
       this.currentTask = this.props.taskSet.data[this.state.currentTaskIndex];
+      console.log(this.props.taskSet);
+      console.log(this.currentTask);
       let trackingTaskSetNames = this.props.tasksFamilyTree.slice(); //clone array, since javascript passes by reference, we need to keep the orgin familyTree untouched
       trackingTaskSetNames.push(this.currentTask.name);
       var parentSet = this.props.tasksFamilyTree[this.props.tasksFamilyTree.length - 1];
@@ -372,8 +374,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
               return <ComparisonViewComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered} parentSet={parentSet}/>;
             }
           } else {
-
-            return <div/>;
+            return null;
           }
         };
 
@@ -392,7 +393,6 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
           </div>
           );
       }
-
     }
     else { //TODO: end of set
       this.props.onFinished();
