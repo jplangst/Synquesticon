@@ -33,7 +33,7 @@ class DataExportationComponent extends Component {
       });
     });
     db_helper.getAllObserverMessagesFromDb((msgs) => {
-      console.log("all comments", msgs);
+      /*console.log("all comments", msgs);*/
     })
   }
 

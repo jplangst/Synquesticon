@@ -27,34 +27,6 @@
   /*background-color: red;*/
 }
 
-.commonContainer{
-  position: relative;
-
-  width: 100%;
-  height: auto;
-  max-height: 96%;
-
-  overflow-y: auto;
-}
-
-.commonContainerOrig{
-  position: relative;
-  height: auto;
-
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  max-height: 100%;
-  max-width: 100%;
-
-  overflow-y: auto;
-}
-
-.questionDisplay {
-
-}
-
 .responsesButtons {
   text-align: center;
   padding: 20px;

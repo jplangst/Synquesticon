@@ -53,3 +53,29 @@ export function pointIsInPoly(p, polygon) {
 
     return isInside;
 }
+
+export function getAllImagePaths(taskList){
+  console.log(taskList);
+  var result = getImagePath(taskList, []);
+  console.log(result);
+  return result;
+}
+
+function getImagePath(dataList, imageFiles){
+  dataList.forEach(function(data){
+    if(data.taskType==="TaskSet"){
+      getImagePath(data.data, imageFiles);
+    }
+    else if(data.taskType==="Image"){
+      imageFiles.push("/Images/" + data.image);
+    }
+    else if(data.taskType==="Comparison"){
+      data.subTasks.forEach(function(subTask){
+        if(subTask.subType==="Image"){
+          imageFiles.push("/Images/" + subTask.image);
+        }
+      });
+    }
+  });
+  return imageFiles;
+}

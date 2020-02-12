@@ -28,6 +28,7 @@ import * as playerUtils from '../../core/player_utility_functions';
 import queryString from 'query-string';
 
 import './DisplayTaskComponent.css';
+import '../../core/utility.css';
 
 var checkShouldSave = true;
 
@@ -73,13 +74,13 @@ function stringifyWAMPMessage(task, lineOfData, eventType, progressCount, taskIn
 ██   ██ ███████  ██████  ██████  ██   ██ ███████ ██  ██████  ██   ████      ██████  ██████  ██      ██ ██       ██████  ██   ████ ███████ ██   ████    ██
 */
 
-class DisplayTaskHelper extends React.Component { //for the fking sake of recursion
+class DisplayTaskHelper extends React.Component { //for the sake of recursion
   constructor() {
     super();
     this.state = {
       currentTaskIndex: 0,
       hasBeenAnswered: false
-    }
+    };
     this.progressCount = 0;
     this.numCorrectAnswers = 0;
     this.currentTask = null;
@@ -304,12 +305,11 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
     //check if we should enter a new level or leave
     if(this.props.taskSet.data.length > 0 && this.state.currentTaskIndex < this.props.taskSet.data.length) {
       this.currentTask = this.props.taskSet.data[this.state.currentTaskIndex];
-      console.log(this.props.taskSet);
-      console.log(this.currentTask);
-      let trackingTaskSetNames = this.props.tasksFamilyTree.slice(); //clone array, since javascript passes by reference, we need to keep the orgin familyTree untouched
+      let trackingTaskSetNames = this.props.tasksFamilyTree.slice(); //clone array, since javascript passes by reference, we need to keep the orginal familyTree untouched
       trackingTaskSetNames.push(this.currentTask.name);
       var parentSet = this.props.tasksFamilyTree[this.props.tasksFamilyTree.length - 1];
       if (this.currentTask.objType === "TaskSet" && !this.currentTask.displayOnePage) {
+
         //shuffle set if set was marked as "Random"
         var runThisTaskSet = this.currentTask.data;
         if (this.currentTask.setTaskOrder === "Random") {
@@ -331,7 +331,6 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
       }
       else {
         //log the start
-
         if (!this.state.hasBeenAnswered
             && !(store.getState().experimentInfo.participantId === "TESTING")
             && !this.currentLineOfData) {
@@ -356,19 +355,19 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
                                     }}/>
             }
             if((this.currentTask.taskType === "Instruction")) {
-              return <InstructionViewComponent className="commonContainer" task={this.currentTask} answerCallback={this.onAnswer.bind(this)} parentSet={parentSet}/>;
+              return <InstructionViewComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} parentSet={parentSet}/>;
             }
             if(this.currentTask.taskType  === "Text Entry") {
-              return <TextEntryComponent className="commonContainer" task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered} parentSet={parentSet}/>;
+              return <TextEntryComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered} parentSet={parentSet}/>;
             }
             if(this.currentTask.taskType === "Single Choice") {
-              return <SingleChoiceComponent className="commonContainer" task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered} parentSet={parentSet}/>;
+              return <SingleChoiceComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered} parentSet={parentSet}/>;
             }
             if((this.currentTask.taskType === "Multiple Choice")) {
-              return <MultipleChoiceComponent className="commonContainer" task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered} parentSet={parentSet}/>;
+              return <MultipleChoiceComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered} parentSet={parentSet}/>;
             }
             if((this.currentTask.taskType === "Image")) {
-              return <ImageViewComponent className="commonContainer" task={this.currentTask} taskIndex={this.state.currentTaskIndex} parentSet={parentSet}/>;
+              return <ImageViewComponent task={this.currentTask} taskIndex={this.state.currentTaskIndex} parentSet={parentSet}/>;
             }
             if((this.currentTask.taskType === "Comparison")) {
               return <ComparisonViewComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered} parentSet={parentSet}/>;
@@ -397,7 +396,7 @@ class DisplayTaskHelper extends React.Component { //for the fking sake of recurs
     else { //TODO: end of set
       this.props.onFinished();
       // console.log("end of set");
-      return (<div/>);
+      return (null);
     }
   }
 }
@@ -416,7 +415,7 @@ class DisplayTaskComponent extends Component {
     super(props);
     this.state = {
       isPaused : false
-    }
+    };
     this.handleNewCommandEvent = this.onNewCommandEvent.bind(this);
 
     this.gazeDataArray = [];
@@ -439,6 +438,16 @@ class DisplayTaskComponent extends Component {
 
     if (mainTaskSetId !== undefined) {
       db_helper.getTasksOrTaskSetsWithIDs(mainTaskSetId, (dbQueryResult, count, mainTaskSetName) => {
+
+        //Force preload all images
+        if(dbQueryResult.data){
+          playerUtils.getAllImagePaths(dbQueryResult.data).forEach((picture) => {
+              const img = document.createElement('img');
+              img.src = picture;
+          });
+
+        }
+
         var action = {
           type: 'SET_EXPERIMENT_INFO',
           experimentInfo: {
@@ -478,6 +487,14 @@ class DisplayTaskComponent extends Component {
 
       this.gazeDataArray = [];
       this.timer = setInterval(this.updateCursorLocation.bind(this), 4.5); //Update the gaze cursor location every 2ms
+
+      //Force preload all images
+      /*if(store.getState().experimentInfo.taskSet){
+        playerUtils.getAllImagePaths(store.getState().experimentInfo.taskSet).forEach((picture) => {
+            const img = new Image();
+            img.src = picture.fileName;
+        });
+      }*/
     }
     checkShouldSave = true;
   }

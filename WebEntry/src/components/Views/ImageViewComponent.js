@@ -15,9 +15,19 @@ class ImageViewComponent extends Component {
   }
   componentWillMount() {
     //db_helper.getImage(this.props.task.image, this.onReceivedImage.bind(this));
+    //
+    this.image = new Image();
+    this.image.src = "/Images/" + this.props.task.image;
+    this.image.ref = this.imageRef;
   }
 
   componentDidMount() {
+
+
+    /*this.image = new Image();
+    this.image.src = "/Images/" + this.props.task.image;
+    this.image.ref = this.imageRef;*/
+
     if (this.props.task.aois.length > 0) {
       var aois = this.props.task.aois.slice();
       for (var i = 0; i < aois.length; i++) {
@@ -59,9 +69,9 @@ class ImageViewComponent extends Component {
     //if (this.state.imageSrc) {
     var url = "/Images/" + this.props.task.image;
       return (
-          <div className="imageViewWrapper">
-            <img className="imageView" src={url} alt="" ref={this.imageRef}/>
-          </div>
+        <div className="imageViewWrapper">
+          <img className="imageView" src={url} alt="" ref={this.imageRef}/>
+        </div>
       );
     // }
     // else {

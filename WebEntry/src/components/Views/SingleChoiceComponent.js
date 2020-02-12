@@ -62,7 +62,7 @@ class SingleChoiceComponent extends Component {
     this.reset();
     return (
       <div className={this.props.className}>
-        <div className="questionDisplay">
+        <div>
           <Typography ref={this.textRef} variant="h3" color="textPrimary" align="center" style={{whiteSpace:"pre-line"}}>{this.props.task.question}</Typography>
         </div>
         <div className="responsesButtons">
