@@ -82,6 +82,9 @@ class EditSetListItemComponent extends Component {
   }
 
   render() {
+
+    const headerHeight = 40;
+
     const { connectDragSource, connectDropTarget, isOver } = this.props;
 
     var opacity = 1;
@@ -101,14 +104,14 @@ class EditSetListItemComponent extends Component {
           <div  style={{opacity:opacity }} className={"editListItem "} >
             {task}
             <div className="editListItemDelBtnContainer">
-              <Button style={{cursor:'pointer',width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
+              <Button style={{cursor:'pointer',width: '100%', height: headerHeight, minWidth: '30px', minHeight: '30px'}}
                  size="small" onClick={this.removeTask.bind(this)}>
                 <DeleteIcon />
               </Button>
             </div>
             {connectDragSource(
               <div className="editListItemDragBtnContainer">
-              <Button style={{cursor:'move',width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
+              <Button style={{cursor:'move',width: '100%', height: headerHeight, minWidth: '30px', minHeight: '30px'}}
                  size="small" >
                 <DragIcon />
               </Button>
@@ -137,14 +140,14 @@ class EditSetListItemComponent extends Component {
         dragSource =
         <div>
         <div className="editListItemDelBtnContainer">
-          <Button style={{cursor:'pointer',width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
+          <Button style={{cursor:'pointer',width: '100%', height: headerHeight, minWidth: '30px', minHeight: '30px'}}
              size="small" onClick={this.removeTask.bind(this)} >
             <DeleteIcon className="delBtnIcon"/>
           </Button>
         </div>
         {connectDragSource(
         <div className="editListItemDragBtnContainer">
-          <Button style={{cursor:'move', width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
+          <Button style={{cursor:'move', width: '100%', height: headerHeight, minWidth: '30px', minHeight: '30px'}}
              size="small" >
             <DragIcon className="dragBtnIcon"/>
           </Button>
@@ -153,7 +156,7 @@ class EditSetListItemComponent extends Component {
         return (connectDropTarget(
           <div content={this.props.content} style={{opacity:opacity, width:'100%'}}>
             <CollapsableContainer content={this.props.content} classNames="editSetCompContainer"
-              contentClassNames="editSetCompContent" headerComponents={dragSource} open={false} headerHeight={40}
+              contentClassNames="editSetCompContent" headerComponents={dragSource} open={false} headerHeight={headerHeight}
               headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={this.props.item.name}
               titleVariant="body1" indentContent={20}>
                 {collapsableContent}
@@ -163,7 +166,7 @@ class EditSetListItemComponent extends Component {
       return(
         <div style={{paddingLeft:20*this.props.componentDepth, width:'100%'}}>
         <CollapsableContainer  classNames="editSetCompContainer" contentClassNames="editSetCompContent" headerComponents={dragSource} open={false}
-        headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={this.props.item.name} headerHeight={40}
+        headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={this.props.item.name} headerHeight={headerHeight}
         headerWidth={{flexGrow:1}} titleVariant="body1" indentContent={10}>
           {collapsableContent}
         </CollapsableContainer></div>);

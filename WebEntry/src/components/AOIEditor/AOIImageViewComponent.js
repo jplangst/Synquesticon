@@ -11,6 +11,19 @@ class AOIImageViewComponent extends Component {
     }
   }
 
+  componentDidMount() {
+    //db_helper.getImage(this.props.task.image, this.onReceivedImage.bind(this));
+    //
+
+    //Force preload the image
+    var url = "/Images/" + this.props.imageName;
+    if (this.props.image) {
+      url = URL.createObjectURL(this.props.image);
+      const img = document.createElement('img');
+      img.src = url;
+    }
+  }
+
   render() {
     var tempAOI = this.props.mode !== "SELECT" ? <AOIComponent aoi={this.props.tempAOI}/> : null;
     var url = "/Images/" + this.props.imageName;
@@ -24,8 +37,9 @@ class AOIImageViewComponent extends Component {
         onMouseDown={this.props.onMouseDown}
         onMouseUp={this.props.onMouseUp}
         onMouseMove={this.props.onMouseMove}>
-        <img className="imageContainer" src={url} alt="Task"
-              />
+        <div className="imageEditorViewWrapper">
+          <img className="imageEditorView" src={url} alt="Task"/>
+        </div>
         <svg id="AOICanvas" className="imageViewWithAOIs" width='100%' height='100%' viewBox="0 0 100 100" preserveAspectRatio="none">
           {tempAOI}
           {this.props.aois.map((aoi, index) => {

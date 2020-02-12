@@ -21,6 +21,7 @@
   position: relative;
   display: inline-block;
   transition: transform 150ms ease-in-out;
+  width: 100%;
 }
 
 .imageViewWithAOIs {
@@ -35,7 +36,31 @@
   display: block;
   max-width: 100%;
   height: auto;
+  background-color: red;
+  align-self: center;
 }
+
+.imageEditorView {
+  display: flex;
+  align-self: center;
+
+  max-width: 100%;
+  max-height: 100%;
+
+  object-fit: contain;
+}
+
+.imageEditorViewWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  height: 100%;
+  width: 100%;
+
+}
+
 
 .supportingToolBox {
   position: relative;

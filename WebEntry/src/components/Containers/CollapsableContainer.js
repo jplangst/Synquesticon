@@ -34,7 +34,7 @@ class CollapsableContainer extends Component {
       customHeaderComponentsStyles = {paddingLeft:20, marginBottom:10};
     }
 
-    var buttonIcon = this.state.open ? <ArrowDropDown fontSize="large"/> : <ArrowDropUp fontSize="large" className="collapsableIcon rotateIcon"/>;
+    var buttonIcon = this.state.open ? <ArrowDropDown fontSize="large"/> : <ArrowDropUp fontSize="large" className="rotateIcon"/>;
     var headerComponents = this.props.hideHeaderComponents ?
                               this.state.open ? this.props.headerComponents : null
                               :this.props.headerComponents;
@@ -48,7 +48,7 @@ class CollapsableContainer extends Component {
         <div style={containerHeaderStyles} className={this.props.headerClassNames+" containerHeader"}>
           <div className="leftHeaderContent" style={{height:headerHeight}}>
             <div className="collapseBtnContainer">
-              <Button style={{minHeight:0, minWidth:0, paddingLeft: 5, paddingRight:5}} onClick={this.onCollapseExpand.bind(this)} >
+              <Button style={{minHeight:0, minWidth:0, paddingLeft: 5, paddingRight:5, paddingTop:0,paddingBottom:0, height:headerHeight}} onClick={this.onCollapseExpand.bind(this)} >
                 {buttonIcon}
               </Button>
             </div>
