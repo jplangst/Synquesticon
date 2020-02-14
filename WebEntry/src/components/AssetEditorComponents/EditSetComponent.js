@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 
 import db_helper from '../../core/db_helper';
-
-
 import * as dbObjects from '../../core/db_objects';
 
 import shuffle from '../../core/shuffle';
@@ -20,6 +18,8 @@ import EditSetListComponent from '../TaskList/EditSetListComponent';
 import { Typography } from '@material-ui/core';
 
 import update from 'immutability-helper'
+
+import { Droppable, Draggable } from 'react-beautiful-dnd';
 
 import './EditSetComponent.css';
 
@@ -55,18 +55,19 @@ class EditSetComponent extends Component {
     this.handleSetTaskOrderChange = this.onSetTaskOrderChanged.bind(this);
     this.handleDisplayOnePageChange = this.onDisplayOnePageChanged.bind(this);
     this.handleLogOneLineChange = this.onLogOneLineChanged.bind(this);
+
+    //The index where a new task will be placed
+    this.destinationIndex = 0;
   }
 
   componentDidMount(){
     this.refreshSetChildList();
   }
 
-  //OLD
   onRetrievedSetChildTasks(retrievedObjects){
     this.setState({taskListObjects: retrievedObjects.data});
   }
 
-  //OLD
   refreshSetChildList(){
     if(this.state.taskList && this.state.taskList.length > 0){
       db_helper.getTasksOrTaskSetsWithIDs(this.set._id, this.handleRetrieveSetChildTasks);
@@ -76,23 +77,25 @@ class EditSetComponent extends Component {
     }
   }
 
-  //NEW
   onRetrievedSetChildTasksAddToSet(retrievedObject){
-    var newObjects = [];
-    newObjects.push(retrievedObject);
+    //Clone the array since we can't mutate the state directly
+    var updatedObjects = this.state.taskListObjects.slice();
+    //Insert the new task at the index stored when add task was called
+    //updatedObjects.splice(this.destinationIndex, 0, retrievedObject);
 
-    //Add to front
-    var updatedObjects = newObjects.concat(this.state.taskListObjects);
-    //Add to end
-    //var updatedObjects = this.state.taskListObjects.concat(newObjects);
+    //Replace the dummy object with the actual object
+    updatedObjects[this.destinationIndex] = retrievedObject;
 
-    var newTasks = [];
-    newTasks.push({id:retrievedObject._id, objType:retrievedObject.objType});
+    //Create a new task object for the taskList
+    var newTask = {id:retrievedObject._id, objType:retrievedObject.objType}
+    //Clone the array since we can't mutate the state directly
+    var updatedTaskList = this.state.taskList.slice();
 
-    //Add to front
-    var updatedTaskList = newTasks.concat(this.state.taskList);
-    //Add to end
-    //var updatedTaskList = this.state.taskList.concat(newTasks);
+    //Insert the new task at the index stored when add task was called
+    //updatedTaskList.splice(this.destinationIndex, 0, newTask);
+
+    //Replace the dummy object with the actual object
+    updatedTaskList[this.destinationIndex] = newTask;
 
     this.setState({
       taskListObjects: updatedObjects,
@@ -102,7 +105,6 @@ class EditSetComponent extends Component {
     this.set.childIds = updatedTaskList;
   }
 
-  //NEW
   updateSetChildList(taskToAdd){
     if(taskToAdd.objType === "Task"){
       db_helper.getTaskWithID(taskToAdd._id, this.handleUpdateSetChildTasks);
@@ -273,7 +275,8 @@ class EditSetComponent extends Component {
   }
 
   //Add a task to the list of tasks in the set
-  addTask(task, objType){
+  addTask(task, destinationIndex){
+
     if(this.set._id === task._id){
       this.setState({
         snackbarOpen: true,
@@ -281,20 +284,45 @@ class EditSetComponent extends Component {
       });
     }
     else{
+      this.destinationIndex = destinationIndex;
       //perform a deeper check for circular references. This will in turn add the task if it is ok to do so.
       this.willCauseCircularReference(task);
+
     }
   }
 
   handleAddTaskAllowed(allowed, task, message){
     if(allowed){
-      this.updateSetChildList(task);
-    }
+      //Add a dummy object to the list while we wait for the callback
+      var dummyObject = {_id:task._id, question:"Adding...", objType:"Task", taskType:"Image"}
+      //Clone the array since we can't mutate the state directly
+      var updatedObjects = this.state.taskListObjects.slice();
+      //Insert the dummy at the index stored when add task was called
+      updatedObjects.splice(this.destinationIndex, 0, dummyObject);
 
-    this.setState({
-      snackbarOpen: true,
-      snackbarMessage: message
-    });
+      //Create a dummy task object for the taskList
+      var dummyTask = {id:task._id, objType:task.objType}
+      //Clone the array since we can't mutate the state directly
+      var updatedTaskList = this.state.taskList.slice();
+      //Insert the dummy task at the index stored when add task was called
+      updatedTaskList.splice(this.destinationIndex, 0, dummyTask);
+
+      this.set.childIds = updatedTaskList;
+      this.updateSetChildList(task);
+
+      this.setState({
+        taskListObjects: updatedObjects,
+        taskList: updatedTaskList,
+        snackbarOpen: true,
+        snackbarMessage: message
+      });
+    }
+    else{
+      this.setState({
+        snackbarOpen: true,
+        snackbarMessage: message
+      });
+    }
   }
 
   handleCloseSnackbar(event, reason) {
@@ -461,8 +489,17 @@ class EditSetComponent extends Component {
         <div className="setTaskListContainer">
           <div className="setTaskListTitle"><div className="setTaskListTitleText"><Typography color="textPrimary">Task sequence</Typography></div></div>
           <div className="setTaskListViewer">
-            < EditSetListComponent removeCallback={this.removeTaskFromListCallback} taskListObjects={this.state.taskListObjects} reactDND={true}
-              removeTaskCallback={this.removeTaskFromListCallback} moveTaskCallback={this.moveTaskCallback} / >
+
+          <Droppable droppableId="setTaskListId" >
+           {(provided, snapshot) => (
+            <div className="tmpSetListWrapper" ref={provided.innerRef} style={{width:'100%', height:'100%'}}>
+              < EditSetListComponent removeCallback={this.removeTaskFromListCallback} taskListObjects={this.state.taskListObjects} reactDND={true}
+                removeTaskCallback={this.removeTaskFromListCallback} moveTaskCallback={this.moveTaskCallback} / >
+                <div style={{display: 'none'}}>{provided.placeholder}</div>
+            </div>
+          )}
+          </Droppable>
+
           </div>
         </div>
 

@@ -13,84 +13,14 @@ import CollapsableContainer from '../Containers/CollapsableContainer';
 
 import './EditSetListItemComponent.css';
 
-import { DragSource, DropTarget } from 'react-dnd'
-
-import flow from 'lodash/flow';
-
-const Types = {
- ITEM: 'taskItemComp',
- REORDER: 'taskReorder'
-};
-const itemSource = {
- beginDrag(props) {
-   var element = document.getElementsByClassName('editSetListItem')[0];
-   var positionInfo = element.getBoundingClientRect();
-   var height = positionInfo.height;
-   var width = positionInfo.width;
-
-   var content = props.content ? props.content : props.item.set.name; //TODO should figure out how to pass this correctly when we have time
-
-   const item = { height: height, width: width, content:content, index: props.index, taskId: props.id?props.id:props.item.id};
-   return item;
- },
- endDrag(props, monitor, component) {
-   return
- }
-};
-
-const itemTarget = {
-	hover(props, monitor, component) {
-		const dragIndex = monitor.getItem().index;
-		const hoverIndex = props.index;
-
-		if (dragIndex === hoverIndex) {
-			return;
-		}
-
-		props.moveTaskCallback(dragIndex, hoverIndex);
-		monitor.getItem().index = hoverIndex;
-	}
-};
-
-//Makes these variables avaliable in the react components props
-function collect(connect, monitor) {
- return {
-   connectDragSource: connect.dragSource(),
-   isDragging: monitor.isDragging(),
-   monitorTest: monitor,
-   connectDragPreview: connect.dragPreview(),
- }
-}
-
-function targetConnect(connect, monitor){
-  return{connectDropTarget: connect.dropTarget(), isOver: monitor.isOver(),};
-}
-
 class EditSetListItemComponent extends Component {
-  componentDidMount(){
-    const { connectDragPreview } = this.props
-    if(connectDragPreview){
-      connectDragPreview(getEmptyImage(),{
-        captureDraggingState: true,
-      });
-    }
-  }
-
   removeTask(){
     var id = this.props._id?this.props._id:this.props.item._id;
     this.props.removeCallback(id);
   }
 
   render() {
-
     const headerHeight = 40;
-
-    const { connectDragSource, connectDropTarget, isOver } = this.props;
-
-    var opacity = 1;
-    if(isOver){
-        opacity = 0;
-    }
 
     var task = <div className={"editListItemTextContainer "}>
                 <div className="editListItemText">
@@ -100,8 +30,8 @@ class EditSetListItemComponent extends Component {
 
     if(this.props.item.objType === "Task"){
       if(this.props.componentDepth === 0){ //If it is a top level parent it should be dragable
-        return(connectDropTarget(
-          <div  style={{opacity:opacity }} className={"editListItem "} >
+        return(
+          <div className={"editListItem "} >
             {task}
             <div className="editListItemDelBtnContainer">
               <Button style={{cursor:'pointer',width: '100%', height: headerHeight, minWidth: '30px', minHeight: '30px'}}
@@ -109,17 +39,16 @@ class EditSetListItemComponent extends Component {
                 <DeleteIcon />
               </Button>
             </div>
-            {connectDragSource(
-              <div className="editListItemDragBtnContainer">
+            <div className="editListItemDragBtnContainer">
               <Button style={{cursor:'move',width: '100%', height: headerHeight, minWidth: '30px', minHeight: '30px'}}
                  size="small" >
                 <DragIcon />
               </Button>
-            </div>)}
-          </div>));
+            </div>
+          </div>);
       }
       else{ //If it is a child we don't want it to be draggable
-        return(<div  className={"editListItem "} >
+        return(<div className={"editListItem "} >
               {task}
             </div>);
       }
@@ -139,29 +68,29 @@ class EditSetListItemComponent extends Component {
       if(this.props.componentDepth === 0){
         dragSource =
         <div>
-        <div className="editListItemDelBtnContainer">
-          <Button style={{cursor:'pointer',width: '100%', height: headerHeight, minWidth: '30px', minHeight: '30px'}}
-             size="small" onClick={this.removeTask.bind(this)} >
-            <DeleteIcon className="delBtnIcon"/>
-          </Button>
-        </div>
-        {connectDragSource(
-        <div className="editListItemDragBtnContainer">
-          <Button style={{cursor:'move', width: '100%', height: headerHeight, minWidth: '30px', minHeight: '30px'}}
-             size="small" >
-            <DragIcon className="dragBtnIcon"/>
-          </Button>
-        </div>)}
+          <div className="editListItemDelBtnContainer">
+            <Button style={{cursor:'pointer',width: '100%', height: headerHeight, minWidth: '30px', minHeight: '30px'}}
+               size="small" onClick={this.removeTask.bind(this)} >
+              <DeleteIcon className="delBtnIcon"/>
+            </Button>
+          </div>
+          <div className="editListItemDragBtnContainer">
+            <Button style={{cursor:'move', width: '100%', height: headerHeight, minWidth: '30px', minHeight: '30px'}}
+               size="small" >
+              <DragIcon className="dragBtnIcon"/>
+            </Button>
+          </div>
         </div>;
-        return (connectDropTarget(
-          <div content={this.props.content} style={{opacity:opacity, width:'100%'}}>
+
+        return (
+          <div content={this.props.content} style={{width:'100%'}}>
             <CollapsableContainer content={this.props.content} classNames="editSetCompContainer"
               contentClassNames="editSetCompContent" headerComponents={dragSource} open={false} headerHeight={headerHeight}
               headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={this.props.item.name}
               titleVariant="body1" indentContent={20}>
                 {collapsableContent}
               </CollapsableContainer>
-          </div>));
+          </div>);
       }
       return(
         <div style={{paddingLeft:20*this.props.componentDepth, width:'100%'}}>
@@ -176,4 +105,4 @@ class EditSetListItemComponent extends Component {
   }
 }
 
-export default flow( DropTarget(Types.REORDER, itemTarget, targetConnect), DragSource(Types.REORDER, itemSource, collect))(withTheme(EditSetListItemComponent));
+export default withTheme(EditSetListItemComponent);

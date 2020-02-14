@@ -108,7 +108,7 @@ class TextEntryComponent extends Component {
 
           padding="dense"
           style={{marginRight:"10px", width:"calc(40% - 15px)"}}
-          id="tags"
+          id="correctResponses"
           defaultValue={this.props.task.correctResponses.join(',')}
           placeholder="Correct Answer, Margin(Optional)"
           helperText="Enter the correct answer and optionally a margin seperated with a comma, +- that still allows a correct answer. E.g. 5,2 would let anything between 3-7 be a correct answer"

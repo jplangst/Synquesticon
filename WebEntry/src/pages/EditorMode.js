@@ -13,6 +13,9 @@ import EditTaskComponent from '../components/AssetEditorComponents/EditTaskCompo
 import EditSetComponent from '../components/AssetEditorComponents/EditSetComponent';
 import { withTheme } from '@material-ui/styles';
 
+import { DragDropContext } from 'react-beautiful-dnd';
+import * as dnd from '../core/beautifulDND.js';
+
 import db_helper from '../core/db_helper.js';
 
 import './EditorMode.css';
@@ -192,10 +195,24 @@ class EditorMode extends Component {
 
   }
 
-  //Called after a dragable item has been dropped into the task list in the asset editor
-  onDragDropCallback(dragableItem, itemType){
-    this.editSetComponentRef.current.addTask(dragableItem, itemType);
-  }
+  //On drag end callback
+  onDragEnd = result => {
+      const { source, destination } = result;
+
+      // dropped outside the list
+      if (!destination) {
+          return;
+      }
+
+      //If the sourc eis the same as the destination we just move the element inside the list
+      if (source.droppableId === destination.droppableId) {
+          this.editSetComponentRef.current.moveTask(source.index,destination.index);
+      } else { //Otherwise we add to the list at the desired location
+          var itemType = source.droppableId ==="sets" ? "TaskSet" : "Task";
+          var dragableItem = {objType:itemType,_id:result.draggableId};
+          this.editSetComponentRef.current.addTask(dragableItem, destination.index);
+      }
+  };
 
   //Get the current asset editorObject
   getAssetEditorObject(){
@@ -213,7 +230,7 @@ class EditorMode extends Component {
   }
 
   //
-  getCollapsableHeaderButtons(searchCallback, addCallback, filterCallback){
+  getCollapsableHeaderButtons(searchCallback, addCallback, filterCallback, searchBarID){
 
     var filterButton = null;
     if(filterCallback !== null){
@@ -225,7 +242,7 @@ class EditorMode extends Component {
 
     var collapsableTaskHeaderButtons =
     <div className="collapsableHeaderBtnsContainer">
-      <div className="searchWrapperDiv"><SearchBar onChange={searchCallback} searchID="taskSearch"/></div>
+      <div className="searchWrapperDiv"><SearchBar onChange={searchCallback} searchID={searchBarID}/></div>
       <div className="collapsableBtns">
         <Button style={{position:"relative", width: '100%', height: '100%', minWidth:0, minHeight:0}} size="small" onClick={addCallback} >
           <AddCircleOutline fontSize="large"/>
@@ -251,35 +268,43 @@ class EditorMode extends Component {
     let theme = this.props.theme;
     let leftBG = theme.palette.type === "light" ? theme.palette.primary.dark : theme.palette.primary.main;
 
-    var collapsableTaskHeaderButtons = this.getCollapsableHeaderButtons(this.taskSearchCallback, this.addTaskCallback.bind(this), null);
-    var collapsableSetHeaderButtons = this.getCollapsableHeaderButtons(this.taskSetSearchCallback, this.addSetCallback.bind(this), null);
+    var collapsableTaskHeaderButtons = this.getCollapsableHeaderButtons(this.taskSearchCallback, this.addTaskCallback.bind(this), null, "taskSearchBar");
+    var collapsableSetHeaderButtons = this.getCollapsableHeaderButtons(this.taskSetSearchCallback, this.addSetCallback.bind(this), null, "setSearchBar");
+
+    var dragEnabled = false;
+    if(this.state.assetEditorObject && this.state.assetEditorObject.type.name==="EditSetComponent"){
+      dragEnabled = true;
+    }
 
     return (
-    <div className = "editorScreenContainer">
-      <CustomDragLayer />
-      <div style={{backgroundColor:leftBG}} className = "AssetViewer">
-        <div className="AssetViewerContent">
-          <CollapsableContainer headerTitle="Tasks" useMediaQuery={true}
-          headerComponents={collapsableTaskHeaderButtons} hideHeaderComponents={true} open={true}>
-              < TaskListComponent reorderDisabled={true} placeholderName="TaskPlaceholder" reorderID="tasksReorder" taskList={ this.state.taskList }
-                selectTask={ this.selectTask.bind(this) } selectedTask={this.state.selectedTask} dragDropCallback={this.onDragDropCallback.bind(this)}
-                reactDND={false} itemType="Task"/ >
-          </CollapsableContainer>
+    <DragDropContext onDragEnd={this.onDragEnd}>
+      <div className = "editorScreenContainer">
 
-          <CollapsableContainer headerTitle="Sets" useMediaQuery={true}
-          headerComponents={collapsableSetHeaderButtons} hideHeaderComponents={true}
-          open={true}>
-              < TaskListComponent selectedTask={this.state.selectedTaskSet} reorderDisabled={true} placeholderName="TaskSetPlaceholder" reorderID="taskSetsReorder"
-                taskList={ this.state.taskSetList } selectTask={ this.selectTaskSet.bind(this) } dragDropCallback={this.onDragDropCallback.bind(this)}
-                reactDND={false} itemType="TaskSet"/ >
-          </CollapsableContainer>
+        <div style={{backgroundColor:leftBG}} className = "AssetViewer">
+          <div className="AssetViewerContent">
+            <CollapsableContainer headerTitle="Tasks" useMediaQuery={true}
+            headerComponents={collapsableTaskHeaderButtons} hideHeaderComponents={true} open={true}>
+                < TaskListComponent dragEnabled={dragEnabled} taskList={ this.state.taskList }
+                  selectTask={ this.selectTask.bind(this) } selectedTask={this.state.selectedTask}
+                  itemType="Task" droppableId="tasks"/ >
+            </CollapsableContainer>
 
+            <CollapsableContainer headerTitle="Sets" useMediaQuery={true}
+            headerComponents={collapsableSetHeaderButtons} hideHeaderComponents={true}
+            open={true}>
+                < TaskListComponent dragEnabled={dragEnabled} selectedTask={this.state.selectedTaskSet}
+                  taskList={ this.state.taskSetList } selectTask={ this.selectTaskSet.bind(this) }
+                  itemType="TaskSet" droppableId="sets"/ >
+            </CollapsableContainer>
+
+          </div>
         </div>
-      </div>
 
-      {this.getAssetEditorObject()}
+        {this.getAssetEditorObject()}
 
-    < /div>);
+      < /div>
+    </DragDropContext>
+    );
   }
 }
 

@@ -1,82 +1,58 @@
 import React, { Component } from 'react';
-import { getEmptyImage } from 'react-dnd-html5-backend'
 import Button from '@material-ui/core/Button';
 import DragIcon from '@material-ui/icons/ControlCamera';
 
 import './TaskItemComponent.css';
 
-import { DragSource } from 'react-dnd'
 import { Typography } from '@material-ui/core';
 import { withTheme } from '@material-ui/styles';
 
-const Types = {
- ITEM: 'taskItemComp'
-}
-const itemSource = {
- beginDrag(props) {
-   var element = document.getElementsByClassName('listItem')[0];
-   var positionInfo = element.getBoundingClientRect();
-   var height = positionInfo.height;
-   var width = positionInfo.width;
-
-   const item = { height: height, width: width, content: props.content };
-   return item;
- },
- endDrag(props, monitor, component) {
-   const dropResult = monitor.getDropResult()
-   if(dropResult){
-     return props.handleDrop(props.task, props.itemType);
-   }
-   else{
-     return
-   }
- }
-}
-function collect(connect, monitor) {
- return {
-   connectDragSource: connect.dragSource(),
-   isDragging: monitor.isDragging(),
-   connectDragPreview: connect.dragPreview()
- }
-}
+import * as dnd from '../../core/beautifulDND.js';
 
 class TaskItemComponent extends Component {
-
-  componentDidMount(){
-    const { connectDragPreview } = this.props
-    if(connectDragPreview){
-      connectDragPreview(getEmptyImage(),{
-        captureDraggingState: true,
-      });
-    }
-  }
+  setRef = ref => {
+    // keep a reference to the dom ref as an instance property
+    this.ref = ref;
+    // give the dom ref to react-beautiful-dnd
+    this.props.domRef(ref);
+  };
 
   render() {
-    const { theme, connectDragSource} = this.props; //connectDragPreview, isDragging
+    const { theme, provided, isDragging, snapshot} = this.props;
 
-
-    let bgColor = this.props.highlight ? theme.palette.secondary.main + "66" : null;
+    //let bgColor = this.props.highlight ? theme.palette.secondary.main + "66" : null;
     let leftBG = theme.palette.type === "light" ? theme.palette.primary.dark : theme.palette.primary.main;
-    //const opacityValue = isDragging ? 0.8 : 1;
-    var content =
-        <div  className={"listItem "} style={{backgroundColor:bgColor}}
-          onClick={()=>this.props.onSelectedCallback(this.props.task)}>
-          <div className="listItemTextContainer" >
-            <div className="listItemText">
-              <Typography color="textPrimary" noWrap> {this.props.content} </Typography>
-            </div>
-          </div>
-          {connectDragSource(
-          <div className="listItemDragBtnContainer" style={{backgroundColor:leftBG}}>
-            <Button style={{cursor:'move',width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
-              className="listItemDragBtn" size="small" fullWidth >
-              <DragIcon className="dragBtnIcon"/>
-            </Button>
-          </div>)}
-        </div>;
+    let dragHighlight = isDragging ? theme.palette.secondary.main + "66" : leftBG;
+    const opacityValue = isDragging ? 0.8 : 1;
+    if(provided === undefined){
+      return null;
+    }
+
+    var dragButton = this.props.dragEnabled ? <div className="listItemDragBtnContainer" style={{backgroundColor:dragHighlight}}><Button style={{cursor:'move',width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
+      className="listItemDragBtn" size="small" fullWidth >
+      <DragIcon className="dragBtnIcon"/>
+    </Button></div> : null;
+
+    var dragStyle = dnd.getItemStyle( //Was style={backgroundColor:leftBG}
+        snapshot.isDragging,
+        provided.draggableProps.style,
+        leftBG,
+        leftBG
+    );
+
+    var content = <div ref={this.setRef}{...provided.draggableProps}{...provided.dragHandleProps}
+      className={"listItem"} style={{...dragStyle, ...{opacity:opacityValue}}}
+      onClick={()=>this.props.onSelectedCallback(this.props.task)}>
+      <div className="listItemTextContainer" >
+        <div className="listItemText">
+          <Typography color="textPrimary" noWrap> {this.props.content} </Typography>
+        </div>
+      </div>
+      {dragButton}
+    </div>;
 
     return( content );
   }
 }
 
-export default withTheme(DragSource(Types.ITEM, itemSource, collect)(TaskItemComponent));
+export default withTheme(TaskItemComponent);

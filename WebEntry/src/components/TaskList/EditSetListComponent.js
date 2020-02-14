@@ -3,27 +3,10 @@ import React, { Component } from 'react';
 import EditSetListItemComponent from './EditSetListItemComponent';
 import * as listUtils from '../../core/db_objects_utility_functions';
 
-import { DropTarget } from 'react-dnd'
-const Types = {
- ITEM: 'taskItemComp'
-}
+import { withTheme } from '@material-ui/styles';
 
-const taskListTarget = {
-  drop(props, monitor, component){
-    return props;
-  },
-  canDrop(props, monitor) {
-    return props.reactDND;
-  }
-};
-
-function collect(connect, monitor) {
- return {
-   canDrop: monitor.canDrop(),
-   connectDropTarget: connect.dropTarget(),
-   isOver: monitor.isOver()
- }
-}
+import { Draggable } from 'react-beautiful-dnd';
+import * as dnd from '../../core/beautifulDND.js';
 
 class EditSetListComponent extends Component {
   constructor(props) {
@@ -32,22 +15,32 @@ class EditSetListComponent extends Component {
   }
 
   render() {
+    const {theme} = this.props;
+    let taskBgColor = theme.palette.type === "light" ? theme.palette.primary.main : theme.palette.primary.dark;
     this.taskListObjects = this.props.taskListObjects;
-    const { connectDropTarget } = this.props;
-
-    return connectDropTarget(
+    return(
       <div style={{width:'100%', height:'100%'}}>
         {
           this.taskListObjects.map((item, index) => {
             var content = listUtils.getTaskContent(item);
 
-            return <div className={"editSetListItem "} key={index}><EditSetListItemComponent index={index} item={item} content={content} componentDepth={0}
-            handleDrop={this.props.dragDropCallback} removeCallback={this.props.removeTaskCallback} moveTaskCallback={this.props.moveTaskCallback}/></div>
+            return(
+              <Draggable key={item._id+"setListId"+index} draggableId={item._id+"setListId"+index} index={index} shouldRespectForceTouch={false}>
+              {(provided, snapshot) => (
+                <div className={"editSetListItem "} key={item._id+"setListId_item"+index}
+                ref={provided.innerRef}{...provided.draggableProps}{...provided.dragHandleProps}
+                style={{...dnd.getItemStyle(snapshot.isDragging, provided.draggableProps.style, taskBgColor, taskBgColor),...{opacity:snapshot.isDragging?0.8:1}}}
+                >
+                  <EditSetListItemComponent index={index} item={item} content={content} componentDepth={0}
+                  handleDrop={this.props.dragDropCallback} removeCallback={this.props.removeTaskCallback} moveTaskCallback={this.props.moveTaskCallback}/>
+                </div>
+              )}
+              </Draggable>
+            )
           })
         }
-      </div>
-    );
+      </div>);
   }
 }
 
-export default DropTarget(Types.ITEM, taskListTarget, collect)(EditSetListComponent);
+export default withTheme(EditSetListComponent);

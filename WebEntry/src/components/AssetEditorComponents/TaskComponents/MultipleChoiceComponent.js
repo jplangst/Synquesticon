@@ -113,7 +113,7 @@ class MultipleChoiceComponent extends Component {
 
           padding="dense"
           style={{marginRight:"10px", width:"calc(40% - 15px)"}}
-          id="tags"
+          id="correctResponses"
           defaultValue={this.props.task.correctResponses.join(',')}
           placeholder="Response A, Response C"
           helperText="The correct responses to the question"

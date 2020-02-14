@@ -13,10 +13,6 @@ import EditorMode from './pages/EditorMode';
 import IntroductionScreen from './pages/IntroductionScreen';
 import DisplayTaskComponent from './components/PlayerComponents/DisplayTaskComponent';
 
-import HTML5Backend from 'react-dnd-html5-backend' /* Does not support touch events */
-import TouchBackend from 'react-dnd-touch-backend' /* Supports touch events, but can be buggy with miouse events */
-import { DragDropContext } from 'react-dnd'
-
 import './App.css'
 
 import ThemeProvider from '@material-ui/styles/ThemeProvider';
@@ -24,7 +20,7 @@ import ThemeProvider from '@material-ui/styles/ThemeProvider';
 //To make MaterialUI use the new variant of typography and avoid the deprecation warning
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
 
-let backend = isMobile ? TouchBackend:HTML5Backend;
+//let backend = isMobile ? TouchBackend:HTML5Backend;
 
 class App extends Component {
   constructor(props){
@@ -85,4 +81,4 @@ function mapStateToProps(state, ownProps) {
     };
 }
 
-export default connect(mapStateToProps)(DragDropContext(backend)(App));
+export default connect(mapStateToProps)(App);

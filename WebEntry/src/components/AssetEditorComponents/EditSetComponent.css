@@ -1,7 +1,8 @@
 .setComponentContainer{
   position: relative;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 20px);
+  padding-top: 20px;
   overflow-y:auto;
   padding-left: 20px;
   padding-right: 20px;

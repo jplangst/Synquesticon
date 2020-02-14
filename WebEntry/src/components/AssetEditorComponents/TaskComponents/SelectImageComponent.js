@@ -87,8 +87,6 @@ class SelectImageComponent extends Component {
       previewImage = <AOIEditorComponent preview={this.preview} task={this.props.task} image={this.image}/>//<img className="imageContainer" src={"Images/"+this.props.task.image} alt="Task" />;
     }
 
-
-
     var imageTaskName =
     <TextField
         required
@@ -98,6 +96,7 @@ class SelectImageComponent extends Component {
         placeholder="Task Name"
         label="Task Name"
         ref="imageTextRef"
+        style={{width:"calc(50% - 5px)", marginRight:'10px'}}
         onChange={(e)=>{
           if (this.props.task.label === undefined) {
             this.props.task.question = e.target.value;
@@ -126,19 +125,19 @@ class SelectImageComponent extends Component {
     <div className="imageTypeContainer">
       <div className="imageInputContainer">
         {imageTaskName}
+        {tags}
       </div>
-      <Button variant="outlined" onClick={this.onBrowseImages.bind(this)}>Browse</Button>
 
       {previewImage}
 
-      <div className="fileSelectorContainer">
+      <div className="imagePickingContainer">
+        <Button variant="outlined" onClick={this.onBrowseImages.bind(this)}>Browse Image Database</Button>
         <FileSelector handleSelectionCallback={this.handleImageSelectedCallback}/>
       </div>
 
       <BrowseImagesDialog openDialog={this.state.openBrowseImage}
                           closeDialog={this.onCloseBrowseImages.bind(this)}
                           onPickImage={this.onPickImageBrowseImages.bind(this)}/>
-      {tags}
     </div>;
 
     return(

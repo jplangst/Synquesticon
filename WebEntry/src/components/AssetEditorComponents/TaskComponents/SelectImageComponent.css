@@ -1,14 +1,21 @@
 .imageTypeContainer{
   width: 100%;
-  height: auto;
+  max-height: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .imageInputContainer{
   width: 100%;
-  height: 10%;
+  /*height: 10%;*/
 }
 
-.fileSelectorContainer{
+.imagePickingContainer{
+  display: flex;
+  flex-direction: row;
   width: 100%;
-  height: 10%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  justify-content: center;
 }

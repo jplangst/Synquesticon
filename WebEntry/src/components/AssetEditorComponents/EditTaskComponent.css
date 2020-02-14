@@ -7,7 +7,7 @@
 .editTaskFormButtons{
   width: 100%;
   height: 9%;
-  margin-top:1%;
+  margin-top: 20px;
 }
 
 .questionTypeContainer{
@@ -20,7 +20,12 @@
   padding-right: 20px;
   position: relative;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 20px);
+  padding-top: 20px;
+
+  display: flex;
+  flex-direction: column;
+
   overflow-y:auto;
 }
 
