@@ -305,6 +305,7 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
     //check if we should enter a new level or leave
     if(this.props.taskSet.data.length > 0 && this.state.currentTaskIndex < this.props.taskSet.data.length) {
       this.currentTask = this.props.taskSet.data[this.state.currentTaskIndex];
+
       let trackingTaskSetNames = this.props.tasksFamilyTree.slice(); //clone array, since javascript passes by reference, we need to keep the orginal familyTree untouched
       trackingTaskSetNames.push(this.currentTask.name);
       var parentSet = this.props.tasksFamilyTree[this.props.tasksFamilyTree.length - 1];
@@ -683,8 +684,19 @@ class DisplayTaskComponent extends Component {
       let rightBG = theme.palette.type === "light" ? theme.palette.primary.main : theme.palette.primary.dark;
 
       try {
+        if (store.getState().experimentInfo.taskSet.displayOnePage) {
+          var taskSet = {
+            objType: "TaskSet",
+            displayOnePage: true,
+            data: [store.getState().experimentInfo.taskSet]
+          };
+        }
+        else {
+          var taskSet = store.getState().experimentInfo.taskSet;
+        }
         var renderObj = <DisplayTaskHelper tasksFamilyTree={[store.getState().experimentInfo.mainTaskSetId]}
-                                           taskSet={store.getState().experimentInfo.taskSet}
+                                           taskSet={taskSet}
+                                           displayOnePage={store.getState().experimentInfo.taskSet.displayOnePage}
                                            onFinished={this.onFinished.bind(this)}
                                            saveGazeData={this.saveGazeData.bind(this)}
                                            progressCount={0}
