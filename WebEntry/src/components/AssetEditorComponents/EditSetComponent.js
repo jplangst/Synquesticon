@@ -492,10 +492,10 @@ class EditSetComponent extends Component {
 
           <Droppable droppableId="setTaskListId" >
            {(provided, snapshot) => (
-            <div className="tmpSetListWrapper" ref={provided.innerRef} style={{width:'100%', height:'100%'}}>
+            <div className="tmpSetListWrapper" ref={provided.innerRef} style={{width:'100%', height:'auto', minHeight:'200px', backgroundColor:'blue'}}>
               < EditSetListComponent removeCallback={this.removeTaskFromListCallback} taskListObjects={this.state.taskListObjects} reactDND={true}
                 removeTaskCallback={this.removeTaskFromListCallback} moveTaskCallback={this.moveTaskCallback} / >
-                <div style={{display: 'none'}}>{provided.placeholder}</div>
+                {provided.placeholder}
             </div>
           )}
           </Droppable>

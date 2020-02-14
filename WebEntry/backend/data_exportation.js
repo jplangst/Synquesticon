@@ -204,7 +204,7 @@ exports.save_to_csv = async function(p) {
     }
 
     //prepare the header
-    var header = "Global variables,Family Tree,Task type,Task content,Start timestamp,First response timestamp,Time to first answer,Time to completion,Answer,Correctly answered,Comments";
+    var header = "Global variables,Family Tree,Task type,Task content,Start timestamp,First response timestamp,Time to first answer(ms),Time to completion(ms),Answer,Correctly answered,Comments";
 
     if (file_name === "") {
       file_name = "Anonymous";
@@ -215,6 +215,8 @@ exports.save_to_csv = async function(p) {
     //file_name += ".csv";
 
     await Promise.all(p.linesOfData.map(async (line, index) => {
+
+
       //get all comments on this line
        var comments = await (ObserverMessages.find({participantId: p._id,
                                    taskId: line.taskId,
@@ -255,17 +257,17 @@ exports.save_to_csv = async function(p) {
         participantResponse = line.responses.join(';');
       }
 
-      csv_string += globalVariables + ',' +
-                   line.tasksFamilyTree.join('_') + ',' +
-                   line.displayType + ',' +
-                   line.taskContent + ',' +
-                   getFormattedTime(line.startTimestamp) + ',' +
-                   getFormattedTime(line.firstResponseTimestamp) + ',' +
-                   line.timeToFirstAnswer + ',' +
-                   line.timeToCompletion + ',' +
-                   participantResponse + ',' +
-                   line.correctlyAnswered + ',' +
-                   commentText + os.EOL;
+      csv_string += '"'+globalVariables + '",' +
+                   '"'+line.tasksFamilyTree.join('_') + '",' +
+                   '"'+line.displayType + '",' +
+                   '"'+line.taskContent + '",' +
+                   '"'+getFormattedTime(line.startTimestamp) + '",' +
+                   '"'+getFormattedTime(line.firstResponseTimestamp) + '",' +
+                   '"'+line.timeToFirstAnswer + '",' +
+                   '"'+line.timeToCompletion + '",' +
+                   '"'+participantResponse + '",' +
+                   '"'+line.correctlyAnswered + '",' +
+                   '"'+commentText +'"'+ os.EOL;
     });
 
     return [file_name, csv_string]
