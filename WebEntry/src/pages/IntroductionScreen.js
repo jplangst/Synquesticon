@@ -22,14 +22,14 @@ class IntroductionScreen extends Component {
     }
     this.gotoPage = this.gotoPageHandler.bind(this);
 
-    this.onPauseAllPressed = this.onPausePlayPressed.bind(this);
+    //this.onPauseAllPressed = this.onPausePlayPressed.bind(this);
   }
 
   gotoPageHandler(route){
     this.props.history.push(route);
   }
 
-  onPausePlayPressed(){
+  /*onPausePlayPressed(){
     wamp.broadcastCommands(JSON.stringify({
                             commandType: !this.state.isParticipantsPaused ? "PAUSE" : "RESUME",
                             participantId: -1
@@ -38,7 +38,7 @@ class IntroductionScreen extends Component {
     this.setState({
       isParticipantsPaused: !this.state.isParticipantsPaused
     });
-  }
+  }*/
 
   render() {
     let theme = this.props.theme;

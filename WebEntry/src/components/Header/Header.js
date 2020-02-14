@@ -18,6 +18,7 @@ import {withRouter} from 'react-router-dom';
 import Settings from '@material-ui/icons/Settings';
 import EditIcon from '@material-ui/icons/Edit';
 import PlayIcon from '@material-ui/icons/PlayArrow';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 
 import store from '../../core/store';
 
@@ -58,6 +59,13 @@ class Header extends Component {
        onClick={this.handleBackwardsNavigation.bind(this)} >
         <PlayIcon fontSize='large'/>
       </Button>);
+      modeButtons.push(
+        <Button key="/ObserverMode"
+          onClick={(e) => this.gotoPage("ObserverMode")}
+          style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:100, height:"100%",
+                backgroundColor:this.props.history.location.pathname.includes("/ObserverMode")?activeColor:""}}>
+          <VisibilityIcon fontSize='large' />
+        </Button>);
     modeButtons.push(
       <Button key="/EditorMode"
         className="IntroDataExportBtnContainer" onClick={(e) => this.gotoPage("EditorMode")}

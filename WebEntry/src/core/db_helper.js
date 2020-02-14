@@ -385,7 +385,6 @@ class db_helper {
         axios.post("/api/getTasksOrTaskSetsWithIDs", {
           wrapperSetId: JSON.stringify(objIds)
         }).then(response => {
-            console.log(response);
             resolve(response.data.data);
         }, (errorResponse) => {
           console.log(errorResponse);
