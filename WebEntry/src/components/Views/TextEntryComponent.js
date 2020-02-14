@@ -68,9 +68,9 @@ class TextEntryComponent extends Component {
     //If the response has two values then we treat the second as how much the answer can differ and still be valid
     if(this.props.task.correctResponses.length > 1){
       let answer = parseFloat(this.textEntry);
-      let correctAnswer = this.props.task.correctResponses[0];
-      let threshold = this.props.task.correctResponses[1];
-      if(answer > correctAnswer-threshold && answer < correctAnswer+threshold){
+      let correctAnswer = parseFloat(this.props.task.correctResponses[0]);
+      let threshold = parseFloat(this.props.task.correctResponses[1]);
+      if(answer >= correctAnswer-threshold && answer <= correctAnswer+threshold){
         return "correct";
       }
     } //Otherwise we just check if it matches the correct response

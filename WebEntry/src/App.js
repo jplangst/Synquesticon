@@ -10,6 +10,7 @@ import {isMobile} from 'react-device-detect';
 
 import Header from './components/Header/Header'
 import EditorMode from './pages/EditorMode';
+import ObserverMode from './pages/ObserverMode';
 import IntroductionScreen from './pages/IntroductionScreen';
 import DisplayTaskComponent from './components/PlayerComponents/DisplayTaskComponent';
 
@@ -62,6 +63,7 @@ class App extends Component {
               <Switch>
                 <Route exact path="/" component={IntroductionScreen} />
                 <Route path="/EditorMode" component={EditorMode} />
+                <Route path="/ObserverMode" component={ObserverMode} />
                 <Route path="/study" component={DisplayTaskComponent}/>} />
               </Switch>
             </div>

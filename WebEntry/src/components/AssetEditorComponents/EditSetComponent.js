@@ -366,23 +366,17 @@ class EditSetComponent extends Component {
     const dragTask = this.state.taskList[dragIndex];
     const taskObject = this.state.taskListObjects[dragIndex];
 
-    //Update the state with the new positions of the tasks
-    this.setState(update(this.state, {
-      taskList: {
-        $splice: [
-          [dragIndex, 1],
-          [hoverIndex, 0, dragTask]
-        ]
-      },
-      taskListObjects: {
-        $splice: [
-          [dragIndex, 1],
-          [hoverIndex, 0, taskObject]
-        ]
-      }
-    }));
+    var updatedTaskList = this.state.taskList.slice();
+    updatedTaskList.splice(dragIndex, 1, updatedTaskList.splice(hoverIndex, 1, updatedTaskList[dragIndex])[0]);
+    var updatedObjectList = this.state.taskListObjects.slice();
+    updatedObjectList.splice(dragIndex, 1, updatedObjectList.splice(hoverIndex, 1, updatedObjectList[dragIndex])[0]);
 
-    this.set.childIds = this.state.taskList;
+    this.setState({
+      taskListObjects: updatedObjectList,
+      taskList: updatedTaskList
+    });
+
+    this.set.childIds = updatedTaskList;
   }
 
   //Removes the selected set from the database
@@ -492,10 +486,10 @@ class EditSetComponent extends Component {
 
           <Droppable droppableId="setTaskListId" >
            {(provided, snapshot) => (
-            <div className="tmpSetListWrapper" ref={provided.innerRef} style={{width:'100%', height:'100%'}}>
+            <div className="tmpSetListWrapper" ref={provided.innerRef} style={{width:'100%', height:'auto', minHeight:'200px'}}>
               < EditSetListComponent removeCallback={this.removeTaskFromListCallback} taskListObjects={this.state.taskListObjects} reactDND={true}
                 removeTaskCallback={this.removeTaskFromListCallback} moveTaskCallback={this.moveTaskCallback} / >
-                <div style={{display: 'none'}}>{provided.placeholder}</div>
+                {provided.placeholder}
             </div>
           )}
           </Droppable>

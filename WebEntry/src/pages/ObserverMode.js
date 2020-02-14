@@ -4,6 +4,9 @@ import GazeCursor from '../components/Views/GazeCursor';
 import WAMPMessageComponent from '../components/Views/ObserverMessages/WAMPMessageComponent';
 import ObserverTab from '../components/Views/ObserverMessages/ObserverTab';
 
+import { withTheme } from '@material-ui/styles';
+
+import wamp from '../core/wamp';
 import wampStore from '../core/wampStore';
 import store from '../core/store';
 
@@ -22,6 +25,8 @@ class ObserverMode extends Component {
     this.completedTasks = {};
     this.totalTasks = {};
     this.handleNewWAMPEvent = this.onNewWAMPEvent.bind(this);
+
+    this.onPauseAllPressed = this.onPausePlayPressed.bind(this);
   }
 
   componentWillMount() {
@@ -30,6 +35,17 @@ class ObserverMode extends Component {
 
   componentWillUnmount() {
     wampStore.removeEventListener(this.handleNewWAMPEvent);
+  }
+
+  onPausePlayPressed(){
+    wamp.broadcastCommands(JSON.stringify({
+                            commandType: !this.state.isParticipantsPaused ? "PAUSE" : "RESUME",
+                            participantId: -1
+                           }));
+
+    this.setState({
+      isParticipantsPaused: !this.state.isParticipantsPaused
+    });
   }
 
   getPairingID(msgArray, msg) {
@@ -101,6 +117,9 @@ class ObserverMode extends Component {
   }
 
   render() {
+    let theme = this.props.theme;
+    let observerBgColor = theme.palette.type === "light" ? theme.palette.primary.main : theme.palette.primary.dark;
+
     var wampMessage = [];
     var gazeObject = null;
     if (this.state.currentParticipant >= 0) {
@@ -114,7 +133,7 @@ class ObserverMode extends Component {
     var showScroll = window.matchMedia("(any-pointer: coarse)").matches ? "" : "ShowScrollBar";
 
     return (
-      <div className="ObserverViewerContent">
+      <div className="ObserverViewerContent" style={{backgroundColor:observerBgColor}}>
           <div className={"ObserverTabContainer " + showScroll}>
             {
               //TODO get the number of tasks in the experiment and the number of tasks completed
@@ -143,4 +162,4 @@ class ObserverMode extends Component {
   }
 }
 
-export default ObserverMode;
+export default withTheme(ObserverMode);
