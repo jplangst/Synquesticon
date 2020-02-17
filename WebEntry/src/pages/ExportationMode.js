@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 
 import './ExportationMode.css';
 
-import DataExportationComponent from '../components/Data/DataExportationComponent';
-
 import { Typography } from '@material-ui/core';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
