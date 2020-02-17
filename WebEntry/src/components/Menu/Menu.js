@@ -144,9 +144,9 @@ class Menu extends Component {
             tabIndex={0}
             role="button"
             onClick={this.props.openSettingsMenu}
-            style={{minWidth: 200}}
+            style={{minWidth: 200, height:'100%'}}
           >
-            <List>
+            <List >
               <ListItem button key="Device ID" onClick={this.onOpenDeviceIDSettings.bind(this)}>
                 <ListItemText primary={deviceName} />
               </ListItem>
@@ -173,7 +173,12 @@ class Menu extends Component {
                 <ListItemText primary="Fullscreen" />
               </ListItem>
               <EyeTrackerSelector />
-              </List>
+            </List>
+            <List>
+              <ListItem key="Version">
+                <ListItemText primary="Version 1.0" />
+              </ListItem>
+            </List>
           </div>
         </Drawer>
         <DeviceIDDialog openDeviceIDSettings={this.state.openDeviceIDSettings} closeDeviceIDSettings={this.onCloseDeviceIDSettings.bind(this)} myStorage={myStorage} />
