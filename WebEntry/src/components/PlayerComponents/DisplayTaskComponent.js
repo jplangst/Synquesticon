@@ -631,6 +631,9 @@ class DisplayTaskComponent extends Component {
                                 startTimestamp: store.getState().experimentInfo.startTimestamp,
                                 selectedTracker: store.getState().experimentInfo.selectedTracker,
                                 mainTaskSetId: store.getState().experimentInfo.mainTaskSetId,
+                                lineOfData: {
+                                  startTaskTime: timestamp
+                                },
                                 timestamp: timestamp
                               });
     wamp.broadcastEvents(info);

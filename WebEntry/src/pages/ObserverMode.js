@@ -60,6 +60,7 @@ class ObserverMode extends Component {
 
   onNewWAMPEvent() {
     var args = JSON.parse(wampStore.getCurrentMessage());
+
     var isComment = (args.eventType === "COMMENT"); // &&
                           // args.observerName != myStorage.getItem('deviceID') &&
                           // args.observerRole != myStorage.getItem('deviceRole'));
