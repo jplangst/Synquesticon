@@ -272,7 +272,7 @@ class EditorMode extends Component {
     var collapsableSetHeaderButtons = this.getCollapsableHeaderButtons(this.taskSetSearchCallback, this.addSetCallback.bind(this), null, "setSearchBar");
 
     var dragEnabled = false;
-    if(this.state.assetEditorObject && this.state.assetEditorObject.props.setObject){
+    if(this.state.assetEditorObject && this.state.assetEditorObject.type === EditSetComponent){
       dragEnabled = true;
     }
 

@@ -483,17 +483,15 @@ class EditSetComponent extends Component {
         <div className="setTaskListContainer">
           <div className="setTaskListTitle"><div className="setTaskListTitleText"><Typography color="textPrimary">Task sequence</Typography></div></div>
           <div className="setTaskListViewer">
-
-          <Droppable droppableId="setTaskListId" >
-           {(provided, snapshot) => (
-            <div className="tmpSetListWrapper" ref={provided.innerRef} style={{width:'100%', height:'auto', minHeight:'200px'}}>
-              < EditSetListComponent removeCallback={this.removeTaskFromListCallback} taskListObjects={this.state.taskListObjects} reactDND={true}
-                removeTaskCallback={this.removeTaskFromListCallback} moveTaskCallback={this.moveTaskCallback} / >
-                {provided.placeholder}
-            </div>
-          )}
-          </Droppable>
-
+            <Droppable droppableId="setTaskListId" >
+             {(provided, snapshot) => (
+              <div ref={provided.innerRef} style={{width:'100%', minHeight:'100%', height:'auto'}}>
+                < EditSetListComponent removeCallback={this.removeTaskFromListCallback} taskListObjects={this.state.taskListObjects} reactDND={true}
+                  removeTaskCallback={this.removeTaskFromListCallback} moveTaskCallback={this.moveTaskCallback} / >
+                  {provided.placeholder}
+              </div>
+            )}
+            </Droppable>
           </div>
         </div>
 
