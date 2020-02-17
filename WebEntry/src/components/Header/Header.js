@@ -19,6 +19,7 @@ import Settings from '@material-ui/icons/Settings';
 import EditIcon from '@material-ui/icons/Edit';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import VisibilityIcon from '@material-ui/icons/Visibility';
+import ExportationIcon from '@material-ui/icons/Archive';
 
 import store from '../../core/store';
 
@@ -59,20 +60,27 @@ class Header extends Component {
        onClick={this.handleBackwardsNavigation.bind(this)} >
         <PlayIcon fontSize='large'/>
       </Button>);
-      modeButtons.push(
-        <Button key="/ObserverMode"
-          onClick={(e) => this.gotoPage("ObserverMode")}
-          style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:100, height:"100%",
-                backgroundColor:this.props.history.location.pathname.includes("/ObserverMode")?activeColor:""}}>
-          <VisibilityIcon fontSize='large' />
-        </Button>);
+    modeButtons.push(
+      <Button key="/ObserverMode"
+        onClick={(e) => this.gotoPage("ObserverMode")}
+        style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:100, height:"100%",
+              backgroundColor:this.props.history.location.pathname.includes("/ObserverMode")?activeColor:""}}>
+        <VisibilityIcon fontSize='large' />
+      </Button>);
     modeButtons.push(
       <Button key="/EditorMode"
-        className="IntroDataExportBtnContainer" onClick={(e) => this.gotoPage("EditorMode")}
+      onClick={(e) => this.gotoPage("EditorMode")}
         style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:100, height:"100%",
               backgroundColor:this.props.history.location.pathname.includes("/EditorMode")?activeColor:""}}>
         <EditIcon fontSize='large' />
       </Button>);
+      modeButtons.push(
+        <Button key="/ExportationMode"
+        onClick={(e) => this.gotoPage("ExportationMode")}
+          style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:100, height:"100%",
+                backgroundColor:this.props.history.location.pathname.includes("/ExportationMode")?activeColor:""}}>
+          <ExportationIcon fontSize='large' />
+        </Button>);
     return modeButtons;
   }
 
@@ -86,7 +94,6 @@ class Header extends Component {
 
                <div className="AppName"><Typography color='textPrimary' variant="h3">Synquesticon</Typography></div>
 
-               <DataExportationComponent exportButtonStyle={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:100, height:"100%"}}/>
                <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:100, height:"100%"}}
                  onClick={this.openSettingsMenu.bind(this)}>
                  <Settings fontSize='large' />

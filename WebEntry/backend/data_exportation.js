@@ -141,7 +141,7 @@ exports.save_gaze_data = function (participantId, task, gazeData) {
   });
 
   if (!fs.existsSync(file_name)) {
-    var header = "Timestamp,X,Y,Left pupil radius,Right pupil radius,Task,Target";
+    var header = "Timestamp(UTC),X,Y,Left pupil radius,Right pupil radius,Task,Target";
     logger.write(header + os.EOL);
   }
 
@@ -204,19 +204,16 @@ exports.save_to_csv = async function(p) {
     }
 
     //prepare the header
-    var header = "Global variables,Family Tree,Task type,Task content,Start timestamp,First response timestamp,Time to first answer(ms),Time to completion(ms),Answer,Correctly answered,Comments";
+    var header = "Global variables,Family Tree,Task type,Task content,Start timestamp(UTC),First response timestamp(UTC),Time to first answer(ms),Time to completion(ms),Answer,Correctly answered,Comments";
 
     if (file_name === "") {
       file_name = "Anonymous";
     }
 
     // var gazeDataFile = RAW_GAZE_DATA_DIRECTORY + GAZE_DATA_PREFIX + p._id;
-
     //file_name += ".csv";
 
     await Promise.all(p.linesOfData.map(async (line, index) => {
-
-
       //get all comments on this line
        var comments = await (ObserverMessages.find({participantId: p._id,
                                    taskId: line.taskId,

@@ -66,7 +66,6 @@ class ObserverTab extends Component {
 
     var shouldHighlight = window.matchMedia("(any-pointer: coarse)").matches ? activeUnderlineStyle : {};
 
-
     var buttonIcon = null;
     if(this.state.isPaused || this.state.forcedPause){
       buttonIcon = <PauseIcon style={{display:'flex', position: 'absolute', height: '100%', width: 'auto', maxWidth: '100%', flexGrow: 1}} />;
@@ -81,22 +80,22 @@ class ObserverTab extends Component {
     var dotText = null;
     if(storeState.windowSize.height > 500){
       participantBigScreen =
-      <div style={{display:'flex', flexDirection:'row', flexGrow:1, position:'relative', paddingBottom:5, marginRight:5}}>
-        <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:20, maxWidth:40, minHeight:20, maxHeight:60}}
+      <div style={{display:'flex', flexDirection:'row', flexGrow:1, position:'relative', paddingBottom:5, marginRight:5, height:'40%'}}>
+        <Button style={{display:'flex', position: 'relative', width:30, height:30}}
          onClick={this.onButtonPress}>
           {buttonIcon}
         </Button>
-        <div style={{display:'flex', position: 'relative', flexDirection:'column', flexGrow: 1, flexShrink:1}}>
-          <div style={{display:'flex', flexGrow:1, flexShrink:1,  width:'100%', justifyContent:'center', alignItems:'center'}}>
+        <div style={{display:'flex', position: 'relative', flexDirection:'column', flexGrow: 1 }}>
+          <div style={{display:'flex', width:'100%', height:10, marginBottom:3, justifyContent:'center', alignItems:'center'}}>
             <Typography color="textPrimary"> {this.props.completedTasks} / {this.props.totalTasks} </Typography>
           </div>
-          <LinearProgress color="secondary" style={{display:'flex', flexGrow:1, flexShrink:1}} variant="determinate" value={(this.props.completedTasks/this.props.totalTasks)*100}/>
+          <LinearProgress color="secondary" style={{display:'flex', width:'100%', height:10}} variant="determinate" value={(this.props.completedTasks/this.props.totalTasks)*100}/>
         </div>
       </div>;
     }
     else{
       participantSmallScreen =
-        <Button style={{zIndex:10,display:'flex', position: 'relative', flexShrink:1, minWidth:20, maxWidth:60, minHeight:20, maxHeight:60}}
+        <Button style={{zIndex:10,display:'flex', position: 'relative', width:30, height: 30}}
            onClick={this.onButtonPress}>
             {buttonIcon}
         </Button>;
@@ -104,10 +103,13 @@ class ObserverTab extends Component {
     }
 
     return(
-          <div style={{...shouldHighlight,...{ zIndex:1, padding:'0 0 0 10px', display:'flex', flexDirection:'column', cursor:'pointer', position:'relative', flexShrink:1, minHeight:20, maxHeight:150, minWidth:150, maxWidth:250}}}>
-            <div onClick={this.onTabPress} style={{display:'flex', flexDirection:'column', position:'relative', width:"100%", height:"100%"}}>
-              <div style={{...activeTextStyle, ...{display:'flex', flexDirection:'row', position: 'relative'}, ...dotText}}>
-                {participantSmallScreen}<p style={{ textAlign:'center'}}>{this.props.label}</p>
+          <div style={{...shouldHighlight,...{alignItems:'center',justifyContent:'center',flexShrink: 0, zIndex:1, marginLeft:5, display:'flex', flexDirection:'column', cursor:'pointer', position:'relative', height:'100%', width:250}}}>
+            <div onClick={this.onTabPress} style={{display:'flex', flexDirection:'column', position:'relative', width:"100%", height:"60%"}}>
+              <div style={{...activeTextStyle, ...{display:'flex', flexDirection:'row', position: 'relative', width:'100%',height:'100%'}, ...dotText}}>
+                {participantSmallScreen}<div style={{...{display:'flex', flexDirection:'column', position:'relative', width:"100%", height:"100%"}}}>
+                    <p style={{textAlign:'center',margin:0, padding:0,width:'100%'}}>{this.props.label}</p>
+                    <p style={{textAlign:'center',margin:0, padding:0,width:'100%'}}>{this.props.startTimestamp}</p>
+                  </div>
               </div>
               {participantBigScreen}
             </div>
