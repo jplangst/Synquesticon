@@ -4,7 +4,6 @@ import './Header.css';
 
 //Components
 import Menu from '../Menu/Menu';
-import DataExportationComponent from '../Data/DataExportationComponent';
 
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
