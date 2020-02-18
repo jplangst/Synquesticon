@@ -4,7 +4,7 @@ import { withTheme } from '@material-ui/styles';
 
 import PlayableSetListComponent from '../components/TaskList/PlayableSetListComponent';
 
-import ShareExperimentDialog from '../components/dialogs/ShareExperimentDialog';
+import Snackbar from '@material-ui/core/Snackbar';
 
 import store from '../core/store';
 
@@ -56,15 +56,25 @@ class PlayerMode extends Component {
 
   onGetLinkCallback(taskSet) {
     this.selectedTaskSet = taskSet;
+    this.copyToClipboard();
+  }
+
+  copyToClipboard() {
+    var url = window.location.href + 'study?id=';
+    if (this.selectedTaskSet) {
+       url += this.selectedTaskSet._id;
+       url = this.appendEyeTrackerInfo(url);
+    }
+    navigator.clipboard.writeText(url);
 
     this.setState({
-      openGetLinkDialog: true
+      openSnackBar: true
     });
   }
 
-  closeGetLinkDialog() {
+  handleCloseSnackbar(event, reason) {
     this.setState({
-      openGetLinkDialog: false
+      openSnackBar: false
     });
   }
 
@@ -83,9 +93,21 @@ class PlayerMode extends Component {
                   getLinkCallback={ this.onGetLinkCallback.bind(this) }
                   showEditButton={false}/>
         </div>
-        <ShareExperimentDialog link={url}
-                               openDialog={this.state.openGetLinkDialog}
-                               closeDialog={this.closeGetLinkDialog.bind(this)}/>
+
+         <Snackbar
+           style = {{bottom: 200}}
+           anchorOrigin={{
+             vertical: 'bottom',
+             horizontal: 'center',
+           }}
+           open={this.state.openSnackBar}
+           autoHideDuration={2000}
+           onClose={this.handleCloseSnackbar.bind(this)}
+           ContentProps={{
+             'aria-describedby': 'message-id',
+           }}
+           message={<span id="message-id">Link copied to clipboard</span>}
+         />
       </div>
       );
   }

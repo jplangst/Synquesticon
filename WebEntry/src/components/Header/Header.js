@@ -89,14 +89,18 @@ class Header extends Component {
       return(
           <AppBar style={{ backgroundColor:this.props.theme.palette.primary.light, padding: 0, display:'flex', flexGrow: 1, position: 'relative', minHeight:50, maxHeight:'6%', width:'100%'}}>
             <Toolbar variant="dense" style={{padding: 0, display:'flex', flexDirection:'row', position:'relative', width:'100%', height:'100%'}}>
+              <div style={{display:'flex',position:'relative',width:400, flexDirection:'row',height:'100%'}}>
                {this.getModeButtons()}
-
+              </div>
                <div className="AppName"><Typography color='textPrimary' variant="h3">Synquesticon</Typography></div>
 
-               <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:100, height:"100%"}}
-                 onClick={this.openSettingsMenu.bind(this)}>
-                 <Settings fontSize='large' />
-               </Button>
+               <div style={{display:'flex',position:'relative',width:400, flexDirection:'row', height:'100%', alignItems:'flex-end', alignContent:'flex-end'}}>
+                <div style={{display:'flex', flexGrow:1}} />
+                 <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:10, maxWidth:100, height:"100%"}}
+                   onClick={this.openSettingsMenu.bind(this)}>
+                   <Settings fontSize='large' />
+                 </Button>
+               </div>
 
               <Menu openSettingsMenu={this.openSettingsMenu.bind(this)}
                     closeSettingsMenu={this.closeSettingsMenu.bind(this)}
