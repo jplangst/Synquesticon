@@ -102,7 +102,7 @@ class ExportationMode extends Component {
   }
 
   formatDateTime(t) {
-    var d = new Date();
+    var d = new Date(t);
     var fillZero = (num) => {
       if (num < 10) {
         return '0' + num;
@@ -129,7 +129,7 @@ class ExportationMode extends Component {
     var file_name = "";
 
     if(p.linesOfData && p.linesOfData.length > 0){
-      file_name = this.formatDateTime(p.linesOfData[0].startTaskTime) + '_';
+      file_name = this.formatDateTime(p.linesOfData[0].startTimestamp) + '_';
       file_name += p.linesOfData[0].tasksFamilyTree[0] + '_';
     }
 
