@@ -90,7 +90,7 @@ function formatDateTime(t) {
       return num;
     }
   }
-  var datestring = d.getFullYear() + '-' + fillZero(d.getMonth()) + '-' + fillZero(d.getDate())
+  var datestring = d.getFullYear() + '-' + fillZero(d.getMonth() + 1) + '-' + fillZero(d.getDate())
                     + '_' + fillZero(d.getHours()) + '-' + fillZero(d.getMinutes());
   return datestring;
 }
