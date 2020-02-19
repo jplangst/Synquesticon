@@ -113,8 +113,8 @@ exports.save_to_csv = async function(p) {
     }
 
     //prepare the header
-    var header = "Global variables,Family Tree,Task type,Task content,Start timestamp(UTC),First response timestamp(UTC),Time to first answer(ms),Time to completion(ms),Answer,Correctly answered,Correct answers,Comments";
-
+    //var header = "Global variables,Family Tree,Task type,Task content,Start timestamp(UTC),First response timestamp(UTC),Time to first answer(ms),Time to completion(ms),Answer,Correctly answered,Correct answers,Comments";
+    var header = "global_vars,question,answer,answered_correctly,time_to_first_response,time_to_completion,comments,set_names,task_type,timestamp_start,timestamp_first_response";
     if (file_name === "") {
       file_name = "Anonymous";
     }
@@ -172,18 +172,40 @@ exports.save_to_csv = async function(p) {
         }
       }
 
+      var handleCorrectlyAnswered = (ans) => {
+        if (ans === "correct") {
+          return 1;
+        }
+        else {
+          return 0;
+        }
+      }
+
+      // csv_string += '"'+globalVariables + '",' +
+      //              '"'+line.tasksFamilyTree.join('_') + '",' +
+      //              '"'+line.displayType + '",' +
+      //              '"'+line.taskContent + '",' +
+      //              '"'+getFormattedTime(line.startTimestamp) + '",' +
+      //              '"'+getFormattedTime(line.firstResponseTimestamp) + '",' +
+      //              '"'+handleMissingData(line.timeToFirstAnswer) + '",' +
+      //              '"'+handleMissingData(line.timeToCompletion) + '",' +
+      //              '"'+participantResponse + '",' +
+      //              '"'+line.correctlyAnswered + '",' +
+      //              '"'+line.correctResponses + '",' +
+      //              '"'+commentText +'"'+ os.EOL;
+
       csv_string += '"'+globalVariables + '",' +
-                   '"'+line.tasksFamilyTree.join('_') + '",' +
-                   '"'+line.displayType + '",' +
                    '"'+line.taskContent + '",' +
-                   '"'+getFormattedTime(line.startTimestamp) + '",' +
-                   '"'+getFormattedTime(line.firstResponseTimestamp) + '",' +
+                   '"'+participantResponse + '",' +
+                   '"'+handleCorrectlyAnswered(line.correctlyAnswered) + '",' +
+                   '"'+line.correctResponses + '",' +
                    '"'+handleMissingData(line.timeToFirstAnswer) + '",' +
                    '"'+handleMissingData(line.timeToCompletion) + '",' +
-                   '"'+participantResponse + '",' +
-                   '"'+line.correctlyAnswered + '",' +
-                   '"'+line.correctResponses + '",' +
-                   '"'+commentText +'"'+ os.EOL;
+                   '"'+commentText + '",' +
+                   '"'+line.tasksFamilyTree.join('_') + '",' +
+                   '"'+line.displayType + '",' +
+                   '"'+getFormattedTime(line.startTimestamp) + '",' +
+                   '"'+getFormattedTime(line.firstResponseTimestamp) +'"'+ os.EOL;
     });
 
     return [file_name, csv_string]
