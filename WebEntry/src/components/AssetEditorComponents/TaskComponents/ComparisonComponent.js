@@ -27,7 +27,7 @@ class TextComponent extends Component {
       <TextField
         required
         padding="dense"
-        id="instructionText"
+        id="instructionText1"
         defaultValue={this.props.task.label}
         placeholder="Write your label here"
         label="Label"
@@ -40,7 +40,7 @@ class TextComponent extends Component {
       <TextField
         required
         padding="dense"
-        id="instructionText"
+        id="instructionText2"
         defaultValue={this.props.task.text}
         placeholder="Write your text here"
         label="Text"

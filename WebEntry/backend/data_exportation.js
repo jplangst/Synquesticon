@@ -80,26 +80,40 @@ exports.get_gaze_data = function (participantId) {
 ██████   ██████   ███ ███  ██   ████ ███████  ██████  ██   ██ ██████  ██   ██ ██████  ███████ ███████
 */
 
+function formatDateTime(t) {
+  var d = new Date(t);
+  var fillZero = (num) => {
+    if (num < 10) {
+      return '0' + num;
+    }
+    else {
+      return num;
+    }
+  }
+  var datestring = d.getFullYear() + '-' + fillZero(d.getMonth()) + '-' + fillZero(d.getDate())
+                    + '_' + fillZero(d.getHours()) + '-' + fillZero(d.getMinutes());
+  return datestring;
+}
+
 exports.save_to_csv = async function(p) {
     var globalVariables = "";
     var file_name = "";
 
     if(p.linesOfData && p.linesOfData.length > 0){
-      file_name = p.linesOfData[0].tasksFamilyTree[0] + '_';
-      date = new Date(p.linesOfData[0].startTimestamp);
-      file_name += date.toUTCString().replace(/\s/g,'') +"_";
+      file_name = formatDateTime(p.linesOfData[0].startTimestamp) + '_';
+      file_name += p.linesOfData[0].tasksFamilyTree[0] + '_';
     }
 
     for (let i = 0; i < p.globalVariables.length; i++) {
       /*header += p.globalVariables[i].label + ",";*/
       if (!p.globalVariables[i].label.toLowerCase().includes("record data")) {
         globalVariables += p.globalVariables[i].label + '_' + p.globalVariables[i].value + ":"; /* Was "," but that does not make sense*/
-        file_name += p.globalVariables[i].label + '_' + p.globalVariables[i].value + '_';
+        file_name += p.globalVariables[i].label + '-' + p.globalVariables[i].value + '_';
       }
     }
 
     //prepare the header
-    var header = "Global variables,Family Tree,Task type,Task content,Start timestamp(UTC),First response timestamp(UTC),Time to first answer(ms),Time to completion(ms),Answer,Correctly answered,Comments";
+    var header = "Global variables,Family Tree,Task type,Task content,Start timestamp(UTC),First response timestamp(UTC),Time to first answer(ms),Time to completion(ms),Answer,Correctly answered,Correct answers,Comments";
 
     if (file_name === "") {
       file_name = "Anonymous";
@@ -149,16 +163,26 @@ exports.save_to_csv = async function(p) {
         participantResponse = line.responses.join(';');
       }
 
+      var handleMissingData = (dat) => {
+        if(dat === -1) {
+          return "NULL";
+        }
+        else {
+          return dat;
+        }
+      }
+
       csv_string += '"'+globalVariables + '",' +
                    '"'+line.tasksFamilyTree.join('_') + '",' +
                    '"'+line.displayType + '",' +
                    '"'+line.taskContent + '",' +
                    '"'+getFormattedTime(line.startTimestamp) + '",' +
                    '"'+getFormattedTime(line.firstResponseTimestamp) + '",' +
-                   '"'+line.timeToFirstAnswer + '",' +
-                   '"'+line.timeToCompletion + '",' +
+                   '"'+handleMissingData(line.timeToFirstAnswer) + '",' +
+                   '"'+handleMissingData(line.timeToCompletion) + '",' +
                    '"'+participantResponse + '",' +
                    '"'+line.correctlyAnswered + '",' +
+                   '"'+line.correctResponses + '",' +
                    '"'+commentText +'"'+ os.EOL;
     });
 
