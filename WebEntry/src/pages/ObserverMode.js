@@ -53,7 +53,7 @@ class ObserverMode extends Component {
     for (var i = 0; i < msgArray.length; i++) {
       if (msgArray[i].lineOfData.startTimestamp === msg.lineOfData.startTimestamp
           && msgArray[i].task._id === msg.task._id) {
-            return i+1;
+            return i;
           }
     }
     return msgArray.length;
