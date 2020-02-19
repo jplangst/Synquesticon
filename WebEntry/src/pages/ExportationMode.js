@@ -132,8 +132,7 @@ class ExportationMode extends Component {
 
     return(
       <div className="ExportationModeContainer" style={{backgroundColor:exportationBG}}>
-        <Typography style={{position:'relative',marginLeft:20, marginTop:20, height:75, position:'relative'}} variant="h4" color="textPrimary">Select experiment(s) to export or delete</Typography>
-        <List style={{display:'flex', flexDirection:'column', flexGrow:1, width:'100%', minHeight:100, maxHeight:'calc(100% - 175px)', overflowY:'auto', overflowX:'hidden'}}>
+        <List style={{display:'flex', flexDirection:'column', flexGrow:1, width:'100%', minHeight:100, maxHeight:'calc(100% - 100px)', overflowY:'auto', overflowX:'hidden'}}>
           {this.state.participants.map((p, index) => {
             if(this.pickedParticipants.includes(p)){
               return(<ListItem style={{borderBottom:'grey solid 1px'}} selected button onClick={() => {
@@ -167,7 +166,7 @@ class ExportationMode extends Component {
           })}
         </List>
         <div className="ExportationActions">
-          <Typography variant="body" color="textPrimary"> {this.pickedParticipants.length} experiments selected </Typography>
+          <Typography variant="body1" color="textPrimary"> {this.pickedParticipants.length} data sets selected </Typography>
           <Button style={{height:buttonHeight, marginLeft:20}} onClick={this.handleExport.bind(this)} variant="outlined">
             Export Selected
           </Button>

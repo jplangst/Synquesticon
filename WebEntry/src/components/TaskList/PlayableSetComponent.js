@@ -18,7 +18,7 @@ class PlayableSetComponent extends Component {
     var editButton = this.props.showEditButton ? <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:buttonSize, maxWidth:buttonSize}}
             size="small" className="playableSetButton" >
       <EditIcon style={{display:'flex', position: 'absolute', minHeight:'25', maxHeight:25, width: '100%'}}/>
-    </Button> : null;    
+    </Button> : null;
 
     var content =
         <div  className={"listItem "}>
@@ -27,8 +27,12 @@ class PlayableSetComponent extends Component {
               <Typography color={textColor} noWrap variant="body1" >{this.props.content}</Typography>
             </div>
           </div>
-          {editButton}
-          <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:buttonSize, maxWidth:buttonSize}}
+          <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, marginRight:10,minWidth:buttonSize, maxWidth:buttonSize}}
+                  size="small" className="playableSetButton"
+                  onClick={()=>{this.props.editSetCallback(this.props.task)}}>
+            <EditIcon fontSize="default"/>
+          </Button>
+          <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, marginRight:10,minWidth:buttonSize, maxWidth:buttonSize}}
                   size="small" className="playableSetButton"
                   onClick={()=>{this.props.getLinkCallback(this.props.task)}}>
             <LinkIcon fontSize="default"/>
