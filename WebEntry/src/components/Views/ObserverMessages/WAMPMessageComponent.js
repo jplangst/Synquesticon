@@ -57,13 +57,15 @@ class WAMPMessageComponent extends React.Component {
   }
 
   render() {
+    var displayMessages = this.props.messages.slice();
+
     return (
       <div  className="wampMessageBoard">
         <div className="messageBoardtitle">
          <Typography color="textPrimary" variant="h6">Messaging Log</Typography>
         </div>
         <div className="messages">
-          {this.props.messages.slice().reverse().map((item, index) => {
+          {displayMessages.reverse().map((item, index) => {
             return <ObserverMessage message={item} key={index+item.lineOfData} commentCallback={this.onCommentPressed.bind(this)} />
           })}
         </div>
