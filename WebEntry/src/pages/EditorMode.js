@@ -219,7 +219,6 @@ class EditorMode extends Component {
     this.editSetComponentRef = React.createRef();
     this.setState({assetEditorObject: <EditSetComponent isEditing={false}
       closeSetCallback={this.assetEditorObjectClosed.bind(this)}
-      selectTaskSet={ this.selectTaskSet.bind(this) }
       key={this.assetEditorCompKey} ref={this.editSetComponentRef}/>});
   }
 

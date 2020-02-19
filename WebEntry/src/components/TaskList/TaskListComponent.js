@@ -62,9 +62,9 @@ class TaskListComponent extends Component {
         <div className="taskListComponentContainer" ref={provided.innerRef}>
           {
             this.taskList.map((item, index) => {
-              var highlightBG = "";
-              if(item === this.props.selectedTask){
-                highlightBG = "highlightBG";
+              var highlightBG = null;
+              if(this.props.selectedTask && item && item._id === this.props.selectedTask._id){
+                highlightBG = true;
               }
 
               var content = listUtils.getTaskContent(item);
