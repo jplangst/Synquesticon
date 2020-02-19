@@ -79,7 +79,7 @@ class EditorMode extends Component {
   }
 
   onDatabaseSearched(queryTasks, result){
-    console.log(result);
+
     if(queryTasks){
       this.setState({taskList: result.tasks});
     }
@@ -115,12 +115,34 @@ class EditorMode extends Component {
   }
 
   //Callback from the asset editor object if an object has been changed that requires a refresh of the page
-  assetEditorObjectClosed(dbChanged, editedObject){
-    this.clearAssetEditorObject();
+  assetEditorObjectClosed(dbChanged, shouldCloseAsset){
+    if(shouldCloseAsset){
+      this.clearAssetEditorObject();
+    }
 
     if(dbChanged){
       db_helper.getAllTasksFromDb(this.dbTaskCallback);
       db_helper.getAllTaskSetsFromDb(this.dbTaskSetCallback);
+    }
+
+    let storeState = store.getState();
+    if(storeState.shouldEditSet){
+      this.selectTaskSet(storeState.setToEdit);
+      var setEditSetAction = {
+        type: 'SET_SHOULD_EDIT_SET',
+        shouldEditSet: false,
+        setToEdit:null
+      };
+      store.dispatch(setEditSetAction);
+    }
+    else if(storeState.shouldEditTask){
+      this.selectTask(storeState.taskToEdit);
+      var taskEditSetAction = {
+        type: 'SET_SHOULD_EDIT_TASK',
+        shouldEditTask: false,
+        taskToEdit:null
+      };
+      store.dispatch(taskEditSetAction);
     }
   }
 
@@ -197,6 +219,7 @@ class EditorMode extends Component {
     this.editSetComponentRef = React.createRef();
     this.setState({assetEditorObject: <EditSetComponent isEditing={false}
       closeSetCallback={this.assetEditorObjectClosed.bind(this)}
+      selectTaskSet={ this.selectTaskSet.bind(this) }
       key={this.assetEditorCompKey} ref={this.editSetComponentRef}/>});
   }
 
