@@ -36,6 +36,8 @@ class EditorMode extends Component {
     };
 
     //Database callbacks
+    this.dbTagsCallback = this.dbTagsCallbackFunction.bind(this);
+
     this.dbTaskCallback = this.dbTaskCallbackFunction.bind(this);
     this.dbTaskSetCallback = this.dbTaskSetCallbackFunction.bind(this);
     this.dbQueryCallback = this.onDatabaseSearched.bind(this);
@@ -68,6 +70,14 @@ class EditorMode extends Component {
       store.dispatch(setEditSetAction);
       this.selectTaskSet(storeState.setToEdit);
     }
+
+    //db_helper.queryAllTagValuesFromDB(true,this.dbTagsCallback);
+    //db_helper.queryAllTagValuesFromDB(false,this.dbTagsCallback);
+  }
+
+  dbTagsCallbackFunction(queryTasks, result){
+    console.log(queryTasks);
+    console.log(result);
   }
 
   dbTaskCallbackFunction(dbQueryResult) {

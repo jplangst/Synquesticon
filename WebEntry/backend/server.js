@@ -109,8 +109,6 @@ router.post("/exportToCSV", (req, res) => {
    ██    ██   ██      ██ ██  ██       ██
    ██    ██   ██ ███████ ██   ██ ███████
 */
-
-
  // this method fetches all available questions in our database
 router.get("/getAllTasks", (req, res) => {
   Tasks.find((err, data) => {
@@ -155,6 +153,25 @@ async function queryAsync(queryString, collection){
   }).catch(e=>console.log(e));
   return await result;
 }
+
+router.post("/getAllTagValues", async (req, res) => {
+  const { queryCollection } = req.body;
+  var collection = null;
+  if(queryCollection === 'Tasks'){
+    collection = Tasks;
+  }
+  else{
+    collection = TaskSets;
+  }
+
+  collection.distinct('tags', (err, data) => {
+    if (err) {
+      console.log(err);
+      return res.json({success: false, error: err});
+    }
+    return res.json({success: true, tasks: data});
+  });
+});
 
 router.post("/getAllTasksContaining", async (req, res) => {
   const { queryCollection, queryString } = req.body;
