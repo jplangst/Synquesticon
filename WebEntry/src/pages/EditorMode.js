@@ -18,6 +18,8 @@ import * as dnd from '../core/beautifulDND.js';
 
 import db_helper from '../core/db_helper.js';
 
+import store from '../core/store';
+
 import './EditorMode.css';
 
 class EditorMode extends Component {
@@ -55,6 +57,17 @@ class EditorMode extends Component {
   //---------------------------component functions------------------------------
   componentWillMount() {
     this.assetViewerQueryDatabase();
+
+    let storeState = store.getState();
+    if(storeState.shouldEditSet){
+      var setEditSetAction = {
+        type: 'SET_SHOULD_EDIT_SET',
+        shouldEditSet: false,
+        setToEdit:null
+      };
+      store.dispatch(setEditSetAction);
+      this.selectTaskSet(storeState.setToEdit);
+    }
   }
 
   dbTaskCallbackFunction(dbQueryResult) {

@@ -46,7 +46,17 @@ class PlayerMode extends Component {
     return url;
   }
 
-  //bottom button handler TODO get the information from the store instead of the state for the eye tracker
+  onEditButtonClick(taskSet) {
+    var setEditSetAction = {
+      type: 'SET_SHOULD_EDIT_SET',
+      shouldEditSet: true,
+      setToEdit:taskSet
+    };
+    store.dispatch(setEditSetAction);
+
+    this.props.gotoPage("/EditorMode");
+  }
+
   onPlayButtonClick(taskSet) {
     this.selectedTaskSet = taskSet;
     var url = '/study?id=' + this.selectedTaskSet._id;
@@ -91,7 +101,8 @@ class PlayerMode extends Component {
           < PlayableSetListComponent taskList={ this.state.taskSets }
                   runSetCallback={ this.onPlayButtonClick.bind(this) }
                   getLinkCallback={ this.onGetLinkCallback.bind(this) }
-                  showEditButton={false}/>
+                  editSetCallback={ this.onEditButtonClick.bind(this) }
+                  showEditButton={true}/>
         </div>
 
          <Snackbar

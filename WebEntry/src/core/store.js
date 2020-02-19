@@ -53,10 +53,10 @@ function prepareMUITheme(themeType){
         // E.g., shift from Red 500 to Red 300 or Red 700.
         tonalOffset: 0.1,
         type: themeType,
-
       }
     });
   }
+  theme = responsiveFontSizes(theme);
 
   let actionDisabledBG = theme.palette.secondary.light;
   if(theme.palette.secondary.light.includes("#")){
@@ -121,6 +121,8 @@ const initialState = {
     width: window.innerWidth,
     height: window.innerHeight
   },
+  shouldEditSet: false,
+  setToEdit: null,
   theme: theme,
 };
 
@@ -146,6 +148,9 @@ const store = createStore ((state = initialState, action) => {
     }
     case 'SET_SHOULD_SAVE': {
       return { ...state, experimentInfo:{...state.experimentInfo, shouldSave: action.shouldSave}};
+    }
+    case 'SET_SHOULD_EDIT_SET': {
+      return { ...state, shouldEditSet:action.shouldEditSet, setToEdit:action.setToEdit};
     }
     case 'ADD_PARTICIPANT': {
       state.participants[action.participant] = action.tracker;

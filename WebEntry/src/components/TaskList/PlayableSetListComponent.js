@@ -23,6 +23,7 @@ class PlayableSetListComponent extends Component {
             return <div key={index}><PlayableSetComponent task={item}
                         runSetCallback={ this.props.runSetCallback }
                         getLinkCallback={ this.props.getLinkCallback }
+                        editSetCallback={this.props.editSetCallback}
                         content={content}
                         showEditButton={this.props.showEditButton}/></div>})
         }
