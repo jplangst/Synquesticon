@@ -112,9 +112,21 @@ exports.save_to_csv = async function(p) {
       }
     }
 
+    var seperator = '!';
+
     //prepare the header
     //var header = "Global variables,Family Tree,Task type,Task content,Start timestamp(UTC),First response timestamp(UTC),Time to first answer(ms),Time to completion(ms),Answer,Correctly answered,Correct answers,Comments";
-    var header = "global_vars,question,answer,answered_correctly,time_to_first_response,time_to_completion,comments,set_names,task_type,timestamp_start,timestamp_first_response";
+    var header = "global_vars" + seperator +
+                 "question" + seperator +
+                 "answer" + seperator +
+                 "answered_correctly" + seperator +
+                 "time_to_first_response" + seperator +
+                 "time_to_completion" + seperator +
+                 "comments" + seperator +
+                 "set_names" + seperator +
+                 "task_type" + seperator +
+                 "timestamp_start" + seperator +
+                 "timestamp_first_response";
     if (file_name === "") {
       file_name = "Anonymous";
     }
@@ -194,18 +206,18 @@ exports.save_to_csv = async function(p) {
       //              '"'+line.correctResponses + '",' +
       //              '"'+commentText +'"'+ os.EOL;
 
-      csv_string += '"'+globalVariables + '",' +
-                   '"'+line.taskContent + '",' +
-                   '"'+participantResponse + '",' +
-                   '"'+handleCorrectlyAnswered(line.correctlyAnswered) + '",' +
-                   '"'+line.correctResponses + '",' +
-                   '"'+handleMissingData(line.timeToFirstAnswer) + '",' +
-                   '"'+handleMissingData(line.timeToCompletion) + '",' +
-                   '"'+commentText + '",' +
-                   '"'+line.tasksFamilyTree.join('_') + '",' +
-                   '"'+line.displayType + '",' +
-                   '"'+getFormattedTime(line.startTimestamp) + '",' +
-                   '"'+getFormattedTime(line.firstResponseTimestamp) +'"'+ os.EOL;
+      csv_string += globalVariables + seperator +
+                   line.taskContent + seperator +
+                   participantResponse + seperator +
+                   handleCorrectlyAnswered(line.correctlyAnswered) + seperator +
+                   line.correctResponses + seperator +
+                   handleMissingData(line.timeToFirstAnswer) + seperator +
+                   handleMissingData(line.timeToCompletion) + seperator +
+                   commentText + seperator +
+                   line.tasksFamilyTree.join('_') + seperator +
+                   line.displayType + seperator +
+                   getFormattedTime(line.startTimestamp) + seperator +
+                   getFormattedTime(line.firstResponseTimestamp) + os.EOL;
     });
 
     return [file_name, csv_string]
