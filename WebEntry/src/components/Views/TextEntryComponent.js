@@ -117,7 +117,7 @@ class TextEntryComponent extends Component {
               {keyboard.map((item, index) => {
                   return <span className="inputButton" key={index}>
                             <Button key={index} variant="contained" onClick={() => this.keyboardPressed(item)}>
-                              <Typography variant='body' align='center'>{item}</Typography>
+                              <Typography variant='body1' align='center'>{item}</Typography>
                             </Button>
                          </span>
                   }

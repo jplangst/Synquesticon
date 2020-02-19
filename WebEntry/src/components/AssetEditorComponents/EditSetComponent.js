@@ -58,6 +58,9 @@ class EditSetComponent extends Component {
 
     //The index where a new task will be placed
     this.destinationIndex = 0;
+
+    //Used to determine if the object should be closed
+    this.shouldCloseAsset = false;
   }
 
   componentDidMount(){
@@ -106,6 +109,8 @@ class EditSetComponent extends Component {
   }
 
   updateSetChildList(taskToAdd){
+    this.shouldCloseAsset = false;
+
     if(taskToAdd.objType === "Task"){
       db_helper.getTaskWithID(taskToAdd._id, this.handleUpdateSetChildTasks);
     }
@@ -115,16 +120,41 @@ class EditSetComponent extends Component {
   }
 
   onDBCallback(setDBID){
+    if(this.shouldReopen){
+      this.shouldReopen = false;
+      var setEditSetAction = {
+        type: 'SET_SHOULD_EDIT_SET',
+        shouldEditSet: true,
+        setToEdit:{...this.set,...{_id:setDBID}}
+      };
+      store.dispatch(setEditSetAction);
+    }
+
     //TODO close and reopen as editing instead. Highlight the set in the left menu
-    this.closeSetComponent(true);
+    this.closeSetComponent(true, this.shouldCloseAsset);
   }
 
   onChangeSetSettings(){
+    this.setState({
+      snackbarOpen: false
+    });
+
     if(this.props.isEditing){
+      this.shouldCloseAsset = false;
       db_helper.updateTaskSetFromDb(this.set._id, this.set, this.handleDBCallback);
+      this.setState({
+        snackbarOpen: true,
+        snackbarMessage: "Set saved"
+      });
     }
     else{
+      this.shouldCloseAsset = true;
+      this.shouldReopen = true;
       db_helper.addTaskSetToDb(this.set, this.handleDBCallback);
+      this.setState({
+        snackbarOpen: true,
+        snackbarMessage: "Set created"
+      });
     }
   }
 
@@ -381,13 +411,23 @@ class EditSetComponent extends Component {
 
   //Removes the selected set from the database
   removeSet() {
-    //TODO Dialog prompt "Are you sure you want to delete "Set", it will also be removed from the data base...
+    this.shouldCloseAsset = true;
+    this.setState({
+      snackbarOpen: false
+    });
+
+    this.setState({
+      snackbarOpen: true,
+      snackbarMessage: "Set deleted"
+    });
+
     db_helper.deleteTaskSetFromDb(this.set._id, this.handleDBCallback);
   }
 
   //Calls the provided callback function that handles the closing of this component
-  closeSetComponent(componentChanged){
-    this.props.closeSetCallback(componentChanged);
+  closeSetComponent(componentChanged, overrideShouldClose){
+    let shouldClose = overrideShouldClose ? overrideShouldClose : this.shouldCloseAsset;
+    this.props.closeSetCallback(componentChanged, shouldClose);
   }
 
   /*
@@ -496,8 +536,8 @@ class EditSetComponent extends Component {
         </div>
 
         <div className="editSetComponentButtons">
-          <Button onClick={this.closeSetComponent.bind(this, false)} variant="outlined">
-            Cancel
+          <Button onClick={this.closeSetComponent.bind(this, false, true)} variant="outlined">
+            Close
           </Button>
           {deleteTaskBtn}
           <Button onClick={this.onChangeSetSettings.bind(this)} variant="outlined">

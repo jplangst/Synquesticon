@@ -80,7 +80,7 @@ class MultiItemTask extends Component {
           this.logTheStartOfTask(item, mapIndex);
         }
 
-        var key = item._id+"MultiItemTask";
+        var key = item._id+"MultiItemTask"+i;
 
         if(item.taskType === "Instruction"){
             return <InstructionViewComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.taskSet.name}/>;

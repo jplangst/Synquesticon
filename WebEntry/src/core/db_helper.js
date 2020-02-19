@@ -330,6 +330,23 @@ class db_helper {
      ██    ██   ██ ███████ ██   ██     ██   ██ ██   ████ ██████      ███████ ███████    ██
   */
 
+  queryAllTagValuesFromDB(queryTasks,callback){
+    var queryCollection = queryTasks ? 'Tasks' : 'TaskSets';
+    axios.post("/api/getAllTagValues", {
+      queryCollection: queryCollection,
+    }).then((response) => {
+      if(response.status === 200) {
+        callback(queryCollection, response.data);
+      }
+      else {
+        alert("Cannot find any tags in ", queryCollection);
+        throw new Error("Database connection failed");
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+    });
+  }
 
 
   /**

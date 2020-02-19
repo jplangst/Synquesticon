@@ -36,6 +36,8 @@ class EditorMode extends Component {
     };
 
     //Database callbacks
+    this.dbTagsCallback = this.dbTagsCallbackFunction.bind(this);
+
     this.dbTaskCallback = this.dbTaskCallbackFunction.bind(this);
     this.dbTaskSetCallback = this.dbTaskSetCallbackFunction.bind(this);
     this.dbQueryCallback = this.onDatabaseSearched.bind(this);
@@ -68,6 +70,14 @@ class EditorMode extends Component {
       store.dispatch(setEditSetAction);
       this.selectTaskSet(storeState.setToEdit);
     }
+
+    //db_helper.queryAllTagValuesFromDB(true,this.dbTagsCallback);
+    //db_helper.queryAllTagValuesFromDB(false,this.dbTagsCallback);
+  }
+
+  dbTagsCallbackFunction(queryTasks, result){
+    console.log(queryTasks);
+    console.log(result);
   }
 
   dbTaskCallbackFunction(dbQueryResult) {
@@ -79,7 +89,7 @@ class EditorMode extends Component {
   }
 
   onDatabaseSearched(queryTasks, result){
-    console.log(result);
+
     if(queryTasks){
       this.setState({taskList: result.tasks});
     }
@@ -115,12 +125,34 @@ class EditorMode extends Component {
   }
 
   //Callback from the asset editor object if an object has been changed that requires a refresh of the page
-  assetEditorObjectClosed(dbChanged, editedObject){
-    this.clearAssetEditorObject();
+  assetEditorObjectClosed(dbChanged, shouldCloseAsset){
+    if(shouldCloseAsset){
+      this.clearAssetEditorObject();
+    }
 
     if(dbChanged){
       db_helper.getAllTasksFromDb(this.dbTaskCallback);
       db_helper.getAllTaskSetsFromDb(this.dbTaskSetCallback);
+    }
+
+    let storeState = store.getState();
+    if(storeState.shouldEditSet){
+      this.selectTaskSet(storeState.setToEdit);
+      var setEditSetAction = {
+        type: 'SET_SHOULD_EDIT_SET',
+        shouldEditSet: false,
+        setToEdit:null
+      };
+      store.dispatch(setEditSetAction);
+    }
+    else if(storeState.shouldEditTask){
+      this.selectTask(storeState.taskToEdit);
+      var taskEditSetAction = {
+        type: 'SET_SHOULD_EDIT_TASK',
+        shouldEditTask: false,
+        taskToEdit:null
+      };
+      store.dispatch(taskEditSetAction);
     }
   }
 

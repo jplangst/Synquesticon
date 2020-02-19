@@ -28,6 +28,11 @@ class TaskItemComponent extends Component {
       return null;
     }
 
+    let highlightColor = null;
+    if(this.props.highlight){
+      highlightColor = {backgroundColor:theme.palette.secondary.main + "66"};
+    }
+
     var dragButton = this.props.dragEnabled ? <div className="listItemDragBtnContainer" style={{backgroundColor:dragHighlight}}><Button style={{cursor:'move',width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
       className="listItemDragBtn" size="small" fullWidth >
       <DragIcon className="dragBtnIcon"/>
@@ -41,7 +46,7 @@ class TaskItemComponent extends Component {
     );
 
     var content = <div ref={this.setRef}{...provided.draggableProps}{...provided.dragHandleProps}
-      className={"listItem"} style={{...dragStyle, ...{opacity:opacityValue}}}
+      className={"listItem"} style={{...dragStyle, ...{opacity:opacityValue},...highlightColor}}
       onClick={()=>this.props.onSelectedCallback(this.props.task)}>
       <div className="listItemTextContainer" >
         <div className="listItemText">
