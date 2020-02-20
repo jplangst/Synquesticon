@@ -71,8 +71,8 @@ class EditorMode extends Component {
       this.selectTaskSet(storeState.setToEdit);
     }
 
-    //db_helper.queryAllTagValuesFromDB(true,this.dbTagsCallback);
-    //db_helper.queryAllTagValuesFromDB(false,this.dbTagsCallback);
+    db_helper.queryAllTagValuesFromDB(true,this.dbTagsCallback);
+    db_helper.queryAllTagValuesFromDB(false,this.dbTagsCallback);
   }
 
   dbTagsCallbackFunction(queryTasks, result){
