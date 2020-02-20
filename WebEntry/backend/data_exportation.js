@@ -130,13 +130,14 @@ exports.save_to_csv = async function(p) {
     //prepare the header
     //var header = "Global variables,Family Tree,Task type,Task content,Start timestamp(UTC),First response timestamp(UTC),Time to first answer(ms),Time to completion(ms),Answer,Correctly answered,Correct answers,Comments";
     var header = "global_vars" + seperator +
-                 "question" + seperator +
+                 "content" + seperator +
                  "answer" + seperator +
                  "answered_correctly" + seperator +
+                 "correct_answer" + seperator +
                  "time_to_first_response" + seperator +
                  "time_to_completion" + seperator +
                  "comments" + seperator +
-                 "tags" + seperator +
+                 //"tags" + seperator +
                  "set_names" + seperator +
                  "task_type" + seperator +
                  "timestamp_start" + seperator +
@@ -211,10 +212,11 @@ exports.save_to_csv = async function(p) {
                      escapeCSV(line.taskContent) + seperator +
                      escapeCSV(participantResponse) + seperator +
                      handleCorrectlyAnswered(line.correctlyAnswered) + seperator +
-                     line.correctResponses + seperator +
+                     escapeCSV(line.correctResponses.join('_')) + seperator +
                      handleMissingData(line.timeToFirstAnswer) + seperator +
                      handleMissingData(line.timeToCompletion) + seperator +
                      escapeCSV(commentText) + seperator +
+                     //escapeCSV(line.tags.join('_')) + seperator +
                      escapeCSV(line.tasksFamilyTree.join('_')) + seperator +
                      escapeCSV(line.displayType) + seperator +
                      getFormattedTime(line.startTimestamp) + seperator + //Remove linebreaks and extra whitespace

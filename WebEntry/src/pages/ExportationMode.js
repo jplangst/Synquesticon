@@ -96,6 +96,7 @@ class ExportationMode extends Component {
     }
 
     this.pickedParticipants.map((p, index) => {
+      console.log(p);
       db_helper.exportToCSV(p, (res) => {
         var blob = new Blob([res.data.csv_string], {type: 'text/csv'});
         FileSaver.saveAs(blob, res.data.file_name + '.csv');
