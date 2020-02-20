@@ -4,8 +4,6 @@ import { withTheme } from '@material-ui/styles';
 
 import PlayableSetListComponent from '../components/TaskList/PlayableSetListComponent';
 
-import Snackbar from '@material-ui/core/Snackbar';
-
 import store from '../core/store';
 
 import db_helper from '../core/db_helper.js';
@@ -77,15 +75,12 @@ class PlayerMode extends Component {
     }
     navigator.clipboard.writeText(url);
 
-    this.setState({
-      openSnackBar: true
-    });
-  }
-
-  handleCloseSnackbar(event, reason) {
-    this.setState({
-      openSnackBar: false
-    });
+    var snackbarAction = {
+      type: 'TOAST_SNACKBAR_MESSAGE',
+      snackbarOpen: true,
+      snackbarMessage: "Link copied to clipboard"
+    };
+    store.dispatch(snackbarAction);
   }
 
   render() {
@@ -104,21 +99,6 @@ class PlayerMode extends Component {
                   editSetCallback={ this.onEditButtonClick.bind(this) }
                   showEditButton={true}/>
         </div>
-
-         <Snackbar
-           style = {{bottom: 200}}
-           anchorOrigin={{
-             vertical: 'bottom',
-             horizontal: 'center',
-           }}
-           open={this.state.openSnackBar}
-           autoHideDuration={2000}
-           onClose={this.handleCloseSnackbar.bind(this)}
-           ContentProps={{
-             'aria-describedby': 'message-id',
-           }}
-           message={<span id="message-id">Link copied to clipboard</span>}
-         />
       </div>
       );
   }

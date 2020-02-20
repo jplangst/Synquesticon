@@ -8,6 +8,8 @@ import store from './core/store';
 
 import {isMobile} from 'react-device-detect';
 
+import Snackbar from '@material-ui/core/Snackbar';
+
 import Header from './components/Header/Header'
 import EditorMode from './pages/EditorMode';
 import ObserverMode from './pages/ObserverMode';
@@ -47,13 +49,21 @@ class App extends Component {
     window.removeEventListener('resize', this.resize)
   }
 
+  handleCloseSnackbar(event, reason) {
+    var snackbarAction = {
+      type: 'TOAST_SNACKBAR_MESSAGE',
+      snackbarOpen: false,
+      snackbarMessage: ""
+    };
+
+    store.dispatch(snackbarAction);
+  }
+
   render() {
     let theme = store.getState().theme;
 
     let scrollBgColor = theme.palette.type==="light"?"lightscroll":"darkscroll";
     document.body.classList.add(scrollBgColor);
-
-
 
     return (
         <Router>
@@ -70,6 +80,20 @@ class App extends Component {
               </Switch>
             </div>
           </div>
+          <Snackbar
+            style = {{bottom: 200}}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
+            }}
+            open={this.props.snackbarOpen}
+            onClose={this.handleCloseSnackbar.bind(this)}
+            autoHideDuration={2000}
+            ContentProps={{
+              'aria-describedby': 'message-id',
+            }}
+            message={<div style={{width: '100%', height: '100%'}} id="message-id">{this.props.snackbarMessage}</div>}
+          />
           </ThemeProvider>
         </Router>
     );
@@ -82,6 +106,8 @@ function mapStateToProps(state, ownProps) {
         showHeader: state.showHeader,
         windowSize: state.windowSize,
         theme: state.theme,
+        snackbarOpen: state.snackbarOpen,
+        snackbarMessage: state.snackbarMessage
     };
 }
 

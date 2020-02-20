@@ -124,6 +124,8 @@ const initialState = {
   shouldEditSet: false,
   setToEdit: null,
   theme: theme,
+  snackbarOpen: false,
+  snackbarMessage: ""
 };
 
 const store = createStore ((state = initialState, action) => {
@@ -188,6 +190,9 @@ const store = createStore ((state = initialState, action) => {
     }
     case 'RESET_AOIS': {
       return {...state, aois: []};
+    }
+    case 'TOAST_SNACKBAR_MESSAGE': {
+      return {...state, snackbarOpen: action.snackbarOpen, snackbarMessage: action.snackbarMessage};
     }
     default:
       return state;

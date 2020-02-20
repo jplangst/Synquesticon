@@ -10,6 +10,8 @@ import { withTheme } from '@material-ui/styles';
 
 import FileSaver from 'file-saver';
 
+import store from '../core/store';
+
 import db_helper from '../core/db_helper';
 
 class ExportationMode extends Component {
@@ -38,6 +40,14 @@ class ExportationMode extends Component {
 
   async handleDeleteSelected() {
     if(this.pickedParticipants.length>0){
+      var snackbarAction = {
+        type: 'TOAST_SNACKBAR_MESSAGE',
+        snackbarOpen: true,
+        snackbarMessage: "Deleting data sets"
+      };
+      store.dispatch(snackbarAction);
+
+
       //Delete each selection synchronously
       for (var i = 0; i < this.pickedParticipants.length; i++) {
         await db_helper.deleteParticipantFromDbPromise(this.pickedParticipants[i]._id);
@@ -48,6 +58,12 @@ class ExportationMode extends Component {
 
       //Update the list after the deletion have been completed
       db_helper.getAllParticipantsFromDb((ids) => {
+        var snackbarAction = {
+          type: 'TOAST_SNACKBAR_MESSAGE',
+          snackbarOpen: true,
+          snackbarMessage: "Deletion completed"
+        };
+        store.dispatch(snackbarAction);
         this.setState({
           participants: ids
         });

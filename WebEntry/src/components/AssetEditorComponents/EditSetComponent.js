@@ -12,8 +12,6 @@ import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import Snackbar from '@material-ui/core/Snackbar';
-
 import EditSetListComponent from '../TaskList/EditSetListComponent';
 import { Typography } from '@material-ui/core';
 
@@ -41,7 +39,6 @@ class EditSetComponent extends Component {
       randomizeSet: this.set.setTaskOrder === "Random" ? true : false,
       displayOnePage: this.set.displayOnePage,
       logOneLine: this.set.logOneLine,
-      snackbarOpen: false,
     };
 
     this.removeTaskFromListCallback = this.removeTask.bind(this);
@@ -83,8 +80,6 @@ class EditSetComponent extends Component {
   onRetrievedSetChildTasksAddToSet(retrievedObject){
     //Clone the array since we can't mutate the state directly
     var updatedObjects = this.state.taskListObjects.slice();
-    //Insert the new task at the index stored when add task was called
-    //updatedObjects.splice(this.destinationIndex, 0, retrievedObject);
 
     //Replace the dummy object with the actual object
     updatedObjects[this.destinationIndex] = retrievedObject;
@@ -93,9 +88,6 @@ class EditSetComponent extends Component {
     var newTask = {id:retrievedObject._id, objType:retrievedObject.objType}
     //Clone the array since we can't mutate the state directly
     var updatedTaskList = this.state.taskList.slice();
-
-    //Insert the new task at the index stored when add task was called
-    //updatedTaskList.splice(this.destinationIndex, 0, newTask);
 
     //Replace the dummy object with the actual object
     updatedTaskList[this.destinationIndex] = newTask;
@@ -130,31 +122,30 @@ class EditSetComponent extends Component {
       store.dispatch(setEditSetAction);
     }
 
-    //TODO close and reopen as editing instead. Highlight the set in the left menu
     this.closeSetComponent(true, this.shouldCloseAsset);
   }
 
   onChangeSetSettings(){
-    this.setState({
-      snackbarOpen: false
-    });
-
     if(this.props.isEditing){
       this.shouldCloseAsset = false;
       db_helper.updateTaskSetFromDb(this.set._id, this.set, this.handleDBCallback);
-      this.setState({
+      var snackbarAction = {
+        type: 'TOAST_SNACKBAR_MESSAGE',
         snackbarOpen: true,
         snackbarMessage: "Set saved"
-      });
+      };
+      store.dispatch(snackbarAction);
     }
     else{
       this.shouldCloseAsset = true;
       this.shouldReopen = true;
       db_helper.addTaskSetToDb(this.set, this.handleDBCallback);
-      this.setState({
+      var snackbarAction = {
+        type: 'TOAST_SNACKBAR_MESSAGE',
         snackbarOpen: true,
         snackbarMessage: "Set created"
-      });
+      };
+      store.dispatch(snackbarAction);
     }
   }
 
@@ -254,28 +245,6 @@ class EditSetComponent extends Component {
             return;
           }
 
-          /*
-          //Get the task set list that is currently being edited
-          var outerList = this.state.taskListObjects;
-
-          //Iterate over the task set being edited and examine all child sets
-          for(var i = 0; i < outerList.length; i++){ //was lentgh
-            //Only need to check if it is a set
-            if(outerList[i].objType === "TaskSet"){
-              //Extract the child set ids of the set we are trying to add as well as the set id
-              var taskSetChildrenSets = this.getChildSetIDs(outerList[i], []);
-
-              //Check if the set we are adding already references any of these sets
-              for(var z = 0; z < taskSetChildrenSets.length; z++){
-                if(addingTaskChildSets.includes(taskSetChildrenSets[z])){
-                  console.log("Illegal because the set we are adding has references to other sets?")
-                  this.handleAddTaskAllowed(false, task);
-                  return;
-                }
-              }
-            }
-          }
-          */
           //No circular reference detected
           var result_message = task.objType === "TaskSet" ? "Set successfully added" : "Task successfully added";
           this.handleAddTaskAllowed(true, task, result_message);
@@ -306,18 +275,18 @@ class EditSetComponent extends Component {
 
   //Add a task to the list of tasks in the set
   addTask(task, destinationIndex){
-
     if(this.set._id === task._id){
-      this.setState({
+      var snackbarAction = {
+        type: 'TOAST_SNACKBAR_MESSAGE',
         snackbarOpen: true,
         snackbarMessage: "Cannot add the same set to itself"
-      });
+      };
+      store.dispatch(snackbarAction);
     }
     else{
       this.destinationIndex = destinationIndex;
       //perform a deeper check for circular references. This will in turn add the task if it is ok to do so.
       this.willCauseCircularReference(task);
-
     }
   }
 
@@ -340,33 +309,30 @@ class EditSetComponent extends Component {
       this.set.childIds = updatedTaskList;
       this.updateSetChildList(task);
 
+      var snackbarAction = {
+        type: 'TOAST_SNACKBAR_MESSAGE',
+        snackbarOpen: true,
+        snackbarMessage: message
+      };
+      store.dispatch(snackbarAction);
+
       this.setState({
         taskListObjects: updatedObjects,
         taskList: updatedTaskList,
-        snackbarOpen: true,
-        snackbarMessage: message
       });
     }
     else{
-      this.setState({
+      var snackbarAction = {
+        type: 'TOAST_SNACKBAR_MESSAGE',
         snackbarOpen: true,
         snackbarMessage: message
-      });
+      };
+      store.dispatch(snackbarAction);
     }
-  }
-
-  handleCloseSnackbar(event, reason) {
-    this.setState({
-      snackbarOpen: false
-    });
   }
 
   //Remove a task from the list of tasks in the set
   removeTask(taskId){
-    this.setState({
-      snackbarOpen: false
-    });
-
     var newList = [...this.state.taskList];
     for( let i = 0; i < newList.length; i++){
       if ( newList[i].id === taskId) {
@@ -384,11 +350,16 @@ class EditSetComponent extends Component {
 
     this.set.childIds = newList;
 
+    var snackbarAction = {
+      type: 'TOAST_SNACKBAR_MESSAGE',
+      snackbarOpen: true,
+      snackbarMessage: "Set removed"
+    };
+    store.dispatch(snackbarAction);
+
     this.setState({
       taskList:newList,
       taskListObjects: newObjectList,
-      snackbarOpen: true,
-      snackbarMessage: "Successfully removed"
     });
   }
 
@@ -412,14 +383,12 @@ class EditSetComponent extends Component {
   //Removes the selected set from the database
   removeSet() {
     this.shouldCloseAsset = true;
-    this.setState({
-      snackbarOpen: false
-    });
 
-    this.setState({
+    var snackbarAction = {
+      type: 'TOAST_SNACKBAR_MESSAGE',
       snackbarOpen: true,
       snackbarMessage: "Set deleted"
-    });
+    };
 
     db_helper.deleteTaskSetFromDb(this.set._id, this.handleDBCallback);
   }
@@ -545,21 +514,6 @@ class EditSetComponent extends Component {
           </Button>
           {playTaskBtn}
         </div>
-
-        <Snackbar
-          style = {{bottom: 200}}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-          }}
-          open={this.state.snackbarOpen}
-          onClose={this.handleCloseSnackbar.bind(this)}
-          autoHideDuration={4000}
-          ContentProps={{
-            'aria-describedby': 'message-id',
-          }}
-          message={<div style={{width: '100%', height: '100%'}} id="message-id">{this.state.snackbarMessage}</div>}
-        />
       </div>
     );
   }

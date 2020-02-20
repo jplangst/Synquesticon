@@ -10,8 +10,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 
-import Snackbar from '@material-ui/core/Snackbar';
-
 //Component imports
 import InstructionComponent from './TaskComponents/InstructionComponent';
 import SelectImageComponent from './TaskComponents/SelectImageComponent';
@@ -75,37 +73,34 @@ class EditTaskComponent extends Component {
   }
 
   onChangeTaskSettings(){
-    this.setState({
-      snackbarOpen: false
-    });
-
     this.task.taskType = this.state.taskType;
 
     if(this.task.taskType !== "Comparison") {
       this.task.subTasks = [];
     }
 
-    console.log("save object", typeof(this.task.subTasks));
-
     if(this.props.isEditing){
       this.shouldCloseAsset = false;
       db_helper.updateTaskFromDb(this.task._id, this.task, this.handleQuestionCallback);
-      this.setState({
+      var snackbarAction = {
+        type: 'TOAST_SNACKBAR_MESSAGE',
         snackbarOpen: true,
-        snackbarMessage: "Set saved"
-      });
+        snackbarMessage: "Task saved"
+      };
+      store.dispatch(snackbarAction);
     }
     else{
       this.shouldCloseAsset = true;
       this.shouldReopen = true;
       db_helper.addTaskToDb(this.task, this.handleQuestionCallback);
-      this.setState({
+      var snackbarAction = {
+        type: 'TOAST_SNACKBAR_MESSAGE',
         snackbarOpen: true,
-        snackbarMessage: "Set created"
-      });
+        snackbarMessage: "Task created"
+      };
+      store.dispatch(snackbarAction);
     }
 
-    console.log("on save", this.task.taskType, this.shouldUpload);
     if (this.task.taskType === "Image" && this.shouldUpload) {
       this.uploadImages();
     }
@@ -142,14 +137,13 @@ class EditTaskComponent extends Component {
 
   removeTask() {
     this.shouldCloseAsset = true;
-    this.setState({
-      snackbarOpen: false
-    });
 
-    this.setState({
+    var snackbarAction = {
+      type: 'TOAST_SNACKBAR_MESSAGE',
       snackbarOpen: true,
-      snackbarMessage: "Set deleted"
-    });
+      snackbarMessage: "Task deleted"
+    };
+    store.dispatch(snackbarAction);
 
     db_helper.deleteTaskFromDb(this.state.task._id, this.handleQuestionCallback);
   }
@@ -179,12 +173,6 @@ class EditTaskComponent extends Component {
       };
       db_helper.uploadImage(this.imageToUpload, formData, config, null);
     }
-  }
-
-  handleCloseSnackbar(event, reason) {
-    this.setState({
-      snackbarOpen: false
-    });
   }
 
   /*
@@ -257,20 +245,6 @@ class EditTaskComponent extends Component {
               </Button>
             </div>
         </form>
-        <Snackbar
-          style = {{bottom: 200}}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-          }}
-          open={this.state.snackbarOpen}
-          onClose={this.handleCloseSnackbar.bind(this)}
-          autoHideDuration={4000}
-          ContentProps={{
-            'aria-describedby': 'message-id',
-          }}
-          message={<div style={{width: '100%', height: '100%'}} id="message-id">{this.state.snackbarMessage}</div>}
-        />
       </div>
     );
   }
