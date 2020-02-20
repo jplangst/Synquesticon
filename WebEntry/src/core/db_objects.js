@@ -133,6 +133,7 @@ export function removeCircular(orgTask) {
       name: a.name,
       boundingbox: a.boundingbox
     });
+    return 1;
   })
   return copiedTask;
 }

@@ -6,8 +6,6 @@ import { throttle } from 'lodash'
 
 import store from './core/store';
 
-import {isMobile} from 'react-device-detect';
-
 import Snackbar from '@material-ui/core/Snackbar';
 
 import Header from './components/Header/Header'

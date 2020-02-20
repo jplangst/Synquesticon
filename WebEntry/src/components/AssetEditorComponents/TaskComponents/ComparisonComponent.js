@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 
 import db_helper from '../../../core/db_helper';
-import * as dbObjects from '../../../core/db_objects';
 
 //Material UI imports
-import Button from '@material-ui/core/Button';
-import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";

@@ -84,12 +84,6 @@ class PlayerMode extends Component {
   }
 
   render() {
-    var url = window.location.href + 'study?id=';
-    if (this.selectedTaskSet) {
-       url += this.selectedTaskSet._id;
-       url = this.appendEyeTrackerInfo(url);
-    }
-
     return (
       <div className="PlayerViewerContent">
         <div className="TaskSetContainer">

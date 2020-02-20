@@ -163,12 +163,9 @@ class ObserverMode extends Component {
     let observerBgColor = theme.palette.type === "light" ? theme.palette.primary.main : theme.palette.primary.dark;
 
     var wampMessage = [];
-    var gazeObject = null;
     if (this.state.currentParticipant >= 0) {
       wampMessage = this.state.participants[this.state.currentParticipant].messages;
     }
-
-    var showScroll = window.matchMedia("(any-pointer: coarse)").matches ? "" : "ShowScrollBar";
 
     return (
       <div className="ObserverViewerContent" style={{backgroundColor:observerBgColor}}>

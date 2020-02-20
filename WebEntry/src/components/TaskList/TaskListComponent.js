@@ -4,7 +4,6 @@ import TaskItemComponent from './TaskItemComponent';
 
 import * as listUtils from '../../core/db_objects_utility_functions';
 
-import * as dnd from '../../core/beautifulDND.js';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 
@@ -53,7 +52,6 @@ class TaskListComponent extends Component {
     this.taskList = this.props.taskList;
 
     const { theme} = this.props;
-    let highlightColor = this.props.highlight ? theme.palette.secondary.main + "66" : null;
     let bgColor = theme.palette.type === "light" ? theme.palette.primary.dark : theme.palette.primary.main;
 
     return(

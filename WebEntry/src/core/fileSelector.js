@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { withTheme } from '@material-ui/styles';
 
 import Button from '@material-ui/core/Button';
 
@@ -18,7 +17,6 @@ export class FileSelector extends Component
     }
 
     redirectUploadClick(){
-      console.log("clicked");
       document.getElementById("dataaseImageUploadSelector").click();
     }
 
@@ -31,8 +29,6 @@ export class FileSelector extends Component
 
     render ()
     {
-      let theme = this.props.theme;
-
         return <div>
             <input style={{opacity:0,position:'absolute',pointerEvents:'none',width:'1px',height:'1px'}} type="file"
               accept="image/gif, image/jpeg, image/png" id="dataaseImageUploadSelector" onChange={ (e) => this.handleChange(e.target.files) } />
@@ -41,4 +37,4 @@ export class FileSelector extends Component
     }
 }
 
-export default withTheme(FileSelector);
+export default FileSelector;

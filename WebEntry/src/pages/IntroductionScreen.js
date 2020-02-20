@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 
-import ObserverMode from './ObserverMode';
 import PlayerMode from './PlayerMode';
 
 import { Typography } from '@material-ui/core';
-
-import wamp from '../core/wamp';
 
 import './IntroductionScreen.css';
 

@@ -15,9 +15,9 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import EditSetListComponent from '../TaskList/EditSetListComponent';
 import { Typography } from '@material-ui/core';
 
-import update from 'immutability-helper'
 
-import { Droppable, Draggable } from 'react-beautiful-dnd';
+
+import { Droppable } from 'react-beautiful-dnd';
 
 import './EditSetComponent.css';
 
@@ -129,7 +129,7 @@ class EditSetComponent extends Component {
     if(this.props.isEditing){
       this.shouldCloseAsset = false;
       db_helper.updateTaskSetFromDb(this.set._id, this.set, this.handleDBCallback);
-      var snackbarAction = {
+      let snackbarAction = {
         type: 'TOAST_SNACKBAR_MESSAGE',
         snackbarOpen: true,
         snackbarMessage: "Set saved"
@@ -140,7 +140,7 @@ class EditSetComponent extends Component {
       this.shouldCloseAsset = true;
       this.shouldReopen = true;
       db_helper.addTaskSetToDb(this.set, this.handleDBCallback);
-      var snackbarAction = {
+      let snackbarAction = {
         type: 'TOAST_SNACKBAR_MESSAGE',
         snackbarOpen: true,
         snackbarMessage: "Set created"
@@ -291,6 +291,7 @@ class EditSetComponent extends Component {
   }
 
   handleAddTaskAllowed(allowed, task, message){
+  
     if(allowed){
       //Add a dummy object to the list while we wait for the callback
       var dummyObject = {_id:task._id, question:"Adding...", objType:"Task", taskType:"Image"}
@@ -309,7 +310,7 @@ class EditSetComponent extends Component {
       this.set.childIds = updatedTaskList;
       this.updateSetChildList(task);
 
-      var snackbarAction = {
+      let snackbarAction = {
         type: 'TOAST_SNACKBAR_MESSAGE',
         snackbarOpen: true,
         snackbarMessage: message
@@ -322,7 +323,7 @@ class EditSetComponent extends Component {
       });
     }
     else{
-      var snackbarAction = {
+      let snackbarAction = {
         type: 'TOAST_SNACKBAR_MESSAGE',
         snackbarOpen: true,
         snackbarMessage: message
@@ -364,8 +365,6 @@ class EditSetComponent extends Component {
   }
 
   moveTask(dragIndex, hoverIndex) {
-    const dragTask = this.state.taskList[dragIndex];
-    const taskObject = this.state.taskListObjects[dragIndex];
 
     var updatedTaskList = this.state.taskList.slice();
     updatedTaskList.splice(dragIndex, 1, updatedTaskList.splice(hoverIndex, 1, updatedTaskList[dragIndex])[0]);
@@ -389,6 +388,7 @@ class EditSetComponent extends Component {
       snackbarOpen: true,
       snackbarMessage: "Set deleted"
     };
+    store.dispatch(snackbarAction);
 
     db_helper.deleteTaskSetFromDb(this.set._id, this.handleDBCallback);
   }

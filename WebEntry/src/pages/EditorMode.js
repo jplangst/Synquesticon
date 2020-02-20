@@ -3,9 +3,6 @@ import React, {Component} from 'react';
 import Button from '@material-ui/core/Button';
 import {FilterList, AddCircleOutline} from '@material-ui/icons';
 
-//The custom drag layer let's us define the appearance of dragged elements.
-//Without this the default browser drag will be used, which looks bad in our case.
-import CustomDragLayer from '../components/Containers/CustomDragLayer';
 import SearchBar from '../components/SearchBar';
 import CollapsableContainer from '../components/Containers/CollapsableContainer';
 import TaskListComponent from '../components/TaskList/TaskListComponent';
@@ -14,7 +11,6 @@ import EditSetComponent from '../components/AssetEditorComponents/EditSetCompone
 import { withTheme } from '@material-ui/styles';
 
 import { DragDropContext } from 'react-beautiful-dnd';
-import * as dnd from '../core/beautifulDND.js';
 
 import db_helper from '../core/db_helper.js';
 

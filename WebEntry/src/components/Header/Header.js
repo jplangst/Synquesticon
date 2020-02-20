@@ -13,8 +13,6 @@ import { Typography } from '@material-ui/core';
 import { withTheme } from '@material-ui/styles';
 import {withRouter} from 'react-router-dom';
 
-import { sizing } from '@material-ui/system';
-
 //Icons
 import Settings from '@material-ui/icons/Settings';
 import EditIcon from '@material-ui/icons/Edit';

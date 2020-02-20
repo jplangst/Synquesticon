@@ -15,11 +15,6 @@ class PlayableSetComponent extends Component {
     var buttonSize = store.getState().windowSize.width > 500 ? 40 : 20;
     let textColor = this.props.theme.palette.type === "light" ? "textSecondary" : "textPrimary";
 
-    var editButton = this.props.showEditButton ? <Button style={{display:'flex', position: 'relative', flexGrow: 1, flexShrink:1, minWidth:buttonSize, maxWidth:buttonSize}}
-            size="small" className="playableSetButton" >
-      <EditIcon style={{display:'flex', position: 'absolute', minHeight:'25', maxHeight:25, width: '100%'}}/>
-    </Button> : null;
-
     var content =
         <div  className={"listItem "}>
           <div className="listItemTextContainer dotLongText">

@@ -32,10 +32,6 @@ class Text extends Component {
 }
 
 class SubTaskViewComponent extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     if(this.props.task.subType === "Text"){
       return <Text className="itemContainer" task={this.props.task} parentSet={this.props.parentSet}/>;

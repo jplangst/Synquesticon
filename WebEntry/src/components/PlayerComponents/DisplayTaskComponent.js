@@ -685,17 +685,17 @@ class DisplayTaskComponent extends Component {
     if (store.getState().experimentInfo) {
       let theme = this.props.theme;
       let rightBG = theme.palette.type === "light" ? theme.palette.primary.main : theme.palette.primary.dark;
-
+      var taskSet = null;
       try {
         if (store.getState().experimentInfo.taskSet.displayOnePage) {
-          var taskSet = {
+          taskSet = {
             objType: "TaskSet",
             displayOnePage: true,
             data: [store.getState().experimentInfo.taskSet]
           };
         }
         else {
-          var taskSet = store.getState().experimentInfo.taskSet;
+          taskSet = store.getState().experimentInfo.taskSet;
         }
         var renderObj = <DisplayTaskHelper tasksFamilyTree={[store.getState().experimentInfo.mainTaskSetId]}
                                            taskSet={taskSet}

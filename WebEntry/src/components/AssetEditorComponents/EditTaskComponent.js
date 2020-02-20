@@ -82,7 +82,7 @@ class EditTaskComponent extends Component {
     if(this.props.isEditing){
       this.shouldCloseAsset = false;
       db_helper.updateTaskFromDb(this.task._id, this.task, this.handleQuestionCallback);
-      var snackbarAction = {
+      let snackbarAction = {
         type: 'TOAST_SNACKBAR_MESSAGE',
         snackbarOpen: true,
         snackbarMessage: "Task saved"
@@ -93,7 +93,7 @@ class EditTaskComponent extends Component {
       this.shouldCloseAsset = true;
       this.shouldReopen = true;
       db_helper.addTaskToDb(this.task, this.handleQuestionCallback);
-      var snackbarAction = {
+      let snackbarAction = {
         type: 'TOAST_SNACKBAR_MESSAGE',
         snackbarOpen: true,
         snackbarMessage: "Task created"
