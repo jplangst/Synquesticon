@@ -84,7 +84,7 @@ class SelectImageComponent extends Component {
   render() {
     var previewImage = <Typography color="textPrimary"> "No Image selected" </Typography>;
     if(this.state.selectedImage !== ""){
-      previewImage = <AOIEditorComponent preview={this.preview} task={this.props.task} image={this.image}/>//<img className="imageContainer" src={"Images/"+this.props.task.image} alt="Task" />;
+      previewImage = <AOIEditorComponent preview={this.preview} task={this.props.task} image={this.image}/>
     }
 
     var imageTaskName =
@@ -128,7 +128,7 @@ class SelectImageComponent extends Component {
         {tags}
       </div>
 
-      {previewImage}
+      <div className="editTaskImagePreview">{previewImage}</div>
 
       <div className="imagePickingContainer">
         <Button variant="outlined" onClick={this.onBrowseImages.bind(this)}>Browse Image Database</Button>

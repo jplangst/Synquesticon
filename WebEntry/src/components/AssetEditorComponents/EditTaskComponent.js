@@ -240,10 +240,12 @@ class EditTaskComponent extends Component {
               </Select>
             </FormControl>
 
-            {instructionTypeContent}
-            {questionTypeContent}
-            {imageTypeContent}
-            {comparisonContent}
+            <div className="editTaskContent">
+              {instructionTypeContent}
+              {questionTypeContent}
+              {imageTypeContent}
+              {comparisonContent}
+            </div>
 
             <div className="editTaskFormButtons">
               <Button onClick={this.closeTaskComponent.bind(this, false)} variant="outlined">

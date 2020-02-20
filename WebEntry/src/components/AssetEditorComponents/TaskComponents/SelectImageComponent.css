@@ -8,7 +8,11 @@
 
 .imageInputContainer{
   width: 100%;
-  /*height: 10%;*/
+}
+
+.editTaskImagePreview{
+  display: flex;
+  flex-grow: 1;
 }
 
 .imagePickingContainer{
