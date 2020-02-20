@@ -86,6 +86,15 @@ class ExportationMode extends Component {
   }
 
   handleExport() {
+    if(this.pickedParticipants.length>0){
+      var snackbarAction = {
+        type: 'TOAST_SNACKBAR_MESSAGE',
+        snackbarOpen: true,
+        snackbarMessage: "Exporting selected data sets"
+      };
+      store.dispatch(snackbarAction);
+    }
+
     this.pickedParticipants.map((p, index) => {
       db_helper.exportToCSV(p, (res) => {
         var blob = new Blob([res.data.csv_string], {type: 'text/csv'});
@@ -101,6 +110,13 @@ class ExportationMode extends Component {
   }
 
   handleExportAll() {
+    var snackbarAction = {
+      type: 'TOAST_SNACKBAR_MESSAGE',
+      snackbarOpen: true,
+      snackbarMessage: "Exporting all data sets"
+    };
+    store.dispatch(snackbarAction);
+
     this.state.participants.map((p, ind) => {
       db_helper.exportToCSV(p, (res) => {
         var blob = new Blob([res.data.csv_string], {type: 'text/csv'});
