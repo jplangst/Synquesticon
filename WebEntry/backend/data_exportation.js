@@ -6,6 +6,9 @@ const dataSchema = require("./data_schema");
 const ObserverMessages = dataSchema.ObserverMessages;
 ObserverMessages.createIndexes({queryString: "text", tags: "text"});
 
+const Tasks = dataSchema.Tasks;
+Tasks.createIndexes({queryString: "text", tags: "text"});
+
 var exports = module.exports = {};
 
 var DATA_DIRECTORY = "exported_data/";
@@ -137,7 +140,7 @@ exports.save_to_csv = async function(p) {
                  "time_to_first_response" + seperator +
                  "time_to_completion" + seperator +
                  "comments" + seperator +
-                 //"tags" + seperator +
+                 "tags" + seperator +
                  "set_names" + seperator +
                  "task_type" + seperator +
                  "timestamp_start" + seperator +
@@ -151,7 +154,7 @@ exports.save_to_csv = async function(p) {
 
     await Promise.all(p.linesOfData.map(async (line, index) => {
       //get all comments on this line
-       var comments = await (ObserverMessages.find({participantId: p._id,
+      var comments = await (ObserverMessages.find({participantId: p._id,
                                    taskId: line.taskId,
                                    startTaskTime: line.startTimestamp},
                                   async (err, obj) => {
@@ -163,9 +166,19 @@ exports.save_to_csv = async function(p) {
       })).catch((exp) => {
         console.log("exp 1");
       });
+      console.log("attempt to find task", line.taskId);
+      var task = await (Tasks.findOne({_id: line.taskId},
+                                  async (err, obj) => {
+
+        line.tags = obj.tags;
+        console.log("found the task", obj);
+
+      })).catch((exp) => {
+        console.log("exp 1");
+      });
 
     })).catch(exp2 => {
-      console.log("exp 2");
+      console.log("exp 2", exp2);
     });
 
     var csv_string = header + os.EOL;
@@ -216,7 +229,7 @@ exports.save_to_csv = async function(p) {
                      handleMissingData(line.timeToFirstAnswer) + seperator +
                      handleMissingData(line.timeToCompletion) + seperator +
                      escapeCSV(commentText) + seperator +
-                     //escapeCSV(line.tags.join('_')) + seperator +
+                     escapeCSV(line.tags.join('_')) + seperator +
                      escapeCSV(line.tasksFamilyTree.join('_')) + seperator +
                      escapeCSV(line.displayType) + seperator +
                      getFormattedTime(line.startTimestamp) + seperator + //Remove linebreaks and extra whitespace
