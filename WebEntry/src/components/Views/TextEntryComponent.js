@@ -66,7 +66,6 @@ class TextEntryComponent extends Component {
       return "notApplicable";
     }
 
-
     //If the response has two values then we treat the second as how much the answer can differ and still be valid
     if(this.props.task.correctResponses.length > 1){
       let answer = parseFloat(this.textEntry);
@@ -76,8 +75,8 @@ class TextEntryComponent extends Component {
         return "correct";
       }
     } //Otherwise we just check if it matches the correct response
-    else{
-      if(this.props.task.correctResponses.includes(this.textEntry)) {
+    else if(this.props.task.correctResponses.length === 1){
+      if(parseFloat(this.props.task.correctResponses[0]) === parseFloat(this.textEntry)) {
         return "correct";
       }
     }
