@@ -38,11 +38,6 @@ exports.save_gaze_data = function (participantId, task, gazeData) {
     flags: 'a' // 'a' means appending (old data will be preserved)
   });
 
-  if (!fs.existsSync(file_name)) {
-    var header = "Timestamp(UTC),X,Y,Left pupil radius,Right pupil radius,Task,Target";
-    logger.write(header + os.EOL);
-  }
-
   var target = "";
   if (row.target != undefined) {
     target = row.target.name + ',';
@@ -61,6 +56,7 @@ exports.save_gaze_data = function (participantId, task, gazeData) {
                  row.leftPupilRadius + ',' +
                  row.rightPupilRadius + ',' +
                  task + ',' +
+                 participantId + ',' +
                  target + os.EOL);
   })
   logger.end();
@@ -74,6 +70,18 @@ exports.get_gaze_data = function (participantId) {
   return null;
 }
 
+exports.get_many_gaze_data = function (participantIds) {
+  var output = [];
+  participantIds.map((item, index) => {
+    output.push(exports.get_gaze_data(item));
+  })
+  if (output.length <= 0) {
+    return null;
+  }
+  else {
+    return output;
+  }
+}
 
 /*
 ██████   ██████  ██     ██ ███    ██ ██       ██████   █████  ██████   █████  ██████  ██      ███████
@@ -111,7 +119,8 @@ function escapeCSV(term){
   return term;
 }
 
-exports.save_to_csv = async function(p) {
+exports.save_to_csv = async function(p, seperator) {
+
     var globalVariables = "";
     var file_name = "";
 
@@ -119,6 +128,8 @@ exports.save_to_csv = async function(p) {
       file_name = formatDateTime(p.linesOfData[0].startTimestamp) + '_';
       file_name += p.linesOfData[0].tasksFamilyTree[0] + '_';
     }
+
+    p.globalVariables.sort((a, b) => a.label.localeCompare(b.label));
 
     for (let i = 0; i < p.globalVariables.length; i++) {
       /*header += p.globalVariables[i].label + ",";*/
@@ -128,23 +139,6 @@ exports.save_to_csv = async function(p) {
       }
     }
 
-    var seperator = ',';
-
-    //prepare the header
-    //var header = "Global variables,Family Tree,Task type,Task content,Start timestamp(UTC),First response timestamp(UTC),Time to first answer(ms),Time to completion(ms),Answer,Correctly answered,Correct answers,Comments";
-    var header = "global_vars" + seperator +
-                 "content" + seperator +
-                 "answer" + seperator +
-                 "answered_correctly" + seperator +
-                 "correct_answer" + seperator +
-                 "time_to_first_response" + seperator +
-                 "time_to_completion" + seperator +
-                 "comments" + seperator +
-                 "tags" + seperator +
-                 "set_names" + seperator +
-                 "task_type" + seperator +
-                 "timestamp_start" + seperator +
-                 "timestamp_first_response";
     if (file_name === "") {
       file_name = "Anonymous";
     }
@@ -166,12 +160,10 @@ exports.save_to_csv = async function(p) {
       })).catch((exp) => {
         console.log("exp 1");
       });
-      console.log("attempt to find task", line.taskId);
       var task = await (Tasks.findOne({_id: line.taskId},
                                   async (err, obj) => {
 
         line.tags = obj.tags;
-        console.log("found the task", obj);
 
       })).catch((exp) => {
         console.log("exp 1");
@@ -181,7 +173,7 @@ exports.save_to_csv = async function(p) {
       console.log("exp 2", exp2);
     });
 
-    var csv_string = header + os.EOL;
+    var csv_string = "";
 
     p.linesOfData.map((line, index) => {
       var comments = [];
@@ -221,7 +213,7 @@ exports.save_to_csv = async function(p) {
         }
       }
 
-      csv_string += (escapeCSV(globalVariables) + seperator +
+      csv_string +=  (escapeCSV(globalVariables) + seperator +
                      escapeCSV(line.taskContent) + seperator +
                      escapeCSV(participantResponse) + seperator +
                      handleCorrectlyAnswered(line.correctlyAnswered) + seperator +
@@ -233,7 +225,8 @@ exports.save_to_csv = async function(p) {
                      escapeCSV(line.tasksFamilyTree.join('_')) + seperator +
                      escapeCSV(line.displayType) + seperator +
                      getFormattedTime(line.startTimestamp) + seperator + //Remove linebreaks and extra whitespace
-                     getFormattedTime(line.firstResponseTimestamp)).replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ") + os.EOL;
+                     getFormattedTime(line.firstResponseTimestamp)).replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ") + seperator +
+                     p._id + os.EOL;
     });
 
     return [file_name, csv_string]

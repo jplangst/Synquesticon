@@ -6,6 +6,9 @@ import { Typography } from '@material-ui/core';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Button from '@material-ui/core/Button';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import TextField from '@material-ui/core/TextField';
 import { withTheme } from '@material-ui/styles';
 
 import FileSaver from 'file-saver';
@@ -14,11 +17,33 @@ import store from '../core/store';
 
 import db_helper from '../core/db_helper';
 
+var GAZE_HEADER = "Timestamp(UTC),X,Y,Left pupil radius,Right pupil radius,Task,Target,database_id\n";
+
+function HEADER(seperator) {
+  var header = "global_vars" + seperator +
+               "content" + seperator +
+               "answer" + seperator +
+               "answered_correctly" + seperator +
+               "correct_answer" + seperator +
+               "time_to_first_response" + seperator +
+               "time_to_completion" + seperator +
+               "comments" + seperator +
+               "tags" + seperator +
+               "set_names" + seperator +
+               "task_type" + seperator +
+               "timestamp_start" + seperator +
+               "timestamp_first_response" + seperator +
+               "database_id" + "\n";
+   return header;
+ }
+
 class ExportationMode extends Component {
   constructor(props){
     super(props);
     this.state = {
-      participants: []
+      participants: [],
+      delimiter: ',',
+      combineFiles: false
     };
     this.pickedParticipants = [];
   }
@@ -36,6 +61,12 @@ class ExportationMode extends Component {
 
   componenWillUnmount() {
     this.pickedParticipants = [];
+  }
+
+  onCombineFilesChange() {
+    this.setState({
+      combineFiles: !this.state.combineFiles
+    });
   }
 
   async handleDeleteSelected() {
@@ -85,7 +116,7 @@ class ExportationMode extends Component {
 
   }
 
-  handleExport() {
+  async handleExport() {
     if(this.pickedParticipants.length>0){
       var snackbarAction = {
         type: 'TOAST_SNACKBAR_MESSAGE',
@@ -95,19 +126,55 @@ class ExportationMode extends Component {
       store.dispatch(snackbarAction);
     }
 
-    this.pickedParticipants.map((p, index) => {
-      console.log(p);
-      db_helper.exportToCSV(p, (res) => {
-        var blob = new Blob([res.data.csv_string], {type: 'text/csv'});
-        FileSaver.saveAs(blob, res.data.file_name + '.csv');
-        if (res.data.gaze_data !== undefined) {
-          var gaze_blob = new Blob([res.data.gaze_data], {type: 'text/csv'});
-          FileSaver.saveAs(gaze_blob, res.data.file_name + '_gaze.csv');
+    console.log("delimiter", this.state.delimiter);
+    var exported_csv = "";
+    var exported_gaze = "";
+    var first_file = false;
+    var file_name = "";
+    await Promise.all(this.pickedParticipants.map(async (p, index) => {
+      var data = {
+        participant: p,
+        delimiter: this.state.delimiter
+      };
+
+
+      var returnedValue = await db_helper.exportToCSV(data);
+      if (this.state.combineFiles) {
+        if (!first_file) {
+          file_name = "combined_" + returnedValue.file_name;
+          first_file = true;
         }
-        this.handleClose();
-      });
+
+        exported_csv += returnedValue.csv_string;
+
+        if (returnedValue.gaze_data !== undefined && returnedValue.gaze_data) {
+          exported_gaze += returnedValue.gaze_data;
+        }
+      }
+
+      else {
+        var blob = new Blob([HEADER(this.state.delimiter) + returnedValue.csv_string], {type: 'text/csv'});
+        FileSaver.saveAs(blob, returnedValue.file_name + '.csv');
+
+        if (returnedValue.gaze_data !== undefined && returnedValue.gaze_data) {
+          var gaze_blob = new Blob([GAZE_HEADER + returnedValue.gaze_data], {type: 'text/csv'});
+          FileSaver.saveAs(gaze_blob, returnedValue.file_name + '_gaze.csv');
+        }
+      }
       return 1;
-    });
+    }));
+
+    if (this.state.combineFiles) {
+      var blob = new Blob([HEADER(this.state.delimiter) + exported_csv], {type: 'text/csv'});
+      FileSaver.saveAs(blob, file_name + '.csv');
+
+      if (this.state.combineFiles && exported_gaze != "") {
+        var gaze_blob = new Blob([GAZE_HEADER + exported_gaze], {type: 'text/csv'});
+        FileSaver.saveAs(gaze_blob, file_name + '_gaze.csv');
+      }
+    }
+
+    this.handleClose();
   }
 
   handleExportAll() {
@@ -118,8 +185,13 @@ class ExportationMode extends Component {
     };
     store.dispatch(snackbarAction);
 
-    this.state.participants.map((p, ind) => {
-      db_helper.exportToCSV(p, (res) => {
+    if (this.state.combineFiles) {
+      var data = {
+        participants: this.state.participants,
+        delimiter: this.state.delimiter
+      }
+
+      db_helper.exportManyToCSV(data, (res) => {
         var blob = new Blob([res.data.csv_string], {type: 'text/csv'});
         FileSaver.saveAs(blob, res.data.file_name + '.csv');
         if (res.data.gaze_data !== undefined) {
@@ -129,8 +201,27 @@ class ExportationMode extends Component {
         this.handleClose();
         return 1;
       });
-      return 1;
-    })
+    }
+
+    else {
+      this.state.participants.map((p, ind) => {
+        var data = {
+          participant: p,
+          delimiter: this.state.delimiter
+        };
+        db_helper.exportToCSV(data, (res) => {
+          var blob = new Blob([res.data.csv_string], {type: 'text/csv'});
+          FileSaver.saveAs(blob, res.data.file_name + '.csv');
+          if (res.data.gaze_data !== undefined) {
+            var gaze_blob = new Blob([res.data.gaze_data], {type: 'text/csv'});
+            FileSaver.saveAs(gaze_blob, res.data.file_name + '_gaze.csv');
+          }
+          this.handleClose();
+          return 1;
+        });
+        return 1;
+      });
+    }
   }
 
   formatDateTime(t) {
@@ -164,6 +255,8 @@ class ExportationMode extends Component {
       file_name = this.formatDateTime(p.linesOfData[0].startTimestamp) + '_';
       file_name += p.linesOfData[0].tasksFamilyTree[0] + '_';
     }
+
+    p.globalVariables.sort((a, b) => a.label.localeCompare(b.label));
 
     for (let i = 0; i < p.globalVariables.length; i++) {
       /*header += p.globalVariables[i].label + ",";*/
@@ -226,6 +319,25 @@ class ExportationMode extends Component {
           <Button style={{height:buttonHeight, marginLeft:20}} onClick={this.handleDeleteSelected.bind(this)} variant="outlined">
             Delete Selected
           </Button>
+
+          <div className="data_export_options">
+            <FormControlLabel label="Combine files"
+              value="combineFiles"
+              checked={this.state.combineFiles}
+              control={<Checkbox color="secondary" />}
+              onChange={this.onCombineFilesChange.bind(this)}
+              labelPlacement="end"
+            />
+            <TextField label="Delimiter"
+              required
+              id="questionText"
+              defaultValue={this.state.delimiter}
+              placeholder="csv delimiter"
+              ref="delimiterRef"
+              variant="filled"
+              onChange={(e)=>{this.state.delimiter = e.target.value}}
+            />
+          </div>
         </div>
       </div>)
     }

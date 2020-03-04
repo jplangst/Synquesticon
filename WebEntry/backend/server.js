@@ -97,8 +97,8 @@ const upload = multer({
 router.post("/exportToCSV", (req, res) => {
   const { data } = req.body;
   var obj = JSON.parse(data);
-  data_exportation.save_to_csv(obj).then(output => {
-    var gaze_data = data_exportation.get_gaze_data(obj._id);
+  data_exportation.save_to_csv(obj.participant, obj.delimiter).then(output => {
+    var gaze_data = data_exportation.get_gaze_data(obj.participant._id);
     return res.json({success: true, file_name: output[0], csv_string: output[1], gaze_data: gaze_data});
   })
 });
@@ -203,7 +203,6 @@ router.post("/getAllTasksContaining", async (req, res) => {
         console.log(err);
         return res.json({success: false, error: err});
       }
-      console.log(data);
       return res.json({success: true, tasks: data});
     }).collation({locale:'en',strength:2});
   }
@@ -224,8 +223,6 @@ router.post("/getAllTasksContaining", async (req, res) => {
 router.post("/addTask", (req, res) => {
   const { message } = req.body;
   var obj = JSON.parse(message);
-  console.log("received obj", obj);
-  console.log(typeof(obj.subTasks));
   let task = new Tasks(obj);
 
   task.save((err, q) => {

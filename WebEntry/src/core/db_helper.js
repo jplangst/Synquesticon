@@ -747,14 +747,14 @@ class db_helper {
     ██████  ██   ██    ██    ██   ██     ███████ ██   ██ ██       ██████  ██   ██    ██    ██   ██    ██    ██  ██████  ██   ████
     */
 
-    exportToCSV(data, callback){
-      axios.post("/api/exportToCSV", {
+    async exportToCSV(data, callback){
+      return new Promise((resolve, reject) => {axios.post("/api/exportToCSV", {
         data: JSON.stringify(data)
-      })
-      .then((response) => {
-        callback(response);
-      });
-   };
-
+      }).then(response => {
+        resolve(response.data);
+      }, (errorResponse) => {
+        reject(errorResponse);
+      })});
+    };
 }
 export default new db_helper();
