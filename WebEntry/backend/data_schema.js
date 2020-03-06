@@ -3,13 +3,43 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 /*
-objType: Task, TaskSet
+objType: Synquestitask
 */
+const Synquestitask = new Schema({
+  name: String, //The name for the Synquestitask
+  tags: [String], //A list of searchable tags
+  globalVariable: Boolean, //If true the response of the task should be stored as a global var in the participant DB object
+  refSets: [String], //list of sets that reference this Synquestitask
+
+  childObj: [{ //A list of child objects
+    _id: false, //To disable automatic mongo db id's for the elements in the list
+
+    objType: String, // What type of object this is
+
+    //obj content
+    displayText: String,
+
+    //For user responses
+    responses: [String], //The possible responses to the task
+    correctResponses: [String], //The correct response
+    responseUnit: String, //The unit of the response e.g. "%", "RPM"
+
+    //Image specifics
+    imageFilepath: String, //filepath
+    aois: [{ //A list of AOIs relevant to the task
+      name: String,
+      boundingbox: [[Number]],
+      _id: false
+    }],
+  }],
+
+}, {
+  collection: 'Synquestitasks'
+});
 
 /*
 taskType: Instruction, Text Entry, Multiple Choice, Image
 */
-
 // this will be our data base's data structure
 const TaskSchema = new Schema(
   {
