@@ -310,34 +310,32 @@ class ExportationMode extends Component {
         </List>
         <div className="ExportationActions">
           <Typography variant="body1" color="textPrimary"> {this.pickedParticipants.length} data sets selected </Typography>
+
+          <FormControlLabel label="Combine files"
+            value="combineFiles"
+            checked={this.state.combineFiles}
+            control={<Checkbox color="secondary" />}
+            onChange={this.onCombineFilesChange.bind(this)}
+            labelPlacement="end"
+            style={{marginLeft:10}}
+          />
+          <TextField label="Delimiter"
+            required
+            id="questionText"
+            defaultValue={this.state.delimiter}
+            placeholder="csv delimiter"
+            ref="delimiterRef"
+            variant="filled"
+            onChange={(e)=>{this.state.delimiter = e.target.value}}
+          />
+
           <Button style={{height:buttonHeight, marginLeft:20}} onClick={this.handleExport.bind(this)} variant="outlined">
-            Export Selected
-          </Button>
-          <Button style={{height:buttonHeight, marginLeft:20}} onClick={this.handleExportAll.bind(this)} variant="outlined">
-            Export All
-          </Button>
-          <Button style={{height:buttonHeight, marginLeft:20}} onClick={this.handleDeleteSelected.bind(this)} variant="outlined">
-            Delete Selected
+            Export
           </Button>
 
-          <div className="data_export_options">
-            <FormControlLabel label="Combine files"
-              value="combineFiles"
-              checked={this.state.combineFiles}
-              control={<Checkbox color="secondary" />}
-              onChange={this.onCombineFilesChange.bind(this)}
-              labelPlacement="end"
-            />
-            <TextField label="Delimiter"
-              required
-              id="questionText"
-              defaultValue={this.state.delimiter}
-              placeholder="csv delimiter"
-              ref="delimiterRef"
-              variant="filled"
-              onChange={(e)=>{this.state.delimiter = e.target.value}}
-            />
-          </div>
+          <Button style={{height:buttonHeight, marginLeft:20}} onClick={this.handleDeleteSelected.bind(this)} variant="outlined">
+            Delete
+          </Button>
         </div>
       </div>)
     }
