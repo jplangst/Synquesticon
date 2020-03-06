@@ -139,6 +139,10 @@ exports.save_to_csv = async function(p, seperator) {
       }
     }
 
+    if (file_name.length > 0) {
+      file_name = file_name.slice(0, -1);
+    }
+
     if (file_name === "") {
       file_name = "Anonymous";
     }
