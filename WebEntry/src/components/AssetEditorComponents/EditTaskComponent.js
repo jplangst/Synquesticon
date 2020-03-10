@@ -81,7 +81,7 @@ class EditTaskComponent extends Component {
 
     if(this.props.isEditing){
       this.shouldCloseAsset = false;
-      db_helper.updateTaskFromDb(this.task._id, this.task, this.handleQuestionCallback);
+      db_helper.updateTaskFromDb(this.task._id, this.task, true, this.handleQuestionCallback);
       let snackbarAction = {
         type: 'TOAST_SNACKBAR_MESSAGE',
         snackbarOpen: true,
@@ -92,7 +92,7 @@ class EditTaskComponent extends Component {
     else{
       this.shouldCloseAsset = true;
       this.shouldReopen = true;
-      db_helper.addTaskToDb(this.task, this.handleQuestionCallback);
+      db_helper.addTaskToDb(this.task, this.task, this.handleQuestionCallback);
       let snackbarAction = {
         type: 'TOAST_SNACKBAR_MESSAGE',
         snackbarOpen: true,
@@ -145,7 +145,7 @@ class EditTaskComponent extends Component {
     };
     store.dispatch(snackbarAction);
 
-    db_helper.deleteTaskFromDb(this.state.task._id, this.handleQuestionCallback);
+    db_helper.deleteTaskFromDb(this.state.task._id, true, this.handleQuestionCallback);
   }
 
   closeTaskComponent(componentChanged, overrideShouldClose){

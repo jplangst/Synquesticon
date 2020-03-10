@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 /*
 objType: Synquestitask
 */
-const Synquestitask = new Schema({
+const SynquestitaskSchema = new Schema({
   name: String, //The name for the Synquestitask
   tags: [String], //A list of searchable tags
   globalVariable: Boolean, //If true the response of the task should be stored as a global var in the participant DB object
@@ -181,6 +181,7 @@ const RoleSchema = new Schema(
 
 // export the new Schema so we could modify it using Node.js
 module.exports = {
+  Synquestitasks: mongoose.model("Synquestitasks", SynquestitaskSchema),
   Tasks: mongoose.model("Tasks", TaskSchema),
   TaskSets: mongoose.model("TaskSets", TaskSetSchema),
   Participants: mongoose.model("Participants", ParticipantSchema),

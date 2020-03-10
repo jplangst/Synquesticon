@@ -2,6 +2,18 @@
 /**
  * The default object used for Tasks. New tasks should use this as the base.
  */
+ export class SynquestitaskObject {
+   constructor(){
+     this.name = ""; //The name for the Synquestitask
+     this.tags = []; //A list of searchable tags
+     this.globalVariable = false; //If true the response of the task should be stored as a global var in the participant DB object
+     this.refSets = []; //list of sets that reference this Synquestitask
+
+     this.childObj = []; //A list of child objects
+     this.objType = "Synquestitask";
+   }
+ }
+
 export class TaskObject {
   constructor(){
     this.taskType = "Multiple Choice";

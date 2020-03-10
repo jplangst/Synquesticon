@@ -10,6 +10,8 @@ const path = require("path");
 
 
 const dataSchema = require("./data_schema");
+const Synquestitasks = dataSchema.Synquestitasks;
+Synquestitasks.createIndexes({queryString: "text", tags: "text"});
 const Tasks = dataSchema.Tasks;
 Tasks.createIndexes({queryString: "text", tags: "text"});
 const TaskSets = dataSchema.TaskSets;
@@ -110,33 +112,75 @@ router.post("/exportToCSV", (req, res) => {
    ██    ██   ██ ███████ ██   ██ ███████
 */
  // this method fetches all available questions in our database
-router.get("/getAllTasks", (req, res) => {
-  Tasks.find((err, data) => {
-    if (err) {
-      return res.json({ success: false, error: err });
-    }
-    return res.json({ success: true, questions: data });
-  });
+router.get("/getAllTasks", async (req, res) => {
+  var tasks = await Tasks.find((err, data) => {
+      if (err) {
+        return null;
+      }
+      return data;
+    });
+
+  var syntasks = await Synquestitasks.find((err, data) => {
+      if (err) {
+        return null;
+      }
+      return data;
+    });
+  if (tasks && syntasks) {
+    return res.json({ success: true, questions: tasks.concat(syntasks) });
+  }
+  else if (tasks) {
+    return res.json({ success: true, questions: tasks });
+  }
+  else if (syntasks) {
+    return res.json({ success: true, questions: syntasks });
+  }
+  else {
+    return res.json({success: false, error: err});
+  }
 });
 
 router.post("/getTaskWithID", (req, res) => {
-  const { id } = req.body;
-  Tasks.findOne({_id: id}, (err, obj) => {
-    if (err) {
-      return res.json({success: false, error: err});
-    }
-    return res.json({success: true, question: obj});
-  });
+  const { id, legacy } = req.body;
+
+  if (legacy) {
+    Tasks.findOne({_id: id}, (err, obj) => {
+      if (err) {
+        return res.json({success: false, error: err});
+      }
+      return res.json({success: true, question: obj});
+    });
+  }
+
+  else {
+    Synquestitasks.findOne({_id: id}, (err, obj) => {
+      if (err) {
+        return res.json({success: false, error: err});
+      }
+      return res.json({success: true, question: obj});
+    });
+  }
 });
 
 router.post("/getManyTaskWithIDs", (req, res) => {
-  const { ids } = req.body;
-  Tasks.find({_id: { $in: ids }}, (err, obj) => {
-    if (err) {
-      return res.json({success: false, error: err});
-    }
-    return res.json({success: true, tasks: obj});
-  });
+  const { ids, legacy } = req.body;
+
+  if (legacy) {
+    Tasks.find({_id: { $in: ids }}, (err, obj) => {
+      if (err) {
+        return res.json({success: false, error: err});
+      }
+      return res.json({success: true, tasks: obj});
+    });
+  }
+  else {
+    Synquestitasks.find({_id: { $in: ids }}, (err, obj) => {
+      if (err) {
+        return res.json({success: false, error: err});
+      }
+      return res.json({success: true, tasks: obj});
+    });
+  }
 });
 
 async function queryAsync(queryString, collection){
@@ -160,7 +204,10 @@ router.post("/getAllTagValues", async (req, res) => {
   if(queryCollection === 'Tasks'){
     collection = Tasks;
   }
-  else{
+  else if (queryCollection === 'Synquestitasks'){
+    collection = Synquestitasks;
+  }
+  else {
     collection = TaskSets;
   }
 
@@ -178,6 +225,9 @@ router.post("/getAllTasksContaining", async (req, res) => {
 
   var collection = null;
   if(queryCollection === 'Tasks'){
+    collection = Tasks;
+  }
+  else if(queryCollection === 'Synquestitasks'){
     collection = Tasks;
   }
   else{
@@ -221,17 +271,30 @@ router.post("/getAllTasksContaining", async (req, res) => {
 
 // this method adds new question in our database
 router.post("/addTask", (req, res) => {
-  const { message } = req.body;
+  const { message, legacy } = req.body;
   var obj = JSON.parse(message);
-  let task = new Tasks(obj);
+  if (legacy) {
+    let task = new Tasks(obj);
 
-  task.save((err, q) => {
-    if (err) {
-      console.log(err);
-      return res.json({ success: false, error: err });
-    }
-    return res.json({ success: true, _id: q._id });
-  });
+    task.save((err, q) => {
+      if (err) {
+        console.log(err);
+        return res.json({ success: false, error: err });
+      }
+      return res.json({ success: true, _id: q._id });
+    });
+  }
+  else {
+    let syntask = new Synquestitasks(obj);
+
+    syntask.save((err, q) => {
+      if (err) {
+        console.log(err);
+        return res.json({ success: false, error: err });
+      }
+      return res.json({ success: true, _id: q._id });
+    });
+  }
 });
 
 router.post("/addTwoTasks", (req, res) => {
@@ -258,35 +321,62 @@ router.post("/addTwoTasks", (req, res) => {
 
 // this method modifies existing question in our database
 router.post("/updateTask", (req, res) => {
-  const { id, message } = req.body;
+  const { id, message, legacy } = req.body;
   var obj = JSON.parse(message);
-  Tasks.findOneAndUpdate({_id: id}, obj, err => {
-    if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true });
-  });
+  if (legacy) {
+    Tasks.findOneAndUpdate({_id: id}, obj, err => {
+      if (err) return res.json({ success: false, error: err });
+      return res.json({ success: true });
+    });
+  }
+  else {
+    Synquestitasks.findOneAndUpdate({_id: id}, obj, err => {
+      if (err) return res.json({ success: false, error: err });
+      return res.json({ success: true });
+    });
+  }
 });
 
 // this method deletes existing question in our database
 router.post("/deleteTask", (req, res) => {
-  const { id } = req.body;
+  const { id, legacy } = req.body;
 
   TaskSets.updateMany({ }, { $pull: {childIds: {id: id}}}, err => {
 
   })
-  Tasks.findOneAndDelete({_id: id}, err => {
-    if (err) return res.send(err);
-    return res.json({ success: true });
-  });
+
+  if (legacy) {
+    Tasks.findOneAndDelete({_id: id}, err => {
+      if (err) return res.send(err);
+      return res.json({ success: true });
+    });
+  }
+  else {
+    Synquestitasks.findOneAndDelete({_id: id}, err => {
+      if (err) return res.send(err);
+      return res.json({ success: true });
+    });
+  }
 
   //remove this question from all sets
 
 });
 
 router.delete("/deleteAllTasks", (req, res) => {
-  Tasks.deleteMany({}, err => {
-    if (err) return res.send(err);
-    return res.json({ success: true });
-  });
+  const { legacy} = req.body;
+
+  if (legacy) {
+    Tasks.deleteMany({}, err => {
+      if (err) return res.send(err);
+      return res.json({ success: true });
+    });
+  }
+  else {
+    Synquestitasks.deleteMany({}, err => {
+      if (err) return res.send(err);
+      return res.json({ success: true });
+    });
+  }
 });
 
 /*
@@ -384,6 +474,13 @@ router.post("/getCompleteTaskSetObject", async (req, res) => {
 
       return taskFromDb;
     }
+    else if (target.objType === "Synquestitask") {
+      var syntaskFromDb = await Synquestitasks.findOne({_id: target.id}, async (err, task) => {
+        return task;
+      });
+
+      return taskFromDb;
+    }
     else if (target.objType === "TaskSet") {
       var setData = await TaskSets.findOne({_id: target.id}, async (err, obj) => {
         return obj;
@@ -433,6 +530,14 @@ router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
       var recursion = async function(target) {
         if (target.objType === "Task") {
           var taskFromDb = await Tasks.findOne({_id: target.id}, async (err, task) => {
+            count = count + 1;
+            return task;
+          });
+
+          return taskFromDb;
+        }
+        else if (target.objType === "Synquestitask") {
+          var syntaskFromDb = await Synquestitasks.findOne({_id: target.id}, async (err, task) => {
             count = count + 1;
             return task;
           });
