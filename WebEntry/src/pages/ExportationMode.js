@@ -265,6 +265,10 @@ class ExportationMode extends Component {
       }
     }
 
+    if (file_name.length > 0) {
+      file_name = file_name.slice(0, -1);
+    }
+
     return file_name;
   }
 

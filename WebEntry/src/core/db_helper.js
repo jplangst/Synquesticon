@@ -19,8 +19,7 @@ class db_helper {
    * @param  {function} callback This function will be called with the result of the query. The function should take one parameter.
    */
    getAllTasksFromDb(callback){
-    fetch("/api/getAllTasks")
-      .then((response) => {
+     fetch("/api/getAllTasks").then((response) => {
         if(response.ok) {
           return response.json();
         }
@@ -43,9 +42,10 @@ class db_helper {
    * @param  {string}   id       The MongoDB generated ID to query for.
    * @param  {function} callback This function will be called with the result of the query. The function should take one parameter.
    */
-   getTaskWithID(id, callback){
+   getTaskWithID(id, legacy, callback){
     axios.post("/api/getTaskWithID", {
-      id: id
+      id: id,
+      legacy: legacy
     }).then((response) => {
       if(response.status === 200) {
         callback(response.data.question);
@@ -66,9 +66,10 @@ class db_helper {
    * @param  {TaskObject} dbQuestionObject The task object to add to the DB. Should use TaskObject defined in db_objects.js.
    * @param  {function}   callback         This function will be called with the MongoDB id assigned to the created task. The function should take one parameter.
    */
-   addTaskToDb(dbQuestionObject, callback){
+   addTaskToDb(dbQuestionObject, legacy, callback){
     axios.post("/api/addTask", {
-      message: JSON.stringify(dbQuestionObject)
+      message: JSON.stringify(dbQuestionObject),
+      legacy: legacy
     })
     .then((response) => {
       if(response.status === 200) {
@@ -97,9 +98,10 @@ class db_helper {
     });
   }
 
-  getManyTaskWithIDs(ids, callback) {
+  getManyTaskWithIDs(ids, legacy, callback) {
     axios.post("/api/getManyTaskWithIDs", {
-      ids: ids
+      ids: ids,
+      legacy: legacy
     }).then((response) => {
       if(response.status === 200) {
         callback(response.data.tasks);
@@ -121,10 +123,11 @@ class db_helper {
    * @param  {TaskObject} editedObj The task object to update in the DB. Should use TaskObject defined in db_objects.js.
    * @param  {function}   callback  This function will be called with the MongoDB id of the updated task. The function should take one parameter.
    */
-   updateTaskFromDb(id, editedObj, callback){
+   updateTaskFromDb(id, editedObj, legacy, callback){
     axios.post("/api/updateTask", {
       id: id,
-      message: JSON.stringify(editedObj)
+      message: JSON.stringify(editedObj),
+      legacy: legacy
     }).then(data =>
       {
         callback(data._id)
@@ -137,9 +140,10 @@ class db_helper {
    * @param  {string}   idTodelete The MongoDB id of the task to delete.
    * @param  {function} callback   This function will be called when the task has been deleted from the DB. Use it to update the interface.
    */
-   deleteTaskFromDb(idTodelete, callback){
+   deleteTaskFromDb(idTodelete, legacy, callback){
     axios.post("/api/deleteTask", {
-        id: idTodelete
+        id: idTodelete,
+        legacy: legacy
     }).then(response =>
     {
       callback();
@@ -149,8 +153,10 @@ class db_helper {
   /**
    * deleteAllTasksFromDb - Deletes all the tasks in the DB. Use with care.
    */
-   deleteAllTasksFromDb(){
-    axios.delete("/api/deleteAllTasks");
+   deleteAllTasksFromDb(legacy){
+    axios.delete("/api/deleteAllTasks", {
+      legacy: legacy
+    });
   };
 
   /*
