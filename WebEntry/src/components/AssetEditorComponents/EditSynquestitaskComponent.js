@@ -31,8 +31,7 @@ class EditSynquestitaskComponent extends Component {
 
     //We keep these fields in the state as they affect how the component is rendered
     this.state = {
-      taskComponents: [], //TODO init with existing components
-      componentOpenState: [], //TODO move the logic to this component from the list
+      taskComponents: this.synquestitask.childObj,
       globalVariable: this.synquestitask.globalVariable,
     };
 
@@ -75,6 +74,7 @@ class EditSynquestitaskComponent extends Component {
     if(this.props.isEditing){
       this.shouldCloseAsset = false;
       //db_helper.updateTaskSetFromDb(this.set._id, this.synquestiTask, this.handleDBCallback);
+      db_helper.updateTaskFromDb(this.synquestitask._id, this.synquestitask, false, this.handleDBCallback)
       let snackbarAction = {
         type: 'TOAST_SNACKBAR_MESSAGE',
         snackbarOpen: true,
@@ -86,6 +86,7 @@ class EditSynquestitaskComponent extends Component {
       this.shouldCloseAsset = true;
       this.shouldReopen = true;
       //db_helper.addTaskSetToDb(this.synquestiTask, this.handleDBCallback);
+      db_helper.addTaskToDb(this.synquestiTask, false, this.handleDBCallback)
       let snackbarAction = {
         type: 'TOAST_SNACKBAR_MESSAGE',
         snackbarOpen: true,
