@@ -272,6 +272,7 @@ router.post("/getAllTasksContaining", async (req, res) => {
 // this method adds new question in our database
 router.post("/addTask", (req, res) => {
   const { message, legacy } = req.body;
+  console.log(req.body);
   var obj = JSON.parse(message);
   if (legacy) {
     let task = new Tasks(obj);

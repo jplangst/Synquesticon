@@ -67,6 +67,7 @@ class db_helper {
    * @param  {function}   callback         This function will be called with the MongoDB id assigned to the created task. The function should take one parameter.
    */
    addTaskToDb(dbQuestionObject, legacy, callback){
+     console.log(JSON.stringify(dbQuestionObject), legacy);
     axios.post("/api/addTask", {
       message: JSON.stringify(dbQuestionObject),
       legacy: legacy

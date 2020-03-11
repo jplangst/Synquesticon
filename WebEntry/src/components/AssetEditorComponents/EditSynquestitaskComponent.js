@@ -86,7 +86,7 @@ class EditSynquestitaskComponent extends Component {
       this.shouldCloseAsset = true;
       this.shouldReopen = true;
       //db_helper.addTaskSetToDb(this.synquestiTask, this.handleDBCallback);
-      db_helper.addTaskToDb(this.synquestiTask, false, this.handleDBCallback)
+      db_helper.addTaskToDb(this.synquestitask, false, this.handleDBCallback);
       let snackbarAction = {
         type: 'TOAST_SNACKBAR_MESSAGE',
         snackbarOpen: true,
