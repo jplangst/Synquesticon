@@ -6,6 +6,7 @@ import {FilterList, AddCircleOutline} from '@material-ui/icons';
 import SearchBar from '../components/SearchBar';
 import CollapsableContainer from '../components/Containers/CollapsableContainer';
 import TaskListComponent from '../components/TaskList/TaskListComponent';
+import EditSynquestitaskComponent from '../components/AssetEditorComponents/EditSynquestitaskComponent';
 import EditTaskComponent from '../components/AssetEditorComponents/EditTaskComponent';
 import EditSetComponent from '../components/AssetEditorComponents/EditSetComponent';
 import { withTheme } from '@material-ui/styles';
@@ -26,6 +27,7 @@ class EditorMode extends Component {
       showMenu: false,
       taskList: [],
       taskSetList: [],
+      synquestitaskList: [],
       allowRegex: true,
       assetEditorContext: "empty",
       assetEditorObject: null,
@@ -39,6 +41,7 @@ class EditorMode extends Component {
     this.dbQueryCallback = this.onDatabaseSearched.bind(this);
 
     //Search bar callbacks
+    this.synquestitaskSearchCallback = this.onTaskSearchInputChanged.bind(this); //TODO change this to a new function
     this.taskSearchCallback = this.onTaskSearchInputChanged.bind(this);
     this.taskSetSearchCallback = this.onTaskSetSearchInputChanged.bind(this);
 
@@ -211,6 +214,14 @@ class EditorMode extends Component {
     db_helper.queryTasksFromDb(false, searchString, this.dbQueryCallback);
   }
 
+  addSynquestitaskCallback(){
+    this.assetEditorCompKey += 1;
+    this.clearAssetEditorObject();
+    this.setState({assetEditorObject: <EditSynquestitaskComponent isEditing={false}
+      closeTaskCallback={this.assetEditorObjectClosed.bind(this)}
+      key={this.assetEditorCompKey} />});
+  }
+
   addTaskCallback(){
     this.assetEditorCompKey += 1;
     this.clearAssetEditorObject();
@@ -311,6 +322,8 @@ class EditorMode extends Component {
 
     var collapsableTaskHeaderButtons = this.getCollapsableHeaderButtons(this.taskSearchCallback, this.addTaskCallback.bind(this), null, "taskSearchBar");
     var collapsableSetHeaderButtons = this.getCollapsableHeaderButtons(this.taskSetSearchCallback, this.addSetCallback.bind(this), null, "setSearchBar");
+    var collapsableSynquestitaskHeaderButtons = this.getCollapsableHeaderButtons(this.synquestitaskSearchCallback, this.addSynquestitaskCallback.bind(this), null, "synquestitaskSearchBar");
+
 
     var dragEnabled = false;
     if(this.state.assetEditorObject && this.state.assetEditorObject.type === EditSetComponent){
@@ -324,6 +337,13 @@ class EditorMode extends Component {
         <div style={{backgroundColor:leftBG}} className = "AssetViewer">
           <div className="AssetViewerContent">
             <CollapsableContainer headerTitle="Tasks" useMediaQuery={true}
+            headerComponents={collapsableSynquestitaskHeaderButtons} hideHeaderComponents={true} open={true}>
+                < TaskListComponent dragEnabled={dragEnabled} taskList={ this.state.synquestitaskList }
+                  selectTask={ this.selectTask.bind(this) } selectedTask={this.state.selectedSynquestitask}
+                  itemType="Synquestitask" droppableId="synquestitasks"/ >
+            </CollapsableContainer>
+
+            <CollapsableContainer headerTitle="Legacy Tasks" useMediaQuery={true}
             headerComponents={collapsableTaskHeaderButtons} hideHeaderComponents={true} open={true}>
                 < TaskListComponent dragEnabled={dragEnabled} taskList={ this.state.taskList }
                   selectTask={ this.selectTask.bind(this) } selectedTask={this.state.selectedTask}

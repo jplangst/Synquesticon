@@ -1,0 +1,21 @@
+.imageTypeContainer{
+  width: 100%;
+  max-height: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.editTaskImagePreview{
+  display: flex;
+  flex-grow: 1;
+}
+
+.imagePickingContainer{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  justify-content: center;
+}

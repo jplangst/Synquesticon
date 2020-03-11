@@ -1,3 +1,42 @@
+export const TaskTypes = {
+  INSTRUCTION: 'Instruction',
+  IMAGE: 'Image',
+  MCHOICE: 'Multiple Choice',
+  TEXTENTRY: 'Text Entry',
+  NUMPAD: 'Numpad Entry'
+}
+var childListID = 0;
+export class SynquestitaskObject{
+  constructor(){
+    this.name = ""; //The name for the Synquestitask
+    this.tags = []; //A list of searchable tags
+    this.globalVariable = false; //If true the response of the task should be stored as a global var in the participant DB object
+    this.refSets = []; //list of sets that reference this Synquestitask
+
+    this.childObjects = [];
+  }
+}
+
+export class SynquestitaskChildComponent{
+  constructor(taskType){
+    this.objType = taskType; //The type of the object, see enum above
+    this.displayText = ""; //The text that will be displayed
+
+    //For user responses
+    this.responses = []; //The possible responses to the task
+    this.correctResponses = []; //The correct response(s)
+    this.responseUnit = ""; //The unit of the response e.g. "%", "RPM"
+    this.singleChoice = false; //If the anser should be single choice
+
+    //Image specifics
+    this.image = ""; //The filepath to the image
+    this.aois = []; //The area of interest objects defined for this image
+
+    this.itemID = childListID;
+    console.log(this.itemID);
+    childListID++;
+  }
+}
 
 /**
  * The default object used for Tasks. New tasks should use this as the base.

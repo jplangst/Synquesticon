@@ -20,7 +20,12 @@ class CollapsableContainer extends Component {
   }
 
   onCollapseExpand(){
-    this.setState(state => ({ open: !state.open }));
+    let newState = !this.state.open;
+    if(this.props.stateChangeCallback){
+      this.props.stateChangeCallback(this.props.index, newState);
+    }
+
+    this.setState(state => ({ open: newState }));
   }
 
   render() {

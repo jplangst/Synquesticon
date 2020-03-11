@@ -23,9 +23,10 @@ const Synquestitask = new Schema({
     responses: [String], //The possible responses to the task
     correctResponses: [String], //The correct response
     responseUnit: String, //The unit of the response e.g. "%", "RPM"
+    singleChoice: Boolean, //If the answer should be single choice
 
     //Image specifics
-    imageFilepath: String, //filepath
+    image: String, //filepath
     aois: [{ //A list of AOIs relevant to the task
       name: String,
       boundingbox: [[Number]],

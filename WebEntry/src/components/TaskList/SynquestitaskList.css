@@ -1,0 +1,67 @@
+.editListItem {
+  border-bottom: 1px solid grey;
+  min-height: 40px;
+  position: relative;
+  width: 100%;
+  opacity: 1;
+}
+
+.editListItemTextContainer{
+  position: absolute;
+  width: calc(100% - 120px);
+  height: 100%;
+
+  display:flex;
+  align-items: center; /* Vertical center alignment */
+}
+
+.editListItemText{
+  padding-left: 10px;
+  width: calc(100% - 10px);
+}
+
+.editListItemDragBtnContainer{
+  position: absolute;
+  left: calc(100% - 60px);
+  width: 60px;
+  cursor:move;
+  height: 100%;
+}
+
+.editListItemDragBtn{
+  position: absolute;
+  width: 30px;
+  height: 100%;
+  padding: 0;
+  padding: 0;
+  cursor:move;
+}
+
+.dragBtnIcon{
+  cursor:move;
+  width: 100%;
+  height: 100%;
+}
+
+.editListItemDelBtnContainer{
+  position: absolute;
+  left: calc(100% - 120px);
+  width: 60px;
+  cursor: pointer;
+  height: 100%;
+}
+
+.editListItemDelBtn{
+  position: absolute;
+  width: 30px;
+  height: 100%;
+  padding: 0;
+  padding: 0;
+  cursor:move;
+}
+
+.delBtnIcon{
+  cursor:pointer;
+  width: 100%;
+  height: 100%;
+}

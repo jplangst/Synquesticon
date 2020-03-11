@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import db_helper from '../../core/db_helper';
+import * as db_utils from '../../core/db_objects_utility_functions';
 import * as dbObjects from '../../core/db_objects';
 
 import shuffle from '../../core/shuffle';
@@ -291,7 +292,7 @@ class EditSetComponent extends Component {
   }
 
   handleAddTaskAllowed(allowed, task, message){
-  
+
     if(allowed){
       //Add a dummy object to the list while we wait for the callback
       var dummyObject = {_id:task._id, question:"Adding...", objType:"Task", taskType:"Image"}
@@ -365,11 +366,12 @@ class EditSetComponent extends Component {
   }
 
   moveTask(dragIndex, hoverIndex) {
-
     var updatedTaskList = this.state.taskList.slice();
-    updatedTaskList.splice(dragIndex, 1, updatedTaskList.splice(hoverIndex, 1, updatedTaskList[dragIndex])[0]);
+    db_utils.arrayMove(updatedTaskList, dragIndex, hoverIndex);
+    //updatedTaskList.splice(dragIndex, 1, updatedTaskList.splice(hoverIndex, 1, updatedTaskList[dragIndex])[0]);
     var updatedObjectList = this.state.taskListObjects.slice();
-    updatedObjectList.splice(dragIndex, 1, updatedObjectList.splice(hoverIndex, 1, updatedObjectList[dragIndex])[0]);
+    db_utils.arrayMove(updatedObjectList, dragIndex, hoverIndex);
+    //updatedObjectList.splice(dragIndex, 1, updatedObjectList.splice(hoverIndex, 1, updatedObjectList[dragIndex])[0]);
 
     this.setState({
       taskListObjects: updatedObjectList,

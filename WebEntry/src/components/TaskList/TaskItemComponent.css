@@ -1,6 +1,6 @@
 .listItem {
   min-height: 40px;
-  max-height: 40px; /*was 120*/
+  max-height: 40px; 
   position: relative;
   width: 100%;
 
