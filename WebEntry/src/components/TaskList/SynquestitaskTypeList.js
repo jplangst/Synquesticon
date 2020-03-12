@@ -47,8 +47,10 @@ class SynquestitaskTypeList extends Component {
         <div className="synquestitaskListComponentContainer" ref={provided.innerRef}>
           {
             this.taskList.map((item, index) => {
+              var margin = index < this.taskList.length-1 ? " synquestiMargin":"";
+
               var clonedContent= <div
-                className={"synquestiListItem"} style={{backgroundColor:bgColor}}>
+                className={"synquestiListItem " + margin} style={{backgroundColor:bgColor}}>
                 <div className="synquestiListItemTextContainer" >
                   <div className="synquestiListItemText">
                     <Typography color="textPrimary" noWrap> {item} </Typography>
@@ -70,7 +72,7 @@ class SynquestitaskTypeList extends Component {
                     <SynquestitaskItemComponent domRef={provided.innerRef} provided={provided} dragEnabled={this.props.dragEnabled}
                       isDragging={snapshot.isDragging} snapshot={snapshot}
                       placeholder={false} task={item} itemType={this.props.itemType}
-                      handleDrop={this.props.dragDropCallback} content={item}
+                      handleDrop={this.props.dragDropCallback} content={item} marginClass={margin}
                     />
                     {snapshot.isDragging && (
                       <Clone>{clonedContent}</Clone>

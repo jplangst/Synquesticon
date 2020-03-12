@@ -46,7 +46,7 @@ class SynquestitaskItemComponent extends Component {
     );
 
     var content = <div ref={this.setRef}{...provided.draggableProps}{...provided.dragHandleProps}
-      className={"synquestiListItem"} style={{...dragStyle, ...{opacity:opacityValue},...highlightColor}}>
+      className={"synquestiListItem " + this.props.marginClass} style={{...dragStyle, ...{opacity:opacityValue},...highlightColor}}>
       <div className="synquestiListItemTextContainer" >
         <div className="synquestiListItemText">
           <Typography color="textPrimary" noWrap> {this.props.content} </Typography>

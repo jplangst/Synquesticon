@@ -14,10 +14,23 @@
 
 .synquestiTaskOptions{
   display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 0;
+
+  position: relative;
+  height: auto;
+  min-height: 0;
+  width:calc(100% - 10px);
+  margin-right: 10px;
+  margin-bottom: 10px;
+
   flex-shrink: 0;
+  flex-grow: 0;
+
+  overflow-x: auto;
+}
+
+.synquestiTaskOptions::before, .synquestiTaskOptions::after {
+  content: '';  /* Insert pseudo-element */
+  margin: auto; /* Make it push flex items to the center */
 }
 
 .editSynquestitaskComponentButtons{

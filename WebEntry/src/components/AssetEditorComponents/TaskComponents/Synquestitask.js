@@ -83,7 +83,7 @@ class Synquestitask extends Component {
             required
             padding="dense"
             fullWidth
-            id="questionText"
+            id="mcQuestionText"
             defaultValue={this.props.task.displayText}
             placeholder="Enter your question here"
             ref="questionTextRef"
@@ -95,7 +95,7 @@ class Synquestitask extends Component {
             required
             padding="dense"
             style={{marginRight:"10px", width:"calc(40% - 15px)"}}
-            id="responses"
+            id="mcResponses"
             defaultValue={this.props.task.responses.join(',')}
             placeholder="Response A, Response B, ResponseC"
             helperText="Question responses seperated by a comma"
@@ -106,7 +106,7 @@ class Synquestitask extends Component {
             required
             padding="dense"
             style={{marginRight:"10px", width:"calc(40% - 15px)"}}
-            id="correctResponses"
+            id="mcCorrectResponses"
             defaultValue={this.props.task.correctResponses.join(',')}
             placeholder="Response A, Response C"
             helperText="The correct responses to the question"
@@ -130,7 +130,7 @@ class Synquestitask extends Component {
             required
             padding="dense"
             fullWidth
-            id="questionText"
+            id="numQuestionText"
             defaultValue={this.props.task.displayText}
             placeholder="Enter your question here"
             ref="questionTextRef"
@@ -142,7 +142,7 @@ class Synquestitask extends Component {
             required
             padding="dense"
             style={{marginRight:"10px", width:"calc(40% - 15px)"}}
-            id="correctResponses"
+            id="numCorrectResponses"
             defaultValue={this.props.task.correctResponses.join(',')}
             placeholder="Correct Answer, Margin(Optional)"
             helperText="Enter the correct answer and optionally a margin seperated with a comma, +- that still allows a correct answer. E.g. 5,2 would let anything between 3-7 be a correct answer"
@@ -158,7 +158,7 @@ class Synquestitask extends Component {
             required
             padding="dense"
             fullWidth
-            id="questionText"
+            id="textQuestionText"
             defaultValue={this.props.task.displayText}
             placeholder="Enter your question here"
             ref="questionTextRef"
@@ -170,7 +170,7 @@ class Synquestitask extends Component {
             required
             padding="dense"
             style={{marginRight:"10px", width:"calc(40% - 15px)"}}
-            id="correctResponses"
+            id="textCorrectResponses"
             defaultValue={this.props.task.correctResponses.join(',')}
             placeholder="Correct Answer(Optional)"
             helperText="Enter the correct answer"
