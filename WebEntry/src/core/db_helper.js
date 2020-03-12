@@ -18,8 +18,10 @@ class db_helper {
    *
    * @param  {function} callback This function will be called with the result of the query. The function should take one parameter.
    */
-   getAllTasksFromDb(callback){
-     fetch("/api/getAllTasks").then((response) => {
+   getAllTasksFromDb(legacy, callback){
+     axios.post("/api/getAllTasks", {
+       legacy: legacy
+     }).then((response) => {
         if(response.ok) {
           return response.json();
         }

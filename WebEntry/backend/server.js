@@ -112,31 +112,24 @@ router.post("/exportToCSV", (req, res) => {
    ██    ██   ██ ███████ ██   ██ ███████
 */
  // this method fetches all available questions in our database
-router.get("/getAllTasks", async (req, res) => {
-  var tasks = await Tasks.find((err, data) => {
-      if (err) {
-        return null;
-      }
-      return data;
-    });
+router.get("/getAllTasks", (req, res) => {
+  const { legacy } = req.body;
+  if (legacy) {
+    var tasks = Tasks.find((err, data) => {
+        if (err) {
+          return res.json({success: false, error: err});
+        }
+        return res.json({ success: true, questions: tasks });
+      });
+  }
 
-  var syntasks = await Synquestitasks.find((err, data) => {
-      if (err) {
-        return null;
-      }
-      return data;
-    });
-  if (tasks && syntasks) {
-    return res.json({ success: true, questions: tasks.concat(syntasks) });
-  }
-  else if (tasks) {
-    return res.json({ success: true, questions: tasks });
-  }
-  else if (syntasks) {
-    return res.json({ success: true, questions: syntasks });
-  }
   else {
-    return res.json({success: false, error: err});
+    var syntasks = Synquestitasks.find((err, data) => {
+        if (err) {
+          return res.json({success: false, error: err});
+        }
+        return res.json({ success: true, questions: syntasks });
+      });
   }
 });
 
