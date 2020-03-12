@@ -24,10 +24,10 @@ class db_helper {
      }).then((response) => {
         if(response.status === 200) {
           if (!legacy) {
-            console.log(response.questions);
+            console.log(response.data.questions);
           }
 
-          callback(response.questions);
+          callback(response.data.questions);
         }
         else {
           alert("Database connection failed!");

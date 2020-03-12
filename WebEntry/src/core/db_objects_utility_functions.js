@@ -36,6 +36,9 @@ export function getTaskContent(task){
   else if(task.objType === "TaskSet"){
     content = task.name;
   }
+  else{
+    content = task.name;
+  }
 
   return content;
 }

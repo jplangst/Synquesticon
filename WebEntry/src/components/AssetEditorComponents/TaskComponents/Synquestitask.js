@@ -14,7 +14,7 @@ class Synquestitask extends Component {
     super(props);
 
     this.state = {
-      singleChoice: props.task.taskType === "Single Choice" ? true : false
+      singleChoice: props.task.singleChoice
     };
 
     //Image
@@ -187,6 +187,7 @@ class Synquestitask extends Component {
 
   onSingleChoiceChanged(e, checked){
     this.props.task.singleChoice = checked;
+    console.log(this.props.task);
     this.setState({
       singleChoice: checked,
     });

@@ -35,8 +35,8 @@ class EditSynquestitaskComponent extends Component {
       globalVariable: this.synquestitask.globalVariable,
     };
 
-    this.childOpenStatus = [];
-    this.childOpenStatus.fill(true,0,this.state.taskComponents.length);
+    this.childOpenStatus = this.synquestitask.childObj.slice();
+    this.childOpenStatus.fill(true,0,this.synquestitask.childObj.length);
 
     this.updateChildOpenStateCallback = this.updateChildOpenState.bind(this);
 
@@ -72,7 +72,7 @@ class EditSynquestitaskComponent extends Component {
     this.closeSetComponent(true, this.shouldCloseAsset);
   }
 
-  onChangeSetSettings(){
+  onChangeTaskSettings(){
     if(this.props.isEditing){
       this.shouldCloseAsset = false;
       db_helper.updateTaskFromDb(this.synquestitask._id, this.synquestitask, false, this.handleDBCallback)
@@ -94,6 +94,8 @@ class EditSynquestitaskComponent extends Component {
       };
       store.dispatch(snackbarAction);
     }
+
+    console.log(this.synquestitask);
   }
 
   onResponsesChanged(e, response, target){
@@ -133,6 +135,8 @@ class EditSynquestitaskComponent extends Component {
       this.setState({
         taskComponents: updatedComponents,
       });
+
+      this.synquestitask.childObj = updatedComponents;
     }
   }
 
@@ -140,6 +144,7 @@ class EditSynquestitaskComponent extends Component {
   removeComponent(index){
     var newObjectList = [...this.state.taskComponents];
     newObjectList.splice(index, 1);
+    this.childOpenStatus.splice(index, 1);
 
     var snackbarAction = {
       type: 'TOAST_SNACKBAR_MESSAGE',
@@ -151,6 +156,8 @@ class EditSynquestitaskComponent extends Component {
     this.setState({
       taskComponents: newObjectList,
     });
+
+    this.synquestitask.childObj = newObjectList;
   }
 
   moveComponent(dragIndex, hoverIndex) {
@@ -160,6 +167,8 @@ class EditSynquestitaskComponent extends Component {
     this.setState({
       taskComponents: updatedObjectList,
     });
+
+    this.synquestitask.childObj = updatedObjectList;
   }
 
   //Removes the selected task from the database
@@ -183,7 +192,7 @@ class EditSynquestitaskComponent extends Component {
   }
 
   onGlobalVariableChanged(e, checked){
-    //this.props.synquestitask.globalVariable = checked;
+    this.synquestitask.globalVariable = checked;
     this.setState({
       globalVariable: checked,
     });
@@ -254,7 +263,7 @@ class EditSynquestitaskComponent extends Component {
 
     var deleteTaskBtn = null;
     if(this.props.isEditing){
-      deleteTaskBtn = <Button onClick={this.removeSet.bind(this)} variant="outlined">
+      deleteTaskBtn = <Button onClick={this.removeTask.bind(this)} variant="outlined">
         Delete Set
         </Button>;
     }
@@ -290,7 +299,7 @@ class EditSynquestitaskComponent extends Component {
               Close
             </Button>
             {deleteTaskBtn}
-            <Button onClick={this.onChangeSetSettings.bind(this)} variant="outlined">
+            <Button onClick={this.onChangeTaskSettings.bind(this)} variant="outlined">
               {this.props.isEditing ? "Save" : "Create"}
             </Button>
           </div>

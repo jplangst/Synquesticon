@@ -36,8 +36,11 @@ class EditorMode extends Component {
     //Database callbacks
     this.dbTagsCallback = this.dbTagsCallbackFunction.bind(this);
 
+    this.dbSynquestitaskCallback = this.dbSynquestitaskCallbackFunction.bind(this);
     this.dbTaskCallback = this.dbTaskCallbackFunction.bind(this);
     this.dbTaskSetCallback = this.dbTaskSetCallbackFunction.bind(this);
+
+    //Callback when querying the databaseusing the search fields
     this.dbQueryCallback = this.onDatabaseSearched.bind(this);
 
     this.gotoPage = this.gotoPageHandler.bind(this);
@@ -71,8 +74,12 @@ class EditorMode extends Component {
   }
 
   dbTagsCallbackFunction(queryTasks, result){
-    console.log(queryTasks);
-    console.log(result);
+    //console.log(queryTasks);
+    //console.log(result);
+  }
+
+  dbSynquestitaskCallbackFunction(dbQueryResult) {
+    this.setState({synquestitaskList: dbQueryResult});
   }
 
   dbTaskCallbackFunction(dbQueryResult) {
@@ -83,6 +90,7 @@ class EditorMode extends Component {
     this.setState({taskSetList: dbQueryResult});
   }
 
+  //Callback after querying the database using the search fields
   onDatabaseSearched(queryType, result){
     if(queryType === "task"){
       this.setState({taskList: result.tasks});
@@ -110,7 +118,18 @@ class EditorMode extends Component {
       key={this.assetEditorCompKey}
     />;
 
-    this.setState(state => ({selectedTaskSet:null, selectedTask: task, assetEditorObject: assetObject}));
+    this.setState(state => ({selectedTaskSet:null, selectedSynquestitask:null, selectedTask: task, assetEditorObject: assetObject}));
+  }
+
+  selectSynquestitask(task) {
+    this.assetEditorCompKey += 1;
+
+    var assetObject = <EditSynquestitaskComponent isEditing={true} synquestitask={task}
+      closeTaskCallback={this.assetEditorObjectClosed.bind(this)}
+      key={this.assetEditorCompKey}
+    />;
+
+    this.setState(state => ({selectedTaskSet:null, selectedTask: null, selectedSynquestitask: task, assetEditorObject: assetObject}));
   }
 
   selectTaskSet(taskSet) {
@@ -122,7 +141,7 @@ class EditorMode extends Component {
       key={this.assetEditorCompKey} ref={this.editSetComponentRef}
       runTestSet={()=>{this.props.history.push('/DisplayTaskComponent')}}/>;
 
-    this.setState({selectedTask: null, selectedTaskSet:taskSet, assetEditorObject: assetObject});
+    this.setState({selectedTask: null, selectedSynquestitask:null, selectedTaskSet:taskSet, assetEditorObject: assetObject});
   }
 
   //Callback from the asset editor object if an object has been changed that requires a refresh of the page
@@ -133,6 +152,7 @@ class EditorMode extends Component {
 
     if(dbChanged){
       db_helper.getAllTasksFromDb(true,this.dbTaskCallback);
+      db_helper.getAllTasksFromDb(false,this.dbSynquestitaskCallback);
       db_helper.getAllTaskSetsFromDb(this.dbTaskSetCallback);
     }
 
@@ -171,9 +191,6 @@ class EditorMode extends Component {
   }
 
   onSearchInputChanged(type, e){
-    console.log(e);
-    console.log(type);
-
     var searchString = "";
     if(typeof(e)==='object'){
       searchString = e.target.value;
@@ -317,7 +334,7 @@ class EditorMode extends Component {
             <CollapsableContainer headerTitle="Tasks" useMediaQuery={true}
             headerComponents={collapsableSynquestitaskHeaderButtons} hideHeaderComponents={true} open={true}>
                 < TaskListComponent dragEnabled={dragEnabled} taskList={ this.state.synquestitaskList }
-                  selectTask={ this.selectTask.bind(this) } selectedTask={this.state.selectedSynquestitask}
+                  selectTask={ this.selectSynquestitask.bind(this) } selectedTask={this.state.selectedSynquestitask}
                   itemType="Synquestitask" droppableId="synquestitasks"/ >
             </CollapsableContainer>
 
