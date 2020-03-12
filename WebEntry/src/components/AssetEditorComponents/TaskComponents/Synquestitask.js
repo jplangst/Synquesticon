@@ -180,6 +180,7 @@ class Synquestitask extends Component {
         </div>;
         break;
       }
+      default: component = null;
     }
 
     return component;
@@ -187,7 +188,6 @@ class Synquestitask extends Component {
 
   onSingleChoiceChanged(e, checked){
     this.props.task.singleChoice = checked;
-    console.log(this.props.task);
     this.setState({
       singleChoice: checked,
     });

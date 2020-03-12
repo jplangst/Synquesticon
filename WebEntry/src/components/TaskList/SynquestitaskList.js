@@ -4,30 +4,17 @@ import DragIcon from '@material-ui/icons/ControlCamera';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withTheme } from '@material-ui/styles';
-import { Typography } from '@material-ui/core';
 
 import { Draggable } from 'react-beautiful-dnd';
 import * as dnd from '../../core/beautifulDND.js';
 
-import * as dbObjects from '../../core/db_objects';
-import * as listUtils from '../../core/db_objects_utility_functions';
-
 import CollapsableContainer from '../Containers/CollapsableContainer';
-import InstructionComponent from '../AssetEditorComponents/TaskComponents/InstructionComponent';
-import SelectImageComponent from '../AssetEditorComponents/TaskComponents/SelectImageComponent';
-import TextEntryComponent from '../AssetEditorComponents/TaskComponents/TextEntryComponent';
-import MultipleChoiceComponent from '../AssetEditorComponents/TaskComponents/MultipleChoiceComponent';
-import ComparisonComponent from '../AssetEditorComponents/TaskComponents/ComparisonComponent';
 
 import Synquestitask from '../AssetEditorComponents/TaskComponents/Synquestitask';
 
 import './SynquestitaskList.css';
 
 class SynquestitaskList extends Component {
-  constructor(props){
-    super(props);
-  }
-
   removeTask(index){
     this.props.removeCallback(index);
   }

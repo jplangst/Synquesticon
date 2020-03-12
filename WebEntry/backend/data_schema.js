@@ -10,6 +10,7 @@ const SynquestitaskSchema = new Schema({
   tags: [String], //A list of searchable tags
   globalVariable: Boolean, //If true the response of the task should be stored as a global var in the participant DB object
   refSets: [String], //list of sets that reference this Synquestitask
+  objType: String, //The type of this object (should always be Synquestitask)
 
   childObj: [{ //A list of child objects
     _id: false, //To disable automatic mongo db id's for the elements in the list

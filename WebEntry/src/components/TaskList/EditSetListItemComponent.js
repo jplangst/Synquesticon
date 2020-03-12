@@ -27,7 +27,7 @@ class EditSetListItemComponent extends Component {
                 </div>
               </div>;
 
-    if(this.props.item.objType === "Task"){
+    if(this.props.item.objType === "Task" || this.props.item.objType === "Synquestitask"){
       if(this.props.componentDepth === 0){ //If it is a top level parent it should be dragable
         return(
           <div className={"editListItem "} >
@@ -56,6 +56,7 @@ class EditSetListItemComponent extends Component {
       var newDepth = this.props.componentDepth + 1;
       var collapsableContent = this.props.item.data.map((data, index) =>
         {
+
           var content = listUtils.getTaskContent(data);
           return <EditSetListItemComponent key={index} removeCallback={this.props.removeTaskCallback} item={data} content={content} componentDepth={newDepth} />
         }

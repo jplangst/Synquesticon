@@ -66,6 +66,7 @@ class EditSetComponent extends Component {
   }
 
   onRetrievedSetChildTasks(retrievedObjects){
+    console.log(retrievedObjects);
     this.setState({taskListObjects: retrievedObjects.data});
   }
 
@@ -105,10 +106,13 @@ class EditSetComponent extends Component {
     this.shouldCloseAsset = false;
 
     if(taskToAdd.objType === "Task"){
-      db_helper.getTaskWithID(taskToAdd._id, this.handleUpdateSetChildTasks);
+      db_helper.getTaskWithID(taskToAdd._id, true, this.handleUpdateSetChildTasks);
+    }
+    else if (taskToAdd.objType === "Set"){
+      db_helper.getTasksOrTaskSetsWithIDs(taskToAdd, this.handleUpdateSetChildTasks);
     }
     else{
-      db_helper.getTasksOrTaskSetsWithIDs(taskToAdd, this.handleUpdateSetChildTasks);
+      db_helper.getTaskWithID(taskToAdd._id, false, this.handleUpdateSetChildTasks);
     }
   }
 
@@ -293,7 +297,6 @@ class EditSetComponent extends Component {
   }
 
   handleAddTaskAllowed(allowed, task, message){
-
     if(allowed){
       //Add a dummy object to the list while we wait for the callback
       var dummyObject = {_id:task._id, question:"Adding...", objType:"Task", taskType:"Image"}

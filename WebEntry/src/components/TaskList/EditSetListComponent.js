@@ -22,6 +22,10 @@ class EditSetListComponent extends Component {
       <div style={{width:'100%', height:'100%'}}>
         {
           this.taskListObjects.map((item, index) => {
+            if(item === null){
+              return item;
+            }
+
             var content = listUtils.getTaskContent(item);
 
             return(

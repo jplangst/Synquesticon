@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import TextField from '@material-ui/core/TextField';
 import FileSelector from '../../../core/fileSelector';
 import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';

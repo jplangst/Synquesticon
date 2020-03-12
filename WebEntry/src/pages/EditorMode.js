@@ -242,6 +242,7 @@ class EditorMode extends Component {
 
   //On drag end callback
   onDragEnd = result => {
+
       const { source, destination } = result;
 
       // dropped outside the list
@@ -253,7 +254,17 @@ class EditorMode extends Component {
       if (source.droppableId === destination.droppableId) {
           this.editSetComponentRef.current.moveTask(source.index,destination.index);
       } else { //Otherwise we add to the list at the desired location
-          var itemType = source.droppableId ==="sets" ? "TaskSet" : "Task";
+          var itemType;
+          if(source.droppableId === "sets"){
+            itemType = "TaskSet";
+          }
+          else if(source.droppableId === "synquestitasks"){
+            itemType = "Synquestitask";
+          }
+          else{
+            itemType = "Task";
+          }
+
           var dragableItem = {objType:itemType,_id:result.draggableId};
           this.editSetComponentRef.current.addTask(dragableItem, destination.index);
       }

@@ -94,8 +94,6 @@ class EditSynquestitaskComponent extends Component {
       };
       store.dispatch(snackbarAction);
     }
-
-    console.log(this.synquestitask);
   }
 
   onResponsesChanged(e, response, target){

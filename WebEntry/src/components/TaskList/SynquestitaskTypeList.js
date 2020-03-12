@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 
 import SynquestitaskItemComponent from './SynquestitaskItemComponent';
 
-import * as listUtils from '../../core/db_objects_utility_functions';
-
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 
