@@ -114,22 +114,22 @@ router.post("/exportToCSV", (req, res) => {
  // this method fetches all available questions in our database
 router.post("/getAllTasks", (req, res) => {
   const { legacy } = req.body;
-  console.log(req.body);
   if (legacy) {
-    var tasks = Tasks.find((err, data) => {
+    Tasks.find((err, data) => {
         if (err) {
           return res.json({success: false, error: err});
         }
-        return res.json({ success: true, questions: tasks });
+        return res.json({ success: true, questions: data });
       });
   }
 
   else {
-    var syntasks = Synquestitasks.find((err, data) => {
+    Synquestitasks.find((err, data) => {
+      console.log(err, data);
         if (err) {
           return res.json({success: false, error: err});
         }
-        return res.json({ success: true, questions: syntasks });
+        return res.json({ success: true, questions: data });
       });
   }
 });

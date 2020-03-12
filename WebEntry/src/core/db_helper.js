@@ -22,16 +22,17 @@ class db_helper {
      axios.post("/api/getAllTasks", {
        legacy: legacy
      }).then((response) => {
-        if(response.ok) {
-          return response.json();
+        if(response.status === 200) {
+          if (!legacy) {
+            console.log(response.questions);
+          }
+
+          callback(response.questions);
         }
         else {
           alert("Database connection failed!");
           throw new Error("Database connection failed");
         }
-      })
-      .then(res => {
-        callback(res.questions);
       })
       .catch((error) => {
         console.log(error)
