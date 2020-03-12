@@ -112,7 +112,7 @@ router.post("/exportToCSV", (req, res) => {
    ██    ██   ██ ███████ ██   ██ ███████
 */
  // this method fetches all available questions in our database
-router.get("/getAllTasks", (req, res) => {
+router.post("/getAllTasks", (req, res) => {
   const { legacy } = req.body;
   if (legacy) {
     var tasks = Tasks.find((err, data) => {
