@@ -510,7 +510,6 @@ router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
         return res.json({success: false, error: err});
       }
       const ids = wrapperSet.childIds;
-
       var count = 0;
 
       var recursionForArray = async function(targetArray) {
@@ -537,7 +536,7 @@ router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
             return task;
           });
 
-          return taskFromDb;
+          return syntaskFromDb;
         }
         else if (target.objType === "TaskSet") {
           var setData = await TaskSets.findOne({_id: target.id}, async (err, obj) => {
