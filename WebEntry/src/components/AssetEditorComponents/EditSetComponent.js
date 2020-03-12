@@ -116,9 +116,10 @@ class EditSetComponent extends Component {
     if(this.shouldReopen){
       this.shouldReopen = false;
       var setEditSetAction = {
-        type: 'SET_SHOULD_EDIT_SET',
-        shouldEditSet: true,
-        setToEdit:{...this.set,...{_id:setDBID}}
+        type: 'SET_SHOULD_EDIT',
+        shouldEdit: true,
+        typeToEdit: 'set',
+        objectToEdit:{...this.set,...{_id:setDBID}}
       };
       store.dispatch(setEditSetAction);
     }

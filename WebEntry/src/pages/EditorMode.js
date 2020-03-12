@@ -62,9 +62,10 @@ class EditorMode extends Component {
     let storeState = store.getState();
     if(storeState.shouldEditSet){
       var setEditSetAction = {
-        type: 'SET_SHOULD_EDIT_SET',
-        shouldEditSet: false,
-        setToEdit:null
+        type: 'SET_SHOULD_EDIT',
+        shouldEdit: false,
+        objectToEdit:null,
+        typeToEdit:''
       };
       store.dispatch(setEditSetAction);
       this.selectTaskSet(storeState.setToEdit);
@@ -88,7 +89,6 @@ class EditorMode extends Component {
   }
 
   onDatabaseSearched(queryTasks, result){
-
     if(queryTasks){
       this.setState({taskList: result.tasks});
     }
@@ -117,10 +117,13 @@ class EditorMode extends Component {
   selectTaskSet(taskSet) {
     this.assetEditorCompKey += 1;
     this.editSetComponentRef = React.createRef();
-    this.setState({selectedTask: null, selectedTaskSet:taskSet, assetEditorObject: <EditSetComponent isEditing={true}
+
+    var assetObject = <EditSetComponent isEditing={true}
       setObject={taskSet} closeSetCallback={this.assetEditorObjectClosed.bind(this)}
       key={this.assetEditorCompKey} ref={this.editSetComponentRef}
-      runTestSet={()=>{this.props.history.push('/DisplayTaskComponent')}}/>});
+      runTestSet={()=>{this.props.history.push('/DisplayTaskComponent')}}/>;
+
+    this.setState({selectedTask: null, selectedTaskSet:taskSet, assetEditorObject: assetObject});
   }
 
   //Callback from the asset editor object if an object has been changed that requires a refresh of the page
@@ -135,23 +138,22 @@ class EditorMode extends Component {
     }
 
     let storeState = store.getState();
-    if(storeState.shouldEditSet){
-      this.selectTaskSet(storeState.setToEdit);
-      var setEditSetAction = {
-        type: 'SET_SHOULD_EDIT_SET',
-        shouldEditSet: false,
-        setToEdit:null
-      };
-      store.dispatch(setEditSetAction);
-    }
-    else if(storeState.shouldEditTask){
-      this.selectTask(storeState.taskToEdit);
-      var taskEditSetAction = {
-        type: 'SET_SHOULD_EDIT_TASK',
-        shouldEditTask: false,
-        taskToEdit:null
-      };
-      store.dispatch(taskEditSetAction);
+    if(storeState.shouldEdit){
+      if(storeState.typeToEdit === 'set'){
+        this.selectTaskSet(storeState.objectToEdit);
+      }
+      else if(storeState.typeToEdit === 'task'){
+        this.selectTask(storeState.objectToEdit);
+      }
+      else if(storeState.typeToEdit === 'synquestitask'){
+        //this.selectSynquestitask(storeState.objectToEdit);
+      }
+      var setEditAction = {
+        type: 'SET_SHOULD_EDIT',
+        shouldEdit: false,
+        typeToEdit: ''
+      }
+      store.dispatch(setEditAction);
     }
   }
 
@@ -237,14 +239,6 @@ class EditorMode extends Component {
     this.setState({assetEditorObject: <EditSetComponent isEditing={false}
       closeSetCallback={this.assetEditorObjectClosed.bind(this)}
       key={this.assetEditorCompKey} ref={this.editSetComponentRef}/>});
-  }
-
-  filterTasksCallback(){
-
-  }
-
-  filterSetsCallback(){
-
   }
 
   //On drag end callback
