@@ -162,7 +162,7 @@ class EditSynquestitaskComponent extends Component {
     });
   }
 
-  //Removes the selected set from the database
+  //Removes the selected task from the database
   removeTask() {
     this.shouldCloseAsset = true;
 
