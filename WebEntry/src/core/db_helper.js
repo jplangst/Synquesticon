@@ -366,14 +366,24 @@ class db_helper {
    * @param  {function} callback    This function will be called with the result of the query. The function should take two parameters.
    *                                The first will be the queried collection, the second will be the result of the query
    */
-   queryTasksFromDb(queryTasks, queryString,callback){
-    var queryCollection = queryTasks ? 'Tasks' : 'TaskSets';
+   queryTasksFromDb(queryType, queryString,callback){
+     var queryCollection;
+     if(queryType === 'task'){
+       queryCollection = 'Tasks';
+     }
+     else if(queryType === 'set'){
+       queryCollection = 'TaskSets';
+     }
+     else{
+       queryCollection = 'Synquestitasks';
+     }
+
     axios.post("/api/getAllTasksContaining", {
       queryCollection: queryCollection,
       queryString: queryString,
     }).then((response) => {
       if(response.status === 200) {
-        callback(queryTasks, response.data);
+        callback(queryType, response.data);
       }
       else {
         alert("Cannot find tasks containing ", queryString);

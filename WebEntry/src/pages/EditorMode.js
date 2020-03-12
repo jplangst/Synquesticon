@@ -40,11 +40,6 @@ class EditorMode extends Component {
     this.dbTaskSetCallback = this.dbTaskSetCallbackFunction.bind(this);
     this.dbQueryCallback = this.onDatabaseSearched.bind(this);
 
-    //Search bar callbacks
-    this.synquestitaskSearchCallback = this.onTaskSearchInputChanged.bind(this); //TODO change this to a new function
-    this.taskSearchCallback = this.onTaskSearchInputChanged.bind(this);
-    this.taskSetSearchCallback = this.onTaskSetSearchInputChanged.bind(this);
-
     this.gotoPage = this.gotoPageHandler.bind(this);
 
     //Asset Editor Component Key. Used to force reconstruction...
@@ -88,17 +83,21 @@ class EditorMode extends Component {
     this.setState({taskSetList: dbQueryResult});
   }
 
-  onDatabaseSearched(queryTasks, result){
-    if(queryTasks){
+  onDatabaseSearched(queryType, result){
+    if(queryType === "task"){
       this.setState({taskList: result.tasks});
     }
-    else{
+    else if(queryType === "set"){
       this.setState({taskSetList: result.tasks});
+    }
+    else if(queryType === "synquestitask"){
+      this.setState({synquestitaskList: result.tasks});
     }
   }
 
   assetViewerQueryDatabase() {
-    db_helper.getAllTasksFromDb(this.dbTaskCallback);
+    db_helper.getAllTasksFromDb(false,this.dbSynquestitaskCallback);
+    db_helper.getAllTasksFromDb(true,this.dbTaskCallback);
     db_helper.getAllTaskSetsFromDb(this.dbTaskSetCallback);
   }
 
@@ -133,7 +132,7 @@ class EditorMode extends Component {
     }
 
     if(dbChanged){
-      db_helper.getAllTasksFromDb(this.dbTaskCallback);
+      db_helper.getAllTasksFromDb(true,this.dbTaskCallback);
       db_helper.getAllTaskSetsFromDb(this.dbTaskSetCallback);
     }
 
@@ -159,7 +158,7 @@ class EditorMode extends Component {
 
   //Closes the current objecy being viewed in the asset editor view
   clearAssetEditorObject(){
-    this.setState({selectedTask: null, assetEditorContext: "empty", assetEditorObject: null, selectedTaskSet: null});
+    this.setState({selectedTask: null, assetEditorContext: "empty", assetEditorObject: null, selectedTaskSet: null, selectedSynquestitask:null});
   }
 
   removeTaskSet(taskSet) {
@@ -171,7 +170,10 @@ class EditorMode extends Component {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
   }
 
-  onTaskSearchInputChanged(e){
+  onSearchInputChanged(type, e){
+    console.log(e);
+    console.log(type);
+
     var searchString = "";
     if(typeof(e)==='object'){
       searchString = e.target.value;
@@ -193,27 +195,7 @@ class EditorMode extends Component {
       }
     }
 
-    db_helper.queryTasksFromDb(true, searchString, this.dbQueryCallback);
-  }
-  onTaskSetSearchInputChanged(e){
-    var searchString = "";
-    if(typeof(e)==='object'){
-      searchString = e.target.value;
-
-      if(!this.state.allowRegex){
-        searchString = this.escapeRegExp(searchString);
-      }
-
-      if(searchString.includes(",")){
-        searchString = searchString.split(",");
-        searchString = searchString.map((value)=>{
-          return value.trim();
-        });
-        searchString = searchString.filter(Boolean); //Remove empty values
-      }
-    }
-
-    db_helper.queryTasksFromDb(false, searchString, this.dbQueryCallback);
+    db_helper.queryTasksFromDb(type, searchString, this.dbQueryCallback);
   }
 
   addSynquestitaskCallback(){
@@ -314,10 +296,12 @@ class EditorMode extends Component {
     let theme = this.props.theme;
     let leftBG = theme.palette.type === "light" ? theme.palette.primary.dark : theme.palette.primary.main;
 
-    var collapsableTaskHeaderButtons = this.getCollapsableHeaderButtons(this.taskSearchCallback, this.addTaskCallback.bind(this), null, "taskSearchBar");
-    var collapsableSetHeaderButtons = this.getCollapsableHeaderButtons(this.taskSetSearchCallback, this.addSetCallback.bind(this), null, "setSearchBar");
-    var collapsableSynquestitaskHeaderButtons = this.getCollapsableHeaderButtons(this.synquestitaskSearchCallback, this.addSynquestitaskCallback.bind(this), null, "synquestitaskSearchBar");
-
+    var collapsableTaskHeaderButtons = this.getCollapsableHeaderButtons(this.onSearchInputChanged.bind(this, "task"),
+      this.addTaskCallback.bind(this), null, "taskSearchBar");
+    var collapsableSetHeaderButtons = this.getCollapsableHeaderButtons(this.onSearchInputChanged.bind(this, "set"),
+      this.addSetCallback.bind(this), null, "setSearchBar");
+    var collapsableSynquestitaskHeaderButtons = this.getCollapsableHeaderButtons(this.onSearchInputChanged.bind(this, "synquestitask"),
+      this.addSynquestitaskCallback.bind(this), null, "synquestitaskSearchBar");
 
     var dragEnabled = false;
     if(this.state.assetEditorObject && this.state.assetEditorObject.type === EditSetComponent){
