@@ -62,9 +62,10 @@ class EditTaskComponent extends Component {
     if(this.shouldReopen){
       this.shouldReopen = false;
       var setEditTaskAction = {
-        type: 'SET_SHOULD_EDIT_TASK',
-        shouldEditTask: true,
-        taskToEdit:{...this.task,...{_id:questionDBID}}
+        type: 'SET_SHOULD_EDIT',
+        shouldEdit: true,
+        objectToEdit:{...this.task,...{_id:questionDBID}},
+        typeToEdit:'task'
       };
       store.dispatch(setEditTaskAction);
     }

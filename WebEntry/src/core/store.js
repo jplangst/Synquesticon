@@ -151,11 +151,8 @@ const store = createStore ((state = initialState, action) => {
     case 'SET_SHOULD_SAVE': {
       return { ...state, experimentInfo:{...state.experimentInfo, shouldSave: action.shouldSave}};
     }
-    case 'SET_SHOULD_EDIT_SET': {
-      return { ...state, shouldEditSet:action.shouldEditSet, setToEdit:action.setToEdit};
-    }
-    case 'SET_SHOULD_EDIT_TASK': {
-      return { ...state, shouldEditTask:action.shouldEditTask, taskToEdit:action.taskToEdit};
+    case 'SET_SHOULD_EDIT': {
+      return { ...state, shouldEdit:action.shouldEdit, objectToEdit:action.objectToEdit, typeToEdit:action.typeToEdit};
     }
     case 'ADD_PARTICIPANT': {
       state.participants[action.participant] = action.tracker;

@@ -46,9 +46,10 @@ class PlayerMode extends Component {
 
   onEditButtonClick(taskSet) {
     var setEditSetAction = {
-      type: 'SET_SHOULD_EDIT_SET',
-      shouldEditSet: true,
-      setToEdit:taskSet
+      type: 'SET_SHOULD_EDIT',
+      shouldEdit: true,
+      objectToEdit:taskSet,
+      typeToEdit:'set'
     };
     store.dispatch(setEditSetAction);
 

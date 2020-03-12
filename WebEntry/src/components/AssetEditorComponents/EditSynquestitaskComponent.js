@@ -52,19 +52,21 @@ class EditSynquestitaskComponent extends Component {
     this.shouldCloseAsset = false;
   }
 
+  //Callback from the collapsable container when it's state is changed
   updateChildOpenState(childIndex, newState){
     this.childOpenStatus[childIndex] = newState;
   }
 
-  onDBCallback(setDBID){
+  onDBCallback(synquestitaskID){
     if(this.shouldReopen){
       this.shouldReopen = false;
-      var setEditSetAction = {
-        type: 'SET_SHOULD_EDIT_SET',
-        shouldEditSet: true,
-        setToEdit:{...this.set,...{_id:setDBID}}
+      var editSynquestitaskAction = {
+        type: 'SET_SHOULD_EDIT',
+        shouldEdit: true,
+        objectToEdit:{...this.synquestitask,...{_id:synquestitaskID}},
+        typeToEdit:'synquestitask'
       };
-      store.dispatch(setEditSetAction);
+      store.dispatch(editSynquestitaskAction);
     }
 
     this.closeSetComponent(true, this.shouldCloseAsset);
@@ -73,24 +75,22 @@ class EditSynquestitaskComponent extends Component {
   onChangeSetSettings(){
     if(this.props.isEditing){
       this.shouldCloseAsset = false;
-      //db_helper.updateTaskSetFromDb(this.set._id, this.synquestiTask, this.handleDBCallback);
       db_helper.updateTaskFromDb(this.synquestitask._id, this.synquestitask, false, this.handleDBCallback)
       let snackbarAction = {
         type: 'TOAST_SNACKBAR_MESSAGE',
         snackbarOpen: true,
-        snackbarMessage: "Set saved"
+        snackbarMessage: "Task saved"
       };
       store.dispatch(snackbarAction);
     }
     else{
       this.shouldCloseAsset = true;
       this.shouldReopen = true;
-      //db_helper.addTaskSetToDb(this.synquestiTask, this.handleDBCallback);
       db_helper.addTaskToDb(this.synquestitask, false, this.handleDBCallback);
       let snackbarAction = {
         type: 'TOAST_SNACKBAR_MESSAGE',
         snackbarOpen: true,
-        snackbarMessage: "Set created"
+        snackbarMessage: "Task created"
       };
       store.dispatch(snackbarAction);
     }
@@ -163,17 +163,17 @@ class EditSynquestitaskComponent extends Component {
   }
 
   //Removes the selected set from the database
-  removeSet() {
+  removeTask() {
     this.shouldCloseAsset = true;
 
     var snackbarAction = {
       type: 'TOAST_SNACKBAR_MESSAGE',
       snackbarOpen: true,
-      snackbarMessage: "Set deleted"
+      snackbarMessage: "Task deleted"
     };
     store.dispatch(snackbarAction);
 
-    db_helper.deleteTaskSetFromDb(this.synquestitask._id, this.handleDBCallback);
+    db_helper.deleteTaskFromDb(this.synquestitask._id, false, this.handleDBCallback);
   }
 
   //Calls the provided callback function that handles the closing of this component
