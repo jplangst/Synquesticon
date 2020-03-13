@@ -24,7 +24,7 @@ class db_helper {
      }).then((response) => {
         if(response.status === 200) {
           if (!legacy) {
-            console.log(response.data.questions);
+            //console.log(response.data.questions);
           }
 
           callback(response.data.questions);

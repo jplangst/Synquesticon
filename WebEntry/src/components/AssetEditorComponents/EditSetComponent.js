@@ -64,7 +64,6 @@ class EditSetComponent extends Component {
   }
 
   onRetrievedSetChildTasks(retrievedObjects){
-    console.log(retrievedObjects);
     this.setState({taskListObjects: retrievedObjects.data});
   }
 
