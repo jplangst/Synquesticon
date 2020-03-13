@@ -27,18 +27,12 @@ export const move = (source, destination, droppableSource, droppableDestination)
     return result;
 };
 
-export const getItemStyle = (isDragging, draggableStyle, bgColor, highlightColor) => ({
-    // some basic styles to make the items look a bit nicer
-    userSelect: 'none',
-    //padding: grid * 2,
-    //margin: `0 0 ${grid}px 0`,
-
-    // change background colour if dragging
-    background: isDragging ? highlightColor : bgColor,
-
-    // styles we need to apply on draggables
-    ...draggableStyle
-});
+export function getItemStyle(snapshot, draggableStyle, bgColor, highlightColor, noDropAnim){
+    return {...draggableStyle,
+            userSelect: 'none',
+            // change background colour if dragging
+            background: snapshot.isDragging ? highlightColor : bgColor,};
+}
 
 export const getListStyle = isDraggingOver => ({
     //background: isDraggingOver ? 'lightblue' : 'lightgrey',

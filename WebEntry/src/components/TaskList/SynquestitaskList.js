@@ -49,15 +49,16 @@ class SynquestitaskList extends Component {
         </div>;
 
         return(
-          <Draggable key={comp.itemID+"synquestitskListId"+index} draggableId={comp.itemID+"synquestitskListId"+index} index={index} shouldRespectForceTouch={false}>
+          <Draggable key={"synquestitskListId"+index} draggableId={"synquestitskListId"+index} index={index} shouldRespectForceTouch={false}>
           {(provided, snapshot) => (
-            <div className={"editSetListItem "} key={comp.itemID+"synquestitskListId_item"+index}
-            ref={provided.innerRef}{...provided.draggableProps}{...provided.dragHandleProps}
-            style={{...dnd.getItemStyle(snapshot.isDragging, provided.draggableProps.style, taskBgColor, taskBgColor),...{opacity:snapshot.isDragging?0.8:1}}}
+
+            <div className={"editSetListItem "} key={"synquestitskListId_item"+index}
+            ref={provided.innerRef}{...provided.draggableProps}
+            style={{...dnd.getItemStyle(snapshot, provided.draggableProps.style, taskBgColor, taskBgColor, true),...{opacity:snapshot.isDragging?0.8:1}}}
             >
               <CollapsableContainer content={comp.displayContent} classNames="editSetCompContainer" stateChangeCallback={this.props.toggleChildCallback} index={index}
-                contentClassNames="editSetCompContent" headerComponents={dragSource} open={this.props.childOpenStatus[index]} headerHeight={headerHeight}
-                headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={comp.objType}
+                contentClassNames="editSetCompContent" headerComponents={dragSource} dndDragHandle={provided.dragHandleProps} open={comp.openState} headerHeight={headerHeight}
+                headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={comp.objType} snapshotT={snapshot}
                 titleVariant="body1" indentContent={20}>
                   {component}
               </CollapsableContainer>

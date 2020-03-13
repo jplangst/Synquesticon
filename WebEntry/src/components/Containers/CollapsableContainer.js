@@ -17,6 +17,9 @@ class CollapsableContainer extends Component {
     this.state = {
       open: props.open
     };
+
+    this.dropping = false;
+    this.timerID = -1;
   }
 
   onCollapseExpand(){
@@ -24,8 +27,29 @@ class CollapsableContainer extends Component {
     if(this.props.stateChangeCallback){
       this.props.stateChangeCallback(this.props.index, newState);
     }
+    else{
+      this.setState(state => ({ open: newState }));
+    }
+  }
 
-    this.setState(state => ({ open: newState }));
+  componentDidUpdate(prevProps, prevState, snapshot){
+    if(prevProps.open !== this.props.open){
+      this.setState({open: this.props.open});
+    }
+
+    //Check if we are drgging and set flag if we are, we use the flag to avoid flickering when dropping
+    if(this.props.snapshotT && (this.props.snapshotT.isDragging && this.dropping === false)){
+      this.dropping = true;
+    } //This should hppen only once, prepare to reset the flag after dropping
+    if(this.props.snapshotT && (this.dropping && this.props.snapshotT.isDropAnimating)){
+      this.timerID = setInterval(this.dropAnimStop, 1000);
+    }
+  }
+
+  //Reset the dropping flag
+  dropAnimStop(){
+    this.dropping = false;
+    clearInterval(this.timerID);
   }
 
   render() {
@@ -48,9 +72,11 @@ class CollapsableContainer extends Component {
     var titleStyles = this.props.titleWidth ? this.props.titleWidth : {width:55};
     var titleVariant = this.props.titleVariant ? this.props.titleVariant : "h6";
 
+    var animationTime = this.dropping ? 0 : "auto";
+
     return (
       <div className={this.props.classNames+" collpasedContainer"}>
-        <div style={containerHeaderStyles} className={this.props.headerClassNames+" containerHeader"}>
+        <div style={containerHeaderStyles} className={this.props.headerClassNames+" containerHeader"} {...this.props.dndDragHandle}>
           <div className="leftHeaderContent" style={{height:headerHeight}}>
             <div className="collapseBtnContainer">
               <Button style={{minHeight:0, minWidth:0, paddingLeft: 5, paddingRight:5, paddingTop:0,paddingBottom:0, height:headerHeight}} onClick={this.onCollapseExpand.bind(this)} >
@@ -61,12 +87,12 @@ class CollapsableContainer extends Component {
               <Typography variant={titleVariant} color="textPrimary">{this.props.headerTitle}</Typography>
             </div>
           </div>
-          <div style={customHeaderComponentsStyles} className="customHeaderComponents">
+          <div style={customHeaderComponentsStyles} className="customHeaderComponents" >
             {headerComponents}
           </div>
         </div>
         <div className={this.props.contentClassNames+" collapsableContent"}>
-          <Collapse in={this.state.open} timeout="auto" unmountOnExit >
+          <Collapse in={this.state.open} timeout={animationTime} unmountOnExit >
             <div style={{paddingLeft:this.props.indentContent?this.props.indentContent:0}}>
               {this.props.children}
             </div>

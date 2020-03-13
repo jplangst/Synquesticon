@@ -29,14 +29,19 @@ class EditSynquestitaskComponent extends Component {
     //Clone the array via JSON. Otherwise we would operate directly on the original objects which we do not want
     this.synquestitask = this.props.isEditing ? JSON.parse(JSON.stringify(this.props.synquestitask)) : new dbObjects.SynquestitaskObject();
 
+    //let childOpenStatus = this.synquestitask.childObj.slice();
+    //childOpenStatus.fill(true,0,this.synquestitask.childObj.length);
+
+    this.synquestitask.childObj.forEach(function (child) {
+      child.openState = true;
+    });
+
     //We keep these fields in the state as they affect how the component is rendered
     this.state = {
       taskComponents: this.synquestitask.childObj,
+      //childOpenStatus: childOpenStatus,
       globalVariable: this.synquestitask.globalVariable,
     };
-
-    this.childOpenStatus = this.synquestitask.childObj.slice();
-    this.childOpenStatus.fill(true,0,this.synquestitask.childObj.length);
 
     this.updateChildOpenStateCallback = this.updateChildOpenState.bind(this);
 
@@ -54,7 +59,12 @@ class EditSynquestitaskComponent extends Component {
 
   //Callback from the collapsable container when it's state is changed
   updateChildOpenState(childIndex, newState){
-    this.childOpenStatus[childIndex] = newState;
+
+    var updatedComponents = this.state.taskComponents.slice();
+    updatedComponents[childIndex].openState = newState;
+    this.setState({
+      taskComponents: updatedComponents
+    });
   }
 
   onDBCallback(synquestitaskID){
@@ -114,14 +124,13 @@ class EditSynquestitaskComponent extends Component {
   addComponent(sourceIndex, destinationIndex){
     var droppedType = Object.values(dbObjects.TaskTypes)[sourceIndex];
     var newComponent = new dbObjects.SynquestitaskChildComponent(droppedType);
+    newComponent.openState = true;
 
     if(newComponent){
       //Clone the array since we can't mutate the state directly
       var updatedComponents = this.state.taskComponents.slice();
       //Insert the new component at the index stored when add task was called
       updatedComponents.splice(destinationIndex, 0, newComponent);
-      //Add the open state of the child
-      this.childOpenStatus.splice(destinationIndex, 0, true);
 
       let snackbarAction = {
         type: 'TOAST_SNACKBAR_MESSAGE',
@@ -132,6 +141,7 @@ class EditSynquestitaskComponent extends Component {
 
       this.setState({
         taskComponents: updatedComponents,
+        //childOpenStatus: updatedChildStates
       });
 
       this.synquestitask.childObj = updatedComponents;
@@ -142,7 +152,6 @@ class EditSynquestitaskComponent extends Component {
   removeComponent(index){
     var newObjectList = [...this.state.taskComponents];
     newObjectList.splice(index, 1);
-    this.childOpenStatus.splice(index, 1);
 
     var snackbarAction = {
       type: 'TOAST_SNACKBAR_MESSAGE',
@@ -161,7 +170,7 @@ class EditSynquestitaskComponent extends Component {
   moveComponent(dragIndex, hoverIndex) {
     var updatedObjectList = this.state.taskComponents.slice();
     db_utils.arrayMove(updatedObjectList, dragIndex, hoverIndex);
-    db_utils.arrayMove(this.childOpenStatus, dragIndex, hoverIndex);
+
     this.setState({
       taskComponents: updatedObjectList,
     });
@@ -284,7 +293,7 @@ class EditSynquestitaskComponent extends Component {
                {(provided, snapshot) => (
                 <div ref={provided.innerRef} style={{width:'100%', height:'100%', minHeight:0}}>
                   < SynquestitaskList removeCallback={this.removeComponentCallback} toggleChildCallback={this.updateChildOpenState.bind(this)}
-                  taskComponents={this.state.taskComponents} childOpenStatus={this.childOpenStatus}/ >
+                  taskComponents={this.state.taskComponents}/ >
                     {provided.placeholder}
                 </div>
               )}
