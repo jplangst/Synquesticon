@@ -16,8 +16,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import EditSetListComponent from '../TaskList/EditSetListComponent';
 import { Typography } from '@material-ui/core';
 
-
-
 import { Droppable } from 'react-beautiful-dnd';
 
 import './EditSetComponent.css';
@@ -105,13 +103,15 @@ class EditSetComponent extends Component {
   updateSetChildList(taskToAdd){
     this.shouldCloseAsset = false;
 
+    console.log(taskToAdd);
+
     if(taskToAdd.objType === "Task"){
       db_helper.getTaskWithID(taskToAdd._id, true, this.handleUpdateSetChildTasks);
     }
-    else if (taskToAdd.objType === "Set"){
-      db_helper.getTasksOrTaskSetsWithIDs(taskToAdd, this.handleUpdateSetChildTasks);
+    else if (taskToAdd.objType === "TaskSet"){
+      db_helper.getTasksOrTaskSetsWithIDs(taskToAdd._id, this.handleUpdateSetChildTasks);
     }
-    else{
+    else if(taskToAdd.objType === "Synquestitask"){
       db_helper.getTaskWithID(taskToAdd._id, false, this.handleUpdateSetChildTasks);
     }
   }
