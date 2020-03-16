@@ -42,7 +42,7 @@ class CollapsableContainer extends Component {
       this.dropping = true;
     } //This should hppen only once, prepare to reset the flag after dropping
     if(this.props.snapshotT && (this.dropping && this.props.snapshotT.isDropAnimating)){
-      this.timerID = setInterval(this.dropAnimStop, 1000);
+      this.timerID = setInterval(this.dropAnimStop, 2000);
     }
   }
 
@@ -93,7 +93,7 @@ class CollapsableContainer extends Component {
         </div>
         <div className={this.props.contentClassNames+" collapsableContent"}>
           <Collapse in={this.state.open} timeout={animationTime} unmountOnExit >
-            <div style={{paddingLeft:this.props.indentContent?this.props.indentContent:0}}>
+            <div className={this.props.collasableStyles} style={{paddingLeft:this.props.indentContent?this.props.indentContent:0}}>
               {this.props.children}
             </div>
           </Collapse>

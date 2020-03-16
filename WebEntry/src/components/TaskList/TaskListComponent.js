@@ -82,7 +82,8 @@ class TaskListComponent extends Component {
               </div>;
 
               return(
-                <Draggable key={item._id} draggableId={item._id} index={index} shouldRespectForceTouch={false} isDragDisabled={!this.props.dragEnabled}>
+                <Draggable key={item._id + this.props.idSuffix} draggableId={item._id + '_' + this.props.idSuffix}
+                  index={index} shouldRespectForceTouch={false} isDragDisabled={!this.props.dragEnabled}>
                 {(provided, snapshot) => (
 
                   <React.Fragment>

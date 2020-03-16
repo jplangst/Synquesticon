@@ -14,6 +14,7 @@ import { withTheme } from '@material-ui/styles';
 import { DragDropContext } from 'react-beautiful-dnd';
 
 import db_helper from '../core/db_helper.js';
+import * as db_objects from '../core/db_objects.js'
 
 import store from '../core/store';
 
@@ -31,6 +32,10 @@ class EditorMode extends Component {
       allowRegex: true,
       assetEditorContext: "empty",
       assetEditorObject: null,
+
+      //Used to determine when it's ok to group tasks into dbTagsCallback
+      tagsCollected: false,
+      tasksCollected: false,
     };
 
     //Database callbacks
@@ -47,6 +52,12 @@ class EditorMode extends Component {
 
     //Asset Editor Component Key. Used to force reconstruction...
     this.assetEditorCompKey = 0;
+
+    this.assetViewerQueryDatabase();
+
+    //We might actually not need this functionality since the tag values are contained in the task queries
+    //db_helper.queryAllTagValuesFromDB(true,this.dbTagsCallback);
+    //db_helper.queryAllTagValuesFromDB(false,this.dbTagsCallback);
   }
 
   gotoPageHandler(e, route){
@@ -55,8 +66,6 @@ class EditorMode extends Component {
 
   //---------------------------component functions------------------------------
   componentWillMount() {
-    this.assetViewerQueryDatabase();
-
     let storeState = store.getState();
     if(storeState.shouldEditSet){
       var setEditSetAction = {
@@ -68,38 +77,80 @@ class EditorMode extends Component {
       store.dispatch(setEditSetAction);
       this.selectTaskSet(storeState.setToEdit);
     }
-
-    db_helper.queryAllTagValuesFromDB(true,this.dbTagsCallback);
-    db_helper.queryAllTagValuesFromDB(false,this.dbTagsCallback);
   }
 
+  //Turns out we did not need this functionality after all
   dbTagsCallbackFunction(queryTasks, result){
-    //console.log(queryTasks);
-    //console.log(result);
+    console.log(queryTasks);
+    console.log(result);
+  }
+
+  groupTasksByTags(tasks){
+    let tagMap = new Map();
+    for(let i = 0; i < tasks.length;i++){
+      let task = tasks[i];
+
+      //If the task contains tags we iterate over and add them with value to our map
+      if(task.tags.length > 0){
+        for(let y = 0; y < task.tags.length;y++){
+          let tag = task.tags[y];
+          if(tagMap.has(tag)){
+            let newValue = tagMap.get(tag);
+            newValue.push(task);
+            tagMap.set(tag,newValue);
+          }
+          else{
+            let objectList = [];
+            objectList.push(task);
+            tagMap.set(tag, objectList);
+          }
+        }
+      } //Otherwise we add the task to the No Tag section
+      else{
+        let key = "No Tag";
+        if(tagMap.has(key)){
+          let newValue = tagMap.get(key);
+          newValue.push(task);
+          tagMap.set(key,newValue);
+        }
+        else{
+          let objectList = [];
+          objectList.push(task);
+          tagMap.set(key, objectList);
+        }
+      }
+    }
+    return tagMap;
   }
 
   dbSynquestitaskCallbackFunction(dbQueryResult) {
-    this.setState({synquestitaskList: dbQueryResult});
+    let groupedResult = this.groupTasksByTags(dbQueryResult);
+    this.setState({synquestitaskList: groupedResult});
   }
 
   dbTaskCallbackFunction(dbQueryResult) {
-    this.setState({taskList: dbQueryResult});
+    let groupedResult = this.groupTasksByTags(dbQueryResult);
+    this.setState({taskList: groupedResult});
   }
 
   dbTaskSetCallbackFunction(dbQueryResult) {
-    this.setState({taskSetList: dbQueryResult});
+    let groupedResult =this.groupTasksByTags(dbQueryResult);
+    this.setState({taskSetList: groupedResult});
   }
 
   //Callback after querying the database using the search fields
   onDatabaseSearched(queryType, result){
-    if(queryType === "task"){
-      this.setState({taskList: result.tasks});
+    let mapResult = this.groupTasksByTags(result.tasks);
+    //mapResult.set(queryType, result.tasks);
+
+    if(queryType === db_objects.ObjectTypes.LEGACY_TASK){
+      this.setState({taskList: mapResult});
     }
-    else if(queryType === "set"){
-      this.setState({taskSetList: result.tasks});
+    else if(queryType === db_objects.ObjectTypes.SET){
+      this.setState({taskSetList: mapResult});
     }
-    else if(queryType === "synquestitask"){
-      this.setState({synquestitaskList: result.tasks});
+    else if(queryType === db_objects.ObjectTypes.TASK){
+      this.setState({synquestitaskList: mapResult});
     }
   }
 
@@ -191,6 +242,8 @@ class EditorMode extends Component {
   }
 
   onSearchInputChanged(type, e){
+    console.log(type);
+
     var searchString = "";
     if(typeof(e)==='object'){
       searchString = e.target.value;
@@ -242,7 +295,6 @@ class EditorMode extends Component {
 
   //On drag end callback
   onDragEnd = result => {
-
       const { source, destination } = result;
 
       // dropped outside the list
@@ -250,22 +302,31 @@ class EditorMode extends Component {
           return;
       }
 
-      //If the sourc eis the same as the destination we just move the element inside the list
+      console.log(source.droppableId);
+
+      //If the source is the same as the destination we just move the element inside the list
       if (source.droppableId === destination.droppableId) {
           this.editSetComponentRef.current.moveTask(source.index,destination.index);
       } else { //Otherwise we add to the list at the desired location
           var itemType;
-          if(source.droppableId === "sets"){
+          if(source.droppableId === "Sets"){
             itemType = "TaskSet";
           }
-          else if(source.droppableId === "synquestitasks"){
+          else if(source.droppableId === "Tasks"){
             itemType = "Synquestitask";
           }
           else{
             itemType = "Task";
           }
 
-          var dragableItem = {objType:itemType,_id:result.draggableId};
+          let id = result.draggableId;
+          if(id.includes('_')){
+            id = result.draggableId.split('_')[0];
+          }
+
+          console.log(itemType,id);
+
+          var dragableItem = {objType:itemType,_id:id};
           this.editSetComponentRef.current.addTask(dragableItem, destination.index);
       }
   };
@@ -312,6 +373,62 @@ class EditorMode extends Component {
     return collapsableTaskHeaderButtons;
   }
 
+  getTaskTypeContainer(taskType, taskMap){
+    var dragEnabled = false;
+    if(this.state.assetEditorObject && this.state.assetEditorObject.type === EditSetComponent){
+      dragEnabled = true;
+    }
+
+    let containerContent = [];
+
+    let selectedTask = null;
+    let selectCallback = null;
+    let searchType = "";
+    if(taskType === db_objects.ObjectTypes.TASK){
+      selectedTask = this.state.selectedSynquestitask;
+      selectCallback = this.selectSynquestitask.bind(this);
+    }
+    else if(taskType === db_objects.ObjectTypes.LEGACY_TASK){
+      selectedTask = this.state.selectedTask;
+      selectCallback = this.selectTask.bind(this);
+    }
+    else if(taskType === db_objects.ObjectTypes.SET){
+      selectedTask = this.state.selectedTaskSet;
+      selectCallback = this.selectTaskSet.bind(this);
+    }
+    else{
+      console.log("unknown task type: ", taskType);
+      return null;
+    }
+
+    let collapsableHeaderButtons = this.getCollapsableHeaderButtons(this.onSearchInputChanged.bind(this, taskType),
+      this.addTaskCallback.bind(this), null, taskType+"SearchBar");
+
+    let index = 0;
+
+    for (const [key, value] of taskMap.entries()) {
+      containerContent.push(<CollapsableContainer headerTitle={key} useMediaQuery={false}
+      hideHeaderComponents={true} open={true} key={key+index}>
+          < TaskListComponent dragEnabled={dragEnabled} taskList={ value }
+            selectTask={ selectCallback } selectedTask={selectedTask}
+            itemType={taskType} droppableId={taskType} idSuffix={key}/ >
+      </CollapsableContainer>);
+      index++;
+    }
+
+    /*< TaskListComponent dragEnabled={dragEnabled} taskList={ this.state.synquestitaskList }
+      selectTask={ this.selectSynquestitask.bind(this) } selectedTask={this.state.selectedSynquestitask}
+      itemType="Synquestitask" droppableId="synquestitasks"/ >*/
+
+    let container =
+    <CollapsableContainer headerTitle={taskType} useMediaQuery={true}
+    headerComponents={collapsableHeaderButtons} hideHeaderComponents={true} open={true}>
+      {containerContent}
+    </CollapsableContainer>;
+
+    return container;
+  }
+
   /*
 ██████  ███████ ███    ██ ██████  ███████ ██████
 ██   ██ ██      ████   ██ ██   ██ ██      ██   ██
@@ -324,7 +441,7 @@ class EditorMode extends Component {
     let theme = this.props.theme;
     let leftBG = theme.palette.type === "light" ? theme.palette.primary.dark : theme.palette.primary.main;
 
-    var collapsableTaskHeaderButtons = this.getCollapsableHeaderButtons(this.onSearchInputChanged.bind(this, "task"),
+    /*var collapsableTaskHeaderButtons = this.getCollapsableHeaderButtons(this.onSearchInputChanged.bind(this, "task"),
       this.addTaskCallback.bind(this), null, "taskSearchBar");
     var collapsableSetHeaderButtons = this.getCollapsableHeaderButtons(this.onSearchInputChanged.bind(this, "set"),
       this.addSetCallback.bind(this), null, "setSearchBar");
@@ -334,7 +451,7 @@ class EditorMode extends Component {
     var dragEnabled = false;
     if(this.state.assetEditorObject && this.state.assetEditorObject.type === EditSetComponent){
       dragEnabled = true;
-    }
+    }*/
 
     return (
     <DragDropContext onDragEnd={this.onDragEnd}>
@@ -342,28 +459,9 @@ class EditorMode extends Component {
 
         <div style={{backgroundColor:leftBG}} className = "AssetViewer">
           <div className="AssetViewerContent">
-            <CollapsableContainer headerTitle="Tasks" useMediaQuery={true}
-            headerComponents={collapsableSynquestitaskHeaderButtons} hideHeaderComponents={true} open={true}>
-                < TaskListComponent dragEnabled={dragEnabled} taskList={ this.state.synquestitaskList }
-                  selectTask={ this.selectSynquestitask.bind(this) } selectedTask={this.state.selectedSynquestitask}
-                  itemType="Synquestitask" droppableId="synquestitasks"/ >
-            </CollapsableContainer>
-
-            <CollapsableContainer headerTitle="Legacy Tasks" useMediaQuery={true}
-            headerComponents={collapsableTaskHeaderButtons} hideHeaderComponents={true} open={true}>
-                < TaskListComponent dragEnabled={dragEnabled} taskList={ this.state.taskList }
-                  selectTask={ this.selectTask.bind(this) } selectedTask={this.state.selectedTask}
-                  itemType="Task" droppableId="tasks"/ >
-            </CollapsableContainer>
-
-            <CollapsableContainer headerTitle="Sets" useMediaQuery={true}
-            headerComponents={collapsableSetHeaderButtons} hideHeaderComponents={true}
-            open={true}>
-                < TaskListComponent dragEnabled={dragEnabled} selectedTask={this.state.selectedTaskSet}
-                  taskList={ this.state.taskSetList } selectTask={ this.selectTaskSet.bind(this) }
-                  itemType="TaskSet" droppableId="sets"/ >
-            </CollapsableContainer>
-
+            {this.getTaskTypeContainer("Tasks", this.state.synquestitaskList)}
+            {this.getTaskTypeContainer("Legacy Tasks", this.state.taskList)}
+            {this.getTaskTypeContainer("Sets", this.state.taskSetList)}
           </div>
         </div>
 
@@ -374,5 +472,33 @@ class EditorMode extends Component {
     );
   }
 }
+
+/*
+{this.getTaskTypeContainer("Tasks", this.state.synquestitaskList)}
+{this.getTaskTypeContainer("Legacy Tasks", this.state.taskList)}
+*/
+/*
+<CollapsableContainer headerTitle="Tasks" useMediaQuery={true}
+headerComponents={collapsableSynquestitaskHeaderButtons} hideHeaderComponents={true} open={true}>
+    < TaskListComponent dragEnabled={dragEnabled} taskList={ this.state.synquestitaskList }
+      selectTask={ this.selectSynquestitask.bind(this) } selectedTask={this.state.selectedSynquestitask}
+      itemType="Synquestitask" droppableId="synquestitasks"/ >
+</CollapsableContainer>
+
+<CollapsableContainer headerTitle="Legacy Tasks" useMediaQuery={true}
+headerComponents={collapsableTaskHeaderButtons} hideHeaderComponents={true} open={true}>
+    < TaskListComponent dragEnabled={dragEnabled} taskList={ this.state.taskList }
+      selectTask={ this.selectTask.bind(this) } selectedTask={this.state.selectedTask}
+      itemType="Task" droppableId="tasks"/ >
+</CollapsableContainer>
+
+<CollapsableContainer headerTitle="Sets" useMediaQuery={true}
+headerComponents={collapsableSetHeaderButtons} hideHeaderComponents={true}
+open={true}>
+    < TaskListComponent dragEnabled={dragEnabled} selectedTask={this.state.selectedTaskSet}
+      taskList={ this.state.taskSetList } selectTask={ this.selectTaskSet.bind(this) }
+      itemType="TaskSet" droppableId="sets"/ >
+</CollapsableContainer>
+*/
 
 export default withTheme(EditorMode);

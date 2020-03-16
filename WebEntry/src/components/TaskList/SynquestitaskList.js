@@ -59,7 +59,7 @@ class SynquestitaskList extends Component {
               <CollapsableContainer content={comp.displayContent} classNames="editSetCompContainer" stateChangeCallback={this.props.toggleChildCallback} index={index}
                 contentClassNames="editSetCompContent" headerComponents={dragSource} dndDragHandle={provided.dragHandleProps} open={comp.openState} headerHeight={headerHeight}
                 headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={comp.objType} snapshotT={snapshot}
-                titleVariant="body1" indentContent={20}>
+                titleVariant="body1" indentContent={20} collasableStyles="contentOpen">
                   {component}
               </CollapsableContainer>
             </div>

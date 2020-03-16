@@ -222,7 +222,7 @@ router.post("/getAllTasksContaining", async (req, res) => {
     collection = Tasks;
   }
   else if(queryCollection === 'Synquestitasks'){
-    collection = Tasks;
+    collection = Synquestitasks;
   }
   else{
     collection = TaskSets;
