@@ -5,6 +5,13 @@ export const TaskTypes = {
   TEXTENTRY: 'Text Entry',
   NUMPAD: 'Numpad Entry'
 }
+
+export const ObjectTypes = {
+  TASK: 'Tasks',
+  LEGACY_TASK: 'Legacy Tasks',
+  SET: 'Sets',
+}
+
 var childListID = 0;
 /**
  * The default object used for Tasks. New tasks should use this as the base.

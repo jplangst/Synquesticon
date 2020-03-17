@@ -39,7 +39,7 @@ class TaskItemComponent extends Component {
     </Button></div> : null;
 
     var dragStyle = dnd.getItemStyle( //Was style={backgroundColor:leftBG}
-        snapshot.isDragging,
+        snapshot,
         provided.draggableProps.style,
         leftBG,
         leftBG

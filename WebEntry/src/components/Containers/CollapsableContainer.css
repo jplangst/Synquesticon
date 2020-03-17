@@ -52,6 +52,12 @@
   height: 100%;
 }
 
+.contentOpen{
+  border-bottom-width: thin;
+  border-bottom-style: solid;
+  border-color: grey;
+}
+
 /**** Content ******/
 .collapsableContent{
   width: 100%;

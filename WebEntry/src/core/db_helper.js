@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import * as db_objects from './db_objects.js';
 
 /**
  * Contains all the DB helper functions
@@ -24,7 +24,7 @@ class db_helper {
      }).then((response) => {
         if(response.status === 200) {
           if (!legacy) {
-            console.log(response.data.questions);
+            //console.log(response.data.questions);
           }
 
           callback(response.data.questions);
@@ -369,14 +369,18 @@ class db_helper {
    */
    queryTasksFromDb(queryType, queryString,callback){
      var queryCollection;
-     if(queryType === 'task'){
+     if(queryType === db_objects.ObjectTypes.LEGACY_TASK){
        queryCollection = 'Tasks';
      }
-     else if(queryType === 'set'){
+     else if(queryType === db_objects.ObjectTypes.SET){
        queryCollection = 'TaskSets';
      }
-     else{
+     else if(queryType === db_objects.ObjectTypes.TASK){
        queryCollection = 'Synquestitasks';
+     }
+     else{
+       console.log("Unknown query type: ", queryType);
+       return;
      }
 
     axios.post("/api/getAllTasksContaining", {

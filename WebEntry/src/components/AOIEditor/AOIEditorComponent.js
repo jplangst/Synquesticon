@@ -170,7 +170,7 @@ class AOIEditorComponent extends Component {
   onMouseDown(e) {
     e.stopPropagation();
     e.preventDefault();
-    console.log("mouse down", e.target.id);
+
     if (e.target.id === "AOICanvas") {
       this.imageRect = e.target.getBoundingClientRect();
     }
