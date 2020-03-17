@@ -12,7 +12,7 @@ import SingleChoiceComponent from '../Views/SingleChoiceComponent';
 import MultipleChoiceComponent from '../Views/MultipleChoiceComponent';
 import ImageViewComponent from '../Views/ImageViewComponent';
 import ComparisonViewComponent from '../Views/ComparisonViewComponent';
-import SynquestitaskViewComponent from '../Views/ComparisonViewComponent';
+import SynquestitaskViewComponent from '../Views/SynquestitaskViewComponent';
 
 import MultiItemTask from './MultiItemTask';
 
@@ -356,6 +356,19 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
                                       wamp.broadcastEvents(stringifyWAMPMessage(task, log, "START", this.progressCount, this.progressCount+ind+1))
                                     }}/>
             }
+            if((this.currentTask.objType === "Synquestitask")) {
+              return <SynquestitaskViewComponent task={this.currentTask}
+                                                 answerCallback={this.onAnswer.bind(this)}
+                                                 answerItem={this.state.answerItem}
+                                                 newTask={!this.state.hasBeenAnswered}
+                                                 parentSet={parentSet}
+                                                 initCallback={(taskResponses) => {
+                                                   this.currentLineOfData = taskResponses;
+                                                 }}
+                                                 logTheStartOfTask={(task, log, ind) => {
+                                                   wamp.broadcastEvents(stringifyWAMPMessage(task, log, "START", this.progressCount, this.progressCount+ind+1))
+                                                 }}/>;
+            }
             if((this.currentTask.taskType === "Instruction")) {
               return <InstructionViewComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} parentSet={parentSet}/>;
             }
@@ -374,9 +387,7 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
             if((this.currentTask.taskType === "Comparison")) {
               return <ComparisonViewComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered} parentSet={parentSet}/>;
             }
-            if((this.currentTask.taskType === "Synquestitask")) {
-              return <SynquestitaskViewComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered} parentSet={parentSet}/>;
-            }
+
           } else {
             return null;
           }

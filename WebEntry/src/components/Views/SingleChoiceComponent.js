@@ -60,10 +60,12 @@ class SingleChoiceComponent extends Component {
   render() {
     let theme=this.props.theme;
     this.reset();
+    //this is for accommodating the legacy
+    var displayText = this.props.task.question == undefined ? this.props.task.displayText : this.props.task.question;
     return (
       <div className={this.props.className}>
         <div>
-          <Typography ref={this.textRef} variant="h3" color="textPrimary" align="center" style={{whiteSpace:"pre-line"}}>{this.props.task.question}</Typography>
+          <Typography ref={this.textRef} variant="h3" color="textPrimary" align="center" style={{whiteSpace:"pre-line"}}>{displayText}</Typography>
         </div>
         <div className="responsesButtons">
           {
