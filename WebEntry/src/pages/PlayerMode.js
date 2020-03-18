@@ -38,7 +38,6 @@ class PlayerMode extends Component {
 
   appendEyeTrackerInfo(url){
     let storeState = store.getState();
-    console.log(storeState);
     if (storeState.selectedEyeTracker !== "" && storeState.selectedEyeTracker !== undefined) {
       url = url + '&tracker=' + storeState.selectedEyeTracker;
     }

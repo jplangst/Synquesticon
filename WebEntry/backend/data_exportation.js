@@ -166,9 +166,12 @@ exports.save_to_csv = async function(p, seperator) {
       });
       var task = await (Tasks.findOne({_id: line.taskId},
                                   async (err, obj) => {
-
-        line.tags = obj.tags;
-
+        if (obj) {
+          line.tags = obj.tags;
+        }
+        else {
+          line.tags = [];
+        }
       })).catch((exp) => {
         console.log("exp 1");
       });
@@ -216,6 +219,9 @@ exports.save_to_csv = async function(p, seperator) {
           return 0;
         }
       }
+
+      console.log("line ======================");
+      console.log(line);
 
       csv_string +=  (escapeCSV(globalVariables) + seperator +
                      escapeCSV(line.taskContent) + seperator +

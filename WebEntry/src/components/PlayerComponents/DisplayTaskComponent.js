@@ -201,7 +201,8 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
       }
     }
     //multi-item page
-    else if (this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage) {
+    else if ((this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage) ||
+              (this.currentTask.objType === "Synquestitask")){
       this.progressCount += this.currentLineOfData.size;
       this.currentLineOfData.forEach((line, index) => {
         if (line.isGlobalVariable !== undefined) {
@@ -276,7 +277,9 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
         this.currentLineOfData.responses = answer.responses;
         this.currentLineOfData.correctlyAnswered = answer.correctlyAnswered;
       }
-      else if (this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage) {
+      else if ((this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage) ||
+                (this.currentTask.objType === "Synquestitask")){
+        console.log("this goes in here", answer.linesOfData);
         this.currentLineOfData = answer.linesOfData;
         if (answer.correctlyAnswered === "correct") {
           this.currentTask.numCorrectAnswers += 1;
