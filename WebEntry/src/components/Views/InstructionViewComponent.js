@@ -35,9 +35,11 @@ class InstructionViewComponent extends Component {
     }
   }
   render() {
+    //this is for accommodating the legacy
+    var displayText = this.props.task.instruction == undefined ? this.props.task.displayText : this.props.task.instruction;
     return (
       <div className={this.props.className}>
-        <Typography ref={this.textRef} variant="h3" color="textPrimary" align="center" style={{whiteSpace:"pre-line"}}>{this.props.task.instruction}</Typography>
+        <Typography ref={this.textRef} variant="h3" color="textPrimary" align="center" style={{whiteSpace:"pre-line"}}>{displayText}</Typography>
       </div>
     );
   }

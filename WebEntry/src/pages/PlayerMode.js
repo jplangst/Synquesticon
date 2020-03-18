@@ -7,6 +7,7 @@ import PlayableSetListComponent from '../components/TaskList/PlayableSetListComp
 import store from '../core/store';
 
 import db_helper from '../core/db_helper.js';
+import * as db_objects from '../core/db_objects.js';
 
 import './PlayerMode.css';
 
@@ -27,7 +28,7 @@ class PlayerMode extends Component {
 
   componentWillMount() {
     //save data into DB before closing
-    db_helper.queryTasksFromDb(false, "experiment", this.dbTaskSetCallback);
+    db_helper.queryTasksFromDb(db_objects.ObjectTypes.SET, "experiment", this.dbTaskSetCallback);
   }
 
   //query all tasksets with experiment tag
