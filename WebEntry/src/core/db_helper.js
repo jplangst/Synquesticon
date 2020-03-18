@@ -340,8 +340,22 @@ class db_helper {
      ██    ██   ██ ███████ ██   ██     ██   ██ ██   ████ ██████      ███████ ███████    ██
   */
 
-  queryAllTagValuesFromDB(queryTasks,callback){
-    var queryCollection = queryTasks ? 'Tasks' : 'TaskSets';
+  queryAllTagValuesFromDB(queryType,callback){
+    var queryCollection;
+    if(queryType === db_objects.ObjectTypes.LEGACY_TASK){
+      queryCollection = 'Tasks';
+    }
+    else if(queryType === db_objects.ObjectTypes.SET){
+      queryCollection = 'TaskSets';
+    }
+    else if(queryType === db_objects.ObjectTypes.TASK){
+      queryCollection = 'Synquestitasks';
+    }
+    else{
+      console.log("Unknown query type: ", queryType);
+      return;
+    }
+    
     axios.post("/api/getAllTagValues", {
       queryCollection: queryCollection,
     }).then((response) => {

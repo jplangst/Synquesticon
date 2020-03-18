@@ -228,16 +228,6 @@ router.post("/getAllTasksContaining", async (req, res) => {
     collection = TaskSets;
   }
 
-  //Query a collection of queries, if a document matches one of the queries it is returned
-  /*if(Array.isArray(queryString)){
-    var results = [];
-    var queriesCompleted=0;
-    for(var i = 0; i < queryString.length; i++){
-      await queryAsync(queryString[i], collection).then( value => {results.push(value)});
-    }
-    return res.json({success: true, tasks: [].concat.apply([], results)});
-  }*/
-
   //Query with a combination of requirements, all must be matched for a document to be returned
   if(Array.isArray(queryString)){
     collection.find({

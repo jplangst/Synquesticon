@@ -10,13 +10,7 @@ const styles = theme => ({
   root: {
     width: '100%',
   },
-  grow: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    paddingLeft: -12,
-    marginRight: 20,
-  },
+
   title: {
     display: 'none',
     [theme.breakpoints.up('sm')]: {
@@ -26,21 +20,25 @@ const styles = theme => ({
   search: {
     borderRadius: theme.shape.borderRadius,
     backgroundColor: fade(theme.palette.primary.main, 0.15),
-    /*'&:hover': {
-      backgroundColor: fade( theme.palette.type==="light"?theme.palette.primary.dark:theme.palette.primary.main , 0.1),
-    },*/
     paddingLeft: 0,
+    paddingRight: 0,
+    marginLeft: 0,
+    marginRight: 0,
     width: '100%',
+    flexGrow: 1,
     height: '100%',
     [theme.breakpoints.up('sm')]: {
       paddingLeft: 0,
+      paddingRight: 0,
       width: 'auto',
     },
   },
   searchIcon: {
-    width: theme.spacing(4),
+    width: theme.spacing(2),
     color: theme.palette.text.primary,
     height: '100%',
+    top: 0,
+    left: theme.spacing(2),
     position: 'absolute',
     pointerEvents: 'none',
     display: 'flex',
@@ -48,9 +46,9 @@ const styles = theme => ({
     justifyContent: 'center',
   },
   clearSearchIcon: {
-    width: theme.spacing(4),
+    width: theme.spacing(2),
     color: theme.palette.text.primary,
-    right: '0%',
+    right: theme.spacing(2),
     top: 0,
     height: '100%',
     position: 'absolute',
@@ -63,10 +61,11 @@ const styles = theme => ({
     borderStyle: 'solid',
     borderWidth: 'thin',
     borderRadius: '15px',
-    borderColor: 'grey',//theme.palette.text.primary,
+    borderColor: 'grey',
     width: '100%',
     height: 'calc(100%-5px)',
     marginTop: '10px',
+    display: 'relative'
   },
   inputInput: {
     paddingTop: theme.spacing(1),
@@ -77,12 +76,7 @@ const styles = theme => ({
     width: '100%',
     borderRadius: '15px',
     color: theme.palette.text.primary,
-    /*[theme.breakpoints.up('sm')]: {
-      width: 120,
-      '&:focus': {
-        width: 200,
-      },
-    },*/
+    display: 'relative'
   },
 });
 
