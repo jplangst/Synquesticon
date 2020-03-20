@@ -355,7 +355,7 @@ class db_helper {
       console.log("Unknown query type: ", queryType);
       return;
     }
-    
+
     axios.post("/api/getAllTagValues", {
       queryCollection: queryCollection,
     }).then((response) => {

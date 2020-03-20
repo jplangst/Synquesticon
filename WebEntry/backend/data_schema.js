@@ -109,6 +109,7 @@ const ParticipantSchema = new Schema(
       taskId: String,
       taskContent: String,
       displayType: String, //MultiItem, SingleItem
+      objType: String,
       responses: [String],
       correctResponses: [String],
       /* correctlyAnswered:

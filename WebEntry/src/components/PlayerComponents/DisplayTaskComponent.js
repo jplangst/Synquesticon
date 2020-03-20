@@ -7,7 +7,7 @@ import { withTheme } from '@material-ui/styles';
 
 //view components
 import InstructionViewComponent from '../Views/InstructionViewComponent';
-import TextEntryComponent from '../Views/TextEntryComponent';
+import NumpadComponent from '../Views/NumpadComponent';
 import SingleChoiceComponent from '../Views/SingleChoiceComponent';
 import MultipleChoiceComponent from '../Views/MultipleChoiceComponent';
 import ImageViewComponent from '../Views/ImageViewComponent';
@@ -35,7 +35,7 @@ var checkShouldSave = true;
 
 function stringifyWAMPMessage(task, lineOfData, eventType, progressCount, taskIndex) {
   try {
-
+    console.log("broadcasting")
     if (store.getState().experimentInfo.participantId === undefined) {
       return null;
     }
@@ -121,7 +121,8 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
                                                         this.props.tasksFamilyTree, //the array that has the task's tasksFamilyTree
                                                         dbObjectsUtilityFunctions.getTaskContent(this.currentTask),
                                                         this.currentTask.correctResponses,
-                                                        "SingleItem");
+                                                        "SingleItem",
+                                                        this.currentTask.taskType);
       wamp.broadcastEvents(stringifyWAMPMessage(this.currentTask, this.currentLineOfData, "START", this.progressCount, this.progressCount+1));
     }
   }
@@ -158,6 +159,16 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
 ██  ██ ██ ██       ██ ██     ██
 ██   ████ ███████ ██   ██    ██
 */
+  saveGlobalVariable(participantId, label, value) {
+    var globalVariableObj = {
+      label: label,
+      value: value
+    };
+    if (store.getState().experimentInfo.shouldSave) {
+      db_helper.addNewGlobalVariableToParticipantDB(participantId, JSON.stringify(globalVariableObj));
+    }
+  }
+
   onClickNext() {
     //===========reset aoi list===========
     var aoiAction = {
@@ -185,13 +196,8 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
           }
         }
         else {
-          var globalVariableObj = {
-            label: this.currentTask.question,
-            value: this.currentLineOfData.responses
-          };
-          if (store.getState().experimentInfo.shouldSave) {
-            db_helper.addNewGlobalVariableToParticipantDB(store.getState().experimentInfo.participantId, JSON.stringify(globalVariableObj));
-          }
+          this.saveGlobalVariable(store.getState().experimentInfo.participantId,
+                                  this.currentTask.question, this.currentLineOfData.responses);
         }
 
         wamp.broadcastEvents(stringifyWAMPMessage(this.currentTask, this.currentLineOfData,
@@ -203,16 +209,19 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
     //multi-item page
     else if ((this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage) ||
               (this.currentTask.objType === "Synquestitask")){
-      this.progressCount += this.currentLineOfData.size;
+      if (this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage) {
+        this.progressCount += this.currentLineOfData.size;
+      }
+      else if (this.currentTask.objType === "Synquestitask") {
+        this.progressCount += 1;
+      }
+
+      console.log("hey", this.currentLineOfData);
+
       this.currentLineOfData.forEach((line, index) => {
         if (line.isGlobalVariable !== undefined) {
-          var globalVariableObj = {
-            label: line.question,
-            value: line.responses
-          };
-          if (store.getState().experimentInfo.shouldSave) {
-            db_helper.addNewGlobalVariableToParticipantDB(store.getState().experimentInfo.participantId, JSON.stringify(globalVariableObj));
-          }
+          this.saveGlobalVariable(store.getState().experimentInfo.participantId,
+                                  line.question, line.responses);
         }
         else {
           line.timeToCompletion = playerUtils.getCurrentTime() - line.startTimestamp;
@@ -279,7 +288,6 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
       }
       else if ((this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage) ||
                 (this.currentTask.objType === "Synquestitask")){
-        console.log("this goes in here", answer.linesOfData);
         this.currentLineOfData = answer.linesOfData;
         if (answer.correctlyAnswered === "correct") {
           this.currentTask.numCorrectAnswers += 1;
@@ -341,7 +349,7 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
             && !this.currentLineOfData) {
           this.logTheStartOfTask();
         }
-
+        let id = this.currentTask._id + "_" + this.progressCount;
         var getDisplayedContent = () => {
           if(this.currentTask){
             if((this.currentTask.objType === "TaskSet") && this.currentTask.displayOnePage) {
@@ -357,7 +365,8 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
                                     }}
                                     logTheStartOfTask={(task, log, ind) => {
                                       wamp.broadcastEvents(stringifyWAMPMessage(task, log, "START", this.progressCount, this.progressCount+ind+1))
-                                    }}/>
+                                    }}
+                                    key={id}/>
             }
             if((this.currentTask.objType === "Synquestitask")) {
               return <SynquestitaskViewComponent task={this.currentTask}
@@ -369,28 +378,28 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
                                                    this.currentLineOfData = taskResponses;
                                                  }}
                                                  logTheStartOfTask={(task, log, ind) => {
-                                                   wamp.broadcastEvents(stringifyWAMPMessage(task, log, "START", this.progressCount, this.progressCount+ind+1))
-                                                 }}/>;
+                                                   wamp.broadcastEvents(stringifyWAMPMessage(task, log, "START", this.progressCount, this.progressCount+1))
+                                                 }}
+                                                 key={id}/>;
             }
-            if((this.currentTask.taskType === "Instruction")) {
-              return <InstructionViewComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} parentSet={parentSet}/>;
+            if((this.currentTask.taskType === dbObjects.TaskTypes.INSTRUCTION)) {
+              return <InstructionViewComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} parentSet={parentSet} key={id}/>;
             }
-            if(this.currentTask.taskType  === "Text Entry") {
-              return <TextEntryComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered} parentSet={parentSet}/>;
+            if(this.currentTask.taskType  === dbObjects.TaskTypes.TEXTENTRY) { //legacy
+              return <NumpadComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered} parentSet={parentSet} key={id}/>;
             }
-            if(this.currentTask.taskType === "Single Choice") {
-              return <SingleChoiceComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered} parentSet={parentSet}/>;
+            if(this.currentTask.taskType === "Single Choice") { //legacy
+              return <SingleChoiceComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered} parentSet={parentSet} key={id}/>;
             }
-            if((this.currentTask.taskType === "Multiple Choice")) {
-              return <MultipleChoiceComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered} parentSet={parentSet}/>;
+            if((this.currentTask.taskType === dbObjects.TaskTypes.MCHOICE)) {
+              return <MultipleChoiceComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered} parentSet={parentSet} key={id}/>;
             }
-            if((this.currentTask.taskType === "Image")) {
-              return <ImageViewComponent task={this.currentTask} taskIndex={this.state.currentTaskIndex} parentSet={parentSet}/>;
+            if((this.currentTask.taskType === dbObjects.TaskTypes.Image)) {
+              return <ImageViewComponent task={this.currentTask} taskIndex={this.state.currentTaskIndex} parentSet={parentSet} key={id}/>;
             }
-            if((this.currentTask.taskType === "Comparison")) {
-              return <ComparisonViewComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered} parentSet={parentSet}/>;
+            if((this.currentTask.taskType === "Comparison")) { //legacy
+              return <ComparisonViewComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered} parentSet={parentSet} key={id}/>;
             }
-
           } else {
             return null;
           }
@@ -399,7 +408,7 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
         var nextButtonText = this.state.hasBeenAnswered ? "Next" : "Skip";
 
         return (
-          <div className="page">
+          <div className="page" key={this.currentTaskIndex}>
             <div className="mainDisplay">
               {getDisplayedContent()}
             </div>

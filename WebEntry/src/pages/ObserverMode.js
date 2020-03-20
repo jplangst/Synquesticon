@@ -49,14 +49,22 @@ class ObserverMode extends Component {
     });
   }
 
-  getPairingID(msgArray, msg) {
+  pairMessage(msgArray, msg) {
+    console.log(msgArray);
     for (var i = 0; i < msgArray.length; i++) {
-      if (msgArray[i].lineOfData.startTimestamp === msg.lineOfData.startTimestamp
-          && msgArray[i].task._id === msg.task._id) {
-            return i;
-          }
+      var pair = msgArray[i];
+      if (pair.length < 2) { //if hasn't had matched message
+        if ((msg.eventType === "ANSWERED" || msg.eventType === "SKIPPED")
+            && pair[0].lineOfData.startTimestamp === msg.lineOfData.startTimestamp
+            && pair[0].lineOfData.taskContent === msg.lineOfData.taskContent) { //match id with first message
+              //pair them together
+              pair.push(msg);
+              return msgArray;
+            }
+      }
     }
-    return msgArray.length;
+    msgArray.push([msg]);
+    return msgArray;
   }
 
   onNewWAMPEvent() {
@@ -83,13 +91,8 @@ class ObserverMode extends Component {
     var existed = false;
     for (let i = 0; i < this.state.participants.length; i++) {
       if (this.state.participants[i].id === args.participantId) {
-        var newMessage = this.state.participants[i].messages;
-        var pairingID = this.getPairingID(newMessage, args);
-        newMessage.splice(pairingID, 0, args);
-        this.state.participants[i] = {
-          ...this.state.participants[i],
-          messages: newMessage
-        }
+        var newMessages = this.pairMessage(this.state.participants[i].messages, args);
+
         existed = true;
         break;
       }
@@ -101,7 +104,7 @@ class ObserverMode extends Component {
         name: label,
         timestamp: args.startTimestamp,
         tracker: args.selectedTracker,
-        messages: [args]
+        messages: [[args]]
       })
     }
 

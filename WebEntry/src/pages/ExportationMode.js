@@ -25,6 +25,7 @@ function HEADER(seperator) {
                "answer" + seperator +
                "answered_correctly" + seperator +
                "correct_answer" + seperator +
+               "accepted_margin" + seperator +
                "time_to_first_response" + seperator +
                "time_to_completion" + seperator +
                "comments" + seperator +
