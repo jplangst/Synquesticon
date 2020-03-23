@@ -94,6 +94,10 @@ class FilterDialog extends Component {
             <div style={{width:'100%', height:'100%'}}>{ content }</div>
           </DialogContent>
           <DialogActions style={{height:buttonContainerHeight}}>
+            <Typography variant="body1" color="textPrimary" align="center"
+               style={{whiteSpace:"pre-line"}}>
+               Query type
+            </Typography>
             <Button style={{height:buttonHeight}} variant="outlined" color={this.state.queryCombination==="AND"?"secondary":"default"}
                 onClick={this.onQueryCombinationChanged.bind(this, "AND")}>
               AND
