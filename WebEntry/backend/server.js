@@ -210,12 +210,12 @@ router.post("/getAllTagValues", async (req, res) => {
       console.log(err);
       return res.json({success: false, error: err});
     }
-    return res.json({success: true, tasks: data});
+    return res.json({success: true, tags: data});
   });
 });
 
 router.post("/getAllTasksContaining", async (req, res) => {
-  const { queryCollection, queryString } = req.body;
+  const { queryCollection, queryString, queryCombination } = req.body;
 
   var collection = null;
   if(queryCollection === 'Tasks'){
@@ -228,10 +228,16 @@ router.post("/getAllTasksContaining", async (req, res) => {
     collection = TaskSets;
   }
 
-  //Query with a combination of requirements, all must be matched for a document to be returned
+  //We use OR as default, and change to AND if the queryCombination matches 
+  var combination = "$in";
+  if(queryCombination === "AND"){
+    combination = "$all"; //Might be $all
+  }
+
+  //Query with a combination of requirements
   if(Array.isArray(queryString)){
     collection.find({
-      'tags': {"$all" : queryString}
+      'tags': {[combination] : queryString}
     }, (err, data) => {
       if (err) {
         console.log(err);
