@@ -63,7 +63,8 @@ class MultiItemTask extends Component {
                                            this.props.tasksFamilyTree,
                                            dbObjectsUtilityFunctions.getTaskContent(task),
                                            task.correctResponses,
-                                           "MultiItem");
+                                           "MultiItem",
+                                           task.taskType);
     if(task.globalVariable) {
       newLine.isGlobalVariable = true;
       newLine.question = task.question;

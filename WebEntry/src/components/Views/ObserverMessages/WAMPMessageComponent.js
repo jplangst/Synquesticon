@@ -65,8 +65,10 @@ class WAMPMessageComponent extends React.Component {
          <Typography color="textPrimary" variant="h6">Messaging Log</Typography>
         </div>
         <div className="messages">
-          {displayMessages.reverse().map((item, index) => {
-            return <ObserverMessage message={item} key={index+item.lineOfData} commentCallback={this.onCommentPressed.bind(this)} />
+          {displayMessages.reverse().map((pair, pindex) => {
+            return pair.map((item, iindex) => {
+              return <ObserverMessage message={item} key={iindex+item.lineOfData} commentCallback={this.onCommentPressed.bind(this)} />
+            })
           })}
         </div>
 

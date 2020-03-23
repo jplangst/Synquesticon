@@ -133,7 +133,6 @@ class ObserverMessage extends React.Component {
 
   render() {
     var message = this.parseMessage(this.props.message);
-    console.log("should show comment?", this.showCommentButton, this.props.message);
     //TODO make the comment button size and the text size responsive
     var commentButton = this.showCommentButton ? <Button style={{display:'flex', position: 'relative', flexGrow: 0, flexShrink:0, height:25, width:25, maxWidth:25}}
                                                 onClick={this.onCommentButtonClicked.bind(this)} >

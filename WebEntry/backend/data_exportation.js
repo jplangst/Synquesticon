@@ -119,6 +119,38 @@ function escapeCSV(term){
   return term;
 }
 
+function handleMissingData(dat){
+  if(dat === -1) {
+    return "NULL";
+  }
+  else {
+    return dat;
+  }
+}
+
+function handleCorrectlyAnswered(ans){
+  if (ans === "correct") {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+function handleAcceptedMargin(line){
+  console.log(line);
+  if (line.objType === "Numpad Entry" || line.taskType === "Numpad Entry"
+      || line.taskType === "Text Entry" /*legacy, remove later*/) {
+    if (line.correctResponses.length > 1) {
+      return line.correctResponses[1];
+    }
+    else {
+      return "NULL";
+    }
+  }
+  return "NULL";
+}
+
 exports.save_to_csv = async function(p, seperator) {
 
     var globalVariables = "";
@@ -166,9 +198,13 @@ exports.save_to_csv = async function(p, seperator) {
       });
       var task = await (Tasks.findOne({_id: line.taskId},
                                   async (err, obj) => {
-
-        line.tags = obj.tags;
-
+        if (obj) {
+          line.tags = obj.tags;
+          line.taskType = obj.taskType;
+        }
+        else {
+          line.tags = [];
+        }
       })).catch((exp) => {
         console.log("exp 1");
       });
@@ -199,29 +235,12 @@ exports.save_to_csv = async function(p, seperator) {
         participantResponse = line.responses.join(';');
       }
 
-      var handleMissingData = (dat) => {
-        if(dat === -1) {
-          return "NULL";
-        }
-        else {
-          return dat;
-        }
-      }
-
-      var handleCorrectlyAnswered = (ans) => {
-        if (ans === "correct") {
-          return 1;
-        }
-        else {
-          return 0;
-        }
-      }
-
       csv_string +=  (escapeCSV(globalVariables) + seperator +
                      escapeCSV(line.taskContent) + seperator +
                      escapeCSV(participantResponse) + seperator +
                      handleCorrectlyAnswered(line.correctlyAnswered) + seperator +
                      escapeCSV(line.correctResponses.join('_')) + seperator +
+                     handleAcceptedMargin(line) + seperator +
                      handleMissingData(line.timeToFirstAnswer) + seperator +
                      handleMissingData(line.timeToCompletion) + seperator +
                      escapeCSV(commentText) + seperator +

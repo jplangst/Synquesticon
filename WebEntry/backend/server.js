@@ -125,7 +125,6 @@ router.post("/getAllTasks", (req, res) => {
 
   else {
     Synquestitasks.find((err, data) => {
-      console.log(err, data);
         if (err) {
           return res.json({success: false, error: err});
         }
@@ -262,14 +261,12 @@ router.post("/getAllTasksContaining", async (req, res) => {
 // this method adds new question in our database
 router.post("/addTask", (req, res) => {
   const { message, legacy } = req.body;
-  console.log(req.body);
   var obj = JSON.parse(message);
   if (legacy) {
     let task = new Tasks(obj);
 
     task.save((err, q) => {
       if (err) {
-        console.log(err);
         return res.json({ success: false, error: err });
       }
       return res.json({ success: true, _id: q._id });
@@ -895,32 +892,6 @@ router.post("/addNewObserverMessage", async (req, res) => {
       return res.json({ success: true });
     })
   }
-  // var result = await ObserverMessages.updateOne({name: obj.name,
-  //                                    role: obj.role,
-  //                                    participantId: obj.participantId,
-  //                                    taskId: obj.taskId,
-  //                                    startTaskTime: obj.startTaskTime}, { $addToSet: {messages: obj.messages[0]}}, err => {
-  //   return err;
-  // });
-  //
-  // console.log("trying to update", result);
-  // if (result) {
-  //   if (result.nModified <= 0) {
-  //     console.log("can't find any message");
-  //     let newMessage = new ObserverMessages(obj);
-  //
-  //     newMessage.save((serr, m) => {
-  //       if (serr) {
-  //         console.log("created a new one");
-  //         return res.json({ success: false, error: serr });
-  //       }
-  //       return res.json({ success: true });
-  //     })
-  //   }
-  // }
-  // else {
-  //   return res.json({ success: false, error: serr });
-  // }
 });
 
 router.post("/deleteAMessage", (req, res) => {

@@ -55,9 +55,7 @@ export function pointIsInPoly(p, polygon) {
 }
 
 export function getAllImagePaths(taskList){
-  console.log(taskList);
   var result = getImagePath(taskList, []);
-  console.log(result);
   return result;
 }
 

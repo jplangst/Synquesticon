@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 
+import TextField from '@material-ui/core/TextField';
+
 import InstructionViewComponent from '../Views/InstructionViewComponent';
 import TextEntryComponent from '../Views/TextEntryComponent';
+import NumpadComponent from '../Views/NumpadComponent';
 import SingleChoiceComponent from '../Views/SingleChoiceComponent';
 import MultipleChoiceComponent from '../Views/MultipleChoiceComponent';
 import ImageViewComponent from '../Views/ImageViewComponent';
@@ -28,7 +31,7 @@ class SynquestitaskViewComponent extends Component {
   //Callback from the task components when the user has provided an answer
   onAnswer(answerObj) {
     //Update the map with the resonse to the task, overwriting any existing answer for that task
-    var lineOfData = this.taskResponses.get(answerObj.taskID+answerObj.mapID);
+    var lineOfData = this.taskResponses.get(this.props.task._id+answerObj.mapID);
 
     if (lineOfData.firstResponseTimestamp === -1) { //log the timeToFirstAnswer
       lineOfData.firstResponseTimestamp = playerUtils.getCurrentTime();
@@ -39,52 +42,57 @@ class SynquestitaskViewComponent extends Component {
     lineOfData.responses = answerObj.responses;
     lineOfData.correctlyAnswered = answerObj.correctlyAnswered;
 
-    this.taskResponses.set(answerObj.taskID+answerObj.mapID, lineOfData);
+    if (answerObj.taskID+answerObj.mapID) {
+      this.taskResponses.set(answerObj.taskID+answerObj.mapID, lineOfData);
+    }
     this.props.answerCallback({linesOfData: this.taskResponses, correctlyAnswered: answerObj.correctlyAnswered});
-
-    //this.forceUpdate();
   }
 
-  logTheStartOfTask(task, ind) {
+  logTheStartOfTask(task, _id, mapIndex) {
     var newLine = new dbObjects.LineOfData(playerUtils.getCurrentTime(),
-                                           task._id,
+                                           _id,
                                            this.props.tasksFamilyTree,
-                                           dbObjectsUtilityFunctions.getTaskContent(task),
+                                           task.displayText,
                                            task.correctResponses,
-                                           "MultiItem");
+                                           "SingleItem",
+                                           task.objType);
     if(task.globalVariable) {
       newLine.isGlobalVariable = true;
       newLine.question = task.question;
     }
-    this.taskResponses.set(task._id + ind, newLine);
-    this.props.logTheStartOfTask(task, newLine, ind);
+    this.taskResponses.set(_id + mapIndex, newLine);
+    this.props.logTheStartOfTask(this.props.task, newLine, mapIndex);
   }
 
   getDisplayedContent(taskList, _id, mapIndex){
     return taskList.map((item, i) => {
       mapIndex = i;
-      if(this.props.newTask) {
-        this.logTheStartOfTask(item, mapIndex);
+      if(this.props.newTask && item.objType !== "Instruction" && item.objType !== "Image") {
+
+        this.logTheStartOfTask(item, _id, mapIndex);
       }
 
       var key = _id+"Synquestitask"+i;
 
-      if(item.objType === "Instruction"){
-        console.log("instruction");
-          return <InstructionViewComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
+      if(item.objType === dbObjects.TaskTypes.INSTRUCTION){
+          return <InstructionViewComponent className="itemContainer" key={key} task={item} mapID={mapIndex} parentSet={this.props.task.name}/>;
       }
-      else if(item.objType === "Text Entry"){
+      else if(item.objType === dbObjects.TaskTypes.TEXTENTRY){
           return <TextEntryComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
       }
-      else if(item.objType === "Single Choice"){
+      else if(item.objType === dbObjects.TaskTypes.MCHOICE){
+        if (item.singleChoice) {
           return <SingleChoiceComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
-      }
-      else if(item.objType === "Multiple Choice"){
+        }
+        else {
           return <MultipleChoiceComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
+        }
       }
-      else if(item.objType === "Image") {
-        console.log("Image");
+      else if(item.objType === dbObjects.TaskTypes.IMAGE) {
           return <ImageViewComponent className="itemContainer" key={key} task={item} mapID={mapIndex} parentSet={this.props.task.name}/>;
+      }
+      else if(item.objType === dbObjects.TaskTypes.NUMPAD) {
+          return <NumpadComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
       }
       else if(item.objType === "Comparison") {
           return <ComparisonViewComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
@@ -97,9 +105,8 @@ class SynquestitaskViewComponent extends Component {
 
   render() {
     var runThisTaskSet = this.props.task.childObj;
-    console.log("synquestitask", runThisTaskSet);
+
     var content = this.getDisplayedContent(runThisTaskSet, this.props.task._id ,0);
-    console.log("content", content);
     this.props.initCallback(this.taskResponses);
     return (
         <div className="multiItemContent">

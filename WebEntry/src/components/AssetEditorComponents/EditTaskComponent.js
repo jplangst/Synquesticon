@@ -22,7 +22,7 @@ import './EditTaskComponent.css';
 const taskTypeOptions = [
   'Instruction',
   'Multiple Choice',
-  'Text Entry',
+  'Numpad Entry',
   'Image',
   'Comparison'
 ];
@@ -189,7 +189,7 @@ class EditTaskComponent extends Component {
     if(this.state.taskType === "Single Choice" || this.state.taskType === "Multiple Choice"){
       questionTypeContent = <MultipleChoiceComponent singleChoiceCallback={this.onSingleChoiceChanged.bind(this)} task={this.task} />;
     }
-    else if(this.state.taskType === "Text Entry"){
+    else if(this.state.taskType === "Numpad Entry"){
       questionTypeContent = <TextEntryComponent task={this.task} />;
     }
 
