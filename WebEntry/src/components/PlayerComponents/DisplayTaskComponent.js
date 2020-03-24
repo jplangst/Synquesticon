@@ -18,8 +18,9 @@ import MultiItemTask from './MultiItemTask';
 
 import PauseDialog from '../dialogs/PauseDialog';
 
-import wamp from '../../core/wamp';
-import wampStore from '../../core/wampStore';
+import mqtt from '../../core/mqtt'
+
+import eventStore from '../../core/eventStore';
 import store from '../../core/store';
 import shuffle from '../../core/shuffle';
 import db_helper from '../../core/db_helper';
@@ -33,7 +34,7 @@ import '../../core/utility.css';
 
 var checkShouldSave = true;
 
-function stringifyWAMPMessage(task, lineOfData, eventType, progressCount, taskIndex) {
+function stringifyMessage(task, lineOfData, eventType, progressCount, taskIndex) {
   try {
     console.log("broadcasting")
     if (store.getState().experimentInfo.participantId === undefined) {
@@ -123,7 +124,7 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
                                                         this.currentTask.correctResponses,
                                                         "SingleItem",
                                                         this.currentTask.taskType);
-      wamp.broadcastEvents(stringifyWAMPMessage(this.currentTask, this.currentLineOfData, "START", this.progressCount, this.progressCount+1));
+      mqtt.broadcastEvents(stringifyMessage(this.currentTask, this.currentLineOfData, "START", this.progressCount, this.progressCount+1));
     }
   }
 
@@ -200,10 +201,10 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
                                   this.currentTask.question, this.currentLineOfData.responses);
         }
 
-        wamp.broadcastEvents(stringifyWAMPMessage(this.currentTask, this.currentLineOfData,
-                                                  (this.currentLineOfData.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED",
-                                                  this.progressCount,
-                                                 -1));
+       mqtt.broadcastEvents(stringifyMessage(this.currentTask, this.currentLineOfData,
+                                                 (this.currentLineOfData.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED",
+                                                 this.progressCount,
+                                                -1));
       }
     }
     //multi-item page
@@ -229,7 +230,8 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
             db_helper.addNewLineToParticipantDB(store.getState().experimentInfo.participantId, JSON.stringify(line));
           }
         }
-        wamp.broadcastEvents(stringifyWAMPMessage({_id:line.taskId}, line,
+
+        mqtt.broadcastEvents(stringifyMessage({_id:line.taskId}, line,
                                                   (line.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED",
                                                   this.progressCount, -1));
       });
@@ -364,7 +366,7 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
                                       this.currentLineOfData = taskResponses;
                                     }}
                                     logTheStartOfTask={(task, log, ind) => {
-                                      wamp.broadcastEvents(stringifyWAMPMessage(task, log, "START", this.progressCount, this.progressCount+ind+1))
+                                      mqtt.broadcastEvents(stringifyMessage(task, log, "START", this.progressCount, this.progressCount+ind+1))
                                     }}
                                     key={id}/>
             }
@@ -378,7 +380,7 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
                                                    this.currentLineOfData = taskResponses;
                                                  }}
                                                  logTheStartOfTask={(task, log, ind) => {
-                                                   wamp.broadcastEvents(stringifyWAMPMessage(task, log, "START", this.progressCount, this.progressCount+1))
+                                                   mqtt.broadcastEvents(stringifyMessage(task, log, "START", this.progressCount, this.progressCount+1))
                                                  }}
                                                  key={id}/>;
             }
@@ -473,7 +475,6 @@ class DisplayTaskComponent extends Component {
               const img = document.createElement('img');
               img.src = picture;
           });
-
         }
 
         var action = {
@@ -504,9 +505,7 @@ class DisplayTaskComponent extends Component {
         }
       });
 
-      //this.broadcastStartEvent();
-
-      wampStore.addNewCommandListener(this.handleNewCommandEvent);
+      eventStore.addNewCommandListener(this.handleNewCommandEvent);
     }
   }
 
@@ -539,13 +538,7 @@ class DisplayTaskComponent extends Component {
     }
 
     store.dispatch(layoutAction);
-    wampStore.removeNewCommandListener(this.handleNewCommandEvent);
-
-    // console.log("should we save?", store.getState().experimentInfo.shouldSave);
-    // if (!store.getState().experimentInfo.shouldSave) {
-    //   console.log("remove participant");
-    //   db_helper.deleteParticipantFromDb(store.getState().experimentInfo.participantId, () => {});
-    // }
+    eventStore.removeNewCommandListener(this.handleNewCommandEvent);
 
     var resetExperimentAction = {
       type: 'RESET_EXPERIMENT'
@@ -613,11 +606,7 @@ class DisplayTaskComponent extends Component {
           this.gazeDataArray.push(gazeLoc);
         }
       }
-
-
-
     } catch (err) {
-
     }
   }
 
@@ -641,7 +630,7 @@ class DisplayTaskComponent extends Component {
                                   mainTaskSetId: store.getState().experimentInfo.mainTaskSetId,
                                   taskSetCount: store.getState().experimentInfo.taskSetCount
                                 });
-      wamp.broadcastEvents(info);
+      mqtt.broadcastEvents(info);
     }
     catch(err) {
       console.log(err);
@@ -663,7 +652,7 @@ class DisplayTaskComponent extends Component {
                                 },
                                 timestamp: timestamp
                               });
-    wamp.broadcastEvents(info);
+    mqtt.broadcastEvents(info);
   }
 
   /*
@@ -674,7 +663,7 @@ class DisplayTaskComponent extends Component {
  ██████  ██████  ██      ██ ██      ██ ██   ██ ██   ████ ██████  ███████
 */
   onNewCommandEvent() {
-    var args = JSON.parse(wampStore.getCurrentCommand());
+    var args = JSON.parse(eventStore.getCurrentCommand());
     var shouldProcess = false;
 
     if (args.participantId === -1 || args.participantId === store.getState().experimentInfo.participantId) {
@@ -697,7 +686,6 @@ class DisplayTaskComponent extends Component {
           break;
       }
     }
-
   }
 
   onFinished() {
@@ -739,7 +727,6 @@ class DisplayTaskComponent extends Component {
         );
       }
       catch(err) {
-        //alert("something went wrong!");
         return <div style={{backgroundColor:rightBG}}/>;
       }
     }

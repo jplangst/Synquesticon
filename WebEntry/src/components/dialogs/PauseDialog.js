@@ -14,7 +14,9 @@ class PauseDialog extends Component {
           fullWidth={true}
           maxWidth='md'
         >
-          <DialogTitle id="form-dialog-title"><Typography variant="h5" color="textPrimary">Experimenter has paused the experiment</Typography></DialogTitle>
+          <DialogTitle id="form-dialog-title" style={{ textAlign: 'center' }} disableTypography>
+            <Typography variant="h4" color="textPrimary">The experimenter has paused the experiment</Typography>
+          </DialogTitle>
       </Dialog>
     );
   }

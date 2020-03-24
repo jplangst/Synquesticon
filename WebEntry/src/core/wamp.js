@@ -1,5 +1,5 @@
 var store = require('./store');
-var wampStore = require('./wampStore');
+var eventStore = require('./eventStore');
 var playerUtils = require('./player_utility_functions');
 
 try {
@@ -94,15 +94,19 @@ function _startWAMP(config) {
     session.subscribe(RemoteEyeTrackingTopic, onRETData);
 
     function onWAMPEvent(args, kwargs, details) {
-      wampStore.default.setCurrentMessage(args);
-      wampStore.default.emitNewWAMPEvent();
+      console.log('wamp args', args);
+      console.log('wamp kwargs', kwargs);
+      console.log('wamp details', details);
+
+      eventStore.default.setCurrentMessage(args);
+      eventStore.default.emitMQTTEvent();
     }
     console.log("subscribe to the wamp events");
     session.subscribe(SynquesticonTopic, onWAMPEvent);
 
     function onCommandEvent(args) {
-      wampStore.default.setCurrentCommand(args);
-      wampStore.default.emitNewCommand();
+      eventStore.default.setCurrentCommand(args);
+      eventStore.default.emitNewCommand();
     }
     session.subscribe(SynquesticonCommandTopic, onCommandEvent);
   };
@@ -134,6 +138,7 @@ module.exports = {
     }
   },
   broadcastCommands(command) {
+    console.log("wamp", command);
     try {
       if(glob_session) {
         glob_session.publish(SynquesticonCommandTopic, [command]);

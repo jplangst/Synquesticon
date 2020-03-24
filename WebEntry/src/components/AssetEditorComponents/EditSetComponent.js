@@ -102,8 +102,6 @@ class EditSetComponent extends Component {
   updateSetChildList(taskToAdd){
     this.shouldCloseAsset = false;
 
-    console.log(taskToAdd);
-
     if(taskToAdd.objType === "Task"){
       db_helper.getTaskWithID(taskToAdd._id, true, this.handleUpdateSetChildTasks);
     }

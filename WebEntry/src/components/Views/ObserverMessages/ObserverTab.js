@@ -10,7 +10,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import { Typography } from '@material-ui/core';
 import { withTheme } from '@material-ui/styles';
 
-import wamp from '../../../core/wamp';
+import mqtt from '../../../core/mqtt';
 
 class ObserverTab extends Component {
   constructor(props) {
@@ -45,10 +45,12 @@ class ObserverTab extends Component {
   onButtonPressed(evt){
     evt.stopPropagation();
     evt.preventDefault();
-    wamp.broadcastCommands(JSON.stringify({
+
+    mqtt.broadcastCommands(JSON.stringify({
                             commandType: !this.state.isPaused ? "PAUSE" : "RESUME",
                             participantId: this.props.participantId
-                           }));
+                          }));
+
     if(!this.state.forcedPause){
       this.setState({
         isPaused: !this.state.isPaused,
