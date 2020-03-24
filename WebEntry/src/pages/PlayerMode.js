@@ -28,7 +28,7 @@ class PlayerMode extends Component {
 
   componentWillMount() {
     //save data into DB before closing
-    db_helper.queryTasksFromDb(db_objects.ObjectTypes.SET, "experiment", this.dbTaskSetCallback);
+    db_helper.queryTasksFromDb(db_objects.ObjectTypes.SET, ["experiment"],"OR", this.dbTaskSetCallback);
   }
 
   //query all tasksets with experiment tag

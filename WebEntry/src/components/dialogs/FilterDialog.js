@@ -88,7 +88,7 @@ class FilterDialog extends Component {
           fullWidth={true}
           maxWidth='md'
         >
-          <DialogTitle style={{height:30}} id="form-dialog-title">{this.props.filterType} Filters</DialogTitle>
+          <DialogTitle style={{height:30}} id="form-dialog-title">{this.props.filterType.substring(0, this.props.filterType.length - 1)} Tags</DialogTitle>
           <DialogContent style={{display:'flex', flexDirection:'row',
                            minHeight:100, maxHeight:'90%', maxWidth:'100%', overflowY:'auto'}}>
             <div style={{width:'100%', height:'100%'}}>{ content }</div>

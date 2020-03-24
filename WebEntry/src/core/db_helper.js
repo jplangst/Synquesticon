@@ -383,7 +383,6 @@ class db_helper {
    *                                The first will be the queried collection, the second will be the result of the query
    */
    queryTasksFromDb(queryType, queryString, queryCombination, callback){
-     console.log(queryString);
 
      var queryCollection;
      if(queryType === db_objects.ObjectTypes.LEGACY_TASK){
