@@ -1,11 +1,11 @@
 const EventEmitter = require('events');
 
-const NEW_MESSAGE_EVENT = "WAMPEvent";
+const NEW_MESSAGE_EVENT = "MQTTEvent";
 const NEW_PARTICIPANT_EVENT = "ParticipantEvent";
 const NEW_REMOTE_TRACKER_EVENT = "NewRemoteTrackerEvent";
 const NEW_COMMAND_EVENT = "NewCommandEvent";
 
-class CWampStore extends EventEmitter {
+class CEventStore extends EventEmitter {
   constructor() {
 	  super();
 		this.currentMessage = [];
@@ -20,7 +20,7 @@ class CWampStore extends EventEmitter {
 	removeEventListener(callback) {
 		this.removeListener(NEW_MESSAGE_EVENT, callback);
 	}
-	emitNewWAMPEvent() {
+	emitMQTTEvent() {
 		this.emit(NEW_MESSAGE_EVENT);
 	}
 
@@ -83,5 +83,5 @@ class CWampStore extends EventEmitter {
   }
 }
 
-let WampStore = new CWampStore();
-export default WampStore;
+let EventStore = new CEventStore();
+export default EventStore;

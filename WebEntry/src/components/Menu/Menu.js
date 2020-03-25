@@ -4,7 +4,7 @@ import './Menu.css';
 
 //Components
 import DeviceIDDialog from '../dialogs/DeviceIDDialog';
-import CrossbarDialog from '../dialogs/CrossbarDialog';
+import MQTTDialog from '../dialogs/MQTTDialog';
 import SpeechDialog from '../dialogs/SpeechDialog';
 import EyeTrackerSelector from '../../core/EyeTrackerSelector';
 
@@ -24,8 +24,8 @@ class Menu extends Component {
     super(props);
     this.state = {
       openDeviceIDSettings: false,
-      openCrossbarSettings: false,
-      openSpeechSettings: false
+      openSpeechSettings: false,
+      openMQTTSettings: false
     }
   }
 
@@ -63,15 +63,15 @@ class Menu extends Component {
     });
   }
 
-  onOpenCrossbarSettings(e) {
+  onOpenMQTTSettings(e) {
     this.setState({
-      openCrossbarSettings: true
+      openMQTTSettings: true
     });
   }
 
-  onCloseCrossbarSettings(e) {
+  onCloseMQTTSettings(e) {
     this.setState({
-      openCrossbarSettings: false
+      openMQTTSettings: false
     });
   }
 
@@ -106,7 +106,6 @@ class Menu extends Component {
       synth.speak(utterThis);
     }
   }
-
 
   //button click handlers
   openSettingsMenu() {
@@ -150,8 +149,8 @@ class Menu extends Component {
               <ListItem button key="Device ID" onClick={this.onOpenDeviceIDSettings.bind(this)}>
                 <ListItemText primary={deviceName} />
               </ListItem>
-              <ListItem button key="Crossbar Settings" onClick={this.onOpenCrossbarSettings.bind(this)}>
-                <ListItemText primary="Crossbar Settings" />
+              <ListItem button key="MQTT Settings" onClick={this.onOpenMQTTSettings.bind(this)}>
+                <ListItemText primary="MQTT Settings" />
               </ListItem>
               {speechSettings}
             </List>
@@ -181,9 +180,12 @@ class Menu extends Component {
             </List>
           </div>
         </Drawer>
-        <DeviceIDDialog openDeviceIDSettings={this.state.openDeviceIDSettings} closeDeviceIDSettings={this.onCloseDeviceIDSettings.bind(this)} myStorage={myStorage} />
-        <CrossbarDialog openCrossbarSettings={this.state.openCrossbarSettings} closeCrossbarSettings={this.onCloseCrossbarSettings.bind(this)} myStorage={myStorage}/>
-        <SpeechDialog openSpeechSettings={this.state.openSpeechSettings} closeSpeechSettings={this.onCloseSpeechSettings.bind(this)} myStorage={myStorage}/>
+        <DeviceIDDialog openDeviceIDSettings={this.state.openDeviceIDSettings}
+          closeDeviceIDSettings={this.onCloseDeviceIDSettings.bind(this)} myStorage={myStorage} />
+        <MQTTDialog openMQTTSettings={this.state.openMQTTSettings}
+          closeMQTTSettings={this.onCloseMQTTSettings.bind(this)} myStorage={myStorage}/>
+        <SpeechDialog openSpeechSettings={this.state.openSpeechSettings}
+          closeSpeechSettings={this.onCloseSpeechSettings.bind(this)} myStorage={myStorage}/>
       </span>
     );
   }

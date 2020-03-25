@@ -1,5 +1,5 @@
 import { createStore } from 'redux';
-import wampStore from './wampStore';
+import eventStore from './eventStore';
 
 import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
 import darkSecondary from '@material-ui/core/colors/amber';
@@ -137,8 +137,8 @@ const store = createStore ((state = initialState, action) => {
       state.gazeData[action.tracker] = action.gazeData;
       if (!state.remoteEyeTrackers.includes(action.tracker)) {
         state.remoteEyeTrackers.push(action.tracker);
-        wampStore.setCurrentRemoteTracker(action.tracker);
-        wampStore.emitNewRemoteTrackerListener();
+        eventStore.setCurrentRemoteTracker(action.tracker);
+        eventStore.emitNewRemoteTrackerListener();
       }
       return state;
     }

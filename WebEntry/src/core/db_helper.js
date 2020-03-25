@@ -378,10 +378,12 @@ class db_helper {
    * Takes a bool to decide the collection to query, and a string to use for the query.
    * @param  {Boolean}  queryTasks  If true the Tasks collection is queried, otherwise the Set collection is queried.
    * @param  {String}   queryString The string to use as the query.
+   * @param  {String}   queryCombination How to combine the queries. E.g. "AND" or "OR"
    * @param  {function} callback    This function will be called with the result of the query. The function should take two parameters.
    *                                The first will be the queried collection, the second will be the result of the query
    */
-   queryTasksFromDb(queryType, queryString,callback){
+   queryTasksFromDb(queryType, queryString, queryCombination, callback){
+
      var queryCollection;
      if(queryType === db_objects.ObjectTypes.LEGACY_TASK){
        queryCollection = 'Tasks';
@@ -400,6 +402,7 @@ class db_helper {
     axios.post("/api/getAllTasksContaining", {
       queryCollection: queryCollection,
       queryString: queryString,
+      queryCombination: queryCombination
     }).then((response) => {
       if(response.status === 200) {
         callback(queryType, response.data);

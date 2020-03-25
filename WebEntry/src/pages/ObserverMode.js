@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import GazeCursor from '../components/Views/GazeCursor';
-import WAMPMessageComponent from '../components/Views/ObserverMessages/WAMPMessageComponent';
+import MessageBoardComponent from '../components/Views/ObserverMessages/MessageBoardComponent';
 import ObserverTab from '../components/Views/ObserverMessages/ObserverTab';
 
 import Button from '@material-ui/core/Button';
@@ -10,8 +10,8 @@ import PlayIcon from '@material-ui/icons/PlayCircleOutline';
 
 import { withTheme } from '@material-ui/styles';
 
-import wamp from '../core/wamp';
-import wampStore from '../core/wampStore';
+import mqtt from '../core/mqtt';
+import eventStore from '../core/eventStore';
 import store from '../core/store';
 
 import './ObserverMode.css';
@@ -25,21 +25,21 @@ class ObserverMode extends Component {
     }
     this.completedTasks = {};
     this.totalTasks = {};
-    this.handleNewWAMPEvent = this.onNewWAMPEvent.bind(this);
+    this.handleNewEvent = this.onNewEvent.bind(this);
 
     this.onPauseAllPressed = this.onPausePlayPressed.bind(this);
   }
 
   componentWillMount() {
-    wampStore.addEventListener(this.handleNewWAMPEvent);
+    eventStore.addEventListener(this.handleNewEvent);
   }
 
   componentWillUnmount() {
-    wampStore.removeEventListener(this.handleNewWAMPEvent);
+    eventStore.removeEventListener(this.handleNewEvent);
   }
 
   onPausePlayPressed(){
-    wamp.broadcastCommands(JSON.stringify({
+    mqtt.broadcastCommands(JSON.stringify({
                             commandType: !this.state.isParticipantsPaused ? "PAUSE" : "RESUME",
                             participantId: -1
                            }));
@@ -50,7 +50,6 @@ class ObserverMode extends Component {
   }
 
   pairMessage(msgArray, msg) {
-    console.log(msgArray);
     for (var i = 0; i < msgArray.length; i++) {
       var pair = msgArray[i];
       if (pair.length < 2) { //if hasn't had matched message
@@ -67,8 +66,8 @@ class ObserverMode extends Component {
     return msgArray;
   }
 
-  onNewWAMPEvent() {
-    var args = JSON.parse(wampStore.getCurrentMessage());
+  onNewEvent() {
+    var args = JSON.parse(eventStore.getCurrentMessage());
 
     var isComment = (args.eventType === "COMMENT"); // &&
                           // args.observerName != myStorage.getItem('deviceID') &&
@@ -165,9 +164,9 @@ class ObserverMode extends Component {
     let theme = this.props.theme;
     let observerBgColor = theme.palette.type === "light" ? theme.palette.primary.main : theme.palette.primary.dark;
 
-    var wampMessage = [];
+    var messages = [];
     if (this.state.currentParticipant >= 0) {
-      wampMessage = this.state.participants[this.state.currentParticipant].messages;
+      messages = this.state.participants[this.state.currentParticipant].messages;
     }
 
     return (
@@ -188,7 +187,7 @@ class ObserverMode extends Component {
           </div>
         </div>
         <div className="ObserverMessageLog">
-          <WAMPMessageComponent messages={wampMessage}/>
+          <MessageBoardComponent messages={messages}/>
         </div>
         <div className="ViewerGaze">
           {this.getGazeViewer(false)}

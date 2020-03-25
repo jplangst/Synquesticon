@@ -3,17 +3,17 @@ import React from 'react';
 import CommentDialog from '../../dialogs/CommentDialog';
 
 import ObserverMessage from './ObserverMessage';
-import wamp from '../../../core/wamp';
+import mqtt from '../../../core/mqtt';
 import db_helper from '../../../core/db_helper';
 import * as dbObjects from '../../../core/db_objects';
 import * as playerUtils from '../../../core/player_utility_functions';
-import './WAMPMessageComponent.css';
+import './MessageBoardComponent.css';
 import { Typography } from '@material-ui/core';
 import { withTheme } from '@material-ui/styles';
 
 var myStorage = window.localStorage;
 
-class WAMPMessageComponent extends React.Component {
+class MessageBoardComponent extends React.Component {
   constructor(props){
     super(props);
 
@@ -39,7 +39,7 @@ class WAMPMessageComponent extends React.Component {
                                                                      this.pickedEvent.lineOfData.taskId,
                                                                      this.pickedEvent.lineOfData.startTimestamp,
                                                                      comment));
-      wamp.broadcastEvents(JSON.stringify({
+      mqtt.broadcastEvents(JSON.stringify({
                                             eventType: "COMMENT",
                                             observerName: myStorage.getItem('deviceID'),
                                             observerRole: myStorage.getItem('deviceRole'),
@@ -50,7 +50,7 @@ class WAMPMessageComponent extends React.Component {
                                             lineOfData: this.pickedEvent.lineOfData,
                                             comment: comment
                                           }));
-    }
+}
     this.setState({
       openCommentDialog: false
     });
@@ -60,7 +60,7 @@ class WAMPMessageComponent extends React.Component {
     var displayMessages = this.props.messages.slice();
 
     return (
-      <div  className="wampMessageBoard">
+      <div  className="messageBoard">
         <div className="messageBoardtitle">
          <Typography color="textPrimary" variant="h6">Messaging Log</Typography>
         </div>
@@ -77,4 +77,4 @@ class WAMPMessageComponent extends React.Component {
   }
 }
 
-export default withTheme(WAMPMessageComponent);
+export default withTheme(MessageBoardComponent);

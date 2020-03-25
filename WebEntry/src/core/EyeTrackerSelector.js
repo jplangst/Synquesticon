@@ -11,7 +11,7 @@ import OutlinedInput from '@material-ui/core/OutlinedInput';
 import { Typography } from '@material-ui/core';
 
 import store from '../core/store';
-import wampStore from '../core/wampStore';
+import eventStore from '../core/eventStore';
 
 class EyeTrackerSelector extends Component {
   constructor(props) {
@@ -25,17 +25,17 @@ class EyeTrackerSelector extends Component {
   }
 
   componentWillMount() {
-    wampStore.addNewRemoteTrackerListener(this.onNewRemoteTracker.bind(this));
+    eventStore.addNewRemoteTrackerListener(this.onNewRemoteTracker.bind(this));
   }
 
   componentWillUnmount() {
-    wampStore.removeNewRemoteTrackerListener(this.onNewRemoteTracker.bind(this));
+    eventStore.removeNewRemoteTrackerListener(this.onNewRemoteTracker.bind(this));
   }
 
   onNewRemoteTracker() {
-    if (!this.remoteEyeTrackers.includes(wampStore.getCurrentRemoteTracker())) {
-      wampStore.confirmRecevingRemoteTracker();
-      this.remoteEyeTrackers.push(wampStore.getCurrentRemoteTracker());
+    if (!this.remoteEyeTrackers.includes(eventStore.getCurrentRemoteTracker())) {
+      eventStore.confirmRecevingRemoteTracker();
+      this.remoteEyeTrackers.push(eventStore.getCurrentRemoteTracker());
 
       this.forceUpdate();
     }
