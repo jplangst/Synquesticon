@@ -5,6 +5,8 @@ import './Header.css';
 //Components
 import Menu from '../Menu/Menu';
 
+import {AppModes} from '../../core/sharedObjects';
+
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -67,10 +69,10 @@ class Header extends Component {
         <VisibilityIcon width="100%" height="100%" />
       </Button>);
     modeButtons.push(
-      <Button key="/EditorMode"
-      onClick={(e) => this.gotoPage("EditorMode")}
+      <Button key={"/"+AppModes.EDIT}
+      onClick={(e) => this.gotoPage(AppModes.EDIT)}
         style={{display:'flex', position: 'relative', flexGrow:1, minWidth:10,maxWidth:100, width:0, height:'100%',
-              backgroundColor:this.props.history.location.pathname.includes("/EditorMode")?activeColor:""}}>
+              backgroundColor:this.props.history.location.pathname.includes("/"+AppModes.EDIT)?activeColor:""}}>
         <EditIcon width="100%" height="100%" />
       </Button>);
       modeButtons.push(

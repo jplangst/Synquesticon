@@ -18,9 +18,9 @@ import * as db_objects from '../core/db_objects.js'
 
 import store from '../core/store';
 
-import './EditorMode.css';
+import './EditMode.css';
 
-class EditorMode extends Component {
+class EditMode extends Component {
   constructor(props) {
     super(props);
 
@@ -79,7 +79,8 @@ class EditorMode extends Component {
   //---------------------------component functions------------------------------
   componentWillMount() {
     let storeState = store.getState();
-    if(storeState.shouldEditSet){
+    if(storeState.shouldEdit){
+
       var setEditSetAction = {
         type: 'SET_SHOULD_EDIT',
         shouldEdit: false,
@@ -87,7 +88,7 @@ class EditorMode extends Component {
         typeToEdit:''
       };
       store.dispatch(setEditSetAction);
-      this.selectTaskSet(storeState.setToEdit);
+      this.selectTaskSet(storeState.objectToEdit);
     }
   }
 
@@ -502,4 +503,4 @@ class EditorMode extends Component {
   }
 }
 
-export default withTheme(EditorMode);
+export default withTheme(EditMode);
