@@ -394,7 +394,7 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
             if((this.currentTask.taskType === dbObjects.TaskTypes.MCHOICE)) {
               return <MultipleChoiceComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered} parentSet={parentSet} key={id}/>;
             }
-            if((this.currentTask.taskType === dbObjects.TaskTypes.Image)) {
+            if((this.currentTask.taskType === dbObjects.TaskTypes.IMAGE)) {
               return <ImageViewComponent task={this.currentTask} taskIndex={this.state.currentTaskIndex} parentSet={parentSet} key={id}/>;
             }
             if((this.currentTask.taskType === "Comparison")) { //legacy

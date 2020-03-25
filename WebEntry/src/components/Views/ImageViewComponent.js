@@ -68,6 +68,7 @@ class ImageViewComponent extends Component {
     // </svg>
     //if (this.state.imageSrc) {
     var url = "/Images/" + this.props.task.image;
+    console.log(url);
       return (
         <div className="imageViewWrapper">
           <img className="imageView" src={url} alt="" ref={this.imageRef}/>
