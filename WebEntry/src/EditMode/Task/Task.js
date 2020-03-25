@@ -12,16 +12,16 @@ import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import SynquestitaskTypeList from '../TaskList/SynquestitaskTypeList';
-import SynquestitaskList from '../TaskList/SynquestitaskList';
+import TaskTypeList from './TypeList';
+import TaskComponentList from './ComponentList';
 
 import { Typography } from '@material-ui/core';
 
 import { Droppable, DragDropContext } from 'react-beautiful-dnd';
 
-import './EditSynquestitaskComponent.css';
+import './Task.css';
 
-class EditSynquestitaskComponent extends Component {
+class EditTask extends Component {
   constructor(props){
     super(props);
 
@@ -265,7 +265,7 @@ class EditSynquestitaskComponent extends Component {
         />
       </div>;
 
-    var taskTypes = <SynquestitaskTypeList dragEnabled={true} taskList={ Object.values(dbObjects.TaskTypes) }
+    var taskTypes = <TaskTypeList dragEnabled={true} taskList={ Object.values(dbObjects.TaskTypes) }
       itemType="Synquestitask" droppableId="synquestitasks"/>;
 
     var deleteTaskBtn = null;
@@ -292,7 +292,7 @@ class EditSynquestitaskComponent extends Component {
               <Droppable droppableId="synquestitaskListId" >
                {(provided, snapshot) => (
                 <div ref={provided.innerRef} style={{width:'100%', height:'100%', minHeight:0}}>
-                  < SynquestitaskList removeCallback={this.removeComponentCallback} toggleChildCallback={this.updateChildOpenState.bind(this)}
+                  < TaskComponentList removeCallback={this.removeComponentCallback} toggleChildCallback={this.updateChildOpenState.bind(this)}
                   taskComponents={this.state.taskComponents}/ >
                     {provided.placeholder}
                 </div>
@@ -316,4 +316,4 @@ class EditSynquestitaskComponent extends Component {
   }
 }
 
-export default EditSynquestitaskComponent;
+export default EditTask;

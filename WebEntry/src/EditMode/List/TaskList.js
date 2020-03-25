@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import TaskItemComponent from './TaskItemComponent';
+import TaskItem from './TaskItem';
 
 import * as listUtils from '../../core/db_objects_utility_functions';
 
@@ -9,7 +9,7 @@ import styled from 'styled-components';
 
 import { withTheme } from '@material-ui/styles';
 
-import './TaskListComponent.css';
+import './TaskList.css';
 
 import Button from '@material-ui/core/Button';
 import DragIcon from '@material-ui/icons/ControlCamera';
@@ -30,7 +30,7 @@ const Clone = styled(TaskClone)`
 `;
 
 //================ React component ================
-class TaskListComponent extends Component {
+class TaskList extends Component {
   constructor(props) {
     super(props);
     this.taskList = props.taskList;
@@ -87,7 +87,7 @@ class TaskListComponent extends Component {
                 {(provided, snapshot) => (
 
                   <React.Fragment>
-                    <TaskItemComponent domRef={provided.innerRef} provided={provided} dragEnabled={this.props.dragEnabled}
+                    <TaskItem domRef={provided.innerRef} provided={provided} dragEnabled={this.props.dragEnabled}
                       isDragging={snapshot.isDragging} snapshot={snapshot}
                       highlight={highlightBG} placeholder={false} task={item} itemType={this.props.itemType}
                       handleDrop={this.props.dragDropCallback} onSelectedCallback={this.onSelectTask.bind(this)} content={content}
@@ -108,4 +108,4 @@ class TaskListComponent extends Component {
   }
 }
 
-export default withTheme(TaskListComponent);
+export default withTheme(TaskList);

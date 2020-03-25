@@ -8,11 +8,11 @@ import { Typography } from '@material-ui/core';
 
 import * as listUtils from '../../core/db_objects_utility_functions';
 
-import CollapsableContainer from '../Containers/CollapsableContainer';
+import CollapsableContainer from '../../components/Containers/CollapsableContainer';
 
-import './EditSetListItemComponent.css';
+import './ListItem.css';
 
-class EditSetListItemComponent extends Component {
+class EditSetListItem extends Component {
   removeTask(){
     var id = this.props._id?this.props._id:this.props.item._id;
     this.props.removeCallback(id);
@@ -58,7 +58,7 @@ class EditSetListItemComponent extends Component {
         {
 
           var content = listUtils.getTaskContent(data);
-          return <EditSetListItemComponent key={index} removeCallback={this.props.removeTaskCallback} item={data} content={content} componentDepth={newDepth} />
+          return <EditSetListItem key={index} removeCallback={this.props.removeTaskCallback} item={data} content={content} componentDepth={newDepth} />
         }
       );
 
@@ -105,4 +105,4 @@ class EditSetListItemComponent extends Component {
   }
 }
 
-export default withTheme(EditSetListItemComponent);
+export default withTheme(EditSetListItem);

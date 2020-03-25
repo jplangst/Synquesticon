@@ -4,12 +4,12 @@ import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import SynquestiImage from './SynquestiImage';
+import ImageTaskType from './ImageType';
 
-import * as dbObjects from '../../../core/db_objects';
-import db_helper from '../../../core/db_helper';
+import * as dbObjects from '../../core/db_objects';
+import db_helper from '../../core/db_helper';
 
-class Synquestitask extends Component {
+class TaskComponentItem extends Component {
   constructor(props){
     super(props);
 
@@ -74,7 +74,7 @@ class Synquestitask extends Component {
         break;
       }
       case dbObjects.TaskTypes.IMAGE: {
-        component = <SynquestiImage task={this.props.task} selectImageCallback={this.imageSelectCallback}/>
+        component = <ImageTaskType task={this.props.task} selectImageCallback={this.imageSelectCallback}/>
         break;
       }
       case dbObjects.TaskTypes.MCHOICE: {
@@ -218,4 +218,4 @@ class Synquestitask extends Component {
   }
 }
 
-export default Synquestitask;
+export default TaskComponentItem;

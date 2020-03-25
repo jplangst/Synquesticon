@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import EditSetListItemComponent from './EditSetListItemComponent';
+import EditSetListItem from './ListItem';
 import * as listUtils from '../../core/db_objects_utility_functions';
 
 import { withTheme } from '@material-ui/styles';
@@ -8,7 +8,7 @@ import { withTheme } from '@material-ui/styles';
 import { Draggable } from 'react-beautiful-dnd';
 import * as dnd from '../../core/beautifulDND.js';
 
-class EditSetListComponent extends Component {
+class EditSetList extends Component {
   constructor(props) {
     super(props);
     this.taskListObjects = props.taskListObjects;
@@ -35,7 +35,7 @@ class EditSetListComponent extends Component {
                 ref={provided.innerRef}{...provided.draggableProps}{...provided.dragHandleProps}
                 style={{...dnd.getItemStyle(snapshot.isDragging, provided.draggableProps.style, taskBgColor, taskBgColor),...{opacity:snapshot.isDragging?0.8:1}}}
                 >
-                  <EditSetListItemComponent index={index} item={item} content={content} componentDepth={0}
+                  <EditSetListItem index={index} item={item} content={content} componentDepth={0}
                   handleDrop={this.props.dragDropCallback} removeCallback={this.props.removeTaskCallback} moveTaskCallback={this.props.moveTaskCallback}/>
                 </div>
               )}
@@ -47,4 +47,4 @@ class EditSetListComponent extends Component {
   }
 }
 
-export default withTheme(EditSetListComponent);
+export default withTheme(EditSetList);

@@ -8,13 +8,13 @@ import { withTheme } from '@material-ui/styles';
 import { Draggable } from 'react-beautiful-dnd';
 import * as dnd from '../../core/beautifulDND.js';
 
-import CollapsableContainer from '../Containers/CollapsableContainer';
+import CollapsableContainer from '../../components/Containers/CollapsableContainer';
 
-import Synquestitask from '../AssetEditorComponents/TaskComponents/Synquestitask';
+import TaskComponentItem from './ComponentItem';
 
-import './SynquestitaskList.css';
+import './ComponentList.css';
 
-class SynquestitaskList extends Component {
+class TaskComponentList extends Component {
   removeTask(index){
     this.props.removeCallback(index);
   }
@@ -30,7 +30,7 @@ class SynquestitaskList extends Component {
     }
     var collapsableContent = this.props.taskComponents.map((comp, index) =>
       {
-        var component = <Synquestitask key={index} task={comp}/>;
+        var component = <TaskComponentItem key={index} task={comp}/>;
 
         var dragSource =
         <div>
@@ -75,4 +75,4 @@ class SynquestitaskList extends Component {
   }
 }
 
-export default withTheme(SynquestitaskList);
+export default withTheme(TaskComponentList);

@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import DragIcon from '@material-ui/icons/ControlCamera';
 
-import './TaskItemComponent.css';
+import './TaskItem.css';
 
 import { Typography } from '@material-ui/core';
 import { withTheme } from '@material-ui/styles';
 
 import * as dnd from '../../core/beautifulDND.js';
 
-class TaskItemComponent extends Component {
+class TaskItem extends Component {
   setRef = ref => {
     // keep a reference to the dom ref as an instance property
     this.ref = ref;
@@ -60,4 +60,4 @@ class TaskItemComponent extends Component {
   }
 }
 
-export default withTheme(TaskItemComponent);
+export default withTheme(TaskItem);
