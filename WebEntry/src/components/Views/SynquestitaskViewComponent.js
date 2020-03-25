@@ -49,26 +49,27 @@ class SynquestitaskViewComponent extends Component {
   }
 
   logTheStartOfTask(task, _id, mapIndex) {
-    var newLine = new dbObjects.LineOfData(playerUtils.getCurrentTime(),
-                                           _id,
-                                           this.props.tasksFamilyTree,
-                                           task.displayText,
-                                           task.correctResponses,
-                                           "SingleItem",
-                                           task.objType);
-    if(task.globalVariable) {
-      newLine.isGlobalVariable = true;
-      newLine.question = task.question;
+    if (!this.props.hasBeenInitiated) {
+      var newLine = new dbObjects.LineOfData(playerUtils.getCurrentTime(),
+                                             _id,
+                                             this.props.tasksFamilyTree,
+                                             task.displayText,
+                                             task.correctResponses,
+                                             "SingleItem",
+                                             task.objType);
+      if(task.globalVariable) {
+        newLine.isGlobalVariable = true;
+        newLine.question = task.question;
+      }
+      this.taskResponses.set(_id + mapIndex, newLine);
+      this.props.logTheStartOfTask(this.props.task, newLine, mapIndex);
     }
-    this.taskResponses.set(_id + mapIndex, newLine);
-    this.props.logTheStartOfTask(this.props.task, newLine, mapIndex);
   }
 
   getDisplayedContent(taskList, _id, mapIndex){
     return taskList.map((item, i) => {
       mapIndex = i;
       if(this.props.newTask && item.objType !== "Instruction" && item.objType !== "Image") {
-
         this.logTheStartOfTask(item, _id, mapIndex);
       }
 

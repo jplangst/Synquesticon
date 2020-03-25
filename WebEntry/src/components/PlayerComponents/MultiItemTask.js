@@ -58,19 +58,21 @@ class MultiItemTask extends Component {
   }
 
   logTheStartOfTask(task, ind) {
-    var newLine = new dbObjects.LineOfData(playerUtils.getCurrentTime(),
-                                           task._id,
-                                           this.props.tasksFamilyTree,
-                                           dbObjectsUtilityFunctions.getTaskContent(task),
-                                           task.correctResponses,
-                                           "MultiItem",
-                                           task.taskType);
-    if(task.globalVariable) {
-      newLine.isGlobalVariable = true;
-      newLine.question = task.question;
+    if (!this.props.hasBeenInitiated) {
+      var newLine = new dbObjects.LineOfData(playerUtils.getCurrentTime(),
+                                             task._id,
+                                             this.props.tasksFamilyTree,
+                                             dbObjectsUtilityFunctions.getTaskContent(task),
+                                             task.correctResponses,
+                                             "MultiItem",
+                                             task.taskType);
+      if(task.globalVariable) {
+        newLine.isGlobalVariable = true;
+        newLine.question = task.question;
+      }
+      this.taskResponses.set(task._id + ind, newLine);
+      this.props.logTheStartOfTask(task, newLine, ind);
     }
-    this.taskResponses.set(task._id + ind, newLine);
-    this.props.logTheStartOfTask(task, newLine, ind);
   }
 
   getDisplayedContent(taskList, mapIndex){

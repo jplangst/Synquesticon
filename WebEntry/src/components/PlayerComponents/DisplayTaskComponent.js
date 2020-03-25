@@ -87,6 +87,7 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
     this.numCorrectAnswers = 0;
     this.currentTask = null;
     this.currentLineOfData = null;
+    this.hasBeenInitiated = false;
   }
 
   /*
@@ -116,7 +117,7 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
 
   logTheStartOfTask() {
     var startTimestamp = playerUtils.getCurrentTime();
-    if (this.currentTask.objType === "Task") {
+    if (this.currentTask.objType === "Task" && !this.hasBeenInitiated) {
       this.currentLineOfData = new dbObjects.LineOfData(startTimestamp,
                                                         this.currentTask._id,
                                                         this.props.tasksFamilyTree, //the array that has the task's tasksFamilyTree
@@ -124,7 +125,9 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
                                                         this.currentTask.correctResponses,
                                                         "SingleItem",
                                                         this.currentTask.taskType);
+
       mqtt.broadcastEvents(stringifyMessage(this.currentTask, this.currentLineOfData, "START", this.progressCount, this.progressCount+1));
+      this.hasBeenInitiated = true;
     }
   }
 
@@ -267,7 +270,7 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
 
     //===========reset===========
     this.currentLineOfData = null;
-
+    this.hasBeenInitiated = false;
     //reset state
     this.setState({
       hasBeenAnswered: false,
@@ -362,11 +365,13 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
                                     taskSet={this.currentTask}
                                     answerCallback={this.onAnswer.bind(this)}
                                     newTask={!this.state.hasBeenAnswered}
+                                    hasBeenInitiated={this.hasBeenInitiated}
                                     initCallback={(taskResponses) => {
                                       this.currentLineOfData = taskResponses;
                                     }}
                                     logTheStartOfTask={(task, log, ind) => {
-                                      mqtt.broadcastEvents(stringifyMessage(task, log, "START", this.progressCount, this.progressCount+ind+1))
+                                      mqtt.broadcastEvents(stringifyMessage(task, log, "START", this.progressCount, this.progressCount+ind+1));
+                                      this.hasBeenInitiated = true;
                                     }}
                                     key={id}/>
             }
@@ -375,12 +380,14 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
                                                  answerCallback={this.onAnswer.bind(this)}
                                                  answerItem={this.state.answerItem}
                                                  newTask={!this.state.hasBeenAnswered}
+                                                 hasBeenInitiated={this.hasBeenInitiated}
                                                  parentSet={parentSet}
                                                  initCallback={(taskResponses) => {
                                                    this.currentLineOfData = taskResponses;
                                                  }}
                                                  logTheStartOfTask={(task, log, ind) => {
-                                                   mqtt.broadcastEvents(stringifyMessage(task, log, "START", this.progressCount, this.progressCount+1))
+                                                   mqtt.broadcastEvents(stringifyMessage(task, log, "START", this.progressCount, this.progressCount+1));
+                                                   this.hasBeenInitiated = true;
                                                  }}
                                                  key={id}/>;
             }

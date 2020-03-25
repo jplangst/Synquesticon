@@ -68,7 +68,7 @@ class ObserverMode extends Component {
 
   onNewEvent() {
     var args = JSON.parse(eventStore.getCurrentMessage());
-
+    console.log(args);
     var isComment = (args.eventType === "COMMENT"); // &&
                           // args.observerName != myStorage.getItem('deviceID') &&
                           // args.observerRole != myStorage.getItem('deviceRole'));
