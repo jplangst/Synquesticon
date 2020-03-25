@@ -50,6 +50,7 @@ class MQTTDialog extends Component {
             <TextField
               required
               padding="normal"
+              style={{marginRight:"10px", width:"calc(50% - 5px)"}}
               id="mqttIP"
               defaultValue={this.mqtt.ip}
               label="MQTT IP Address"
@@ -61,6 +62,7 @@ class MQTTDialog extends Component {
               padding="normal"
               id="mqttPort"
               defaultValue={this.mqtt.port}
+              style={{width:"calc(50% - 5px)"}}
               label="MQTT port"
               type="number"
               ref="MQTTPortRef"
