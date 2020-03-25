@@ -24,7 +24,7 @@ class MQTTDialog extends Component {
   mqttConfigurations() {
     var mqttConfig = JSON.parse(this.props.myStorage.getItem('mqtt'));
     this.mqtt = (mqttConfig && mqttConfig !== undefined && mqttConfig.ip !== undefined) ? mqttConfig : {
-      ip: "ws://127.0.0.1",
+      ip: "127.0.0.1",
       port: "9001"
     }
   }
