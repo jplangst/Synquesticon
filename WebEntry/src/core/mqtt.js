@@ -1,6 +1,6 @@
-var store = require('./store');
+//var store = require('./store');
 var eventStore = require('./eventStore');
-var playerUtils = require('./player_utility_functions');
+//var playerUtils = require('./player_utility_functions');
 
 //MQTT javascript library
 var mqtt = require('mqtt')
@@ -58,22 +58,15 @@ function _startMQTT(config, restart) {
     return;
   }
 
-  var wsString = 'wss://';
-  var configString = "";
-  if(config.ip !== ""){
-    configString += config.ip;
+  var wsURL = "ws://";
+  if(config.ip.includes("/crossbarproxy")){
+    wsURL = "wss://";
   }
-  if(config.port !== ""){
-    configString += ':' + config.port;
-    wsString = 'ws://';
-  }
-  else{
-    configString += '/crossbarproxy'
-  }
+  wsURL += config.ip + ":" + config.port;
 
   //Attempt to connect the client to the mqtt broker
-  console.log("Attmpting to connect to the mqtt broker ", wsString+configString);
-  mqttClient  = mqtt.connect(wsString+configString);
+  console.log("Attmpting to connect to the mqtt broker ", wsURL);
+  mqttClient  = mqtt.connect(wsURL);
   last_config = config;
 
   //When the client connects we subscribe to the topics we want to listen to
