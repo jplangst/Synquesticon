@@ -1,4 +1,6 @@
-start mosquitto -v -c ./mosquitto.conf
+cd mqttAEDES
+start node aedes.js
+cd ..
 cd backend
 start node server.js
 cd ..
