@@ -192,7 +192,7 @@ const RoleSchema = new Schema(
 // export the new Schema so we could modify it using Node.js
 module.exports = {
   Synquestitasks: mongoose.model("Synquestitasks", SynquestitaskSchema),
-  Tasks: mongoose.model("Tasks", TaskSchema),
+  //Tasks: mongoose.model("Tasks", TaskSchema),
   TaskSets: mongoose.model("TaskSets", TaskSetSchema),
   Participants: mongoose.model("Participants", ParticipantSchema),
   Experiments: mongoose.model("Experiments", ParticipantSchema),

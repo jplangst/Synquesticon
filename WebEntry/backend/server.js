@@ -12,8 +12,6 @@ const path = require("path");
 const dataSchema = require("./data_schema");
 const Synquestitasks = dataSchema.Synquestitasks;
 Synquestitasks.createIndexes({queryString: "text", tags: "text"});
-const Tasks = dataSchema.Tasks;
-Tasks.createIndexes({queryString: "text", tags: "text"});
 const TaskSets = dataSchema.TaskSets;
 TaskSets.createIndexes({queryString: "text", tags: "text"});
 const Participants = dataSchema.Participants;

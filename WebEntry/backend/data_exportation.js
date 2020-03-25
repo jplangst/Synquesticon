@@ -6,9 +6,6 @@ const dataSchema = require("./data_schema");
 const ObserverMessages = dataSchema.ObserverMessages;
 ObserverMessages.createIndexes({queryString: "text", tags: "text"});
 
-const Tasks = dataSchema.Tasks;
-Tasks.createIndexes({queryString: "text", tags: "text"});
-
 var exports = module.exports = {};
 
 var DATA_DIRECTORY = "exported_data/";

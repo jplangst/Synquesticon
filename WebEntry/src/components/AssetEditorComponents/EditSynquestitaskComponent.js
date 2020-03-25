@@ -85,7 +85,7 @@ class EditSynquestitaskComponent extends Component {
   onChangeTaskSettings(){
     if(this.props.isEditing){
       this.shouldCloseAsset = false;
-      db_helper.updateTaskFromDb(this.synquestitask._id, this.synquestitask, false, this.handleDBCallback)
+      db_helper.updateTaskFromDb(this.synquestitask._id, this.synquestitask, this.handleDBCallback)
       let snackbarAction = {
         type: 'TOAST_SNACKBAR_MESSAGE',
         snackbarOpen: true,
@@ -96,7 +96,7 @@ class EditSynquestitaskComponent extends Component {
     else{
       this.shouldCloseAsset = true;
       this.shouldReopen = true;
-      db_helper.addTaskToDb(this.synquestitask, false, this.handleDBCallback);
+      db_helper.addTaskToDb(this.synquestitask, this.handleDBCallback);
       let snackbarAction = {
         type: 'TOAST_SNACKBAR_MESSAGE',
         snackbarOpen: true,
@@ -189,7 +189,7 @@ class EditSynquestitaskComponent extends Component {
     };
     store.dispatch(snackbarAction);
 
-    db_helper.deleteTaskFromDb(this.synquestitask._id, false, this.handleDBCallback);
+    db_helper.deleteTaskFromDb(this.synquestitask._id, this.handleDBCallback);
   }
 
   //Calls the provided callback function that handles the closing of this component

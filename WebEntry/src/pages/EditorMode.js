@@ -152,7 +152,7 @@ class EditorMode extends Component {
   }
 
   assetViewerQueryDatabase() {
-    db_helper.getAllTasksFromDb(false,this.dbSynquestitaskCallback);
+    db_helper.getAllTasksFromDb(this.dbSynquestitaskCallback);
     db_helper.getAllTaskSetsFromDb(this.dbTaskSetCallback);
   }
 
@@ -186,7 +186,7 @@ class EditorMode extends Component {
     }
 
     if(dbChanged){
-      db_helper.getAllTasksFromDb(false,this.dbSynquestitaskCallback);
+      db_helper.getAllTasksFromDb(this.dbSynquestitaskCallback);
       db_helper.getAllTaskSetsFromDb(this.dbTaskSetCallback);
     }
 
