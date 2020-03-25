@@ -111,69 +111,37 @@ router.post("/exportToCSV", (req, res) => {
    ██    ██   ██      ██ ██  ██       ██
    ██    ██   ██ ███████ ██   ██ ███████
 */
- // this method fetches all available questions in our database
+ // this method fetches all available tasks in our database
 router.post("/getAllTasks", (req, res) => {
-  const { legacy } = req.body;
-  if (legacy) {
-    Tasks.find((err, data) => {
-        if (err) {
-          return res.json({success: false, error: err});
-        }
-        return res.json({ success: true, questions: data });
-      });
-  }
-
-  else {
-    Synquestitasks.find((err, data) => {
-        if (err) {
-          return res.json({success: false, error: err});
-        }
-        return res.json({ success: true, questions: data });
-      });
-  }
+  Synquestitasks.find((err, data) => {
+      if (err) {
+        return res.json({success: false, error: err});
+      }
+      return res.json({ success: true, tasks: data });
+    });
 });
 
 router.post("/getTaskWithID", (req, res) => {
-  const { id, legacy } = req.body;
+  const { id } = req.body;
 
-  if (legacy) {
-    Tasks.findOne({_id: id}, (err, obj) => {
-      if (err) {
-        return res.json({success: false, error: err});
-      }
-      return res.json({success: true, question: obj});
-    });
-  }
-
-  else {
-    Synquestitasks.findOne({_id: id}, (err, obj) => {
-      if (err) {
-        return res.json({success: false, error: err});
-      }
-      return res.json({success: true, question: obj});
-    });
-  }
+  Synquestitasks.findOne({_id: id}, (err, obj) => {
+    if (err) {
+      return res.json({success: false, error: err});
+    }
+    return res.json({success: true, task: obj});
+  });
 });
 
 router.post("/getManyTaskWithIDs", (req, res) => {
-  const { ids, legacy } = req.body;
+  const { ids } = req.body;
 
-  if (legacy) {
-    Tasks.find({_id: { $in: ids }}, (err, obj) => {
-      if (err) {
-        return res.json({success: false, error: err});
-      }
-      return res.json({success: true, tasks: obj});
-    });
-  }
-  else {
-    Synquestitasks.find({_id: { $in: ids }}, (err, obj) => {
-      if (err) {
-        return res.json({success: false, error: err});
-      }
-      return res.json({success: true, tasks: obj});
-    });
-  }
+  Synquestitasks.find({_id: { $in: ids }}, (err, obj) => {
+    if (err) {
+      return res.json({success: false, error: err});
+    }
+    return res.json({success: true, tasks: obj});
+  });
+
 });
 
 async function queryAsync(queryString, collection){
@@ -194,10 +162,8 @@ async function queryAsync(queryString, collection){
 router.post("/getAllTagValues", async (req, res) => {
   const { queryCollection } = req.body;
   var collection = null;
-  if(queryCollection === 'Tasks'){
-    collection = Tasks;
-  }
-  else if (queryCollection === 'Synquestitasks'){
+
+  if (queryCollection === 'Synquestitasks'){
     collection = Synquestitasks;
   }
   else {
@@ -217,17 +183,14 @@ router.post("/getAllTasksContaining", async (req, res) => {
   const { queryCollection, queryString, queryCombination } = req.body;
 
   var collection = null;
-  if(queryCollection === 'Tasks'){
-    collection = Tasks;
-  }
-  else if(queryCollection === 'Synquestitasks'){
+  if(queryCollection === 'Synquestitasks'){
     collection = Synquestitasks;
   }
   else{
     collection = TaskSets;
   }
 
-  //We use OR as default, and change to AND if the queryCombination matches 
+  //We use OR as default, and change to AND if the queryCombination matches
   var combination = "$in";
   if(queryCombination === "AND"){
     combination = "$all"; //Might be $all
@@ -260,29 +223,18 @@ router.post("/getAllTasksContaining", async (req, res) => {
 
 // this method adds new question in our database
 router.post("/addTask", (req, res) => {
-  const { message, legacy } = req.body;
+  const { message } = req.body;
   var obj = JSON.parse(message);
-  if (legacy) {
-    let task = new Tasks(obj);
 
-    task.save((err, q) => {
-      if (err) {
-        return res.json({ success: false, error: err });
-      }
-      return res.json({ success: true, _id: q._id });
-    });
-  }
-  else {
-    let syntask = new Synquestitasks(obj);
+  let syntask = new Synquestitasks(obj);
 
-    syntask.save((err, q) => {
-      if (err) {
-        console.log(err);
-        return res.json({ success: false, error: err });
-      }
-      return res.json({ success: true, _id: q._id });
-    });
-  }
+  syntask.save((err, q) => {
+    if (err) {
+      console.log(err);
+      return res.json({ success: false, error: err });
+    }
+    return res.json({ success: true, _id: q._id });
+  });
 });
 
 router.post("/addTwoTasks", (req, res) => {
@@ -309,62 +261,37 @@ router.post("/addTwoTasks", (req, res) => {
 
 // this method modifies existing question in our database
 router.post("/updateTask", (req, res) => {
-  const { id, message, legacy } = req.body;
+  const { id, message } = req.body;
   var obj = JSON.parse(message);
-  if (legacy) {
-    Tasks.findOneAndUpdate({_id: id}, obj, err => {
-      if (err) return res.json({ success: false, error: err });
-      return res.json({ success: true });
-    });
-  }
-  else {
-    Synquestitasks.findOneAndUpdate({_id: id}, obj, err => {
-      if (err) return res.json({ success: false, error: err });
-      return res.json({ success: true });
-    });
-  }
+
+  Synquestitasks.findOneAndUpdate({_id: id}, obj, err => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true });
+  });
+
 });
 
 // this method deletes existing question in our database
 router.post("/deleteTask", (req, res) => {
-  const { id, legacy } = req.body;
+  const { id } = req.body;
 
+  //remove this task from all sets
   TaskSets.updateMany({ }, { $pull: {childIds: {id: id}}}, err => {
 
   })
 
-  if (legacy) {
-    Tasks.findOneAndDelete({_id: id}, err => {
-      if (err) return res.send(err);
-      return res.json({ success: true });
-    });
-  }
-  else {
-    Synquestitasks.findOneAndDelete({_id: id}, err => {
-      if (err) return res.send(err);
-      return res.json({ success: true });
-    });
-  }
-
-  //remove this question from all sets
+  Synquestitasks.findOneAndDelete({_id: id}, err => {
+    if (err) return res.send(err);
+    return res.json({ success: true });
+  });
 
 });
 
 router.delete("/deleteAllTasks", (req, res) => {
-  const { legacy} = req.body;
-
-  if (legacy) {
-    Tasks.deleteMany({}, err => {
-      if (err) return res.send(err);
-      return res.json({ success: true });
-    });
-  }
-  else {
-    Synquestitasks.deleteMany({}, err => {
-      if (err) return res.send(err);
-      return res.json({ success: true });
-    });
-  }
+  Synquestitasks.deleteMany({}, err => {
+    if (err) return res.send(err);
+    return res.json({ success: true });
+  });
 });
 
 /*

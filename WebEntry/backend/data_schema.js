@@ -15,6 +15,9 @@ const SynquestitaskSchema = new Schema({
   childObj: [{ //A list of child objects
     _id: false, //To disable automatic mongo db id's for the elements in the list
 
+    /*
+    taskType: Instruction, Text Entry, Multiple Choice, Image, Numpad Entry
+    */
     objType: String, // What type of object this is
 
     //obj content
@@ -39,45 +42,43 @@ const SynquestitaskSchema = new Schema({
   collection: 'Synquestitasks'
 });
 
-/*
-taskType: Instruction, Text Entry, Multiple Choice, Image
-*/
-// this will be our data base's data structure
-const TaskSchema = new Schema(
-  {
-    id: String, //The id of the Task
-    taskType: String, //The type of the task
-    question: String, //Used if the task type is "Text Entry" and "Choice" //it's the body
-    globalVariable: Boolean, //If true the response of the task should be stored as a global var in the participant DB object
-    instruction: String,
-    image: String, //filepath
-    subTasks: [{
-      subType: String,
-      label: String,
-      image: String,
-      text: String,
-      aois: [{
-        name: String,
-        boundingbox: [[Number]],
-        _id: false
-      }],
-      _id: false
-    }],
-    aois: [{
-      name: String,
-      boundingbox: [[Number]],
-      _id: false
-    }], //A list of AOIs relevant to the task
-    tags: [String], //A list of searchable tags
-    responses: [String], //The possible responses to the task
-    correctResponses: [String], //The correct response
-    responseUnit: String, //The unit of the response e.g. "%", "RPM"
-    refSets: [String], //list of sets that reference to this questions
-    objType: String,
-  }, {
-    collection: 'Tasks'
-  }
-);
+
+// // this will be our data base's data structure
+// const TaskSchema = new Schema(
+//   {
+//     id: String, //The id of the Task
+//     taskType: String, //The type of the task
+//     question: String, //Used if the task type is "Text Entry" and "Choice" //it's the body
+//     globalVariable: Boolean, //If true the response of the task should be stored as a global var in the participant DB object
+//     instruction: String,
+//     image: String, //filepath
+//     subTasks: [{
+//       subType: String,
+//       label: String,
+//       image: String,
+//       text: String,
+//       aois: [{
+//         name: String,
+//         boundingbox: [[Number]],
+//         _id: false
+//       }],
+//       _id: false
+//     }],
+//     aois: [{
+//       name: String,
+//       boundingbox: [[Number]],
+//       _id: false
+//     }], //A list of AOIs relevant to the task
+//     tags: [String], //A list of searchable tags
+//     responses: [String], //The possible responses to the task
+//     correctResponses: [String], //The correct response
+//     responseUnit: String, //The unit of the response e.g. "%", "RPM"
+//     refSets: [String], //list of sets that reference to this questions
+//     objType: String,
+//   }, {
+//     collection: 'Tasks'
+//   }
+// );
 
 const TaskSetSchema = new Schema({
   id: String, //The id of the TaskSet
@@ -136,6 +137,12 @@ const ParticipantSchema = new Schema(
       In case of "skipped", we leave (1) empty and log (2) as time to pressing "skip".
       */
       timeToCompletion: Number,
+      clickedPoints: [{
+        x: Number,
+        y: Number,
+        _id: false
+      }],
+      clickedAOIs: [String],
       aoiCheckedList: [{
         label: String,
         checked: Boolean,

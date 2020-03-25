@@ -18,16 +18,11 @@ class db_helper {
    *
    * @param  {function} callback This function will be called with the result of the query. The function should take one parameter.
    */
-   getAllTasksFromDb(legacy, callback){
+   getAllTasksFromDb(callback){
      axios.post("/api/getAllTasks", {
-       legacy: legacy
      }).then((response) => {
         if(response.status === 200) {
-          if (!legacy) {
-            //console.log(response.data.questions);
-          }
-
-          callback(response.data.questions);
+          callback(response.data.tasks);
         }
         else {
           alert("Database connection failed!");
@@ -45,13 +40,12 @@ class db_helper {
    * @param  {string}   id       The MongoDB generated ID to query for.
    * @param  {function} callback This function will be called with the result of the query. The function should take one parameter.
    */
-   getTaskWithID(id, legacy, callback){
+   getTaskWithID(id, callback){
     axios.post("/api/getTaskWithID", {
-      id: id,
-      legacy: legacy
+      id: id
     }).then((response) => {
       if(response.status === 200) {
-        callback(response.data.question);
+        callback(response.data.task);
       }
       else {
         alert("Cannot find task with this ID ", id);
@@ -69,11 +63,9 @@ class db_helper {
    * @param  {TaskObject} dbQuestionObject The task object to add to the DB. Should use TaskObject defined in db_objects.js.
    * @param  {function}   callback         This function will be called with the MongoDB id assigned to the created task. The function should take one parameter.
    */
-   addTaskToDb(dbQuestionObject, legacy, callback){
-     console.log(JSON.stringify(dbQuestionObject), legacy);
+   addTaskToDb(dbQuestionObject, callback){
     axios.post("/api/addTask", {
       message: JSON.stringify(dbQuestionObject),
-      legacy: legacy
     })
     .then((response) => {
       if(response.status === 200) {
@@ -102,10 +94,9 @@ class db_helper {
     });
   }
 
-  getManyTaskWithIDs(ids, legacy, callback) {
+  getManyTaskWithIDs(ids, callback) {
     axios.post("/api/getManyTaskWithIDs", {
-      ids: ids,
-      legacy: legacy
+      ids: ids
     }).then((response) => {
       if(response.status === 200) {
         callback(response.data.tasks);
@@ -127,11 +118,10 @@ class db_helper {
    * @param  {TaskObject} editedObj The task object to update in the DB. Should use TaskObject defined in db_objects.js.
    * @param  {function}   callback  This function will be called with the MongoDB id of the updated task. The function should take one parameter.
    */
-   updateTaskFromDb(id, editedObj, legacy, callback){
+   updateTaskFromDb(id, editedObj, callback){
     axios.post("/api/updateTask", {
       id: id,
-      message: JSON.stringify(editedObj),
-      legacy: legacy
+      message: JSON.stringify(editedObj)
     }).then(data =>
       {
         callback(data._id)
@@ -144,10 +134,9 @@ class db_helper {
    * @param  {string}   idTodelete The MongoDB id of the task to delete.
    * @param  {function} callback   This function will be called when the task has been deleted from the DB. Use it to update the interface.
    */
-   deleteTaskFromDb(idTodelete, legacy, callback){
+   deleteTaskFromDb(idTodelete, callback){
     axios.post("/api/deleteTask", {
-        id: idTodelete,
-        legacy: legacy
+        id: idTodelete
     }).then(response =>
     {
       callback();
@@ -157,9 +146,8 @@ class db_helper {
   /**
    * deleteAllTasksFromDb - Deletes all the tasks in the DB. Use with care.
    */
-   deleteAllTasksFromDb(legacy){
+   deleteAllTasksFromDb(){
     axios.delete("/api/deleteAllTasks", {
-      legacy: legacy
     });
   };
 
@@ -342,10 +330,7 @@ class db_helper {
 
   queryAllTagValuesFromDB(queryType,callback){
     var queryCollection;
-    if(queryType === db_objects.ObjectTypes.LEGACY_TASK){
-      queryCollection = 'Tasks';
-    }
-    else if(queryType === db_objects.ObjectTypes.SET){
+    if(queryType === db_objects.ObjectTypes.SET){
       queryCollection = 'TaskSets';
     }
     else if(queryType === db_objects.ObjectTypes.TASK){
@@ -385,10 +370,7 @@ class db_helper {
    queryTasksFromDb(queryType, queryString, queryCombination, callback){
 
      var queryCollection;
-     if(queryType === db_objects.ObjectTypes.LEGACY_TASK){
-       queryCollection = 'Tasks';
-     }
-     else if(queryType === db_objects.ObjectTypes.SET){
+     if(queryType === db_objects.ObjectTypes.SET){
        queryCollection = 'TaskSets';
      }
      else if(queryType === db_objects.ObjectTypes.TASK){

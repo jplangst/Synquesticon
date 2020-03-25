@@ -36,7 +36,6 @@ var checkShouldSave = true;
 
 function stringifyMessage(task, lineOfData, eventType, progressCount, taskIndex) {
   try {
-    console.log("broadcasting")
     if (store.getState().experimentInfo.participantId === undefined) {
       return null;
     }
@@ -98,37 +97,8 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
    ██████  ██████  ██      ██ ██       ██████  ██   ████ ███████ ██   ████    ██        ██       ██████  ██   ████  ██████    ██    ██  ██████  ██   ████ ███████
   */
 
-
-  componentDidMount() {
-
-  }
-
   componentWillMount() {
     this.progressCount = this.props.progressCount;
-  }
-
-  /*
-██       ██████   ██████   ██████  ██ ███    ██  ██████
-██      ██    ██ ██       ██       ██ ████   ██ ██
-██      ██    ██ ██   ███ ██   ███ ██ ██ ██  ██ ██   ███
-██      ██    ██ ██    ██ ██    ██ ██ ██  ██ ██ ██    ██
-███████  ██████   ██████   ██████  ██ ██   ████  ██████
-*/
-
-  logTheStartOfTask() {
-    var startTimestamp = playerUtils.getCurrentTime();
-    if (this.currentTask.objType === "Task" && !this.hasBeenInitiated) {
-      this.currentLineOfData = new dbObjects.LineOfData(startTimestamp,
-                                                        this.currentTask._id,
-                                                        this.props.tasksFamilyTree, //the array that has the task's tasksFamilyTree
-                                                        dbObjectsUtilityFunctions.getTaskContent(this.currentTask),
-                                                        this.currentTask.correctResponses,
-                                                        "SingleItem",
-                                                        this.currentTask.taskType);
-
-      mqtt.broadcastEvents(stringifyMessage(this.currentTask, this.currentLineOfData, "START", this.progressCount, this.progressCount+1));
-      this.hasBeenInitiated = true;
-    }
   }
 
   /*
@@ -185,60 +155,29 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
     this.props.saveGazeData(dbObjectsUtilityFunctions.getTaskContent(this.currentTask));
 
     //===========save logging data===========
-    //single task
-    if (this.currentTask.objType === "Task") {
-      if (this.currentLineOfData.correctlyAnswered === "correct") {
-        this.numCorrectAnswers += 1;
-      }
+    if (this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage) {
+      this.progressCount += this.currentLineOfData.size;
+    }
+    else if (this.currentTask.objType === "Synquestitask") {
       this.progressCount += 1;
-      if (this.currentLineOfData) {
-        if (!this.currentTask.globalVariable) {
-          //complete line of data before saving to DB
-          this.currentLineOfData.timeToCompletion = playerUtils.getCurrentTime() - this.currentLineOfData.startTimestamp;
-          if (store.getState().experimentInfo.shouldSave) {
-            db_helper.addNewLineToParticipantDB(store.getState().experimentInfo.participantId, JSON.stringify(this.currentLineOfData));
-          }
-        }
-        else {
-          this.saveGlobalVariable(store.getState().experimentInfo.participantId,
-                                  this.currentTask.question, this.currentLineOfData.responses);
-        }
-
-       mqtt.broadcastEvents(stringifyMessage(this.currentTask, this.currentLineOfData,
-                                                 (this.currentLineOfData.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED",
-                                                 this.progressCount,
-                                                -1));
-      }
     }
-    //multi-item page
-    else if ((this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage) ||
-              (this.currentTask.objType === "Synquestitask")){
-      if (this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage) {
-        this.progressCount += this.currentLineOfData.size;
+
+    this.currentLineOfData.forEach((line, index) => {
+      if (line.isGlobalVariable !== undefined) {
+        this.saveGlobalVariable(store.getState().experimentInfo.participantId,
+                                line.question, line.responses);
       }
-      else if (this.currentTask.objType === "Synquestitask") {
-        this.progressCount += 1;
+      else {
+        line.timeToCompletion = playerUtils.getCurrentTime() - line.startTimestamp;
+        if (store.getState().experimentInfo.shouldSave) {
+          db_helper.addNewLineToParticipantDB(store.getState().experimentInfo.participantId, JSON.stringify(line));
+        }
       }
 
-      console.log("hey", this.currentLineOfData);
-
-      this.currentLineOfData.forEach((line, index) => {
-        if (line.isGlobalVariable !== undefined) {
-          this.saveGlobalVariable(store.getState().experimentInfo.participantId,
-                                  line.question, line.responses);
-        }
-        else {
-          line.timeToCompletion = playerUtils.getCurrentTime() - line.startTimestamp;
-          if (store.getState().experimentInfo.shouldSave) {
-            db_helper.addNewLineToParticipantDB(store.getState().experimentInfo.participantId, JSON.stringify(line));
-          }
-        }
-
-        mqtt.broadcastEvents(stringifyMessage({_id:line.taskId}, line,
-                                                  (line.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED",
-                                                  this.progressCount, -1));
-      });
-    }
+      mqtt.broadcastEvents(stringifyMessage({_id:line.taskId}, line,
+                                                (line.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED",
+                                                this.progressCount, -1));
+    });
 
     //===========check requirement of number of correct answers===========
     if ((this.state.currentTaskIndex + 1) >= this.props.taskSet.data.length && this.numCorrectAnswers < this.props.repeatSetThreshold){
@@ -281,22 +220,9 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
 
   onAnswer(answer) {
     if(!(store.getState().experimentInfo.participantId === "TESTING")) {
-      if (this.currentTask.objType === "Task") {
-        this.checkShouldRecordData(this.currentTask.question, answer.responses);
-        if (this.currentLineOfData.firstResponseTimestamp === -1) { //log the timeToFirstAnswer
-          this.currentLineOfData.firstResponseTimestamp = playerUtils.getCurrentTime();
-          this.currentLineOfData.timeToFirstAnswer = this.currentLineOfData.firstResponseTimestamp - this.currentLineOfData.startTimestamp;
-        }
-        //update answers
-        this.currentLineOfData.responses = answer.responses;
-        this.currentLineOfData.correctlyAnswered = answer.correctlyAnswered;
-      }
-      else if ((this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage) ||
-                (this.currentTask.objType === "Synquestitask")){
-        this.currentLineOfData = answer.linesOfData;
-        if (answer.correctlyAnswered === "correct") {
-          this.currentTask.numCorrectAnswers += 1;
-        }
+      this.currentLineOfData = answer.linesOfData;
+      if (answer.correctlyAnswered === "correct") {
+        this.currentTask.numCorrectAnswers += 1;
       }
     }
     this.setState({
@@ -391,24 +317,7 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
                                                  }}
                                                  key={id}/>;
             }
-            if((this.currentTask.taskType === dbObjects.TaskTypes.INSTRUCTION)) {
-              return <InstructionViewComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} parentSet={parentSet} key={id}/>;
-            }
-            if(this.currentTask.taskType  === dbObjects.TaskTypes.TEXTENTRY) { //legacy
-              return <NumpadComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered} parentSet={parentSet} key={id}/>;
-            }
-            if(this.currentTask.taskType === "Single Choice") { //legacy
-              return <SingleChoiceComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered} parentSet={parentSet} key={id}/>;
-            }
-            if((this.currentTask.taskType === dbObjects.TaskTypes.MCHOICE)) {
-              return <MultipleChoiceComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered} parentSet={parentSet} key={id}/>;
-            }
-            if((this.currentTask.taskType === dbObjects.TaskTypes.IMAGE)) {
-              return <ImageViewComponent task={this.currentTask} taskIndex={this.state.currentTaskIndex} parentSet={parentSet} key={id}/>;
-            }
-            if((this.currentTask.taskType === "Comparison")) { //legacy
-              return <ComparisonViewComponent task={this.currentTask} answerCallback={this.onAnswer.bind(this)} answerItem={this.state.answerItem} newTask={!this.state.hasBeenAnswered} parentSet={parentSet} key={id}/>;
-            }
+
           } else {
             return null;
           }
