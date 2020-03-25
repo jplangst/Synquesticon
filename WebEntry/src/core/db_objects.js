@@ -8,7 +8,6 @@ export const TaskTypes = {
 
 export const ObjectTypes = {
   TASK: 'Tasks',
-  LEGACY_TASK: 'Legacy Tasks',
   SET: 'Sets',
 }
 

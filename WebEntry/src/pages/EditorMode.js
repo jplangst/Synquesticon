@@ -8,7 +8,6 @@ import SearchBar from '../components/SearchBar';
 import CollapsableContainer from '../components/Containers/CollapsableContainer';
 import TaskListComponent from '../components/TaskList/TaskListComponent';
 import EditSynquestitaskComponent from '../components/AssetEditorComponents/EditSynquestitaskComponent';
-import EditTaskComponent from '../components/AssetEditorComponents/EditTaskComponent';
 import EditSetComponent from '../components/AssetEditorComponents/EditSetComponent';
 import { withTheme } from '@material-ui/styles';
 
@@ -27,7 +26,6 @@ class EditorMode extends Component {
 
     this.state = {
       showMenu: false,
-      taskList: [],
       taskSetList: [],
       synquestitaskList: [],
       allowRegex: true,
@@ -42,7 +40,6 @@ class EditorMode extends Component {
 
     //Database callbacks
     this.dbSynquestitaskCallback = this.dbSynquestitaskCallbackFunction.bind(this);
-    this.dbTaskCallback = this.dbTaskCallbackFunction.bind(this);
     this.dbTaskSetCallback = this.dbTaskSetCallbackFunction.bind(this);
 
     //Filter callback
@@ -133,55 +130,30 @@ class EditorMode extends Component {
   }
 
   dbSynquestitaskCallbackFunction(dbQueryResult) {
-    //let groupedResult = this.groupTasksByTags(dbQueryResult);
-    let groupedResult = dbQueryResult;
-    this.setState({synquestitaskList: groupedResult});
+    this.setState({synquestitaskList: dbQueryResult});
   }
 
   dbTaskCallbackFunction(dbQueryResult) {
-    //let groupedResult = this.groupTasksByTags(dbQueryResult);
-    let groupedResult = dbQueryResult;
-    this.setState({taskList: groupedResult});
+    this.setState({taskList: dbQueryResult});
   }
 
   dbTaskSetCallbackFunction(dbQueryResult) {
-    let groupedResult = dbQueryResult;
-    //let groupedResult =this.groupTasksByTags(dbQueryResult);
-    this.setState({taskSetList: groupedResult});
+    this.setState({taskSetList: dbQueryResult});
   }
 
   //Callback after querying the database using the search fields
   onDatabaseSearched(queryType, result){
-    let mapResult = result.tasks;
-    //let mapResult = this.groupTasksByTags(result.tasks);
-
-    if(queryType === db_objects.ObjectTypes.LEGACY_TASK){
-      this.setState({taskList: mapResult});
-    }
-    else if(queryType === db_objects.ObjectTypes.SET){
-      this.setState({taskSetList: mapResult});
+    if(queryType === db_objects.ObjectTypes.SET){
+      this.setState({taskSetList: result.tasks});
     }
     else if(queryType === db_objects.ObjectTypes.TASK){
-      this.setState({synquestitaskList: mapResult});
+      this.setState({synquestitaskList: result.tasks});
     }
   }
 
   assetViewerQueryDatabase() {
     db_helper.getAllTasksFromDb(false,this.dbSynquestitaskCallback);
-    db_helper.getAllTasksFromDb(true,this.dbTaskCallback);
     db_helper.getAllTaskSetsFromDb(this.dbTaskSetCallback);
-  }
-
-  //actions callbacks
-  selectTask(task) {
-    this.assetEditorCompKey += 1;
-
-    var assetObject = <EditTaskComponent isEditing={true} taskObject={task}
-      closeTaskCallback={this.assetEditorObjectClosed.bind(this)}
-      key={this.assetEditorCompKey}
-    />;
-
-    this.setState(state => ({selectedTaskSet:null, selectedSynquestitask:null, selectedTask: task, assetEditorObject: assetObject}));
   }
 
   selectSynquestitask(task) {
@@ -214,7 +186,6 @@ class EditorMode extends Component {
     }
 
     if(dbChanged){
-      db_helper.getAllTasksFromDb(true,this.dbTaskCallback);
       db_helper.getAllTasksFromDb(false,this.dbSynquestitaskCallback);
       db_helper.getAllTaskSetsFromDb(this.dbTaskSetCallback);
     }
@@ -224,12 +195,10 @@ class EditorMode extends Component {
       if(storeState.typeToEdit === 'set'){
         this.selectTaskSet(storeState.objectToEdit);
       }
-      else if(storeState.typeToEdit === 'task'){
-        this.selectTask(storeState.objectToEdit);
-      }
       else if(storeState.typeToEdit === 'synquestitask'){
-        //this.selectSynquestitask(storeState.objectToEdit);
+        this.selectSynquestitask(storeState.objectToEdit);
       }
+
       var setEditAction = {
         type: 'SET_SHOULD_EDIT',
         shouldEdit: false,
@@ -241,7 +210,7 @@ class EditorMode extends Component {
 
   //Closes the current objecy being viewed in the asset editor view
   clearAssetEditorObject(){
-    this.setState({selectedTask: null, assetEditorContext: "empty", assetEditorObject: null, selectedTaskSet: null, selectedSynquestitask:null});
+    this.setState({assetEditorContext: "empty", assetEditorObject: null, selectedTaskSet: null, selectedSynquestitask:null});
   }
 
   removeTaskSet(taskSet) {
@@ -257,14 +226,6 @@ class EditorMode extends Component {
     this.assetEditorCompKey += 1;
     this.clearAssetEditorObject();
     this.setState({assetEditorObject: <EditSynquestitaskComponent isEditing={false}
-      closeTaskCallback={this.assetEditorObjectClosed.bind(this)}
-      key={this.assetEditorCompKey} />});
-  }
-
-  addTaskCallback(){
-    this.assetEditorCompKey += 1;
-    this.clearAssetEditorObject();
-    this.setState({assetEditorObject: <EditTaskComponent isEditing={false}
       closeTaskCallback={this.assetEditorObjectClosed.bind(this)}
       key={this.assetEditorCompKey} />});
   }
@@ -299,15 +260,14 @@ class EditorMode extends Component {
             itemType = "Synquestitask";
           }
           else{
-            itemType = "Task";
+            console.log("Unknown type dragged");
+            return;
           }
 
           let id = result.draggableId;
           if(id.includes('_')){
             id = result.draggableId.split('_')[0];
           }
-
-          console.log(itemType,id);
 
           var dragableItem = {objType:itemType,_id:id};
           this.editSetComponentRef.current.addTask(dragableItem, destination.index);
@@ -464,11 +424,6 @@ class EditorMode extends Component {
       selectCallback = this.selectSynquestitask.bind(this);
       addCallback = this.addSynquestitaskCallback.bind(this);
     }
-    else if(taskType === db_objects.ObjectTypes.LEGACY_TASK){
-      selectedTask = this.state.selectedTask;
-      selectCallback = this.selectTask.bind(this);
-      addCallback = this.addTaskCallback.bind(this);
-    }
     else if(taskType === db_objects.ObjectTypes.SET){
       selectedTask = this.state.selectedTaskSet;
       selectCallback = this.selectTaskSet.bind(this);
@@ -530,7 +485,6 @@ class EditorMode extends Component {
         <div style={{backgroundColor:leftBG}} className = "AssetViewer">
           <div className="AssetViewerContent">
             {this.getTaskTypeContainer(db_objects.ObjectTypes.TASK, this.state.synquestitaskList)}
-            {this.getTaskTypeContainer(db_objects.ObjectTypes.LEGACY_TASK, this.state.taskList)}
             {this.getTaskTypeContainer(db_objects.ObjectTypes.SET, this.state.taskSetList)}
           </div>
         </div>
