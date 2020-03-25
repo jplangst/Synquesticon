@@ -11,22 +11,7 @@
         Download and install mosquitto using the x64 installer
       </li>
       <li>
-        Edit the mosquitto.conf file in the installation directory as Admin and add the following lines:
-        <ul>
-          <li>port 1884</li>
-          <li>listener 9001 </li>
-          <li>protocol websockets</li>
-        </ul>
-      </li>
-      <li>
-        Create a bat file at your desired location and add the following: 
-        <ul>
-          <li>cd C:/Program Files/mosquitto (use your path)</li>
-          <li>mosquitto -v -c ./mosquitto.conf </li>
-        </ul>
-      </li>
-      <li>
-        Use this bat file to start the mosquitto mqtt broker 
+        Add the installed folder location to your systen environment variables
       </li>
     </ol>
   </li>  
