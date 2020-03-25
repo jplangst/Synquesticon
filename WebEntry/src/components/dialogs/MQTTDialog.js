@@ -17,10 +17,6 @@ class MQTTDialog extends Component {
     mqtt.startMQTT(this.mqtt);
   }
 
-  componentWillUnmount() {
-  }
-
-  //-----------Crossbar Settings------------
   mqttConfigurations() {
     var mqttConfig = JSON.parse(this.props.myStorage.getItem('mqtt'));
     this.mqtt = (mqttConfig && mqttConfig !== undefined && mqttConfig.ip !== undefined) ? mqttConfig : {
@@ -32,6 +28,7 @@ class MQTTDialog extends Component {
   onChangeMQTTSettings(e) {
     this.props.myStorage.setItem('mqtt', JSON.stringify(this.mqtt));
 
+    //Passing true to indicate that we want to restart the mqtt client
     mqtt.startMQTT(this.mqtt, true);
 
     //Callback to close the dialog from the header
