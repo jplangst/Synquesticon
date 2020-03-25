@@ -102,14 +102,11 @@ class EditSetComponent extends Component {
   updateSetChildList(taskToAdd){
     this.shouldCloseAsset = false;
 
-    if(taskToAdd.objType === "Task"){
-      db_helper.getTaskWithID(taskToAdd._id, true, this.handleUpdateSetChildTasks);
-    }
-    else if (taskToAdd.objType === "TaskSet"){
+    if (taskToAdd.objType === "TaskSet"){
       db_helper.getTasksOrTaskSetsWithIDs(taskToAdd._id, this.handleUpdateSetChildTasks);
     }
     else if(taskToAdd.objType === "Synquestitask"){
-      db_helper.getTaskWithID(taskToAdd._id, false, this.handleUpdateSetChildTasks);
+      db_helper.getTaskWithID(taskToAdd._id, this.handleUpdateSetChildTasks);
     }
   }
 

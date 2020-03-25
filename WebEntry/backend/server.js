@@ -380,14 +380,7 @@ router.post("/getCompleteTaskSetObject", async (req, res) => {
   const id = JSON.parse(objId);
 
   var recursion = async function(target) {
-    if (target.objType === "Task") {
-      var taskFromDb = await Tasks.findOne({_id: target.id}, async (err, task) => {
-        return task;
-      });
-
-      return taskFromDb;
-    }
-    else if (target.objType === "Synquestitask") {
+    if (target.objType === "Synquestitask") {
       var syntaskFromDb = await Synquestitasks.findOne({_id: target.id}, async (err, task) => {
         return task;
       });
@@ -440,15 +433,7 @@ router.post("/getTasksOrTaskSetsWithIDs", async (req, res) => {
       }
 
       var recursion = async function(target) {
-        if (target.objType === "Task") {
-          var taskFromDb = await Tasks.findOne({_id: target.id}, async (err, task) => {
-            count = count + 1;
-            return task;
-          });
-
-          return taskFromDb;
-        }
-        else if (target.objType === "Synquestitask") {
+        if (target.objType === "Synquestitask") {
           var syntaskFromDb = await Synquestitasks.findOne({_id: target.id}, async (err, task) => {
             count = count + 1;
             return task;
