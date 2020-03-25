@@ -7,13 +7,13 @@ import mqtt from '../../../core/mqtt';
 import db_helper from '../../../core/db_helper';
 import * as dbObjects from '../../../core/db_objects';
 import * as playerUtils from '../../../core/player_utility_functions';
-import './WAMPMessageComponent.css';
+import './MessageBoardComponent.css';
 import { Typography } from '@material-ui/core';
 import { withTheme } from '@material-ui/styles';
 
 var myStorage = window.localStorage;
 
-class WAMPMessageComponent extends React.Component {
+class MessageBoardComponent extends React.Component {
   constructor(props){
     super(props);
 
@@ -60,7 +60,7 @@ class WAMPMessageComponent extends React.Component {
     var displayMessages = this.props.messages.slice();
 
     return (
-      <div  className="wampMessageBoard">
+      <div  className="messageBoard">
         <div className="messageBoardtitle">
          <Typography color="textPrimary" variant="h6">Messaging Log</Typography>
         </div>
@@ -77,4 +77,4 @@ class WAMPMessageComponent extends React.Component {
   }
 }
 
-export default withTheme(WAMPMessageComponent);
+export default withTheme(MessageBoardComponent);

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import GazeCursor from '../components/Views/GazeCursor';
-import WAMPMessageComponent from '../components/Views/ObserverMessages/WAMPMessageComponent';
+import MessageBoardComponent from '../components/Views/ObserverMessages/MessageBoardComponent';
 import ObserverTab from '../components/Views/ObserverMessages/ObserverTab';
 
 import Button from '@material-ui/core/Button';
@@ -187,7 +187,7 @@ class ObserverMode extends Component {
           </div>
         </div>
         <div className="ObserverMessageLog">
-          <WAMPMessageComponent messages={messages}/>
+          <MessageBoardComponent messages={messages}/>
         </div>
         <div className="ViewerGaze">
           {this.getGazeViewer(false)}
