@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+import {AppModes} from '../core/sharedObjects';
 import { withTheme } from '@material-ui/styles';
 
 import PlayableSetListComponent from '../components/TaskList/PlayableSetListComponent';
@@ -53,7 +54,7 @@ class PlayerMode extends Component {
     };
     store.dispatch(setEditSetAction);
 
-    this.props.gotoPage("/EditorMode");
+    this.props.gotoPage("/"+AppModes.EDIT);
   }
 
   onPlayButtonClick(taskSet) {

@@ -3,12 +3,12 @@ import React, {Component} from 'react';
 import Button from '@material-ui/core/Button';
 import {FilterList, AddCircleOutline} from '@material-ui/icons';
 
-import FilterDialog from '../components/dialogs/FilterDialog';
-import SearchBar from '../components/SearchBar';
+import FilterDialog from './FilterDialog';
+import SearchBar from './SearchBar';
 import CollapsableContainer from '../components/Containers/CollapsableContainer';
-import TaskListComponent from '../components/TaskList/TaskListComponent';
-import EditSynquestitaskComponent from '../components/AssetEditorComponents/EditSynquestitaskComponent';
-import EditSetComponent from '../components/AssetEditorComponents/EditSetComponent';
+import TaskList from './List/TaskList';
+import EditTask from './Task/Task';
+import EditSet from './Set/Set';
 import { withTheme } from '@material-ui/styles';
 
 import { DragDropContext } from 'react-beautiful-dnd';
@@ -18,9 +18,9 @@ import * as db_objects from '../core/db_objects.js'
 
 import store from '../core/store';
 
-import './EditorMode.css';
+import './EditMode.css';
 
-class EditorMode extends Component {
+class EditMode extends Component {
   constructor(props) {
     super(props);
 
@@ -79,7 +79,8 @@ class EditorMode extends Component {
   //---------------------------component functions------------------------------
   componentWillMount() {
     let storeState = store.getState();
-    if(storeState.shouldEditSet){
+    if(storeState.shouldEdit){
+
       var setEditSetAction = {
         type: 'SET_SHOULD_EDIT',
         shouldEdit: false,
@@ -87,7 +88,7 @@ class EditorMode extends Component {
         typeToEdit:''
       };
       store.dispatch(setEditSetAction);
-      this.selectTaskSet(storeState.setToEdit);
+      this.selectTaskSet(storeState.objectToEdit);
     }
   }
 
@@ -159,7 +160,7 @@ class EditorMode extends Component {
   selectSynquestitask(task) {
     this.assetEditorCompKey += 1;
 
-    var assetObject = <EditSynquestitaskComponent isEditing={true} synquestitask={task}
+    var assetObject = <EditTask isEditing={true} synquestitask={task}
       closeTaskCallback={this.assetEditorObjectClosed.bind(this)}
       key={this.assetEditorCompKey}
     />;
@@ -171,7 +172,7 @@ class EditorMode extends Component {
     this.assetEditorCompKey += 1;
     this.editSetComponentRef = React.createRef();
 
-    var assetObject = <EditSetComponent isEditing={true}
+    var assetObject = <EditSet isEditing={true}
       setObject={taskSet} closeSetCallback={this.assetEditorObjectClosed.bind(this)}
       key={this.assetEditorCompKey} ref={this.editSetComponentRef}
       runTestSet={()=>{this.props.history.push('/DisplayTaskComponent')}}/>;
@@ -225,7 +226,7 @@ class EditorMode extends Component {
   addSynquestitaskCallback(){
     this.assetEditorCompKey += 1;
     this.clearAssetEditorObject();
-    this.setState({assetEditorObject: <EditSynquestitaskComponent isEditing={false}
+    this.setState({assetEditorObject: <EditTask isEditing={false}
       closeTaskCallback={this.assetEditorObjectClosed.bind(this)}
       key={this.assetEditorCompKey} />});
   }
@@ -234,7 +235,7 @@ class EditorMode extends Component {
     this.assetEditorCompKey += 1;
     this.clearAssetEditorObject();
     this.editSetComponentRef = React.createRef();
-    this.setState({assetEditorObject: <EditSetComponent isEditing={false}
+    this.setState({assetEditorObject: <EditSet isEditing={false}
       closeSetCallback={this.assetEditorObjectClosed.bind(this)}
       key={this.assetEditorCompKey} ref={this.editSetComponentRef}/>});
   }
@@ -408,7 +409,7 @@ class EditorMode extends Component {
 
   getTaskTypeContainer(taskType, taskMap){
     var dragEnabled = false;
-    if(this.state.assetEditorObject && this.state.assetEditorObject.type === EditSetComponent){
+    if(this.state.assetEditorObject && this.state.assetEditorObject.type === EditSet){
       dragEnabled = true;
     }
 
@@ -452,7 +453,7 @@ class EditorMode extends Component {
     }*/
 
     //No nested lists
-    containerContent = < TaskListComponent dragEnabled={dragEnabled} taskList={ taskMap }
+    containerContent = < TaskList dragEnabled={dragEnabled} taskList={ taskMap }
       selectTask={ selectCallback } selectedTask={selectedTask}
       itemType={taskType} droppableId={taskType} idSuffix={""}/ >;
 
@@ -502,4 +503,4 @@ class EditorMode extends Component {
   }
 }
 
-export default withTheme(EditorMode);
+export default withTheme(EditMode);

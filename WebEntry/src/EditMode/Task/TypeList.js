@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 
-import SynquestitaskItemComponent from './SynquestitaskItemComponent';
+import TaskTypeItem from './TypeItem';
 
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 
 import { withTheme } from '@material-ui/styles';
 
-import './SynquestitaskTypeList.css';
+import './TypeList.css';
 
 import Button from '@material-ui/core/Button';
 import DragIcon from '@material-ui/icons/ControlCamera';
@@ -28,7 +28,7 @@ const Clone = styled(TaskClone)`
 `;
 
 //================ React component ================
-class SynquestitaskTypeList extends Component {
+class EditTaskTypeList extends Component {
   constructor(props) {
     super(props);
     this.taskList = props.taskList;
@@ -69,7 +69,7 @@ class SynquestitaskTypeList extends Component {
                 {(provided, snapshot) => (
 
                   <React.Fragment>
-                    <SynquestitaskItemComponent domRef={provided.innerRef} provided={provided} dragEnabled={this.props.dragEnabled}
+                    <TaskTypeItem domRef={provided.innerRef} provided={provided} dragEnabled={this.props.dragEnabled}
                       isDragging={snapshot.isDragging} snapshot={snapshot}
                       placeholder={false} task={item} itemType={this.props.itemType}
                       handleDrop={this.props.dragDropCallback} content={item} marginClass={margin}
@@ -90,4 +90,4 @@ class SynquestitaskTypeList extends Component {
   }
 }
 
-export default withTheme(SynquestitaskTypeList);
+export default withTheme(EditTaskTypeList);

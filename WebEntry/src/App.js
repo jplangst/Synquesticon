@@ -4,12 +4,14 @@ import { connect } from 'react-redux';
 
 import { throttle } from 'lodash'
 
+import {AppModes} from './core/sharedObjects';
+
 import store from './core/store';
 
 import Snackbar from '@material-ui/core/Snackbar';
 
 import Header from './components/Header/Header'
-import EditorMode from './pages/EditorMode';
+import EditMode from './EditMode/EditMode';
 import ObserverMode from './pages/ObserverMode';
 import ExportationMode from './pages/ExportationMode';
 import IntroductionScreen from './pages/IntroductionScreen';
@@ -71,7 +73,7 @@ class App extends Component {
             <div className="MainContent">
               <Switch>
                 <Route exact path="/" component={IntroductionScreen} />
-                <Route path="/EditorMode" component={EditorMode} />
+                <Route path={"/"+AppModes.EDIT} component={EditMode} />
                 <Route path="/ObserverMode" component={ObserverMode} />
                 <Route path="/ExportationMode" component={ExportationMode} />
                 <Route path="/study" component={DisplayTaskComponent}/>} />

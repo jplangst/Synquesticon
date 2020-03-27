@@ -1,0 +1,65 @@
+.listItem {
+  min-height: 40px;
+  max-height: 40px; 
+  position: relative;
+  width: 100%;
+
+  opacity: 1;
+
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  flex-shrink: 1;
+
+  align-items: center;
+
+  border-bottom: grey solid 1px;
+}
+
+.listItemTextContainer{
+  position: relative;
+  width: calc(100% - 40px);
+  height: 100%;
+  cursor:pointer;
+}
+
+.listItemText{
+  position: relative;
+  height: 100%;
+  padding-left: 10px;
+}
+
+.listItemDragBtnContainer{
+  position: relative;
+  width: 40px;
+  height: 40px;
+
+  border-left-style: solid;
+  border-width: thin;
+  border-radius: 10px 0 0 10px;
+  border-color: #BDBDBD;
+}
+
+.listItemDragBtn{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  padding: 0;
+}
+
+.dragBtnIcon{
+  cursor:move;
+  width: 100%;
+  height: 100%;
+}
+
+.highlightBG{
+  background-color: #AEA;
+}
+
+.dotLongText{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -10,9 +10,7 @@ import { withTheme } from '@material-ui/styles';
 
 import Button from '@material-ui/core/Button';
 
-import db_helper from '../../core/db_helper';
-
-import './BrowseImagesDialog.css';
+import db_helper from '../core/db_helper';
 
 class FilterDialog extends Component {
   constructor(props){

@@ -13,14 +13,14 @@ import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import EditSetListComponent from '../TaskList/EditSetListComponent';
+import EditSetList from './SetList';
 import { Typography } from '@material-ui/core';
 
 import { Droppable } from 'react-beautiful-dnd';
 
-import './EditSetComponent.css';
+import './Set.css';
 
-class EditSetComponent extends Component {
+class EditSet extends Component {
   constructor(props){
     super(props);
 
@@ -495,7 +495,7 @@ class EditSetComponent extends Component {
             <Droppable droppableId="setTaskListId" >
              {(provided, snapshot) => (
               <div ref={provided.innerRef} style={{width:'100%', minHeight:'100%', height:'auto'}}>
-                < EditSetListComponent removeCallback={this.removeTaskFromListCallback} taskListObjects={this.state.taskListObjects} reactDND={true}
+                < EditSetList removeCallback={this.removeTaskFromListCallback} taskListObjects={this.state.taskListObjects} reactDND={true}
                   removeTaskCallback={this.removeTaskFromListCallback} moveTaskCallback={this.moveTaskCallback} / >
                   {provided.placeholder}
               </div>
@@ -519,4 +519,4 @@ class EditSetComponent extends Component {
   }
 }
 
-export default EditSetComponent;
+export default EditSet;

@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import FileSelector from '../../../core/fileSelector';
+import FileSelector from '../../core/fileSelector';
 import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 //import Button from '@material-ui/core/Button';
 
-import AOIEditorComponent from '../../AOIEditor/AOIEditorComponent';
-import BrowseImagesDialog from '../../dialogs/BrowseImagesDialog';
+import AOIEditorComponent from '../../components/AOIEditor/AOIEditorComponent';
+import BrowseImagesDialog from '../../components/dialogs/BrowseImagesDialog';
 
-import './SynquestiImage.css';
+import './ImageType.css';
 
-class SynquestiImage extends Component {
+class ImageTaskType extends Component {
   constructor(props){
     super(props);
 
@@ -85,4 +85,4 @@ class SynquestiImage extends Component {
   }
 }
 
-export default SynquestiImage;
+export default ImageTaskType;
