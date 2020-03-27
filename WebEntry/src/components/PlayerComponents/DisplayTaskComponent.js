@@ -163,9 +163,10 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
     }
 
     this.currentLineOfData.forEach((line, index) => {
+      console.log("isGlobalVariable", line.isGlobalVariable);
       if (line.isGlobalVariable !== undefined) {
         this.saveGlobalVariable(store.getState().experimentInfo.participantId,
-                                line.question, line.responses);
+                                line.label, line.responses);
       }
       else {
         line.timeToCompletion = playerUtils.getCurrentTime() - line.startTimestamp;
@@ -274,12 +275,6 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
                                   repeatSetThreshold={updatedTaskSet.repeatSetThreshold}/>
       }
       else {
-        //log the start
-        if (!this.state.hasBeenAnswered
-            && !(store.getState().experimentInfo.participantId === "TESTING")
-            && !this.currentLineOfData) {
-          this.logTheStartOfTask();
-        }
         let id = this.currentTask._id + "_" + this.progressCount;
         var getDisplayedContent = () => {
           if(this.currentTask){
@@ -302,7 +297,8 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
                                     key={id}/>
             }
             if((this.currentTask.objType === "Synquestitask")) {
-              return <SynquestitaskViewComponent task={this.currentTask}
+              return <SynquestitaskViewComponent tasksFamilyTree={trackingTaskSetNames}
+                                                 task={this.currentTask}
                                                  answerCallback={this.onAnswer.bind(this)}
                                                  answerItem={this.state.answerItem}
                                                  newTask={!this.state.hasBeenAnswered}

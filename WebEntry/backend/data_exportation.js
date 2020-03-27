@@ -6,6 +6,9 @@ const dataSchema = require("./data_schema");
 const ObserverMessages = dataSchema.ObserverMessages;
 ObserverMessages.createIndexes({queryString: "text", tags: "text"});
 
+const Synquestitasks = dataSchema.Synquestitasks;
+Synquestitasks.createIndexes({queryString: "text", tags: "text"});
+
 var exports = module.exports = {};
 
 var DATA_DIRECTORY = "exported_data/";
@@ -136,8 +139,7 @@ function handleCorrectlyAnswered(ans){
 
 function handleAcceptedMargin(line){
   console.log(line);
-  if (line.objType === "Numpad Entry" || line.taskType === "Numpad Entry"
-      || line.taskType === "Text Entry" /*legacy, remove later*/) {
+  if (line.objType === "Numpad Entry") {
     if (line.correctResponses.length > 1) {
       return line.correctResponses[1];
     }
@@ -193,11 +195,10 @@ exports.save_to_csv = async function(p, seperator) {
       })).catch((exp) => {
         console.log("exp 1");
       });
-      var task = await (Tasks.findOne({_id: line.taskId},
+      var task = await (Synquestitasks.findOne({_id: line.taskId},
                                   async (err, obj) => {
         if (obj) {
           line.tags = obj.tags;
-          line.taskType = obj.taskType;
         }
         else {
           line.tags = [];

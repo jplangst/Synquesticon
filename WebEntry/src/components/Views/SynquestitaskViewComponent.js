@@ -57,9 +57,10 @@ class SynquestitaskViewComponent extends Component {
                                              task.correctResponses,
                                              "SingleItem",
                                              task.objType);
-      if(task.globalVariable) {
+
+      if(this.props.task.globalVariable) {
         newLine.isGlobalVariable = true;
-        newLine.question = task.question;
+        newLine.label = task.displayText;
       }
       this.taskResponses.set(_id + mapIndex, newLine);
       this.props.logTheStartOfTask(this.props.task, newLine, mapIndex);

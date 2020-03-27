@@ -57,7 +57,7 @@ class ExportationMode extends Component {
     });
     db_helper.getAllObserverMessagesFromDb((msgs) => {
       /*console.log("all comments", msgs);*/
-    })
+    });
   }
 
   componenWillUnmount() {
@@ -256,7 +256,7 @@ class ExportationMode extends Component {
       file_name = this.formatDateTime(p.linesOfData[0].startTimestamp) + '_';
       file_name += p.linesOfData[0].tasksFamilyTree[0] + '_';
     }
-
+    
     p.globalVariables.sort((a, b) => a.label.localeCompare(b.label));
 
     for (let i = 0; i < p.globalVariables.length; i++) {
