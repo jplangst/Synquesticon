@@ -12,6 +12,8 @@ const path = require("path");
 const dataSchema = require("./data_schema");
 const Synquestitasks = dataSchema.Synquestitasks;
 Synquestitasks.createIndexes({queryString: "text", tags: "text"});
+const Tasks = dataSchema.Tasks;
+Tasks.createIndexes({queryString: "text", tags: "text"});
 const TaskSets = dataSchema.TaskSets;
 TaskSets.createIndexes({queryString: "text", tags: "text"});
 const Participants = dataSchema.Participants;
@@ -287,6 +289,13 @@ router.post("/deleteTask", (req, res) => {
 
 router.delete("/deleteAllTasks", (req, res) => {
   Synquestitasks.deleteMany({}, err => {
+    if (err) return res.send(err);
+    return res.json({ success: true });
+  });
+});
+
+router.delete("/deleteAllLegacyTasks", (req, res) => {
+  Tasks.deleteMany({}, err => {
     if (err) return res.send(err);
     return res.json({ success: true });
   });

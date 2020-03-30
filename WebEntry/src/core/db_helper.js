@@ -304,7 +304,11 @@ class db_helper {
    */
    deleteAllTaskSetsFromDb(){
     axios.delete("api/deleteAllTaskSets");
-  };
+   };
+
+   deleteAllLegacyTasksFromDb(){
+     axios.delete("api/deleteAllLegacyTasks");
+   };
 
   /**
    * getImage - Asynch load the image from the filepath.

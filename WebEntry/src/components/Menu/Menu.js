@@ -17,6 +17,8 @@ import Switch from '@material-ui/core/Switch';
 
 import store from '../../core/store';
 
+import db_helper from '../../core/db_helper';
+
 var myStorage = window.localStorage;
 
 class Menu extends Component {
@@ -124,6 +126,14 @@ class Menu extends Component {
     store.dispatch(toggleThemeAction);
   }
 
+  onEmptySets() {
+    db_helper.deleteAllTaskSetsFromDb();
+  }
+
+  onEmptyLegacyTasks() {
+    db_helper.deleteAllLegacyTasksFromDb();
+  }
+
   render() {
     var deviceName = myStorage.getItem('deviceID');
     if (!deviceName || deviceName === "") {
@@ -176,6 +186,14 @@ class Menu extends Component {
             <List>
               <ListItem key="Version">
                 <ListItemText primary="Version 1.0" />
+              </ListItem>
+            </List>
+            <List>
+              <ListItem button key="DummySet" onClick={this.onEmptySets.bind(this)}>
+                <ListItemText primary="Empty Sets" />
+              </ListItem>
+              <ListItem button key="DummyLegacy" onClick={this.onEmptyLegacyTasks.bind(this)}>
+                <ListItemText primary="Empty Legacy Tasks" />
               </ListItem>
             </List>
           </div>
