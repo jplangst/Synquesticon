@@ -32,9 +32,12 @@ class EditTask extends Component {
     //let childOpenStatus = this.synquestitask.childObj.slice();
     //childOpenStatus.fill(true,0,this.synquestitask.childObj.length);
 
-    this.synquestitask.childObj.forEach(function (child) {
-      child.openState = true;
-    });
+    for(var i = 0; i < this.synquestitask.childObj.length; i++){
+      this.synquestitask.childObj[i] = {...new dbObjects.SynquestitaskChildComponent(this.synquestitask.childObj[i].objType),...this.synquestitask.childObj[i]};
+      this.synquestitask.childObj[i].openState = true;
+    }
+
+    console.log(this.synquestitask.childObj);
 
     //We keep these fields in the state as they affect how the component is rendered
     this.state = {

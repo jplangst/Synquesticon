@@ -53,7 +53,7 @@ class EditTaskTypeList extends Component {
                 className={"synquestiListItem " + margin} style={{backgroundColor:bgColor}}>
                 <div className="synquestiListItemTextContainer" >
                   <div className="synquestiListItemText">
-                    <Typography color="textPrimary" noWrap> {item} </Typography>
+                    <Typography color="textPrimary" noWrap> {item.label} </Typography>
                   </div>
                 </div>
                 <div className="synquestiListItemDragBtnContainer" style={{backgroundColor:bgColor}}>
@@ -72,7 +72,7 @@ class EditTaskTypeList extends Component {
                     <TaskTypeItem domRef={provided.innerRef} provided={provided} dragEnabled={this.props.dragEnabled}
                       isDragging={snapshot.isDragging} snapshot={snapshot}
                       placeholder={false} task={item} itemType={this.props.itemType}
-                      handleDrop={this.props.dragDropCallback} content={item} marginClass={margin}
+                      handleDrop={this.props.dragDropCallback} content={item.label} marginClass={margin}
                     />
                     {snapshot.isDragging && (
                       <Clone>{clonedContent}</Clone>

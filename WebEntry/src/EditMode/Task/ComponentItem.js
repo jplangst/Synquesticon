@@ -9,6 +9,7 @@ import ImageTaskType from './ImageType';
 import * as dbObjects from '../../core/db_objects';
 import db_helper from '../../core/db_helper';
 
+var _id = 0;
 class TaskComponentItem extends Component {
   constructor(props){
     super(props);
@@ -25,6 +26,9 @@ class TaskComponentItem extends Component {
     //Task update
     this.responseHandler = this.onResponsesChanged;
     this.handleSingleChoiceChanged = this.onSingleChoiceChanged.bind(this);
+
+    this.uniqueID = _id;
+    _id++;
   }
 
   onTaskChanged(){
@@ -55,13 +59,12 @@ class TaskComponentItem extends Component {
   //Get the components to render based on the object type
   getComponent(){
     let component = null;
-
     switch (this.props.task.objType){
-      case dbObjects.TaskTypes.INSTRUCTION: {
+      case dbObjects.TaskTypes.INSTRUCTION.type: {
         component =  <TextField
                   required
                   padding="dense"
-                  id="instructionText"
+                  id={this.uniqueID+"instructionText"}
                   defaultValue={this.props.task.displayText}
                   placeholder="Write your instruction here"
                   label="Instructions"
@@ -73,17 +76,17 @@ class TaskComponentItem extends Component {
                 />;
         break;
       }
-      case dbObjects.TaskTypes.IMAGE: {
+      case dbObjects.TaskTypes.IMAGE.type: {
         component = <ImageTaskType task={this.props.task} selectImageCallback={this.imageSelectCallback}/>
         break;
       }
-      case dbObjects.TaskTypes.MCHOICE: {
+      case dbObjects.TaskTypes.MCHOICE.type: {
         component = <div>
           <TextField label="Question"
             required
             padding="dense"
             fullWidth
-            id="mcQuestionText"
+            id={this.uniqueID+"mcQuestionText"}
             defaultValue={this.props.task.displayText}
             placeholder="Enter your question here"
             ref="questionTextRef"
@@ -95,7 +98,7 @@ class TaskComponentItem extends Component {
             required
             padding="dense"
             style={{marginRight:"10px", width:"calc(40% - 15px)"}}
-            id="mcResponses"
+            id={this.uniqueID+"mcResponses"}
             defaultValue={this.props.task.responses.join(',')}
             placeholder="Response A, Response B, ResponseC"
             helperText="Question responses seperated by a comma"
@@ -106,7 +109,7 @@ class TaskComponentItem extends Component {
             required
             padding="dense"
             style={{marginRight:"10px", width:"calc(40% - 15px)"}}
-            id="mcCorrectResponses"
+            id={this.uniqueID+"mcCorrectResponses"}
             defaultValue={this.props.task.correctResponses.join(',')}
             placeholder="Response A, Response C"
             helperText="The correct responses to the question"
@@ -115,6 +118,7 @@ class TaskComponentItem extends Component {
           />
           <FormControlLabel label="Single Choice"
             value="end"
+            id={this.uniqueID+"schoice"}
             padding="dense"
             checked={this.state.singleChoice}
             control={<Checkbox style={{width:"50%"}} color="secondary" />}
@@ -124,13 +128,13 @@ class TaskComponentItem extends Component {
         </div>;
         break;
       }
-      case dbObjects.TaskTypes.NUMPAD: {
+      case dbObjects.TaskTypes.NUMPAD.type: {
         component = <div>
           <TextField label="Question"
             required
             padding="dense"
             fullWidth
-            id="numQuestionText"
+            id={this.uniqueID+"numQuestionText"}
             defaultValue={this.props.task.displayText}
             placeholder="Enter your question here"
             ref="questionTextRef"
@@ -142,7 +146,7 @@ class TaskComponentItem extends Component {
             required
             padding="dense"
             style={{marginRight:"10px", width:"calc(40% - 15px)"}}
-            id="numCorrectResponses"
+            id={this.uniqueID+"numCorrectResponses"}
             defaultValue={this.props.task.correctResponses.join(',')}
             placeholder="Correct Answer, Margin(Optional)"
             helperText="Enter the correct answer and optionally a margin seperated with a comma, +- that still allows a correct answer. E.g. 5,2 would let anything between 3-7 be a correct answer"
@@ -152,13 +156,13 @@ class TaskComponentItem extends Component {
         </div>;
         break;
       }
-      case dbObjects.TaskTypes.TEXTENTRY: {
+      case dbObjects.TaskTypes.TEXTENTRY.type: {
         component = <div>
           <TextField label="Question"
             required
             padding="dense"
             fullWidth
-            id="textQuestionText"
+            id={this.uniqueID+"textQuestionText"}
             defaultValue={this.props.task.displayText}
             placeholder="Enter your question here"
             ref="questionTextRef"
@@ -170,7 +174,7 @@ class TaskComponentItem extends Component {
             required
             padding="dense"
             style={{marginRight:"10px", width:"calc(40% - 15px)"}}
-            id="textCorrectResponses"
+            id={this.uniqueID+"textCorrectResponses"}
             defaultValue={this.props.task.correctResponses.join(',')}
             placeholder="Correct Answer(Optional)"
             helperText="Enter the correct answer"

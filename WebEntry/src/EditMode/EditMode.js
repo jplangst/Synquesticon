@@ -438,8 +438,7 @@ class EditMode extends Component {
     let collapsableHeaderButtons = this.getCollapsableHeaderButtons(activeFilters, this.onSearchInputChanged.bind(this, taskType),
       addCallback, this.filterButtonPressed.bind(this, taskType), taskType+"SearchBar");
 
-    let index = 0;
-
+    //let index = 0;
     //Nested lists based on task groups
     //let taskMap = this.groupTasksByTags(taskMap);
     /*for (const [key, value] of taskMap.entries()) {

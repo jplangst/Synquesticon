@@ -1,9 +1,21 @@
 export const TaskTypes = {
-  INSTRUCTION: 'Instruction',
-  IMAGE: 'Image',
-  MCHOICE: 'Multiple Choice',
-  TEXTENTRY: 'Text Entry',
-  NUMPAD: 'Numpad Entry'
+  INSTRUCTION: {type:'Instruction',label:'Instruction'},
+  IMAGE: {type:'Image',label:'Image'},
+  MCHOICE: {type:'Multiple Choice',label:'Buttons'},
+  TEXTENTRY: {type:'Text Entry',label:'Text'},
+  NUMPAD: {type:'Numpad Entry',label:'Numbers'}
+}
+
+function getLabel(type){
+  let values = Object.values(TaskTypes);
+
+  for(var i = 0; i < values.length; i++){
+    if(values[i].type === type){
+      return values[i].label;
+    }
+  }
+
+  return "Not found"+type;
 }
 
 export const ObjectTypes = {
@@ -29,7 +41,8 @@ var childListID = 0;
 
 export class SynquestitaskChildComponent{
   constructor(taskType){
-    this.objType = taskType; //The type of the object, see enum above
+    this.objType = taskType.type; //The type of the object, see enum above
+    this.label = taskType.label ? taskType.label : getLabel(taskType);
     this.displayText = ""; //The text that will be displayed
 
     //For user responses

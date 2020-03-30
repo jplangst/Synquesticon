@@ -14,6 +14,8 @@ import TaskComponentItem from './ComponentItem';
 
 import './ComponentList.css';
 
+var _id = 0;
+
 class TaskComponentList extends Component {
   removeTask(index){
     this.props.removeCallback(index);
@@ -48,17 +50,19 @@ class TaskComponentList extends Component {
           </div>
         </div>;
 
+        _id++;
+
         return(
           <Draggable key={"synquestitskListId"+index} draggableId={"synquestitskListId"+index} index={index} shouldRespectForceTouch={false}>
           {(provided, snapshot) => (
 
-            <div className={"editSetListItem "} key={"synquestitskListId_item"+index}
+            <div className={"editSetListItem "} key={"synquestitskListId_item"+_id}
             ref={provided.innerRef}{...provided.draggableProps}
             style={{...dnd.getItemStyle(snapshot, provided.draggableProps.style, taskBgColor, taskBgColor, true),...{opacity:snapshot.isDragging?0.8:1}}}
             >
               <CollapsableContainer content={comp.displayContent} classNames="editSetCompContainer" stateChangeCallback={this.props.toggleChildCallback} index={index}
                 contentClassNames="editSetCompContent" headerComponents={dragSource} dndDragHandle={provided.dragHandleProps} open={comp.openState} headerHeight={headerHeight}
-                headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={comp.objType} snapshotT={snapshot}
+                headerClassNames="editSetCompHeader" hideHeaderComponents={false} headerTitle={comp.label} snapshotT={snapshot}
                 titleVariant="body1" indentContent={20} collasableStyles="contentOpen">
                   {component}
               </CollapsableContainer>

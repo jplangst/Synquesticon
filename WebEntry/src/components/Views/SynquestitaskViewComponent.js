@@ -76,13 +76,13 @@ class SynquestitaskViewComponent extends Component {
 
       var key = _id+"Synquestitask"+i;
 
-      if(item.objType === dbObjects.TaskTypes.INSTRUCTION){
+      if(item.objType === dbObjects.TaskTypes.INSTRUCTION.type){
           return <InstructionViewComponent className="itemContainer" key={key} task={item} mapID={mapIndex} parentSet={this.props.task.name}/>;
       }
-      else if(item.objType === dbObjects.TaskTypes.TEXTENTRY){
+      else if(item.objType === dbObjects.TaskTypes.TEXTENTRY.type){
           return <TextEntryComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
       }
-      else if(item.objType === dbObjects.TaskTypes.MCHOICE){
+      else if(item.objType === dbObjects.TaskTypes.MCHOICE.type){
         if (item.singleChoice) {
           return <SingleChoiceComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
         }
@@ -90,10 +90,10 @@ class SynquestitaskViewComponent extends Component {
           return <MultipleChoiceComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
         }
       }
-      else if(item.objType === dbObjects.TaskTypes.IMAGE) {
+      else if(item.objType === dbObjects.TaskTypes.IMAGE.type) {
           return <ImageViewComponent className="itemContainer" key={key} task={item} mapID={mapIndex} parentSet={this.props.task.name}/>;
       }
-      else if(item.objType === dbObjects.TaskTypes.NUMPAD) {
+      else if(item.objType === dbObjects.TaskTypes.NUMPAD.type) {
           return <NumpadComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
       }
       else if(item.objType === "Comparison") {
