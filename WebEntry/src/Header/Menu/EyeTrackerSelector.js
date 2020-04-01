@@ -10,8 +10,8 @@ import OutlinedInput from '@material-ui/core/OutlinedInput';
 
 import { Typography } from '@material-ui/core';
 
-import store from '../core/store';
-import eventStore from '../core/eventStore';
+import store from '../../core/store';
+import eventStore from '../../core/eventStore';
 
 class EyeTrackerSelector extends Component {
   constructor(props) {

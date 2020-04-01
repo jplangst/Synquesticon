@@ -9,7 +9,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-import * as mqtt from '../../core/mqtt';
+import * as mqtt from '../../../core/mqtt';
 
 class MQTTDialog extends Component {
   componentWillMount() {

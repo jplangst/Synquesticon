@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 
 import './Menu.css';
 
-//Components
-import DeviceIDDialog from '../dialogs/DeviceIDDialog';
-import MQTTDialog from '../dialogs/MQTTDialog';
-import SpeechDialog from '../dialogs/SpeechDialog';
-import EyeTrackerSelector from '../../core/EyeTrackerSelector';
+import store from '../../core/store';
+import db_helper from '../../core/db_helper';
+
+import DeviceIDDialog from './Dialogs/DeviceIDDialog';
+import MQTTDialog from './Dialogs/MQTTDialog';
+import SpeechDialog from './Dialogs/SpeechDialog';
+import EyeTrackerSelector from './EyeTrackerSelector';
 
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
@@ -14,10 +16,6 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Switch from '@material-ui/core/Switch';
-
-import store from '../../core/store';
-
-import db_helper from '../../core/db_helper';
 
 var myStorage = window.localStorage;
 
@@ -31,7 +29,6 @@ class Menu extends Component {
     }
   }
 
-  //Menus
   onFullscreen(e) {
     if ((document.fullScreenElement && document.fullScreenElement !== null) ||
      (!document.mozFullScreen && !document.webkitIsFullScreen)) {

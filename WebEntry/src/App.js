@@ -10,7 +10,7 @@ import store from './core/store';
 
 import Snackbar from '@material-ui/core/Snackbar';
 
-import Header from './components/Header/Header'
+import Header from './Header/Header'
 import EditMode from './EditMode/EditMode';
 import ObserverMode from './ObserverMode/ObserverMode';
 import ExportMode from './ExportMode/ExportMode';

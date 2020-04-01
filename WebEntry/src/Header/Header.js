@@ -3,26 +3,23 @@ import React, { Component } from 'react';
 import './Header.css';
 
 //Components
-import Menu from '../Menu/Menu';
+import Menu from './Menu/Menu';
 
-import {AppModes} from '../../core/sharedObjects';
+import {AppModes} from '../core/sharedObjects';
+import store from '../core/store';
+
+import {withRouter} from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-
 import { Typography } from '@material-ui/core';
 import { withTheme } from '@material-ui/styles';
-import {withRouter} from 'react-router-dom';
-
-//Icons
 import Settings from '@material-ui/icons/Settings';
 import EditIcon from '@material-ui/icons/Edit';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import ExportationIcon from '@material-ui/icons/Archive';
-
-import store from '../../core/store';
 
 class Header extends Component {
   constructor(props) {

@@ -16,7 +16,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import NativeSelect from '@material-ui/core/NativeSelect';
 
-import db_helper from '../../core/db_helper';
+import db_helper from '../../../core/db_helper';
 
 const DEFAULT_ROLES = ["SRO", "RO", "TO"];
 
