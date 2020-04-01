@@ -61,7 +61,7 @@ class TextEntryComponent extends Component {
           id="outlined-name"
           className="textField"
 
-          inputProps={{style: { textAlign: 'center',overflowX:'hidden'}}}
+          inputProps={{style: { overflowX:'hidden'}}}
           variant="outlined"
           value={this.textEntry}
           fullWidth
