@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import ImageTaskType from './ImageType';
+import ImageTaskType from './ImageType/ImageType';
 
 import * as dbObjects from '../../core/db_objects';
 import db_helper from '../../core/db_helper';

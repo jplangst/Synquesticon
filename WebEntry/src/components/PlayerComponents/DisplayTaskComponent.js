@@ -14,7 +14,7 @@ import ImageViewComponent from '../Views/ImageViewComponent';
 import ComparisonViewComponent from '../Views/ComparisonViewComponent';
 import SynquestitaskViewComponent from '../Views/SynquestitaskViewComponent';
 
-import PauseDialog from '../dialogs/PauseDialog';
+import PauseDialog from './PauseDialog';
 
 import mqtt from '../../core/mqtt'
 

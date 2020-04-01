@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import FileSelector from '../../core/fileSelector';
+import FileSelector from '../../../core/fileSelector';
 import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 //import Button from '@material-ui/core/Button';
 
-import AOIEditorComponent from '../../components/AOIEditor/AOIEditorComponent';
-import BrowseImagesDialog from '../../components/dialogs/BrowseImagesDialog';
+import AOIEditorComponent from './AOIEditor/AOIEditorComponent';
+import BrowseImagesDialog from './BrowseImagesDialog';
 
 import './ImageType.css';
 
