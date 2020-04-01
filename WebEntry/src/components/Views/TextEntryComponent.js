@@ -41,6 +41,7 @@ class TextEntryComponent extends Component {
 
   onAnswer(e) {
     this.textEntry = e.target.value;
+    this.textEntry = this.textEntry.replace(/\s\s+/g, ' ');
     var answerObj = {
       responses: [this.textEntry],
       correctlyAnswered: this.checkAnswer(),
@@ -59,8 +60,10 @@ class TextEntryComponent extends Component {
         <TextField
           id="outlined-name"
           className="textField"
-          defaultValue={this.textEntry}
+
+          inputProps={{style: { textAlign: 'center',overflowX:'hidden'}}}
           variant="outlined"
+          value={this.textEntry}
           fullWidth
           margin='dense'
           multiline
