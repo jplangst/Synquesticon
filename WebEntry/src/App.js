@@ -12,7 +12,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 
 import Header from './components/Header/Header'
 import EditMode from './EditMode/EditMode';
-import ObserverMode from './pages/ObserverMode';
+import ObserverMode from './ObserverMode/ObserverMode';
 import ExportMode from './ExportMode/ExportMode';
 import PlayMode from './PlayMode/PlayMode';
 import DisplayTaskComponent from './components/PlayerComponents/DisplayTaskComponent';

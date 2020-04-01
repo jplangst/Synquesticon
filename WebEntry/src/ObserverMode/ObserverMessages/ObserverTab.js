@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
 
-import store from '../../../core/store';
+import store from '../../core/store';
+import mqtt from '../../core/mqtt';
 
-//Components
 import Button from '@material-ui/core/Button';
 import PauseIcon from '@material-ui/icons/PauseCircleOutline';
 import PlayIcon from '@material-ui/icons/PlayCircleOutline';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { Typography } from '@material-ui/core';
 import { withTheme } from '@material-ui/styles';
-
-import mqtt from '../../../core/mqtt';
 
 class ObserverTab extends Component {
   constructor(props) {

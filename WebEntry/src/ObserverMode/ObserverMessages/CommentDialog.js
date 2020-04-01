@@ -13,9 +13,8 @@ import TextField from '@material-ui/core/TextField';
 class CommentDialog extends Component {
   constructor(props){
     super(props);
-    //this.closeDialogCallback = this.onClose.bind(this);
-    this.comment = "";
 
+    this.comment = "";
     this.onClosePressed = this.onClose.bind(this);
   }
 
@@ -32,11 +31,12 @@ class CommentDialog extends Component {
           fullWidth={true}
           maxWidth='md'
         >
-          <DialogTitle id="form-dialog-title"><Typography variant="h5" color="textPrimary">Write Comment</Typography></DialogTitle>
+          <DialogTitle id="form-dialog-title" variant="h5">
+            Write Comment
+          </DialogTitle>
           <DialogContent>
             <TextField
               required
-
               padding="dense"
               id="taskComment"
               defaultValue=""

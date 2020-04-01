@@ -4,7 +4,7 @@ import './GazeCursor.css';
 import { withTheme } from '@material-ui/styles';
 import { Typography } from '@material-ui/core';
 
-import store from '../../core/store';
+import store from '../core/store';
 
 class GazeCursor extends React.Component {
   constructor(){
@@ -96,7 +96,5 @@ class GazeCursor extends React.Component {
     );
   }
 }
-
-
 
 export default withTheme(GazeCursor);

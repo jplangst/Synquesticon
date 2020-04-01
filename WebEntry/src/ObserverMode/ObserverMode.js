@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import GazeCursor from '../components/Views/GazeCursor';
-import MessageBoardComponent from '../components/Views/ObserverMessages/MessageBoardComponent';
-import ObserverTab from '../components/Views/ObserverMessages/ObserverTab';
+import GazeCursor from './GazeCursor';
+import MessageBoard from './ObserverMessages/MessageBoard';
+import ObserverTab from './ObserverMessages/ObserverTab';
 
 import Button from '@material-ui/core/Button';
 import PauseIcon from '@material-ui/icons/PauseCircleOutline';
@@ -187,7 +187,7 @@ class ObserverMode extends Component {
           </div>
         </div>
         <div className="ObserverMessageLog">
-          <MessageBoardComponent messages={messages}/>
+          <MessageBoard messages={messages}/>
         </div>
         <div className="ViewerGaze">
           {this.getGazeViewer(false)}

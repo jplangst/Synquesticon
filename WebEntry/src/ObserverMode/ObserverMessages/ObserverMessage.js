@@ -5,7 +5,7 @@ import CommentIcon from '@material-ui/icons/ModeCommentOutlined';
 import { Typography } from '@material-ui/core';
 import { withTheme } from '@material-ui/styles';
 
-import * as playerUtils from '../../../core/player_utility_functions';
+import * as playerUtils from '../../core/player_utility_functions';
 
 import './ObserverMessage.css';
 
@@ -133,7 +133,7 @@ class ObserverMessage extends React.Component {
 
   render() {
     var message = this.parseMessage(this.props.message);
-    //TODO make the comment button size and the text size responsive
+
     var commentButton = this.showCommentButton ? <Button style={{display:'flex', position: 'relative', flexGrow: 0, flexShrink:0, height:25, width:25, maxWidth:25}}
                                                 onClick={this.onCommentButtonClicked.bind(this)} >
                                                 <CommentIcon className="flippedCommentIcon" style={{display:'flex', position: 'absolute', height: '100%', width: '100%'}} />

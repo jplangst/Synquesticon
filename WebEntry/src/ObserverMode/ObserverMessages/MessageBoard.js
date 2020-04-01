@@ -1,19 +1,21 @@
 import React from 'react';
 
-import CommentDialog from '../../dialogs/CommentDialog';
-
+import CommentDialog from './CommentDialog';
 import ObserverMessage from './ObserverMessage';
-import mqtt from '../../../core/mqtt';
-import db_helper from '../../../core/db_helper';
-import * as dbObjects from '../../../core/db_objects';
-import * as playerUtils from '../../../core/player_utility_functions';
-import './MessageBoardComponent.css';
+
+import mqtt from '../../core/mqtt';
+import db_helper from '../../core/db_helper';
+import * as dbObjects from '../../core/db_objects';
+import * as playerUtils from '../../core/player_utility_functions';
+
+import './MessageBoard.css';
+
 import { Typography } from '@material-ui/core';
 import { withTheme } from '@material-ui/styles';
 
 var myStorage = window.localStorage;
 
-class MessageBoardComponent extends React.Component {
+class MessageBoard extends React.Component {
   constructor(props){
     super(props);
 
@@ -77,4 +79,4 @@ class MessageBoardComponent extends React.Component {
   }
 }
 
-export default withTheme(MessageBoardComponent);
+export default withTheme(MessageBoard);
