@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
 
-import PlayableSetComponent from './PlayableSetComponent';
+import PlayableSet from './PlayableSet';
 
 import * as listUtils from '../../core/db_objects_utility_functions';
 
-//================ React component ================
-class PlayableSetListComponent extends Component {
+class PlayableSetList extends Component {
   constructor(props) {
     super(props);
     this.taskList = props.taskList;
   }
-
-  //-----------Tasks------------
 
   render() {
     this.taskList = this.props.taskList;
@@ -20,16 +17,17 @@ class PlayableSetListComponent extends Component {
           this.taskList.map((item, index) => {
             var content = listUtils.getTaskContent(item);
 
-            return <div key={index}><PlayableSetComponent task={item}
+            return <div key={index}>
+                    <PlayableSet task={item}
                         runSetCallback={ this.props.runSetCallback }
                         getLinkCallback={ this.props.getLinkCallback }
                         editSetCallback={this.props.editSetCallback}
                         content={content}
-                        showEditButton={this.props.showEditButton}/></div>})
+                        showEditButton={this.props.showEditButton}/>
+                   </div>})
         }
-
       </div>);
   }
 }
 
-export default PlayableSetListComponent;
+export default PlayableSetList;

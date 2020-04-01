@@ -7,7 +7,7 @@ import store from '../core/store';
 import db_helper from '../core/db_helper.js';
 import * as db_objects from '../core/db_objects.js';
 import {AppModes} from '../core/sharedObjects';
-import PlayableSetListComponent from '../components/TaskList/PlayableSetListComponent';
+import PlayableSetList from './PlayableSet/PlayableSetList';
 
 import './PlayMode.css';
 
@@ -104,7 +104,7 @@ class PlayMode extends Component {
         <div style={{backgroundColor:viewerBG}} className="IntroViewer">
           <div className="PlayerViewerContent">
             <div className="TaskSetContainer">
-              < PlayableSetListComponent taskList={ this.state.taskSets }
+              < PlayableSetList taskList={ this.state.taskSets }
                       runSetCallback={ this.onPlayButtonClick.bind(this) }
                       getLinkCallback={ this.onGetLinkCallback.bind(this) }
                       editSetCallback={ this.onEditButtonClick.bind(this) }

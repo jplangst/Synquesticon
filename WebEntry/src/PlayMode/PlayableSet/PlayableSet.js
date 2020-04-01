@@ -8,9 +8,9 @@ import { withTheme } from '@material-ui/styles';
 
 import store from '../../core/store';
 
-import './TaskItemComponent.css';
+import './PlayableSet.css';
 
-class PlayableSetComponent extends Component {
+class PlayableSet extends Component {
   render() {
     var buttonSize = store.getState().windowSize.width > 500 ? 40 : 20;
     let textColor = this.props.theme.palette.type === "light" ? "textSecondary" : "textPrimary";
@@ -43,4 +43,4 @@ class PlayableSetComponent extends Component {
   }
 }
 
-export default withTheme(PlayableSetComponent);
+export default withTheme(PlayableSet);
