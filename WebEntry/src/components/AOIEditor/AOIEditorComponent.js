@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import AOIToolboxComponent from './AOIToolboxComponent';
 import AOIImageViewComponent from './AOIImageViewComponent';
-import AOINameDialog from '../dialogs/AOINameDialog';
+import AOINameDialog from './AOINameDialog';
 
 import './AOIEditorComponent.css';
 

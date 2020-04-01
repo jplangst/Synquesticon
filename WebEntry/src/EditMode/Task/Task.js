@@ -37,8 +37,6 @@ class EditTask extends Component {
       this.synquestitask.childObj[i].openState = true;
     }
 
-    console.log(this.synquestitask.childObj);
-
     //We keep these fields in the state as they affect how the component is rendered
     this.state = {
       taskComponents: this.synquestitask.childObj,
