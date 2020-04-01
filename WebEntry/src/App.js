@@ -13,8 +13,8 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Header from './components/Header/Header'
 import EditMode from './EditMode/EditMode';
 import ObserverMode from './pages/ObserverMode';
-import ExportationMode from './pages/ExportationMode';
-import IntroductionScreen from './pages/IntroductionScreen';
+import ExportMode from './ExportMode/ExportMode';
+import PlayMode from './PlayMode/PlayMode';
 import DisplayTaskComponent from './components/PlayerComponents/DisplayTaskComponent';
 
 import './App.css'
@@ -72,10 +72,10 @@ class App extends Component {
             <Route component={Header} />
             <div className="MainContent">
               <Switch>
-                <Route exact path="/" component={IntroductionScreen} />
+                <Route exact path="/" component={PlayMode} />
                 <Route path={"/"+AppModes.EDIT} component={EditMode} />
                 <Route path="/ObserverMode" component={ObserverMode} />
-                <Route path="/ExportationMode" component={ExportationMode} />
+                <Route path="/ExportationMode" component={ExportMode} />
                 <Route path="/study" component={DisplayTaskComponent}/>} />
               </Switch>
             </div>

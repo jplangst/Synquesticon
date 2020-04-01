@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
 
-import {AppModes} from '../core/sharedObjects';
 import { withTheme } from '@material-ui/styles';
-
-import PlayableSetListComponent from '../components/TaskList/PlayableSetListComponent';
+import { Typography } from '@material-ui/core';
 
 import store from '../core/store';
-
 import db_helper from '../core/db_helper.js';
 import * as db_objects from '../core/db_objects.js';
+import {AppModes} from '../core/sharedObjects';
+import PlayableSetListComponent from '../components/TaskList/PlayableSetListComponent';
 
-import './PlayerMode.css';
+import './PlayMode.css';
 
-class PlayerMode extends Component {
+class PlayMode extends Component {
   constructor(props) {
     super(props);
 
@@ -25,6 +24,12 @@ class PlayerMode extends Component {
 
     //Database callbacks
     this.dbTaskSetCallback = this.dbTaskSetCallbackFunction.bind(this);
+
+    this.gotoPage = this.gotoPageHandler.bind(this);
+  }
+
+  gotoPageHandler(route){
+    this.props.history.push(route);
   }
 
   componentWillMount() {
@@ -54,14 +59,14 @@ class PlayerMode extends Component {
     };
     store.dispatch(setEditSetAction);
 
-    this.props.gotoPage("/"+AppModes.EDIT);
+    this.gotoPage("/"+AppModes.EDIT);
   }
 
   onPlayButtonClick(taskSet) {
     this.selectedTaskSet = taskSet;
     var url = '/study?id=' + this.selectedTaskSet._id;
     url = this.appendEyeTrackerInfo(url);
-    this.props.gotoPage(url);
+    this.gotoPage(url);
   }
 
   onGetLinkCallback(taskSet) {
@@ -86,18 +91,30 @@ class PlayerMode extends Component {
   }
 
   render() {
-    return (
-      <div className="PlayerViewerContent">
-        <div className="TaskSetContainer">
-          < PlayableSetListComponent taskList={ this.state.taskSets }
-                  runSetCallback={ this.onPlayButtonClick.bind(this) }
-                  getLinkCallback={ this.onGetLinkCallback.bind(this) }
-                  editSetCallback={ this.onEditButtonClick.bind(this) }
-                  showEditButton={true}/>
+    let theme = this.props.theme;
+    let viewerBG = theme.palette.type === "light" ? theme.palette.primary.main : theme.palette.primary.dark;
+
+    return(
+      <div className="introductionScreenContainer">
+        <div className="experimentsHeader" style={{backgroundColor:viewerBG}}>
+          <Typography style={{marginLeft:20, marginTop:20}} variant="h4" color="textPrimary">
+            Experiments
+          </Typography>
+        </div>
+        <div style={{backgroundColor:viewerBG}} className="IntroViewer">
+          <div className="PlayerViewerContent">
+            <div className="TaskSetContainer">
+              < PlayableSetListComponent taskList={ this.state.taskSets }
+                      runSetCallback={ this.onPlayButtonClick.bind(this) }
+                      getLinkCallback={ this.onGetLinkCallback.bind(this) }
+                      editSetCallback={ this.onEditButtonClick.bind(this) }
+                      showEditButton={true}/>
+            </div>
+          </div>
         </div>
       </div>
-      );
+    );
   }
 }
 
-export default withTheme(PlayerMode);
+export default withTheme(PlayMode);

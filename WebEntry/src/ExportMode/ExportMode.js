@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import './ExportationMode.css';
+import './ExportMode.css';
 
 import { Typography } from '@material-ui/core';
 import List from '@material-ui/core/List';
@@ -38,7 +38,7 @@ function HEADER(seperator) {
    return header;
  }
 
-class ExportationMode extends Component {
+class ExportMode extends Component {
   constructor(props){
     super(props);
     this.state = {
@@ -256,7 +256,7 @@ class ExportationMode extends Component {
       file_name = this.formatDateTime(p.linesOfData[0].startTimestamp) + '_';
       file_name += p.linesOfData[0].tasksFamilyTree[0] + '_';
     }
-    
+
     p.globalVariables.sort((a, b) => a.label.localeCompare(b.label));
 
     for (let i = 0; i < p.globalVariables.length; i++) {
@@ -345,4 +345,4 @@ class ExportationMode extends Component {
       </div>)
     }
 }
-export default withTheme(ExportationMode);
+export default withTheme(ExportMode);
