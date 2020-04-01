@@ -36,7 +36,6 @@ class EditSet extends Component {
       taskList: this.set.childIds ? this.set.childIds : [],
       taskListObjects: [],
       randomizeSet: this.set.setTaskOrder === "Random" ? true : false,
-      displayOnePage: this.set.displayOnePage,
       logOneLine: this.set.logOneLine,
     };
 
@@ -49,7 +48,6 @@ class EditSet extends Component {
     this.handleUpdateSetChildTasks = this.onRetrievedSetChildTasksAddToSet.bind(this);
 
     this.handleSetTaskOrderChange = this.onSetTaskOrderChanged.bind(this);
-    this.handleDisplayOnePageChange = this.onDisplayOnePageChanged.bind(this);
     this.handleLogOneLineChange = this.onLogOneLineChanged.bind(this);
 
     //The index where a new task will be placed
@@ -175,12 +173,7 @@ class EditSet extends Component {
       randomizeSet: checked
     });
   }
-  onDisplayOnePageChanged(e, checked){
-    this.set.displayOnePage = checked;
-    this.setState({
-      displayOnePage: checked
-    });
-  }
+
   onLogOneLineChanged(e, checked){
     this.set.logOneLine = checked;
     this.setState({
@@ -407,14 +400,6 @@ class EditSet extends Component {
 ██   ██ ███████ ██   ████ ██████  ███████ ██   ██
 */
 
-/*<FormControlLabel label="Log on one line"
-  value="start"
-  checked={this.state.logOneLine}
-  control={<Checkbox color="secondary" />}
-  onChange={this.handleLogOneLineChange}
-  labelPlacement="end"
-/>*/
-
   render() {
     var setContent =
       <div>
@@ -460,25 +445,13 @@ class EditSet extends Component {
           onChange={this.handleSetTaskOrderChange}
           labelPlacement="end"
         />
-        <FormControlLabel label="Display on one page"
-          value="start"
-          checked={this.state.displayOnePage}
-          control={<Checkbox color="secondary" />}
-          onChange={this.handleDisplayOnePageChange}
-          labelPlacement="end"
-        />
       </div>;
 
     var deleteTaskBtn = null;
-    var playTaskBtn = null;
     if(this.props.isEditing){
       deleteTaskBtn = <Button onClick={this.removeSet.bind(this)} variant="outlined">
         Delete Set
         </Button>;
-      playTaskBtn = null;
-      // playTaskBtn = <Button onClick={this.onPlaySet.bind(this)} variant="outlined">
-      //   Play
-      //   </Button>;
     }
 
     return(
@@ -512,7 +485,6 @@ class EditSet extends Component {
           <Button onClick={this.onChangeSetSettings.bind(this)} variant="outlined">
             {this.props.isEditing ? "Save" : "Create"}
           </Button>
-          {playTaskBtn}
         </div>
       </div>
     );

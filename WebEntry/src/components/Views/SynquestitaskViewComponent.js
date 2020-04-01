@@ -15,7 +15,7 @@ import * as dbObjects from '../../core/db_objects';
 import * as dbObjectsUtilityFunctions from '../../core/db_objects_utility_functions';
 import * as playerUtils from '../../core/player_utility_functions';
 
-import '../PlayerComponents/MultiItemTask.css';
+import '../PlayerComponents/SynquestitaskItem.css';
 
 class SynquestitaskViewComponent extends Component {
   constructor(props) {

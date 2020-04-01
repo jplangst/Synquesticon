@@ -14,8 +14,6 @@ import ImageViewComponent from '../Views/ImageViewComponent';
 import ComparisonViewComponent from '../Views/ComparisonViewComponent';
 import SynquestitaskViewComponent from '../Views/SynquestitaskViewComponent';
 
-import MultiItemTask from './MultiItemTask';
-
 import PauseDialog from '../dialogs/PauseDialog';
 
 import mqtt from '../../core/mqtt'
@@ -278,24 +276,6 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
         let id = this.currentTask._id + "_" + this.progressCount;
         var getDisplayedContent = () => {
           if(this.currentTask){
-            if((this.currentTask.objType === "TaskSet") && this.currentTask.displayOnePage) {
-              if (this.currentTask.numCorrectAnswers === undefined) {
-                this.currentTask.numCorrectAnswers = 0;
-              }
-              return <MultiItemTask tasksFamilyTree={trackingTaskSetNames}
-                                    taskSet={this.currentTask}
-                                    answerCallback={this.onAnswer.bind(this)}
-                                    newTask={!this.state.hasBeenAnswered}
-                                    hasBeenInitiated={this.hasBeenInitiated}
-                                    initCallback={(taskResponses) => {
-                                      this.currentLineOfData = taskResponses;
-                                    }}
-                                    logTheStartOfTask={(task, log, ind) => {
-                                      mqtt.broadcastEvents(stringifyMessage(task, log, "START", this.progressCount, this.progressCount+ind+1));
-                                      this.hasBeenInitiated = true;
-                                    }}
-                                    key={id}/>
-            }
             if((this.currentTask.objType === "Synquestitask")) {
               return <SynquestitaskViewComponent tasksFamilyTree={trackingTaskSetNames}
                                                  task={this.currentTask}
