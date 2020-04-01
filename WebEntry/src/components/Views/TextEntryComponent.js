@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 
-import { Typography } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+import { Typography, TextField } from '@material-ui/core';
 
 import store from '../../core/store';
 
@@ -54,16 +52,20 @@ class TextEntryComponent extends Component {
 
   render() {
     return (
-      <div className={this.props.className} >
-        <div>
-          <Typography ref={this.textRef} variant="h3" align="center" style={{whiteSpace:"pre-line"}} color="textPrimary">{this.props.task.displayText}</Typography>
-        </div>
+      <div className={this.props.className} style={{display:'flex', position:'relative', flexDirection:'column', width:'100%', flexGrow:0,flexShrink:0}}>
+        <Typography ref={this.textRef} variant="h3" align="center" style={{whiteSpace:"pre-line", width:'100%'}} color="textPrimary">
+          {this.props.task.displayText}
+        </Typography>
         <TextField
           id="outlined-name"
           className="textField"
           defaultValue={this.textEntry}
-          padding="normal"
           variant="outlined"
+          fullWidth
+          margin='dense'
+          multiline
+          rows={3}
+          rowsMax={10}
           onChange={(e) => this.onAnswer(e)}
         />
       </div>
