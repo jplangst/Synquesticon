@@ -68,6 +68,7 @@ const SynquestitaskSchema = new Schema({
     correctResponses: [String], //The correct response
     responseUnit: String, //The unit of the response e.g. "%", "RPM"
     singleChoice: Boolean, //If the answer should be single choice
+    resetResponses: Boolean, //If the answer should be reset after 1s
 
     //Image specifics
     image: String, //filepath

@@ -49,7 +49,8 @@ export class SynquestitaskChildComponent{
     this.responses = []; //The possible responses to the task
     this.correctResponses = []; //The correct response(s)
     this.responseUnit = ""; //The unit of the response e.g. "%", "RPM"
-    this.singleChoice = false; //If the anser should be single choice
+    this.singleChoice = false; //If the answer should be single choice
+    this.resetResponses = false; //If the responses should be reset after 1s 
 
     //Image specifics
     this.image = ""; //The filepath to the image

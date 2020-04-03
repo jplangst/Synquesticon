@@ -4,14 +4,13 @@ import Button from '@material-ui/core/Button';
 import { Typography } from '@material-ui/core';
 import { withTheme } from '@material-ui/styles';
 
-import store from '../../core/store';
+import store from '../../../core/store';
+import './ButtonViewComponent.css';
 
-import './MultipleChoiceComponent.css';
-
-class MultipleChoiceComponent extends Component {
+class ButtonViewComponent extends Component {
   constructor() {
     super();
-    this.pickedItems = [];
+    this.pickedItem = [];
     this.textRef = React.createRef();
   }
 
@@ -28,42 +27,66 @@ class MultipleChoiceComponent extends Component {
   }
 
   reset() {
-    if (this.props.newTask) {
-      this.pickedItems = [];
-    }
+    console.log("resest");
+    this.pickedItems = [];
+    this.forceUpdate();
   }
 
   checkAnswer() {
     if (this.props.task.correctResponses === undefined || this.props.task.correctResponses.length === 0) {
       return "notApplicable";
     }
-    for (var i = 0; i < this.props.task.correctResponses.length; i++) {
-        if (!this.pickedItems.includes(this.props.task.correctResponses[i])) {
-          return "incorrect";
-        }
+
+    if (this.props.task.singleChoice) { //single choice
+      if (this.props.task.correctResponses.includes(this.pickedItem)) {
+        return "correct";
+      }
+      return "incorrect";
     }
-    return "correct";
+    else { //multiple choice
+      for (var i = 0; i < this.props.task.correctResponses.length; i++) {
+          if (!this.pickedItems.includes(this.props.task.correctResponses[i])) {
+            return "incorrect";
+          }
+      }
+      return "correct";
+    }
   }
 
-  onAnswer(item) {
-    this.pickedItems.push(item);
+  onAnswer(response) {
+    console.log("resetResponses?", this.props.task);
+
+    if (this.props.task.singleChoice) { //single choice
+      if (this.pickedItems.length <= 0) {
+        this.pickedItems.push(response);
+      }
+    }
+    else { //multiple choice
+      this.pickedItems.push(response);
+    }
     var answerObj = {
-      responses: this.pickedItems,
+      responses: [this.pickedItem],
       correctlyAnswered: this.checkAnswer(),
       taskID: this.props.task._id,
       mapID: this.props.mapID,
     }
-    this.props.answerCallback(answerObj);
-  }
 
+
+    this.props.answerCallback(answerObj);
+
+    if (this.props.task.resetResponses) {
+      //setTimeout(this.reset(), 1000);
+    }
+  }
   render() {
-    let theme = this.props.theme;
-    this.reset();
-    //this is for accommodating the legacy
-    var displayText = this.props.task.question == undefined ? this.props.task.displayText : this.props.task.question;
+    console.log("buttonview??????????????");
+    let theme=this.props.theme;
+
     return (
       <div className={this.props.className}>
-        <Typography ref={this.textRef} variant="h3" color="textPrimary" align="center" style={{whiteSpace:"pre-line"}}>{displayText}</Typography>
+        <div>
+          <Typography ref={this.textRef} variant="h3" color="textPrimary" align="center" style={{whiteSpace:"pre-line"}}>{this.props.task.displayText}</Typography>
+        </div>
         <div className="responsesButtons">
           {
             this.props.task.responses.map((item, index)=>{
@@ -80,4 +103,4 @@ class MultipleChoiceComponent extends Component {
   }
 }
 
-export default withTheme(MultipleChoiceComponent);
+export default withTheme(ButtonViewComponent);

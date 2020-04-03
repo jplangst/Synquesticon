@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import { Typography } from '@material-ui/core';
 import { withTheme } from '@material-ui/styles';
 
-import store from '../../core/store';
+import store from '../../../core/store';
 
 class SingleChoiceComponent extends Component {
   constructor() {

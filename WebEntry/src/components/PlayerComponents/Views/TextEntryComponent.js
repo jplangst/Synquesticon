@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { Typography, TextField } from '@material-ui/core';
 
-import store from '../../core/store';
+import store from '../../../core/store';
 
 import './TextEntryComponent.css';
 

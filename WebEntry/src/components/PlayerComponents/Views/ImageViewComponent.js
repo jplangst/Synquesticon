@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import store from '../../core/store';
+import store from '../../../core/store';
 
 import './ImageViewComponent.css';
 

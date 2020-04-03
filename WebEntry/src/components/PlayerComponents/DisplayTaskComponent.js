@@ -6,13 +6,7 @@ import { Typography } from '@material-ui/core';
 import { withTheme } from '@material-ui/styles';
 
 //view components
-import InstructionViewComponent from '../Views/InstructionViewComponent';
-import NumpadComponent from '../Views/NumpadComponent';
-import SingleChoiceComponent from '../Views/SingleChoiceComponent';
-import MultipleChoiceComponent from '../Views/MultipleChoiceComponent';
-import ImageViewComponent from '../Views/ImageViewComponent';
-import ComparisonViewComponent from '../Views/ComparisonViewComponent';
-import SynquestitaskViewComponent from '../Views/SynquestitaskViewComponent';
+import SynquestitaskViewComponent from './Views/SynquestitaskViewComponent';
 
 import PauseDialog from './PauseDialog';
 
@@ -72,7 +66,7 @@ function stringifyMessage(task, lineOfData, eventType, progressCount, taskIndex)
 ██   ██ ██      ██      ██    ██ ██   ██      ██ ██ ██    ██ ██  ██ ██     ██      ██    ██ ██  ██  ██ ██      ██    ██ ██  ██ ██ ██      ██  ██ ██    ██
 ██   ██ ███████  ██████  ██████  ██   ██ ███████ ██  ██████  ██   ████      ██████  ██████  ██      ██ ██       ██████  ██   ████ ███████ ██   ████    ██
 */
-
+//This component is used to do recursion
 class DisplayTaskHelper extends React.Component { //for the sake of recursion
   constructor() {
     super();
@@ -161,7 +155,6 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
     }
 
     this.currentLineOfData.forEach((line, index) => {
-      console.log("isGlobalVariable", line.isGlobalVariable);
       if (line.isGlobalVariable !== undefined) {
         this.saveGlobalVariable(store.getState().experimentInfo.participantId,
                                 line.label, line.responses);
@@ -194,14 +187,6 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
           currentTaskIndex: 0
         });
 
-        return;
-      }
-    }
-
-    if (this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage && this.currentTask.numCorrectAnswers < this.currentTask.repeatSetThreshold) {
-      if (!(store.getState().experimentInfo.participantId === "TESTING")) {
-        alert("you did not meet the required number of correct answers.");
-        this.progressCount = this.props.progressCount;
         return;
       }
     }
@@ -241,18 +226,21 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
   ██   ██ ██      ██  ██ ██ ██   ██ ██      ██   ██
   ██   ██ ███████ ██   ████ ██████  ███████ ██   ██
   */
-
+  //This function is the anchor of recursion
+  isTheEndOfSet() {
+    return (this.props.taskSet.data.length > 0 && this.state.currentTaskIndex >= this.props.taskSet.data.length)
+  }
 
   render() {
-    //check if we should enter a new level or leave
-    if(this.props.taskSet.data.length > 0 && this.state.currentTaskIndex < this.props.taskSet.data.length) {
+    if(!this.isTheEndOfSet()) {
       this.currentTask = this.props.taskSet.data[this.state.currentTaskIndex];
+      var id = this.currentTask._id + "_" + this.progressCount;
 
       let trackingTaskSetNames = this.props.tasksFamilyTree.slice(); //clone array, since javascript passes by reference, we need to keep the orginal familyTree untouched
       trackingTaskSetNames.push(this.currentTask.name);
-      var parentSet = this.props.tasksFamilyTree[this.props.tasksFamilyTree.length - 1];
-      if (this.currentTask.objType === "TaskSet" && !this.currentTask.displayOnePage) {
 
+      var parentSet = this.props.tasksFamilyTree[this.props.tasksFamilyTree.length - 1];
+      if (this.currentTask.objType === dbObjects.ObjectTypes.SET) {
         //shuffle set if set was marked as "Random"
         var runThisTaskSet = this.currentTask.data;
         if (this.currentTask.setTaskOrder === "Random") {
@@ -272,39 +260,27 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
                                   progressCount={this.progressCount}
                                   repeatSetThreshold={updatedTaskSet.repeatSetThreshold}/>
       }
-      else {
-        let id = this.currentTask._id + "_" + this.progressCount;
-        var getDisplayedContent = () => {
-          if(this.currentTask){
-            if((this.currentTask.objType === "Synquestitask")) {
-              return <SynquestitaskViewComponent tasksFamilyTree={trackingTaskSetNames}
-                                                 task={this.currentTask}
-                                                 answerCallback={this.onAnswer.bind(this)}
-                                                 answerItem={this.state.answerItem}
-                                                 newTask={!this.state.hasBeenAnswered}
-                                                 hasBeenInitiated={this.hasBeenInitiated}
-                                                 parentSet={parentSet}
-                                                 initCallback={(taskResponses) => {
-                                                   this.currentLineOfData = taskResponses;
-                                                 }}
-                                                 logTheStartOfTask={(task, log, ind) => {
-                                                   mqtt.broadcastEvents(stringifyMessage(task, log, "START", this.progressCount, this.progressCount+1));
-                                                   this.hasBeenInitiated = true;
-                                                 }}
-                                                 key={id}/>;
-            }
-
-          } else {
-            return null;
-          }
-        };
-
+      else { //not a set
         var nextButtonText = this.state.hasBeenAnswered ? "Next" : "Skip";
 
         return (
           <div className="page" key={this.currentTaskIndex}>
             <div className="mainDisplay">
-              {getDisplayedContent()}
+              <SynquestitaskViewComponent tasksFamilyTree={trackingTaskSetNames}
+                                          task={this.currentTask}
+                                          answerCallback={this.onAnswer.bind(this)}
+                                          answerItem={this.state.answerItem}
+                                          newTask={!this.state.hasBeenAnswered}
+                                          hasBeenInitiated={this.hasBeenInitiated}
+                                          parentSet={parentSet}
+                                          initCallback={(taskResponses) => {
+                                              this.currentLineOfData = taskResponses;
+                                          }}
+                                          logTheStartOfTask={(task, log, ind) => {
+                                              mqtt.broadcastEvents(stringifyMessage(task, log, "START", this.progressCount, this.progressCount+1));
+                                                   this.hasBeenInitiated = true;
+                                              }}
+                                          key={id}/>
             </div>
             <div className="nextButton">
               <Button className="nextButton" variant="outlined" onClick={this.onClickNext.bind(this)}>
@@ -317,7 +293,6 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
     }
     else { //TODO: end of set
       this.props.onFinished();
-      // console.log("end of set");
       return (null);
     }
   }
@@ -331,7 +306,8 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
  ███ ███  ██   ██ ██   ██ ██      ██      ███████ ██   ██      ██████  ██████  ██      ██ ██       ██████  ██   ████ ███████ ██   ████    ██
 */
 
-
+//The wrapper handles global measurement that does not need to be reinitiated every recursion
+//For example: gaze events
 class DisplayTaskComponent extends Component {
   constructor(props) {
     super(props);

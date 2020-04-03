@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 
-import store from '../../core/store';
+import store from '../../../core/store';
 
 import './TextEntryComponent.css';
 
@@ -54,13 +54,6 @@ class NumpadComponent extends Component {
     this.onAnswer();
   }
 
-  reset() {
-    if (this.props.newTask) {
-      this.textEntry = "";
-      this.decimalWasPressed = false;
-    }
-  }
-
   checkAnswer() {
     if (this.props.task.correctResponses === undefined || this.props.task.correctResponses.length === 0) {
       return "notApplicable";
@@ -94,23 +87,6 @@ class NumpadComponent extends Component {
   }
 
   render() {
-    /* SAVE FOR LATER
-    <TextField
-      id="outlined-name"
-      className="textField"
-      value={this.textEntry}
-      InputProps={{
-                readOnly: true
-              }}
-      padding="normal"
-      variant="outlined"
-      onClick={(e)=>{e.preventDefault(); e.stopPropagation()}}
-    />
-    */
-
-
-    this.reset();
-
     var getKeyboardLine = (keyboard, css) => {
       return (<div className={css}>
               {keyboard.map((item, index) => {
@@ -124,11 +100,11 @@ class NumpadComponent extends Component {
               }
               </div>);
     }
-    var displayText = this.props.task.question == undefined ? this.props.task.displayText : this.props.task.question;
+    
     return (
       <div className={this.props.className} >
         <div>
-          <Typography ref={this.textRef} variant="h3" align="center" style={{whiteSpace:"pre-line"}} color="textPrimary">{displayText}</Typography>
+          <Typography ref={this.textRef} variant="h3" align="center" style={{whiteSpace:"pre-line"}} color="textPrimary">{this.props.displayText}</Typography>
         </div>
         <div className="inputField">
           <Typography color="textPrimary">{this.textEntry}</Typography>

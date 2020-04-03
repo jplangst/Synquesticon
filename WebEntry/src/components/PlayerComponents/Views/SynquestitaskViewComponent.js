@@ -2,20 +2,19 @@ import React, { Component } from 'react';
 
 import TextField from '@material-ui/core/TextField';
 
-import InstructionViewComponent from '../Views/InstructionViewComponent';
-import TextEntryComponent from '../Views/TextEntryComponent';
-import NumpadComponent from '../Views/NumpadComponent';
-import SingleChoiceComponent from '../Views/SingleChoiceComponent';
-import MultipleChoiceComponent from '../Views/MultipleChoiceComponent';
-import ImageViewComponent from '../Views/ImageViewComponent';
-import ComparisonViewComponent from '../Views/ComparisonViewComponent';
+import InstructionViewComponent from './InstructionViewComponent';
+import TextEntryComponent from './TextEntryComponent';
+import NumpadComponent from './NumpadComponent';
+import ButtonViewComponent from './SingleChoiceComponent';
+import ImageViewComponent from './ImageViewComponent';
+//import ComparisonViewComponent from './Views/ComparisonViewComponent';
 
-import shuffle from '../../core/shuffle';
-import * as dbObjects from '../../core/db_objects';
-import * as dbObjectsUtilityFunctions from '../../core/db_objects_utility_functions';
-import * as playerUtils from '../../core/player_utility_functions';
+import shuffle from '../../../core/shuffle';
+import * as dbObjects from '../../../core/db_objects';
+import * as dbObjectsUtilityFunctions from '../../../core/db_objects_utility_functions';
+import * as playerUtils from '../../../core/player_utility_functions';
 
-import '../PlayerComponents/SynquestitaskItem.css';
+import './SynquestitaskItem.css';
 
 class SynquestitaskViewComponent extends Component {
   constructor(props) {
@@ -83,12 +82,7 @@ class SynquestitaskViewComponent extends Component {
           return <TextEntryComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
       }
       else if(item.objType === dbObjects.TaskTypes.MCHOICE.type){
-        if (item.singleChoice) {
-          return <SingleChoiceComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
-        }
-        else {
-          return <MultipleChoiceComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
-        }
+          return <ButtonViewComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
       }
       else if(item.objType === dbObjects.TaskTypes.IMAGE.type) {
           return <ImageViewComponent className="itemContainer" key={key} task={item} mapID={mapIndex} parentSet={this.props.task.name}/>;
@@ -96,9 +90,9 @@ class SynquestitaskViewComponent extends Component {
       else if(item.objType === dbObjects.TaskTypes.NUMPAD.type) {
           return <NumpadComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
       }
-      else if(item.objType === "Comparison") {
-          return <ComparisonViewComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
-      }
+      // else if(item.objType === "Comparison") {
+      //     return <ComparisonViewComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
+      // }
       else{
         return null;
       }

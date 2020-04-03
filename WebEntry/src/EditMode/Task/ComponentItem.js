@@ -15,7 +15,8 @@ class TaskComponentItem extends Component {
     super(props);
 
     this.state = {
-      singleChoice: props.task.singleChoice
+      singleChoice: props.task.singleChoice,
+      resetResponses: props.task.resetResponses
     };
 
     //Image
@@ -26,6 +27,7 @@ class TaskComponentItem extends Component {
     //Task update
     this.responseHandler = this.onResponsesChanged;
     this.handleSingleChoiceChanged = this.onSingleChoiceChanged.bind(this);
+    this.handleResetResponsesChanged = this.onResetResponsesChanged.bind(this);
 
     this.uniqueID = _id;
     _id++;
@@ -97,7 +99,7 @@ class TaskComponentItem extends Component {
           <TextField label="Responses"
             required
             padding="dense"
-            style={{marginRight:"10px", width:"calc(40% - 15px)"}}
+            style={{marginRight:"10px", width:"calc(35% - 15px)"}}
             id={this.uniqueID+"mcResponses"}
             defaultValue={this.props.task.responses.join(',')}
             placeholder="Response A, Response B, ResponseC"
@@ -108,7 +110,7 @@ class TaskComponentItem extends Component {
           <TextField label="Correct Responses"
             required
             padding="dense"
-            style={{marginRight:"10px", width:"calc(40% - 15px)"}}
+            style={{marginRight:"10px", width:"calc(35% - 15px)"}}
             id={this.uniqueID+"mcCorrectResponses"}
             defaultValue={this.props.task.correctResponses.join(',')}
             placeholder="Response A, Response C"
@@ -123,6 +125,15 @@ class TaskComponentItem extends Component {
             checked={this.state.singleChoice}
             control={<Checkbox style={{width:"50%"}} color="secondary" />}
             onChange={this.handleSingleChoiceChanged}
+            labelPlacement="end"
+          />
+          <FormControlLabel label="Reset Buttons"
+            value="end"
+            id={this.uniqueID+"reset"}
+            padding="dense"
+            checked={this.state.resetResponses}
+            control={<Checkbox style={{width:"50%"}} color="secondary" />}
+            onChange={this.handleResetResponsesChanged}
             labelPlacement="end"
           />
         </div>;
@@ -194,6 +205,13 @@ class TaskComponentItem extends Component {
     this.props.task.singleChoice = checked;
     this.setState({
       singleChoice: checked,
+    });
+  }
+
+  onResetResponsesChanged(e, checked){
+    this.props.task.resetResponses = checked;
+    this.setState({
+      resetResponses: checked,
     });
   }
 
