@@ -52,6 +52,13 @@ class Header extends Component {
     var activeColor = this.props.theme.palette.secondary.main+"66";
     var modeButtons = [];
     modeButtons.push(
+      <Button key={"/"+AppModes.EDIT}
+      onClick={(e) => this.gotoPage(AppModes.EDIT)}
+        style={{display:'flex', position: 'relative', flexGrow:1, minWidth:10,maxWidth:100, width:0, height:'100%',
+              backgroundColor:this.props.history.location.pathname.includes("/"+AppModes.EDIT)?activeColor:""}}>
+        <EditIcon width="100%" height="100%" />
+      </Button>);
+    modeButtons.push(
       <Button key="/"
         style={{display:'flex', position: 'relative', flexGrow:1,minWidth:10,maxWidth:100, width:0, height:'100%',
               backgroundColor:this.props.history.location.pathname==="/"?activeColor:""}}
@@ -64,13 +71,6 @@ class Header extends Component {
         style={{display:'flex', position: 'relative', flexGrow:1,minWidth:10,maxWidth:100, width:0, height:'100%',
               backgroundColor:this.props.history.location.pathname.includes("/ObserverMode")?activeColor:""}}>
         <VisibilityIcon width="100%" height="100%" />
-      </Button>);
-    modeButtons.push(
-      <Button key={"/"+AppModes.EDIT}
-      onClick={(e) => this.gotoPage(AppModes.EDIT)}
-        style={{display:'flex', position: 'relative', flexGrow:1, minWidth:10,maxWidth:100, width:0, height:'100%',
-              backgroundColor:this.props.history.location.pathname.includes("/"+AppModes.EDIT)?activeColor:""}}>
-        <EditIcon width="100%" height="100%" />
       </Button>);
       modeButtons.push(
         <Button key="/ExportationMode"

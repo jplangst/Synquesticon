@@ -15,8 +15,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TaskTypeList from './TypeList';
 import TaskComponentList from './ComponentList';
 
-import { Typography } from '@material-ui/core';
-
 import { Droppable, DragDropContext } from 'react-beautiful-dnd';
 
 import './Task.css';
@@ -240,7 +238,7 @@ class EditTask extends Component {
           placeholder="Demographics task"
           label="Name"
           ref="setTextRef"
-          fullWidth
+          style={{width:'calc(50% - 10px)', marginRight:10}}
           rows="1"
           onChange={(e)=>{this.synquestitask.name = e.target.value}}
         />
@@ -252,17 +250,9 @@ class EditTask extends Component {
           placeholder="Demographics, Procedure"
           helperText="Tags seperated by a comma"
           label="Tags"
-          fullWidth
+          style={{width:'50%'}}
           ref="tagsRef"
           onChange={(e)=> this.responseHandler(e, e.target.value, "Tags")}
-        />
-        <FormControlLabel label="Treat Response as Global Variable"
-          value="end"
-          padding="dense"
-          checked={this.state.globalVariable}
-          control={<Checkbox style={{width:"50px"}} color="secondary" />}
-          onChange={this.handleGlobalVariableChanged}
-          labelPlacement="end"
         />
       </div>;
 
@@ -272,8 +262,8 @@ class EditTask extends Component {
     var deleteTaskBtn = null;
     if(this.props.isEditing){
       deleteTaskBtn = <Button onClick={this.removeTask.bind(this)} variant="outlined">
-        Delete Set
-        </Button>;
+                        Delete
+                      </Button>;
     }
 
     return(
@@ -288,13 +278,12 @@ class EditTask extends Component {
           </div>
 
           <div className="synquestitaskListContainer">
-            <div className="setTaskListTitle"><div className="setTaskListTitleText"><Typography color="textPrimary">Task components</Typography></div></div>
             <div className="synquestitaskListViewer">
               <Droppable droppableId="synquestitaskListId" >
                {(provided, snapshot) => (
                 <div ref={provided.innerRef} style={{width:'100%', height:'100%', minHeight:0}}>
                   < TaskComponentList removeCallback={this.removeComponentCallback} toggleChildCallback={this.updateChildOpenState.bind(this)}
-                  taskComponents={this.state.taskComponents}/ >
+                  taskComponents={this.state.taskComponents} displayIfEmpty={"Drag components here"}/ >
                     {provided.placeholder}
                 </div>
               )}
@@ -302,19 +291,31 @@ class EditTask extends Component {
             </div>
           </div>
 
+          <FormControlLabel label="Treat Response as Global Variable"
+            value="end"
+            padding="dense"
+            checked={this.state.globalVariable}
+            control={<Checkbox style={{width:"50px"}} color="secondary" />}
+            onChange={this.handleGlobalVariableChanged}
+            labelPlacement="end"
+          />
+
           <div className="editSynquestitaskComponentButtons">
-            <Button onClick={this.closeSetComponent.bind(this, false, true)} variant="outlined">
-              Close
-            </Button>
-            {deleteTaskBtn}
             <Button onClick={this.onChangeTaskSettings.bind(this)} variant="outlined">
               {this.props.isEditing ? "Save" : "Create"}
             </Button>
+            {deleteTaskBtn}
           </div>
         </div>
       </DragDropContext>
     );
   }
 }
+
+/*
+<Button onClick={this.closeSetComponent.bind(this, false, true)} variant="outlined">
+  Close
+</Button>
+*/
 
 export default EditTask;
