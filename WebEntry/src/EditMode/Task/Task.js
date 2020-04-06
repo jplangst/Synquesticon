@@ -247,9 +247,8 @@ class EditTask extends Component {
 
           padding="dense"
           defaultValue={this.synquestitask.tags.join(',')}
-          placeholder="Demographics, Procedure"
-          helperText="Tags seperated by a comma"
-          label="Tags"
+          placeholder="Pump, Steam"
+          label="Tags(comma-separated)"
           style={{width:'50%'}}
           ref="tagsRef"
           onChange={(e)=> this.responseHandler(e, e.target.value, "Tags")}
@@ -291,20 +290,20 @@ class EditTask extends Component {
             </div>
           </div>
 
-          <FormControlLabel label="Treat Response as Global Variable"
-            value="end"
-            padding="dense"
-            checked={this.state.globalVariable}
-            control={<Checkbox style={{width:"50px"}} color="secondary" />}
-            onChange={this.handleGlobalVariableChanged}
-            labelPlacement="end"
-          />
-
           <div className="editSynquestitaskComponentButtons">
             <Button onClick={this.onChangeTaskSettings.bind(this)} variant="outlined">
               {this.props.isEditing ? "Save" : "Create"}
             </Button>
             {deleteTaskBtn}
+            <FormControlLabel label="Treat Response as Global Variable"
+              value="end"
+              padding="dense"
+              style={{marginLeft:10}}
+              checked={this.state.globalVariable}
+              control={<Checkbox style={{width:"50px"}} color="secondary" />}
+              onChange={this.handleGlobalVariableChanged}
+              labelPlacement="end"
+            />
           </div>
         </div>
       </DragDropContext>
