@@ -77,3 +77,37 @@ function getImagePath(dataList, imageFiles){
   });
   return imageFiles;
 }
+
+export function stringifyMessage(store, task, lineOfData, eventType, progressCount, taskIndex) {
+  try {
+    if (store.getState().experimentInfo.participantId === undefined) {
+      return null;
+    }
+    return JSON.stringify({
+                            eventType: eventType,
+                            participantId: store.getState().experimentInfo.participantId,
+                            participantLabel: store.getState().experimentInfo.participantLabel,
+                            startTimestamp: store.getState().experimentInfo.startTimestamp,
+                            selectedTracker: store.getState().experimentInfo.selectedTracker,
+                            task: task,
+                            lineOfData: lineOfData,
+                            taskSetCount: store.getState().experimentInfo.taskSetCount,
+                            progressCount: progressCount,
+                            taskIndex: taskIndex
+                          });
+  } catch (err) {
+    // return JSON.stringify({
+    //                         eventType: eventType,
+    //                         participantId: store.getState().experimentInfo.participantId,
+    //                         participantLabel: store.getState().experimentInfo.participantLabel,
+    //                         startTimestamp: store.getState().experimentInfo.startTimestamp,
+    //                         selectedTracker: store.getState().experimentInfo.selectedTracker,
+    //                         task: task,
+    //                         lineOfData: lineOfData,
+    //                         taskSetCount: store.getState().experimentInfo.taskSetCount,
+    //                         progressCount: progressCount,
+    //                         taskIndex: taskIndex
+    //                       });
+    return null;
+  }
+}

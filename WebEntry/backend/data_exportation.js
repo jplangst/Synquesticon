@@ -244,7 +244,6 @@ exports.save_to_csv = async function(p, seperator) {
                      escapeCSV(commentText) + seperator +
                      escapeCSV(line.tags.join('_')) + seperator +
                      escapeCSV(line.tasksFamilyTree.join('_')) + seperator +
-                     escapeCSV(line.displayType) + seperator +
                      getFormattedTime(line.startTimestamp) + seperator + //Remove linebreaks and extra whitespace
                      getFormattedTime(line.firstResponseTimestamp)).replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ") + seperator +
                      p._id + os.EOL;

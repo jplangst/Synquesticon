@@ -50,7 +50,7 @@ export class SynquestitaskChildComponent{
     this.correctResponses = []; //The correct response(s)
     this.responseUnit = ""; //The unit of the response e.g. "%", "RPM"
     this.singleChoice = false; //If the answer should be single choice
-    this.resetResponses = false; //If the responses should be reset after 1s 
+    this.resetResponses = false; //If the responses should be reset after 1s
 
     //Image specifics
     this.image = ""; //The filepath to the image
@@ -127,11 +127,10 @@ export class ParticipantObject {
  * The default object used for LineOfData. New lines of data should use this as the base.
  */
 export class LineOfData {
-  constructor(currentTime, taskId, familyTree, taskContent, taskCorrectResponses, displayType, taskType) {
+  constructor(currentTime, taskId, familyTree, taskContent, taskCorrectResponses, taskType) {
     this.tasksFamilyTree = familyTree;
     this.taskId = taskId;
     this.taskContent = taskContent;
-    this.displayType = displayType;
     this.objType = taskType;
     this.responses = [];
     this.correctResponses = taskCorrectResponses;

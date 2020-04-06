@@ -5,7 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import InstructionViewComponent from './InstructionViewComponent';
 import TextEntryComponent from './TextEntryComponent';
 import NumpadComponent from './NumpadComponent';
-import ButtonViewComponent from './SingleChoiceComponent';
+import ButtonViewComponent from './ButtonViewComponent';
 import ImageViewComponent from './ImageViewComponent';
 //import ComparisonViewComponent from './Views/ComparisonViewComponent';
 
@@ -54,26 +54,31 @@ class SynquestitaskViewComponent extends Component {
                                              this.props.tasksFamilyTree,
                                              task.displayText,
                                              task.correctResponses,
-                                             "SingleItem",
                                              task.objType);
 
       if(this.props.task.globalVariable) {
         newLine.isGlobalVariable = true;
         newLine.label = task.displayText;
       }
-      this.taskResponses.set(_id + mapIndex, newLine);
+      if (!task.resetResponses) { //this item is authorized to log its own data, remove the logging from parent task
+        this.taskResponses.set(_id + mapIndex, newLine);
+      }
+
       this.props.logTheStartOfTask(this.props.task, newLine, mapIndex);
+      return newLine;
     }
+    return null;
   }
 
   getDisplayedContent(taskList, _id, mapIndex){
     return taskList.map((item, i) => {
       mapIndex = i;
+      var newLine = null;
       if(this.props.newTask && item.objType !== "Instruction" && item.objType !== "Image") {
-        this.logTheStartOfTask(item, _id, mapIndex);
+        newLine = this.logTheStartOfTask(item, _id, mapIndex);
       }
 
-      var key = _id+"Synquestitask"+i;
+      var key = this.props.key+"Synquestitask"+i;
 
       if(item.objType === dbObjects.TaskTypes.INSTRUCTION.type){
           return <InstructionViewComponent className="itemContainer" key={key} task={item} mapID={mapIndex} parentSet={this.props.task.name}/>;
@@ -82,7 +87,7 @@ class SynquestitaskViewComponent extends Component {
           return <TextEntryComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
       }
       else if(item.objType === dbObjects.TaskTypes.MCHOICE.type){
-          return <ButtonViewComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
+          return <ButtonViewComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name} delegate={newLine}/>;
       }
       else if(item.objType === dbObjects.TaskTypes.IMAGE.type) {
           return <ImageViewComponent className="itemContainer" key={key} task={item} mapID={mapIndex} parentSet={this.props.task.name}/>;

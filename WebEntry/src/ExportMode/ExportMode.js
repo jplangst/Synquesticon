@@ -31,7 +31,6 @@ function HEADER(seperator) {
                "comments" + seperator +
                "tags" + seperator +
                "set_names" + seperator +
-               "task_type" + seperator +
                "timestamp_start" + seperator +
                "timestamp_first_response" + seperator +
                "database_id" + "\n";

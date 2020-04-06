@@ -4,14 +4,22 @@ import Button from '@material-ui/core/Button';
 import { Typography } from '@material-ui/core';
 import { withTheme } from '@material-ui/styles';
 
+import mqtt from '../../../core/mqtt'
+import db_helper from '../../../core/db_helper';
+import * as playerUtils from '../../../core/player_utility_functions';
+
 import store from '../../../core/store';
+
 import './ButtonViewComponent.css';
 
 class ButtonViewComponent extends Component {
-  constructor() {
-    super();
-    this.pickedItem = [];
+  constructor(props) {
+    super(props);
+    this.pickedItems = [];
     this.textRef = React.createRef();
+
+    //we grant button with reset feature the permission to log data
+    this.delegate = this.props.delegate;
   }
 
   componentDidMount() {
@@ -26,8 +34,14 @@ class ButtonViewComponent extends Component {
     store.dispatch(textAOIAction);
   }
 
+  componentDidUpdate() {
+    if (this.pickedItems.length > 0 && this.props.task.resetResponses) {
+      setTimeout(this.reset.bind(this), 1000);
+    }
+  }
+
   reset() {
-    console.log("resest");
+    console.log("reset");
     this.pickedItems = [];
     this.forceUpdate();
   }
@@ -37,25 +51,15 @@ class ButtonViewComponent extends Component {
       return "notApplicable";
     }
 
-    if (this.props.task.singleChoice) { //single choice
-      if (this.props.task.correctResponses.includes(this.pickedItem)) {
-        return "correct";
-      }
-      return "incorrect";
+    for (var i = 0; i < this.props.task.correctResponses.length; i++) {
+        if (!this.pickedItems.includes(this.props.task.correctResponses[i])) {
+          return "incorrect";
+        }
     }
-    else { //multiple choice
-      for (var i = 0; i < this.props.task.correctResponses.length; i++) {
-          if (!this.pickedItems.includes(this.props.task.correctResponses[i])) {
-            return "incorrect";
-          }
-      }
-      return "correct";
-    }
+    return "correct";
   }
 
   onAnswer(response) {
-    console.log("resetResponses?", this.props.task);
-
     if (this.props.task.singleChoice) { //single choice
       if (this.pickedItems.length <= 0) {
         this.pickedItems.push(response);
@@ -64,22 +68,36 @@ class ButtonViewComponent extends Component {
     else { //multiple choice
       this.pickedItems.push(response);
     }
-    var answerObj = {
-      responses: [this.pickedItem],
-      correctlyAnswered: this.checkAnswer(),
-      taskID: this.props.task._id,
-      mapID: this.props.mapID,
+
+    if (this.props.task.resetResponses) { //buttons with this feature are authorized to log their own data
+      console.log("log individual button click");
+      var lineOfData = JSON.parse(JSON.stringify(this.delegate));
+      lineOfData.timeToCompletion = playerUtils.getCurrentTime() - lineOfData.startTimestamp;
+      lineOfData.responses = [response];
+      lineOfData.correctlyAnswered = this.checkAnswer();
+
+      console.log("responses", lineOfData);
+
+      db_helper.addNewLineToParticipantDB(store.getState().experimentInfo.participantId, JSON.stringify(lineOfData));
+      mqtt.broadcastEvents(playerUtils.stringifyMessage(store,
+                                                        {_id:lineOfData.taskId},
+                                                        lineOfData,
+                                                        "RESETANSWER",
+                                                        this.progressCount, -1));
+      this.forceUpdate();
     }
+    else { //normal buttons behaviour
+      var answerObj = {
+        responses: [response],
+        correctlyAnswered: this.checkAnswer(),
+        taskID: this.props.task._id,
+        mapID: this.props.mapID,
+      }
 
-
-    this.props.answerCallback(answerObj);
-
-    if (this.props.task.resetResponses) {
-      //setTimeout(this.reset(), 1000);
+      this.props.answerCallback(answerObj);
     }
   }
   render() {
-    console.log("buttonview??????????????");
     let theme=this.props.theme;
 
     return (

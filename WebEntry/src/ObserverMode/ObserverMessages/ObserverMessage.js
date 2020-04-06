@@ -64,6 +64,7 @@ class ObserverMessage extends React.Component {
 
         var responses = args.lineOfData.responses.join(', ');
         timeToCompletion = args.lineOfData.timeToCompletion < 0 ? 0 : args.lineOfData.timeToCompletion/1000;
+        var timeToFirstAnswer = args.lineOfData.timeToFirstAnswer < 0 ? 0 : args.lineOfData.timeToFirstAnswer/1000;
         var color = this.props.theme.palette.textPrimary;
         if (args.lineOfData.correctlyAnswered === "correct") {
           color = greenColor;
@@ -72,7 +73,7 @@ class ObserverMessage extends React.Component {
           color = redColor;
         }
         displayText = <Typography display="inline" variant="body1" color="textPrimary">
-                      <font color={color}>"{responses}"</font> ({args.lineOfData.timeToFirstAnswer/1000}s /{timeToCompletion}s)
+                      <font color={color}>"{responses}"</font> ({timeToFirstAnswer}s /{timeToCompletion}s)
                       </Typography>;
 
 

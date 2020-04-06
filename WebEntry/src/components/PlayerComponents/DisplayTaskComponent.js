@@ -26,38 +26,7 @@ import '../../core/utility.css';
 
 var checkShouldSave = true;
 
-function stringifyMessage(task, lineOfData, eventType, progressCount, taskIndex) {
-  try {
-    if (store.getState().experimentInfo.participantId === undefined) {
-      return null;
-    }
-    return JSON.stringify({
-                            eventType: eventType,
-                            participantId: store.getState().experimentInfo.participantId,
-                            participantLabel: store.getState().experimentInfo.participantLabel,
-                            startTimestamp: store.getState().experimentInfo.startTimestamp,
-                            selectedTracker: store.getState().experimentInfo.selectedTracker,
-                            task: task,
-                            lineOfData: lineOfData,
-                            taskSetCount: store.getState().experimentInfo.taskSetCount,
-                            progressCount: progressCount,
-                            taskIndex: taskIndex
-                          });
-  } catch (err) {
-    return JSON.stringify({
-                            eventType: eventType,
-                            participantId: store.getState().experimentInfo.participantId,
-                            participantLabel: store.getState().experimentInfo.participantLabel,
-                            startTimestamp: store.getState().experimentInfo.startTimestamp,
-                            selectedTracker: store.getState().experimentInfo.selectedTracker,
-                            task: dbObjects.removeCircular(task),
-                            lineOfData: lineOfData,
-                            taskSetCount: store.getState().experimentInfo.taskSetCount,
-                            progressCount: progressCount,
-                            taskIndex: taskIndex
-                          });
-  }
-}
+//task: dbObjects.removeCircular(task),
 
 /*
 ██████  ███████  ██████ ██    ██ ██████  ███████ ██  ██████  ███    ██      ██████  ██████  ███    ███ ██████   ██████  ███    ██ ███████ ███    ██ ████████
@@ -135,24 +104,24 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
     }
   }
 
-  onClickNext() {
-    //===========reset aoi list===========
+  resetAOIs() {
     var aoiAction = {
       type: 'RESET_AOIS'
     }
 
     store.dispatch(aoiAction);
+  }
+
+  onClickNext() {
+    //===========reset aoi list===========
+    this.resetAOIs();
 
     //===========save gazedata===========
     this.props.saveGazeData(dbObjectsUtilityFunctions.getTaskContent(this.currentTask));
 
     //===========save logging data===========
-    if (this.currentTask.objType === "TaskSet" && this.currentTask.displayOnePage) {
-      this.progressCount += this.currentLineOfData.size;
-    }
-    else if (this.currentTask.objType === "Synquestitask") {
-      this.progressCount += 1;
-    }
+
+    this.progressCount += 1;
 
     this.currentLineOfData.forEach((line, index) => {
       if (line.isGlobalVariable !== undefined) {
@@ -166,7 +135,7 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
         }
       }
 
-      mqtt.broadcastEvents(stringifyMessage({_id:line.taskId}, line,
+      mqtt.broadcastEvents(playerUtils.stringifyMessage(store, {_id:line.taskId}, line,
                                                 (line.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED",
                                                 this.progressCount, -1));
     });
@@ -190,6 +159,10 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
         return;
       }
     }
+
+    mqtt.broadcastEvents(JSON.stringify({eventType: "PROGRESSCOUNT",
+                                         participantId: store.getState().experimentInfo.participantId,
+                                         progressCount: this.progressCount}));
 
     //===========reset===========
     this.currentLineOfData = null;
@@ -277,7 +250,7 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
                                               this.currentLineOfData = taskResponses;
                                           }}
                                           logTheStartOfTask={(task, log, ind) => {
-                                              mqtt.broadcastEvents(stringifyMessage(task, log, "START", this.progressCount, this.progressCount+1));
+                                              mqtt.broadcastEvents(playerUtils.stringifyMessage(store, task, log, "START", this.progressCount, this.progressCount+1));
                                                    this.hasBeenInitiated = true;
                                               }}
                                           key={id}/>

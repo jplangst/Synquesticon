@@ -49,37 +49,42 @@ class ObserverMode extends Component {
     });
   }
 
+  isSameIdentifier(pair, msg) {
+    return (pair.lineOfData.startTimestamp === msg.lineOfData.startTimestamp
+            && pair.lineOfData.taskContent === msg.lineOfData.taskContent);
+  }
+
   pairMessage(msgArray, msg) {
     for (var i = 0; i < msgArray.length; i++) {
       var pair = msgArray[i];
-      if (pair.length < 2) { //if hasn't had matched message
-        if ((msg.eventType === "ANSWERED" || msg.eventType === "SKIPPED")
-            && pair[0].lineOfData.startTimestamp === msg.lineOfData.startTimestamp
-            && pair[0].lineOfData.taskContent === msg.lineOfData.taskContent) { //match id with first message
+      if (msg.eventType === "ANSWERED" || msg.eventType === "SKIPPED") {
+        if (pair.length < 2 //if hasn't had matched message
+            && this.isSameIdentifier(pair[0], msg)) { //match id with first message
               //pair them together
               pair.push(msg);
               return msgArray;
-            }
+        }
+      }
+      else if (msg.eventType === "RESETANSWER") {
+        if (this.isSameIdentifier(pair[0], msg)) {
+          msg.eventType = "ANSWERED"; //we cheat so we don't have to handle new case
+          pair.push(msg);
+          return msgArray;
+        }
       }
     }
-    msgArray.push([msg]);
+    if (msg.eventType !== "PROGRESSCOUNT") {
+      msgArray.push([msg]);
+    }
+
     return msgArray;
   }
 
   onNewEvent() {
     var args = JSON.parse(eventStore.getCurrentMessage());
-    console.log(args);
-    var isComment = (args.eventType === "COMMENT"); // &&
-                          // args.observerName != myStorage.getItem('deviceID') &&
-                          // args.observerRole != myStorage.getItem('deviceRole'));
-    if (args.taskSetCount !== undefined) {
-      this.totalTasks[args.participantId] = args.taskSetCount;
-    }
-    if (args.progressCount !== undefined) {
-      this.completedTasks[args.participantId] = args.progressCount;
-    }
 
-    if (store.getState().participants[args.participantId] === undefined && !isComment) {
+    //set up a new participant, this is for catching gaze data
+    if (store.getState().participants[args.participantId] === undefined) {
       var action = {
         type: 'ADD_PARTICIPANT',
         participant: args.participantId,
@@ -87,6 +92,14 @@ class ObserverMode extends Component {
       }
       store.dispatch(action);
     }
+
+    if (args.taskSetCount !== undefined) {
+      this.totalTasks[args.participantId] = args.taskSetCount;
+    }
+    if (args.progressCount !== undefined) {
+      this.completedTasks[args.participantId] = args.progressCount;
+    }
+
     var existed = false;
     for (let i = 0; i < this.state.participants.length; i++) {
       if (this.state.participants[i].id === args.participantId) {
