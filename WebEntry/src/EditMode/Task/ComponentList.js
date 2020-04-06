@@ -8,6 +8,8 @@ import { withTheme } from '@material-ui/styles';
 import { Draggable } from 'react-beautiful-dnd';
 import * as dnd from '../../core/beautifulDND.js';
 
+import { Typography } from '@material-ui/core';
+
 import CollapsableContainer from '../../components/Containers/CollapsableContainer';
 
 import TaskComponentItem from './ComponentItem';
@@ -28,7 +30,7 @@ class TaskComponentList extends Component {
     const headerHeight = 40;
 
     if(this.props.taskComponents.length === 0){
-      return null;
+      return <Typography variant='h5' color='textPrimary' style={{opacity:0.5, padding:5, marginLeft:5}}>{this.props.displayIfEmpty?this.props.displayIfEmpty:''}</Typography>;
     }
     var collapsableContent = this.props.taskComponents.map((comp, index) =>
       {
