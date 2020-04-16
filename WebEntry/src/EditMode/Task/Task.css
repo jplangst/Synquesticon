@@ -59,7 +59,6 @@
   position: relative;
   height: calc(100% - 5px);
   width: calc(100% - 6px);
-  top: 5px;
 
   border-style: solid;
   border-width: thin;
