@@ -5,8 +5,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
 
-import { Typography } from '@material-ui/core';
-
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 

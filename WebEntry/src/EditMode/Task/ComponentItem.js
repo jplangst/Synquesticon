@@ -105,25 +105,23 @@ class TaskComponentItem extends Component {
             rows="3"
             onChange={(e)=>{this.props.task.displayText = e.target.value}}
           />
-          <TextField label="Answers"
+          <TextField label="Answers(comma-separated)"
             required
             padding="dense"
             style={{marginRight:"10px", width:"calc(50% - 10px)"}}
             id={this.uniqueID+"mcResponses"}
             defaultValue={this.props.task.responses.join(',')}
             placeholder="Answer A, Answer B, Answer C"
-            label="Answers(comma-separated)"
             ref="responsesRef"
             onChange={(e)=> this.responseHandler(e, e.target.value, "Responses")}
           />
-          <TextField label="Correct answers"
+          <TextField label="Correct answers(comma-separated)"
             required
             padding="dense"
             style={{width:"50%"}}
             id={this.uniqueID+"mcCorrectResponses"}
             defaultValue={this.props.task.correctResponses.join(',')}
             placeholder="Answer A, Answer C"
-            label="Correct answers(comma-separated)"
             ref="correctResponseRef"
             onChange={(e)=> this.responseHandler(e, e.target.value, "Correct Responses")}
           />
@@ -171,13 +169,12 @@ class TaskComponentItem extends Component {
             rows="3"
             onChange={(e)=>{this.props.task.displayText = e.target.value}}
           />
-          <TextField label="Correct answer"
+          <TextField label="Correct answer, +-Margin(Optional)"
             required
             padding="dense"
             style={{marginRight:"10px", width:"calc(40% - 15px)"}}
             id={this.uniqueID+"numCorrectResponses"}
             defaultValue={this.props.task.correctResponses.join(',')}
-            label="Correct answer, +-Margin(Optional)"
             placeholder="3, 0.2"
             ref="correctResponseRef"
             onChange={(e)=> this.responseHandler(e, e.target.value, "Correct Responses")}
@@ -213,8 +210,7 @@ class TaskComponentItem extends Component {
             style={{marginRight:"10px", width:"calc(40% - 15px)"}}
             id={this.uniqueID+"textCorrectResponses"}
             defaultValue={this.props.task.correctResponses.join(',')}
-            placeholder="Answer A, Answer C"
-            label="Correct answer"
+            placeholder="Answer A, Answer C"            
             ref="correctResponseRef"
             onChange={(e)=> this.responseHandler(e, e.target.value, "Correct Responses")}
           />

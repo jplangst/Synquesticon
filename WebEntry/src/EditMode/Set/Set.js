@@ -14,7 +14,6 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import EditSetList from './SetList';
-import { Typography } from '@material-ui/core';
 
 import { Droppable } from 'react-beautiful-dnd';
 

@@ -9,9 +9,6 @@ import store from '../../core/store';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-
 import TaskTypeList from './TypeList';
 import TaskComponentList from './ComponentList';
 
