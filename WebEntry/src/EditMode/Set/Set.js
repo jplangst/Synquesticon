@@ -459,7 +459,7 @@ class EditSet extends Component {
           </Button>
           {deleteTaskBtn}
 
-          <FormControlLabel label="Randomize Set Order"
+          <FormControlLabel label="Randomize order"
             value="start"
             padding="dense"
             style={{marginLeft:10}}

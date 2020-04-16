@@ -123,7 +123,7 @@ class TaskComponentItem extends Component {
             id={this.uniqueID+"schoice"}
             padding="dense"
             checked={this.state.singleChoice}
-            control={<Checkbox style={{width:"50%"}} color="secondary" />}
+            control={<Checkbox  color="secondary" />}
             onChange={this.handleSingleChoiceChanged}
             labelPlacement="end"
           />
@@ -132,7 +132,7 @@ class TaskComponentItem extends Component {
             id={this.uniqueID+"reset"}
             padding="dense"
             checked={this.state.resetResponses}
-            control={<Checkbox style={{width:"50%"}} color="secondary" />}
+            control={<Checkbox  color="secondary" />}
             onChange={this.handleResetResponsesChanged}
             labelPlacement="end"
           />
