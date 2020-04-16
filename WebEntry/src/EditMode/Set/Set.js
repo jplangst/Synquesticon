@@ -405,90 +405,86 @@ class EditSet extends Component {
       <div>
         <TextField id="questionText"
           required
-
           padding="dense"
           defaultValue={this.set.name}
           placeholder="Valve questions"
           label="Set Name"
           ref="setTextRef"
-          fullWidth
+          style={{width:'calc(50% - 10px)', marginRight:10}}
           rows="1"
           onChange={(e)=>{this.set.name = e.target.value}}
         />
         <TextField id="tags"
           required
-
           padding="dense"
           defaultValue={this.set.tags.join(',')}
-          placeholder="SillyWalks, Swallows"
-          helperText="Tags seperated by a comma"
-          label="Tags"
-          fullWidth
+          placeholder="Pump, Steam"
+          label="Tags(comma-separated)"
+          style={{width:'50%'}}
           ref="tagsRef"
           onChange={(e)=> this.responseHandler(e, e.target.value, "Tags")}
-        />
-        <TextField id="repeatSet"
-
-          padding="dense"
-          defaultValue={this.set.repeatSetThreshold}
-          placeholder="0"
-          fullWidth
-          helperText="The amount of tasks that must be completed, otherwise the set repeats"
-          label="Repeat Set Threshold"
-          ref="repeatRef"
-          onChange={(e)=> this.responseHandler(e, e.target.value, "Repeat")}
-        />
-        <FormControlLabel label="Randomize Set Order"
-          value="start"
-          checked={this.state.randomizeSet}
-          control={<Checkbox color="secondary" />}
-          onChange={this.handleSetTaskOrderChange}
-          labelPlacement="end"
         />
       </div>;
 
     var deleteTaskBtn = null;
     if(this.props.isEditing){
       deleteTaskBtn = <Button onClick={this.removeSet.bind(this)} variant="outlined">
-        Delete Set
+          Delete
         </Button>;
     }
 
     return(
       <div className="setComponentContainer">
-        <div className="setFormContainer">
-          <form className="setFormRoot" autoComplete="off" id="formRootId">
-              {setContent}
-          </form>
-        </div>
+        <form className="setFormRoot" autoComplete="off" id="formRootId">
+            {setContent}
+        </form>
 
         <div className="setTaskListContainer">
-          <div className="setTaskListTitle"><div className="setTaskListTitleText"><Typography color="textPrimary">Task sequence</Typography></div></div>
           <div className="setTaskListViewer">
             <Droppable droppableId="setTaskListId" >
              {(provided, snapshot) => (
               <div ref={provided.innerRef} style={{width:'100%', minHeight:'100%', height:'auto'}}>
                 < EditSetList removeCallback={this.removeTaskFromListCallback} taskListObjects={this.state.taskListObjects} reactDND={true}
-                  removeTaskCallback={this.removeTaskFromListCallback} moveTaskCallback={this.moveTaskCallback} / >
+                  removeTaskCallback={this.removeTaskFromListCallback} moveTaskCallback={this.moveTaskCallback}
+                  displayIfEmpty={"Drag tasks here"} / >
                   {provided.placeholder}
               </div>
             )}
             </Droppable>
           </div>
         </div>
-
         <div className="editSetComponentButtons">
-          <Button onClick={this.closeSetComponent.bind(this, false, true)} variant="outlined">
-            Close
-          </Button>
-          {deleteTaskBtn}
           <Button onClick={this.onChangeSetSettings.bind(this)} variant="outlined">
             {this.props.isEditing ? "Save" : "Create"}
           </Button>
+          {deleteTaskBtn}
+
+          <FormControlLabel label="Randomize Set Order"
+            value="start"
+            padding="dense"
+            style={{marginLeft:10}}
+            checked={this.state.randomizeSet}
+            control={<Checkbox color="secondary" />}
+            onChange={this.handleSetTaskOrderChange}
+            labelPlacement="end"
+          />
         </div>
       </div>
     );
   }
 }
+
+/*
+<TextField id="repeatSet"
+  padding="dense"
+  defaultValue={this.set.repeatSetThreshold}
+  placeholder="0"
+  fullWidth
+  helperText="The amount of tasks that must be completed, otherwise the set repeats"
+  label="Repeat Set Threshold"
+  ref="repeatRef"
+  onChange={(e)=> this.responseHandler(e, e.target.value, "Repeat")}
+/>
+*/
 
 export default EditSet;

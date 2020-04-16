@@ -235,7 +235,7 @@ class EditTask extends Component {
           required
           padding="dense"
           defaultValue={this.synquestitask.name}
-          placeholder="Demographics task"
+          placeholder="Demographics"
           label="Name"
           ref="setTextRef"
           style={{width:'calc(50% - 10px)', marginRight:10}}
@@ -244,7 +244,6 @@ class EditTask extends Component {
         />
         <TextField id="tags"
           required
-
           padding="dense"
           defaultValue={this.synquestitask.tags.join(',')}
           placeholder="Pump, Steam"
@@ -300,7 +299,7 @@ class EditTask extends Component {
               padding="dense"
               style={{marginLeft:10}}
               checked={this.state.globalVariable}
-              control={<Checkbox style={{width:"50px"}} color="secondary" />}
+              control={<Checkbox color="secondary" />}
               onChange={this.handleGlobalVariableChanged}
               labelPlacement="end"
             />

@@ -1,50 +1,31 @@
 .setComponentContainer{
-  position: relative;
   width: 100%;
-  height: calc(100% - 20px);
-  padding-top: 20px;
-  overflow-y:auto;
-  padding-left: 20px;
-  padding-right: 20px;
+  height: calc(100% - 5px);
+  padding-top: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
-.setFormContainer{
-  position: relative;
-  width: 100%;
-  height: 43%;
-}
 .setFormRoot{
   position: relative;
-  height: 100%;
-  width: 100%;
+  height: auto;
+  width: calc(100% - 5px);
 }
-
 .setTaskListContainer{
-  position:relative;
-  width: 100%;
-  height: 49%;
-}
-.setTaskListTitle{
-  position: absolute;
-  width: auto;
-  padding-left: 15px;
-  padding-right: 15px;
-  height: 25px;
-
-  border-style: solid;
-  border-bottom-style: none;
-  border-width: thin;
-  border-color: grey;
-}
-.setTaskListTitleText{
-  position: relative;
+  display: flex;
+  flex-grow: 1;
+  flex-shrink: 1;
+  min-height: 0;
 }
 
 .setTaskListViewer{
   position: relative;
-  height: calc(100% - 25px);
+  height: calc(100% - 10px);
   width: calc(100% - 6px);
-  top: 25px;
+  top: 10px;
 
   border-style: solid;
   border-width: thin;
@@ -53,32 +34,25 @@
   overflow-y: auto;
   overflow-x: hidden;
 }
-
 .setTaskListViewer::-webkit-scrollbar{
   display: inline-block;
   width: 6px;
 }
-
 /* Track */
 .setTaskListViewer::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
-
 /* Handle */
 .setTaskListViewer::-webkit-scrollbar-thumb {
   background: #888;
 }
-
 /* Handle on hover */
 .setTaskListViewer::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
-
 .editSetComponentButtons{
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  width: calc(100% - 10px);
-  height: calc(8% - 10px);
-  padding: 5px;
+  width: 100%;
+  height: auto;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
