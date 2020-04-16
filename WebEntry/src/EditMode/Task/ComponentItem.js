@@ -17,7 +17,7 @@ class TaskComponentItem extends Component {
     this.state = {
       singleChoice: props.task.singleChoice,
       resetResponses: props.task.resetResponses,
-      globalVariable: props.task.globalVariable,
+      globalVariable: props.task.globalVariable ? props.task.globalVariable : false
     };
 
     //Image
@@ -148,6 +148,7 @@ class TaskComponentItem extends Component {
           <FormControlLabel label="Treat Response as Global Variable"
             value="end"
             padding="dense"
+            id={this.uniqueID+"globalVar"}
             checked={this.state.globalVariable}
             control={<Checkbox color="secondary" />}
             onChange={this.handleGlobalVariableChanged}
@@ -184,6 +185,7 @@ class TaskComponentItem extends Component {
           <FormControlLabel label="Treat Response as Global Variable"
             value="end"
             padding="dense"
+            id={this.uniqueID+"globalVar"}
             checked={this.state.globalVariable}
             control={<Checkbox color="secondary" />}
             onChange={this.handleGlobalVariableChanged}
@@ -219,6 +221,7 @@ class TaskComponentItem extends Component {
           <FormControlLabel label="Treat Response as Global Variable"
             value="end"
             padding="dense"
+            id={this.uniqueID+"globalVar"}
             checked={this.state.globalVariable}
             control={<Checkbox color="secondary" />}
             onChange={this.handleGlobalVariableChanged}

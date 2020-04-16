@@ -39,7 +39,7 @@ class EditTask extends Component {
     this.state = {
       taskComponents: this.synquestitask.childObj,
       //childOpenStatus: childOpenStatus,
-      globalVariable: this.synquestitask.globalVariable,
+      //globalVariable: this.synquestitask.globalVariable,
     };
 
     this.updateChildOpenStateCallback = this.updateChildOpenState.bind(this);

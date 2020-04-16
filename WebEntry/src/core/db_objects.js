@@ -51,6 +51,7 @@ export class SynquestitaskChildComponent{
     this.responseUnit = ""; //The unit of the response e.g. "%", "RPM"
     this.singleChoice = false; //If the answer should be single choice
     this.resetResponses = false; //If the responses should be reset after 1s
+    this.globalVariable = false; //If true the response of the task should be stored as a global var in the participant DB object
 
     //Image specifics
     this.image = ""; //The filepath to the image
