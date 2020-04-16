@@ -44,8 +44,8 @@
 .editSynquestitaskComponentButtons{
   width: 100%;
   height: auto;
-  margin-top: 5px;
-  margin-bottom: 5px;
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 
 .synquestitaskListContainer{
@@ -57,7 +57,7 @@
 
 .synquestitaskListViewer{
   position: relative;
-  height: calc(100% - 5px);
+  height: calc(100%);
   width: calc(100% - 6px);
 
   border-style: solid;

@@ -16,7 +16,8 @@ class TaskComponentItem extends Component {
 
     this.state = {
       singleChoice: props.task.singleChoice,
-      resetResponses: props.task.resetResponses
+      resetResponses: props.task.resetResponses,
+      globalVariable: props.task.globalVariable,
     };
 
     //Image
@@ -26,6 +27,7 @@ class TaskComponentItem extends Component {
 
     //Task update
     this.responseHandler = this.onResponsesChanged;
+    this.handleGlobalVariableChanged = this.onGlobalVariableChanged.bind(this);
     this.handleSingleChoiceChanged = this.onSingleChoiceChanged.bind(this);
     this.handleResetResponsesChanged = this.onResetResponsesChanged.bind(this);
 
@@ -56,6 +58,13 @@ class TaskComponentItem extends Component {
       };
       db_helper.uploadImage(this.imageToUpload, formData, config, null);
     }
+  }
+
+  onGlobalVariableChanged(e, checked){
+    this.props.task.globalVariable = checked;
+    this.setState({
+      globalVariable: checked,
+    });
   }
 
   //Get the components to render based on the object type
@@ -136,6 +145,14 @@ class TaskComponentItem extends Component {
             onChange={this.handleResetResponsesChanged}
             labelPlacement="end"
           />
+          <FormControlLabel label="Treat Response as Global Variable"
+            value="end"
+            padding="dense"
+            checked={this.state.globalVariable}
+            control={<Checkbox color="secondary" />}
+            onChange={this.handleGlobalVariableChanged}
+            labelPlacement="end"
+          />
         </div>;
         break;
       }
@@ -164,6 +181,14 @@ class TaskComponentItem extends Component {
             ref="correctResponseRef"
             onChange={(e)=> this.responseHandler(e, e.target.value, "Correct Responses")}
           />
+          <FormControlLabel label="Treat Response as Global Variable"
+            value="end"
+            padding="dense"
+            checked={this.state.globalVariable}
+            control={<Checkbox color="secondary" />}
+            onChange={this.handleGlobalVariableChanged}
+            labelPlacement="end"
+          />
         </div>;
         break;
       }
@@ -190,6 +215,14 @@ class TaskComponentItem extends Component {
             label="Correct answer"
             ref="correctResponseRef"
             onChange={(e)=> this.responseHandler(e, e.target.value, "Correct Responses")}
+          />
+          <FormControlLabel label="Treat Response as Global Variable"
+            value="end"
+            padding="dense"
+            checked={this.state.globalVariable}
+            control={<Checkbox color="secondary" />}
+            onChange={this.handleGlobalVariableChanged}
+            labelPlacement="end"
           />
         </div>;
         break;
