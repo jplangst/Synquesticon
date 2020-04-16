@@ -96,25 +96,25 @@ class TaskComponentItem extends Component {
             rows="3"
             onChange={(e)=>{this.props.task.displayText = e.target.value}}
           />
-          <TextField label="Responses"
+          <TextField label="Answers"
             required
             padding="dense"
-            style={{marginRight:"10px", width:"calc(35% - 15px)"}}
+            style={{marginRight:"10px", width:"calc(50% - 10px)"}}
             id={this.uniqueID+"mcResponses"}
             defaultValue={this.props.task.responses.join(',')}
-            placeholder="Response A, Response B, ResponseC"
-            helperText="Question responses seperated by a comma"
+            placeholder="Answer A, Answer B, Answer C"
+            label="Answers(comma-separated)"
             ref="responsesRef"
             onChange={(e)=> this.responseHandler(e, e.target.value, "Responses")}
           />
-          <TextField label="Correct Responses"
+          <TextField label="Correct answers"
             required
             padding="dense"
-            style={{marginRight:"10px", width:"calc(35% - 15px)"}}
+            style={{width:"50%"}}
             id={this.uniqueID+"mcCorrectResponses"}
             defaultValue={this.props.task.correctResponses.join(',')}
-            placeholder="Response A, Response C"
-            helperText="The correct responses to the question"
+            placeholder="Answer A, Answer C"
+            label="Correct answers(comma-separated)"
             ref="correctResponseRef"
             onChange={(e)=> this.responseHandler(e, e.target.value, "Correct Responses")}
           />
@@ -153,14 +153,14 @@ class TaskComponentItem extends Component {
             rows="3"
             onChange={(e)=>{this.props.task.displayText = e.target.value}}
           />
-          <TextField label="Correct Response"
+          <TextField label="Correct answer"
             required
             padding="dense"
             style={{marginRight:"10px", width:"calc(40% - 15px)"}}
             id={this.uniqueID+"numCorrectResponses"}
             defaultValue={this.props.task.correctResponses.join(',')}
-            placeholder="Correct Answer, Margin(Optional)"
-            helperText="Enter the correct answer and optionally a margin seperated with a comma, +- that still allows a correct answer. E.g. 5,2 would let anything between 3-7 be a correct answer"
+            label="Correct answer, +-Margin(Optional)"
+            placeholder="3, 0.2"
             ref="correctResponseRef"
             onChange={(e)=> this.responseHandler(e, e.target.value, "Correct Responses")}
           />
@@ -181,14 +181,13 @@ class TaskComponentItem extends Component {
             rows="3"
             onChange={(e)=>{this.props.task.displayText = e.target.value}}
           />
-          <TextField label="Correct Response"
-            required
+          <TextField label="Correct answer"
             padding="dense"
             style={{marginRight:"10px", width:"calc(40% - 15px)"}}
             id={this.uniqueID+"textCorrectResponses"}
             defaultValue={this.props.task.correctResponses.join(',')}
-            placeholder="Correct Answer(Optional)"
-            helperText="Enter the correct answer"
+            placeholder="Answer A, Answer C"
+            label="Correct answer"
             ref="correctResponseRef"
             onChange={(e)=> this.responseHandler(e, e.target.value, "Correct Responses")}
           />
