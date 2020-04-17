@@ -82,7 +82,7 @@ class TaskComponentItem extends Component {
                   ref="instructionTextRef"
                   fullWidth
                   multiline
-                  rows="3"
+                  rows="1"
                   onChange={(e)=>{this.props.task.displayText = e.target.value}}
                 />;
         break;
@@ -102,7 +102,7 @@ class TaskComponentItem extends Component {
             placeholder="Enter your question here"
             ref="questionTextRef"
             multiline
-            rows="3"
+            rows="1"
             onChange={(e)=>{this.props.task.displayText = e.target.value}}
           />
           <TextField label="Answers(comma-separated)"
@@ -166,7 +166,7 @@ class TaskComponentItem extends Component {
             placeholder="Enter your question here"
             ref="questionTextRef"
             multiline
-            rows="3"
+            rows="1"
             onChange={(e)=>{this.props.task.displayText = e.target.value}}
           />
           <TextField label="Correct answer, +-Margin(Optional)"
@@ -202,7 +202,7 @@ class TaskComponentItem extends Component {
             placeholder="Enter your question here"
             ref="questionTextRef"
             multiline
-            rows="3"
+            rows="1"
             onChange={(e)=>{this.props.task.displayText = e.target.value}}
           />
           <TextField label="Correct answer"
@@ -210,7 +210,7 @@ class TaskComponentItem extends Component {
             style={{marginRight:"10px", width:"calc(40% - 15px)"}}
             id={this.uniqueID+"textCorrectResponses"}
             defaultValue={this.props.task.correctResponses.join(',')}
-            placeholder="Answer A, Answer C"            
+            placeholder="Answer A, Answer C"
             ref="correctResponseRef"
             onChange={(e)=> this.responseHandler(e, e.target.value, "Correct Responses")}
           />
