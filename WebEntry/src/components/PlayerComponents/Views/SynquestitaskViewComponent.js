@@ -56,7 +56,6 @@ class SynquestitaskViewComponent extends Component {
                                              task.displayText,
                                              task.correctResponses,
                                              task.objType);
-      console.log("global variable", task);
       if(task.globalVariable) {
         newLine.isGlobalVariable = true;
         newLine.label = task.displayText;

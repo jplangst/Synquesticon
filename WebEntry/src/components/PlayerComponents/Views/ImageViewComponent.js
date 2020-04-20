@@ -41,7 +41,6 @@ class ImageViewComponent extends Component {
       for (var i = 0; i < aois.length; i++) {
         aois[i].imageRef = this.imageRef;
       }
-      console.log("add aois", aois);
 
       var action = {
         type: 'ADD_AOIS',
@@ -53,7 +52,7 @@ class ImageViewComponent extends Component {
     var imageAOIAction = {
       type: 'ADD_AOIS',
       aois: {
-        name: this.props.parentSet + '_' + this.props.task.question,
+        name: this.props.parentSet + '_' + this.props.task.displayText,
         boundingbox: [],
         imageRef: this.imageRef
       }
@@ -70,8 +69,8 @@ class ImageViewComponent extends Component {
 
   getMousePosition(e) {
     var imageRect = e.target.getBoundingClientRect();
-    return {x : (e.clientX - imageRect.left)*100/imageRect.width,
-            y: (e.clientY - imageRect.top)*100/imageRect.height}
+    return {x : (e.clientX - imageRect.left)/imageRect.width,
+            y: (e.clientY - imageRect.top)/imageRect.height}
   }
 
   checkHitAOI(click) {
@@ -98,8 +97,9 @@ class ImageViewComponent extends Component {
         polygon.push([imageDivRect.x + imageDivRect.width, imageDivRect.y + imageDivRect.height]);
         polygon.push([imageDivRect.x, imageDivRect.y + imageDivRect.height]);
       }
-      if (playerUtils.pointIsInPoly([click.x, click.y], polygon)){
-        return a.label;
+
+      if (playerUtils.pointIsInPoly([click.clientX, click.clientY], polygon)){
+        return a.name;
       }
     }
 
@@ -109,7 +109,7 @@ class ImageViewComponent extends Component {
   onImageClicked(e) {
     var mouseClick = this.getMousePosition(e);
     var click = {
-      aoi: this.checkHitAOI(mouseClick),
+      aoi: this.checkHitAOI(e),
       x: mouseClick.x,
       y: mouseClick.y
     };
@@ -126,16 +126,26 @@ class ImageViewComponent extends Component {
   getClickableComponent() {
     if (this.props.task.recordClicks) {
       return (
-        <svg onClick={this.onImageClicked.bind(this)} className="imageViewWithAOIs" width='100%' height='100%' viewBox="0 0 100 100">
+        <svg onClick={this.onImageClicked.bind(this)} className="clickableCanvas" width='100%' height='100%' viewBox="0 0 100 100">
           <g stroke="none" fill="black">
             {this.clicks.map((item, index) => {
-              return <circle cx={item.x} cy={item.y} r={CLICK_RADIUS} opacity={OPACITY} fill={COLOR}/>
+              return <circle cx={item.x*100} cy={item.y*100} r={CLICK_RADIUS} opacity={OPACITY} fill={COLOR}/>
             })}
           </g>
         </svg>);
     }
     else {
       return null;
+    }
+  }
+
+  getFullScreenImage() {
+    console.log("show fullscreen", this.props.task.fullScreenImage);
+    if (this.props.task.fullScreenImage) {
+      return "fullScreenImage";
+    }
+    else {
+      return "imageCanvas";
     }
   }
 
@@ -161,7 +171,7 @@ class ImageViewComponent extends Component {
 
     return (
       <div className="imagePreviewContainer">
-        <img className="imageCanvas" src={url} alt="" ref={this.imageRef}/>
+        <img className={this.getFullScreenImage()} src={url} alt="" ref={this.imageRef}/>
         {this.getClickableComponent()}
         {this.showAOIs()}
       </div>

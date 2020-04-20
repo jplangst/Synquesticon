@@ -31,9 +31,6 @@
 
   object-fit: contain;
 
-  background-color: blue;
-  opacity: 0.5;
-
   margin: auto;
 }
 
@@ -45,7 +42,6 @@
   align-self: center; */
   top: 0;
   left: 0;
-  opacity: 0.5;
 }
 
 .supportingToolBox {
