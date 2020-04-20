@@ -126,7 +126,7 @@ class ImageViewComponent extends Component {
   getClickableComponent() {
     if (this.props.task.recordClicks) {
       return (
-        <svg onClick={this.onImageClicked.bind(this)} className="clickableCanvas" width='100%' height='100%' viewBox="0 0 100 100">
+        <svg onClick={this.onImageClicked.bind(this)} className="clickableCanvas" width='100%' height='100%' viewBox="0 0 100 100" preserveAspectRatio="none">
           <g stroke="none" fill="black">
             {this.clicks.map((item, index) => {
               return <circle cx={item.x*100} cy={item.y*100} r={CLICK_RADIUS} opacity={OPACITY} fill={COLOR}/>
