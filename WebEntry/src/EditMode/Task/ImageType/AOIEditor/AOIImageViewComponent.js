@@ -37,10 +37,8 @@ class AOIImageViewComponent extends Component {
         onMouseDown={this.props.onMouseDown}
         onMouseUp={this.props.onMouseUp}
         onMouseMove={this.props.onMouseMove}>
-        <div className="imageEditorViewWrapper">
-          <img className="imageEditorView" src={url} alt="Task"/>
-        </div>
-        <svg id="AOICanvas" className="imageViewWithAOIs" width='100%' height='100%' viewBox="0 0 100 100" preserveAspectRatio="none">
+        <img className="imageCanvas" src={url} alt="Task"/>
+        <svg id="AOICanvas" className="AOICanvas" width='100%' height='100%' viewBox="0 0 100 100" preserveAspectRatio="none">
           {tempAOI}
           {this.props.aois.map((aoi, index) => {
             return <AOIComponent aoi={aoi} key={index} onSelected={e => this.onSelectAOI(aoi)}/>

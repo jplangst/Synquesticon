@@ -3,46 +3,6 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 /*
-taskType: Instruction, Text Entry, Multiple Choice, Image
-*/
-// this will be our data base's data structure
-const TaskSchema = new Schema(
-  {
-    id: String, //The id of the Task
-    taskType: String, //The type of the task
-    question: String, //Used if the task type is "Text Entry" and "Choice" //it's the body
-    globalVariable: Boolean, //If true the response of the task should be stored as a global var in the participant DB object
-    instruction: String,
-    image: String, //filepath
-    subTasks: [{
-      subType: String,
-      label: String,
-      image: String,
-      text: String,
-      aois: [{
-        name: String,
-        boundingbox: [[Number]],
-        _id: false
-      }],
-      _id: false
-    }],
-    aois: [{
-      name: String,
-      boundingbox: [[Number]],
-      _id: false
-    }], //A list of AOIs relevant to the task
-    tags: [String], //A list of searchable tags
-    responses: [String], //The possible responses to the task
-    correctResponses: [String], //The correct response
-    responseUnit: String, //The unit of the response e.g. "%", "RPM"
-    refSets: [String], //list of sets that reference to this questions
-    objType: String,
-  }, {
-    collection: 'Tasks'
-  }
-);
-
-/*
 objType: Synquestitask
 */
 const SynquestitaskSchema = new Schema({
@@ -72,6 +32,9 @@ const SynquestitaskSchema = new Schema({
 
     //Image specifics
     image: String, //filepath
+    recordClicks: Boolean,
+    fullScreenImage: Boolean,
+    showAOIs: Boolean,
     aois: [{ //A list of AOIs relevant to the task
       name: String,
       boundingbox: [[Number]],
@@ -139,11 +102,11 @@ const ParticipantSchema = new Schema(
       */
       timeToCompletion: Number,
       clickedPoints: [{
+        aoi: String, //name of the hit AOI
         x: Number,
         y: Number,
         _id: false
       }],
-      clickedAOIs: [String],
       aoiCheckedList: [{
         label: String,
         checked: Boolean,
@@ -193,7 +156,6 @@ const RoleSchema = new Schema(
 // export the new Schema so we could modify it using Node.js
 module.exports = {
   Synquestitasks: mongoose.model("Synquestitasks", SynquestitaskSchema),
-  Tasks: mongoose.model("Tasks", TaskSchema),
   TaskSets: mongoose.model("TaskSets", TaskSetSchema),
   Participants: mongoose.model("Participants", ParticipantSchema),
   Experiments: mongoose.model("Experiments", ParticipantSchema),

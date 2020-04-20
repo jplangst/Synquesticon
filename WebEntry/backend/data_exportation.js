@@ -138,7 +138,6 @@ function handleCorrectlyAnswered(ans){
 }
 
 function handleAcceptedMargin(line){
-  console.log(line);
   if (line.objType === "Numpad Entry") {
     if (line.correctResponses.length > 1) {
       return line.correctResponses[1];
@@ -148,6 +147,19 @@ function handleAcceptedMargin(line){
     }
   }
   return "NULL";
+}
+
+function handleClickedPoints(points) {
+  var text = "";
+  points.map((item, index) => {
+    var aoi = item.aoi ? item.aoi : "NULL";
+    text += aoi + "_" + item.x + "_" + item.y + ";";
+  });
+
+  if (text != "") {
+    text = text.substring(0, text.length - 1);
+  }
+  return text;
 }
 
 exports.save_to_csv = async function(p, seperator) {
@@ -246,6 +258,7 @@ exports.save_to_csv = async function(p, seperator) {
                      escapeCSV(line.tasksFamilyTree.join('_')) + seperator +
                      getFormattedTime(line.startTimestamp) + seperator + //Remove linebreaks and extra whitespace
                      getFormattedTime(line.firstResponseTimestamp)).replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ") + seperator +
+                     handleClickedPoints(line.clickedPoints) + seperator +
                      p._id + os.EOL;
     });
 

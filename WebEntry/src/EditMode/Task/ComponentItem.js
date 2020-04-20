@@ -79,7 +79,9 @@ class TaskComponentItem extends Component {
         break;
       }
       case dbObjects.TaskTypes.IMAGE.type: {
-        component = <ImageTaskType task={this.props.task} selectImageCallback={this.imageSelectCallback}/>
+        component = <ImageTaskType task={this.props.task}
+                                   selectImageCallback={this.imageSelectCallback}
+                                   uniqueID={this.uniqueID+"image"}/>
         break;
       }
       case dbObjects.TaskTypes.MCHOICE.type: {

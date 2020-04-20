@@ -54,6 +54,9 @@ export class SynquestitaskChildComponent{
 
     //Image specifics
     this.image = ""; //The filepath to the image
+    this.recordClicks = false;
+    this.fullScreenImage = false;
+    this.showAOIs = false;
     this.aois = []; //The area of interest objects defined for this image
 
     this.itemID = childListID;
@@ -61,36 +64,37 @@ export class SynquestitaskChildComponent{
   }
 }
 
-export class TaskObject {
-  constructor(){
-    this.taskType = "Multiple Choice";
-    this.question = "";
-    this.globalVariable = false;
-    this.instruction = "";
-    this.image = "";
-    this.subTasks = [];
-    this.subTasks.push({
-      subType: "Text",
-      label: "",
-      image: "",
-      text: "",
-      aois: []
-    });
-    this.subTasks.push({
-      subType: "Text",
-      label: "",
-      image: "",
-      text: "",
-      aois: []
-    });
-    this.aois = [];
-    this.tags = [];
-    this.responses = [];
-    this.correctResponses = [];
-    this.responseUnit = "";
-    this.objType = "Task";
-  }
-}
+// export class TaskObject {
+//   constructor(){
+//     this.taskType = "Multiple Choice";
+//     this.question = "";
+//     this.globalVariable = false;
+//     this.instruction = "";
+//     this.image = "";
+//
+//     this.subTasks = [];
+//     this.subTasks.push({
+//       subType: "Text",
+//       label: "",
+//       image: "",
+//       text: "",
+//       aois: []
+//     });
+//     this.subTasks.push({
+//       subType: "Text",
+//       label: "",
+//       image: "",
+//       text: "",
+//       aois: []
+//     });
+//     this.aois = [];
+//     this.tags = [];
+//     this.responses = [];
+//     this.correctResponses = [];
+//     this.responseUnit = "";
+//     this.objType = "Task";
+//   }
+// }
 
 /**
  * The default object used for Sets. New sets should use this as the base.
@@ -174,25 +178,27 @@ export class ObserverMessage {
 }
 
 export function removeCircular(orgTask) {
-  var copiedTask = new TaskObject();
-  copiedTask.taskType = orgTask.taskType;
-  copiedTask.question = orgTask.question;
-  copiedTask.globalVariable = orgTask.globalVariable;
-  copiedTask.instruction = orgTask.instruction;
-  copiedTask.image = orgTask.image;
-  copiedTask.aois = [];
-  copiedTask.tags = orgTask.tags;
-  copiedTask.responses = orgTask.responses;
-  copiedTask.correctResponses = orgTask.correctResponses;
-  copiedTask.responseUnit = orgTask.responseUnit;
-  copiedTask.objType = orgTask.objType;
-
-  orgTask.aois.map((a, ind) => {
-    copiedTask.aois.push({
-      name: a.name,
-      boundingbox: a.boundingbox
-    });
-    return 1;
-  })
+  var copiedTask = JSON.parse(JSON.stringify(orgTask));
   return copiedTask;
+  // var copiedTask = new TaskObject();
+  // copiedTask.taskType = orgTask.taskType;
+  // copiedTask.question = orgTask.question;
+  // copiedTask.globalVariable = orgTask.globalVariable;
+  // copiedTask.instruction = orgTask.instruction;
+  // copiedTask.image = orgTask.image;
+  // copiedTask.aois = [];
+  // copiedTask.tags = orgTask.tags;
+  // copiedTask.responses = orgTask.responses;
+  // copiedTask.correctResponses = orgTask.correctResponses;
+  // copiedTask.responseUnit = orgTask.responseUnit;
+  // copiedTask.objType = orgTask.objType;
+  //
+  // orgTask.aois.map((a, ind) => {
+  //   copiedTask.aois.push({
+  //     name: a.name,
+  //     boundingbox: a.boundingbox
+  //   });
+  //   return 1;
+  // })
+  // return copiedTask;
 }

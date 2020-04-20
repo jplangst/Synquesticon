@@ -37,7 +37,8 @@ class SynquestitaskViewComponent extends Component {
       lineOfData.timeToFirstAnswer = lineOfData.firstResponseTimestamp - lineOfData.startTimestamp;
     }
 
-    //update answers
+    //update answer
+    lineOfData.clickedPoints = answerObj.clickedPoints;
     lineOfData.responses = answerObj.responses;
     lineOfData.correctlyAnswered = answerObj.correctlyAnswered;
 
@@ -74,7 +75,7 @@ class SynquestitaskViewComponent extends Component {
     return taskList.map((item, i) => {
       mapIndex = i;
       var newLine = null;
-      if(this.props.newTask && item.objType !== "Instruction" && item.objType !== "Image") {
+      if(this.props.newTask && item.objType !== "Instruction") {
         newLine = this.logTheStartOfTask(item, _id, mapIndex);
       }
 
@@ -90,7 +91,7 @@ class SynquestitaskViewComponent extends Component {
           return <ButtonViewComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name} delegate={newLine}/>;
       }
       else if(item.objType === dbObjects.TaskTypes.IMAGE.type) {
-          return <ImageViewComponent className="itemContainer" key={key} task={item} mapID={mapIndex} parentSet={this.props.task.name}/>;
+          return <ImageViewComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
       }
       else if(item.objType === dbObjects.TaskTypes.NUMPAD.type) {
           return <NumpadComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
