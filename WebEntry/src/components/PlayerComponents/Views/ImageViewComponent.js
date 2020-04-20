@@ -7,7 +7,7 @@ import * as playerUtils from '../../../core/player_utility_functions';
 
 import './ImageViewComponent.css';
 
-var CLICK_RADIUS = "5";
+var CLICK_RADIUS = "1";
 var OPACITY = "0.5";
 var COLOR = "red";
 
@@ -129,7 +129,8 @@ class ImageViewComponent extends Component {
         <svg onClick={this.onImageClicked.bind(this)} className="clickableCanvas" width='100%' height='100%' viewBox="0 0 100 100" preserveAspectRatio="none">
           <g stroke="none" fill="black">
             {this.clicks.map((item, index) => {
-              return <circle cx={item.x*100} cy={item.y*100} r={CLICK_RADIUS} opacity={OPACITY} fill={COLOR}/>
+              return <ellipse cx={item.x*100} cy={item.y*100} rx={CLICK_RADIUS} ry={CLICK_RADIUS*2} opacity={OPACITY} fill={COLOR}/>
+              //return <circle cx={item.x*100} cy={item.y*100} r={CLICK_RADIUS} opacity={OPACITY} fill={COLOR}/>
             })}
           </g>
         </svg>);
