@@ -105,8 +105,9 @@ class ImageTaskType extends Component {
           value="end"
           id={this.props.uniqueID+"rclick"}
           padding="dense"
+          style={{marginLeft:5}}
           checked={this.state.recordClicks}
-          control={<Checkbox style={{width:"50%"}} color="secondary" />}
+          control={<Checkbox color="secondary" />}
           onChange={this.handleRecordClickCallback}
           labelPlacement="end"
         />
@@ -115,7 +116,7 @@ class ImageTaskType extends Component {
           id={this.props.uniqueID+"fscreen"}
           padding="dense"
           checked={this.state.fullScreenImage}
-          control={<Checkbox style={{width:"50%"}} color="secondary" />}
+          control={<Checkbox color="secondary" />}
           onChange={this.handleShowFullScreenCallback}
           labelPlacement="end"
         />
@@ -124,7 +125,7 @@ class ImageTaskType extends Component {
           id={this.props.uniqueID+"saois"}
           padding="dense"
           checked={this.state.showAOIs}
-          control={<Checkbox style={{width:"50%"}} color="secondary" />}
+          control={<Checkbox color="secondary" />}
           onChange={this.handleShowAOIsCallback}
           labelPlacement="end"
         />

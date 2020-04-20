@@ -2,6 +2,10 @@
   padding-left: 15%;
   width: 70%;
   height: 80%;
+  align-items: center;
+  align-content: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .AOIShape {
@@ -13,7 +17,7 @@
 .imagePreviewContainer{
   position: relative;
   display: inline-block;
-  
+
   align-items: center;
 }
 
@@ -41,7 +45,6 @@
   align-self: center; */
   top: 0;
   left: 0;
-  background-color: red;
   opacity: 0.5;
 }
 
