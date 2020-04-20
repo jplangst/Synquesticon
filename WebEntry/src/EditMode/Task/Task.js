@@ -9,9 +9,6 @@ import store from '../../core/store';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-
 import TaskTypeList from './TypeList';
 import TaskComponentList from './ComponentList';
 
@@ -39,7 +36,7 @@ class EditTask extends Component {
     this.state = {
       taskComponents: this.synquestitask.childObj,
       //childOpenStatus: childOpenStatus,
-      globalVariable: this.synquestitask.globalVariable,
+      //globalVariable: this.synquestitask.globalVariable,
     };
 
     this.updateChildOpenStateCallback = this.updateChildOpenState.bind(this);
@@ -50,7 +47,7 @@ class EditTask extends Component {
     this.responseHandler = this.onResponsesChanged;
     this.handleDBCallback = this.onDBCallback.bind(this);
 
-    this.handleGlobalVariableChanged = this.onGlobalVariableChanged.bind(this);
+    //this.handleGlobalVariableChanged = this.onGlobalVariableChanged.bind(this);
 
     //Used to determine if the object should be closed
     this.shouldCloseAsset = false;
@@ -197,12 +194,12 @@ class EditTask extends Component {
     this.props.closeTaskCallback(componentChanged, shouldClose);
   }
 
-  onGlobalVariableChanged(e, checked){
+  /*onGlobalVariableChanged(e, checked){
     this.synquestitask.globalVariable = checked;
     this.setState({
       globalVariable: checked,
     });
-  }
+  }*/
 
   //On drag end callback from ReactDND
   onDragEnd = result => {
@@ -235,7 +232,7 @@ class EditTask extends Component {
           required
           padding="dense"
           defaultValue={this.synquestitask.name}
-          placeholder="Demographics task"
+          placeholder="Demographics"
           label="Name"
           ref="setTextRef"
           style={{width:'calc(50% - 10px)', marginRight:10}}
@@ -244,7 +241,6 @@ class EditTask extends Component {
         />
         <TextField id="tags"
           required
-
           padding="dense"
           defaultValue={this.synquestitask.tags.join(',')}
           placeholder="Pump, Steam"
@@ -295,15 +291,6 @@ class EditTask extends Component {
               {this.props.isEditing ? "Save" : "Create"}
             </Button>
             {deleteTaskBtn}
-            <FormControlLabel label="Treat Response as Global Variable"
-              value="end"
-              padding="dense"
-              style={{marginLeft:10}}
-              checked={this.state.globalVariable}
-              control={<Checkbox style={{width:"50px"}} color="secondary" />}
-              onChange={this.handleGlobalVariableChanged}
-              labelPlacement="end"
-            />
           </div>
         </div>
       </DragDropContext>
@@ -312,6 +299,17 @@ class EditTask extends Component {
 }
 
 /*
+
+<FormControlLabel label="Treat Response as Global Variable"
+  value="end"
+  padding="dense"
+  style={{marginLeft:10}}
+  checked={this.state.globalVariable}
+  control={<Checkbox color="secondary" />}
+  onChange={this.handleGlobalVariableChanged}
+  labelPlacement="end"
+/>
+
 <Button onClick={this.closeSetComponent.bind(this, false, true)} variant="outlined">
   Close
 </Button>

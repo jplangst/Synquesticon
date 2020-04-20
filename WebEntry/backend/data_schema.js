@@ -8,7 +8,6 @@ objType: Synquestitask
 const SynquestitaskSchema = new Schema({
   name: String, //The name for the Synquestitask
   tags: [String], //A list of searchable tags
-  globalVariable: Boolean, //If true the response of the task should be stored as a global var in the participant DB object
   refSets: [String], //list of sets that reference this Synquestitask
   objType: String, //The type of this object (should always be Synquestitask)
 
@@ -19,6 +18,7 @@ const SynquestitaskSchema = new Schema({
     taskType: Instruction, Text Entry, Multiple Choice, Image, Numpad Entry
     */
     objType: String, // What type of object this is
+    globalVariable: Boolean, //If true the response of the task should be stored as a global var in the participant DB object
 
     //obj content
     displayText: String,

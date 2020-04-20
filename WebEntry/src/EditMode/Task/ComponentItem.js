@@ -16,7 +16,8 @@ class TaskComponentItem extends Component {
 
     this.state = {
       singleChoice: props.task.singleChoice,
-      resetResponses: props.task.resetResponses
+      resetResponses: props.task.resetResponses,
+      globalVariable: props.task.globalVariable ? props.task.globalVariable : false
     };
 
     //Image
@@ -26,6 +27,7 @@ class TaskComponentItem extends Component {
 
     //Task update
     this.responseHandler = this.onResponsesChanged;
+    this.handleGlobalVariableChanged = this.onGlobalVariableChanged.bind(this);
     this.handleSingleChoiceChanged = this.onSingleChoiceChanged.bind(this);
     this.handleResetResponsesChanged = this.onResetResponsesChanged.bind(this);
 
@@ -58,6 +60,13 @@ class TaskComponentItem extends Component {
     }
   }
 
+  onGlobalVariableChanged(e, checked){
+    this.props.task.globalVariable = checked;
+    this.setState({
+      globalVariable: checked,
+    });
+  }
+
   //Get the components to render based on the object type
   getComponent(){
     let component = null;
@@ -73,7 +82,7 @@ class TaskComponentItem extends Component {
                   ref="instructionTextRef"
                   fullWidth
                   multiline
-                  rows="3"
+                  rows="1"
                   onChange={(e)=>{this.props.task.displayText = e.target.value}}
                 />;
         break;
@@ -95,28 +104,26 @@ class TaskComponentItem extends Component {
             placeholder="Enter your question here"
             ref="questionTextRef"
             multiline
-            rows="3"
+            rows="1"
             onChange={(e)=>{this.props.task.displayText = e.target.value}}
           />
-          <TextField label="Responses"
+          <TextField label="Answers(comma-separated)"
             required
             padding="dense"
-            style={{marginRight:"10px", width:"calc(35% - 15px)"}}
+            style={{marginRight:"10px", width:"calc(50% - 10px)"}}
             id={this.uniqueID+"mcResponses"}
             defaultValue={this.props.task.responses.join(',')}
-            placeholder="Response A, Response B, ResponseC"
-            helperText="Question responses seperated by a comma"
+            placeholder="Answer A, Answer B, Answer C"
             ref="responsesRef"
             onChange={(e)=> this.responseHandler(e, e.target.value, "Responses")}
           />
-          <TextField label="Correct Responses"
+          <TextField label="Correct answers(comma-separated)"
             required
             padding="dense"
-            style={{marginRight:"10px", width:"calc(35% - 15px)"}}
+            style={{width:"50%"}}
             id={this.uniqueID+"mcCorrectResponses"}
             defaultValue={this.props.task.correctResponses.join(',')}
-            placeholder="Response A, Response C"
-            helperText="The correct responses to the question"
+            placeholder="Answer A, Answer C"
             ref="correctResponseRef"
             onChange={(e)=> this.responseHandler(e, e.target.value, "Correct Responses")}
           />
@@ -125,7 +132,7 @@ class TaskComponentItem extends Component {
             id={this.uniqueID+"schoice"}
             padding="dense"
             checked={this.state.singleChoice}
-            control={<Checkbox style={{width:"50%"}} color="secondary" />}
+            control={<Checkbox  color="secondary" />}
             onChange={this.handleSingleChoiceChanged}
             labelPlacement="end"
           />
@@ -134,8 +141,17 @@ class TaskComponentItem extends Component {
             id={this.uniqueID+"reset"}
             padding="dense"
             checked={this.state.resetResponses}
-            control={<Checkbox style={{width:"50%"}} color="secondary" />}
+            control={<Checkbox  color="secondary" />}
             onChange={this.handleResetResponsesChanged}
+            labelPlacement="end"
+          />
+          <FormControlLabel label="Treat Response as Global Variable"
+            value="end"
+            padding="dense"
+            id={this.uniqueID+"globalVar"}
+            checked={this.state.globalVariable}
+            control={<Checkbox color="secondary" />}
+            onChange={this.handleGlobalVariableChanged}
             labelPlacement="end"
           />
         </div>;
@@ -152,19 +168,27 @@ class TaskComponentItem extends Component {
             placeholder="Enter your question here"
             ref="questionTextRef"
             multiline
-            rows="3"
+            rows="1"
             onChange={(e)=>{this.props.task.displayText = e.target.value}}
           />
-          <TextField label="Correct Response"
+          <TextField label="Correct answer, +-Margin(Optional)"
             required
             padding="dense"
             style={{marginRight:"10px", width:"calc(40% - 15px)"}}
             id={this.uniqueID+"numCorrectResponses"}
             defaultValue={this.props.task.correctResponses.join(',')}
-            placeholder="Correct Answer, Margin(Optional)"
-            helperText="Enter the correct answer and optionally a margin seperated with a comma, +- that still allows a correct answer. E.g. 5,2 would let anything between 3-7 be a correct answer"
+            placeholder="3, 0.2"
             ref="correctResponseRef"
             onChange={(e)=> this.responseHandler(e, e.target.value, "Correct Responses")}
+          />
+          <FormControlLabel label="Treat Response as Global Variable"
+            value="end"
+            padding="dense"
+            id={this.uniqueID+"globalVar"}
+            checked={this.state.globalVariable}
+            control={<Checkbox color="secondary" />}
+            onChange={this.handleGlobalVariableChanged}
+            labelPlacement="end"
           />
         </div>;
         break;
@@ -180,19 +204,26 @@ class TaskComponentItem extends Component {
             placeholder="Enter your question here"
             ref="questionTextRef"
             multiline
-            rows="3"
+            rows="1"
             onChange={(e)=>{this.props.task.displayText = e.target.value}}
           />
-          <TextField label="Correct Response"
-            required
+          <TextField label="Correct answer"
             padding="dense"
             style={{marginRight:"10px", width:"calc(40% - 15px)"}}
             id={this.uniqueID+"textCorrectResponses"}
             defaultValue={this.props.task.correctResponses.join(',')}
-            placeholder="Correct Answer(Optional)"
-            helperText="Enter the correct answer"
+            placeholder="Answer A, Answer C"
             ref="correctResponseRef"
             onChange={(e)=> this.responseHandler(e, e.target.value, "Correct Responses")}
+          />
+          <FormControlLabel label="Treat Response as Global Variable"
+            value="end"
+            padding="dense"
+            id={this.uniqueID+"globalVar"}
+            checked={this.state.globalVariable}
+            control={<Checkbox color="secondary" />}
+            onChange={this.handleGlobalVariableChanged}
+            labelPlacement="end"
           />
         </div>;
         break;
