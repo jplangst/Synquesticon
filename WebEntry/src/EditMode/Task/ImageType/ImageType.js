@@ -99,7 +99,7 @@ class ImageTaskType extends Component {
       <div className="editTaskImagePreview">{previewImage}</div>
 
       <div className="imagePickingContainer">
-        <Button variant="outlined" onClick={this.onBrowseImages.bind(this)}>Browse Image Database</Button>
+        <Button variant="outlined" onClick={this.onBrowseImages.bind(this)}>Browse Images</Button>
         <FileSelector handleSelectionCallback={this.handleImageSelectedCallback}/>
         <FormControlLabel label="Record Clicks"
           value="end"
