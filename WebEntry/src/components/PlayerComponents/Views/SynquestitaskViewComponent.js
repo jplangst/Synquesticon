@@ -91,7 +91,7 @@ class SynquestitaskViewComponent extends Component {
           return <ButtonViewComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name} delegate={newLine}/>;
       }
       else if(item.objType === dbObjects.TaskTypes.IMAGE.type) {
-          return <ImageViewComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
+          return <ImageViewComponent style={{backgroundColor: 'red'}} className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
       }
       else if(item.objType === dbObjects.TaskTypes.NUMPAD.type) {
           return <NumpadComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
