@@ -1,3 +1,26 @@
+.imagePreviewContainer{
+  position: relative;
+  display: inline-block;
+
+  align-items: center;
+}
+
+.imageCanvas {
+  position: relative;
+  display: block;
+  align-self: center;
+
+  max-width: 100%;
+  max-height: 400px;
+
+  object-fit: contain;
+
+  background-color: blue;
+  opacity: 0.5;
+
+  margin: auto;
+}
+
 /* .imageView {
   display: flex;
   align-self: center;

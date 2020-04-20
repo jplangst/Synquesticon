@@ -29,11 +29,11 @@ export class FileSelector extends Component
 
     render ()
     {
-        return <div>
+        return <span style={{display:'flex', justifyContent:'center'}}>
             <input style={{opacity:0,position:'absolute',pointerEvents:'none',width:'1px',height:'1px'}} type="file"
               accept="image/gif, image/jpeg, image/png" id="dataaseImageUploadSelector" onChange={ (e) => this.handleChange(e.target.files) } />
-            <Button onClick={this.onClickRedirector} variant="outlined">Upload Image To Database</Button>
-        </div>;
+            <Button onClick={this.onClickRedirector} margin='dense' variant="outlined">Upload Image To Database</Button>
+        </span>;
     }
 }
 
