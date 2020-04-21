@@ -72,7 +72,8 @@ class TaskComponentItem extends Component {
     let component = null;
     switch (this.props.task.objType){
       case dbObjects.TaskTypes.INSTRUCTION.type: {
-        component =  <TextField
+        component =  <div>
+                <TextField
                   required
                   padding="dense"
                   id={this.uniqueID+"instructionText"}
@@ -84,13 +85,36 @@ class TaskComponentItem extends Component {
                   multiline
                   rows="1"
                   onChange={(e)=>{this.props.task.displayText = e.target.value}}
-                />;
+                />
+                <TextField label="Screen IDs"
+                   required
+                   padding="dense"
+                   style={{width:"100px"}}
+                   id={this.uniqueID+"insScreenIDs"}
+                   defaultValue={this.props.task.screenIDS.join(',')}
+                   placeholder="1, 2"
+                   ref="insScreenIDRef"
+                   onChange={(e)=> this.responseHandler(e, e.target.value, "ScreenIDs")}
+                 />
+              </div>;
         break;
       }
       case dbObjects.TaskTypes.IMAGE.type: {
-        component = <ImageTaskType task={this.props.task}
-                                   selectImageCallback={this.imageSelectCallback}
-                                   uniqueID={this.uniqueID+"image"}/>
+        component = <div>
+                      <ImageTaskType task={this.props.task}
+                         selectImageCallback={this.imageSelectCallback}
+                         uniqueID={this.uniqueID+"image"}/>
+                      <TextField label="Screen IDs"
+                         required
+                         padding="dense"
+                         style={{width:"100px"}}
+                         id={this.uniqueID+"imageScreenIDs"}
+                         defaultValue={this.props.task.screenIDS.join(',')}
+                         placeholder="1, 2"
+                         ref="imageScreenIDRef"
+                         onChange={(e)=> this.responseHandler(e, e.target.value, "ScreenIDs")}
+                       />
+                   </div>
         break;
       }
       case dbObjects.TaskTypes.MCHOICE.type: {
@@ -154,6 +178,16 @@ class TaskComponentItem extends Component {
             onChange={this.handleGlobalVariableChanged}
             labelPlacement="end"
           />
+          <TextField label="Screen IDs"
+            required
+            padding="dense"
+            style={{width:"100px"}}
+            id={this.uniqueID+"mcScreenIDs"}
+            defaultValue={this.props.task.screenIDS.join(',')}
+            placeholder="1, 2"
+            ref="mcScreenIDRef"
+            onChange={(e)=> this.responseHandler(e, e.target.value, "ScreenIDs")}
+          />
         </div>;
         break;
       }
@@ -190,6 +224,16 @@ class TaskComponentItem extends Component {
             onChange={this.handleGlobalVariableChanged}
             labelPlacement="end"
           />
+          <TextField label="Screen IDs"
+             required
+             padding="dense"
+             style={{width:"100px"}}
+             id={this.uniqueID+"numScreenIDs"}
+             defaultValue={this.props.task.screenIDS.join(',')}
+             placeholder="1, 2"
+             ref="numScreenIDRef"
+             onChange={(e)=> this.responseHandler(e, e.target.value, "ScreenIDs")}
+           />
         </div>;
         break;
       }
@@ -225,6 +269,16 @@ class TaskComponentItem extends Component {
             onChange={this.handleGlobalVariableChanged}
             labelPlacement="end"
           />
+          <TextField label="Screen IDs"
+             required
+             padding="dense"
+             style={{width:"100px"}}
+             id={this.uniqueID+"textScreenIDs"}
+             defaultValue={this.props.task.screenIDS.join(',')}
+             placeholder="1, 2"
+             ref="textScreenIDRef"
+             onChange={(e)=> this.responseHandler(e, e.target.value, "ScreenIDs")}
+           />
         </div>;
         break;
       }
@@ -262,6 +316,9 @@ class TaskComponentItem extends Component {
     }
     else if(target==="Correct Responses"){
       this.props.task.correctResponses = response;
+    }
+    else if(target==="ScreenIDs"){
+      this.props.task.screenIDS = response;
     }
   }
 
