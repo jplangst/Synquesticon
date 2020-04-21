@@ -160,7 +160,7 @@ class TaskComponentItem extends Component {
             onChange={this.handleSingleChoiceChanged}
             labelPlacement="end"
           />
-          <FormControlLabel label="Reset Buttons"
+          <FormControlLabel label="Auto-Reset"
             value="end"
             id={this.uniqueID+"reset"}
             padding="dense"
