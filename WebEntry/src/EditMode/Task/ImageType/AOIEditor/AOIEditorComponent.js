@@ -245,11 +245,10 @@ class AOIEditorComponent extends Component {
 
     return (
       <div className="AOIEditor">
+        {imageReview}
         <AOIToolboxComponent onSwitchMode={this.switchMode.bind(this)}
                              mode={this.state.mode}
                              callbacks={this.callbacks}/>
-
-        {imageReview}
         <AOINameDialog name={this.tempAOI.name} openDialog={this.state.openAOINameDialog} closeDialog={this.onCloseAOINameDialog.bind(this)}/>
       </div>
     );
