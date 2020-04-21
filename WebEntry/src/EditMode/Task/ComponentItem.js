@@ -169,7 +169,7 @@ class TaskComponentItem extends Component {
             onChange={this.handleResetResponsesChanged}
             labelPlacement="end"
           />
-          <FormControlLabel label="Treat Response as Global Variable"
+          <FormControlLabel label="Make Global Variable"
             value="end"
             padding="dense"
             id={this.uniqueID+"globalVar"}
@@ -215,7 +215,7 @@ class TaskComponentItem extends Component {
             ref="correctResponseRef"
             onChange={(e)=> this.responseHandler(e, e.target.value, "Correct Responses")}
           />
-          <FormControlLabel label="Treat Response as Global Variable"
+          <FormControlLabel label="Make Global Variable"
             value="end"
             padding="dense"
             id={this.uniqueID+"globalVar"}
@@ -260,7 +260,7 @@ class TaskComponentItem extends Component {
             ref="correctResponseRef"
             onChange={(e)=> this.responseHandler(e, e.target.value, "Correct Responses")}
           />
-          <FormControlLabel label="Treat Response as Global Variable"
+          <FormControlLabel label="Make Global Variable"
             value="end"
             padding="dense"
             id={this.uniqueID+"globalVar"}
