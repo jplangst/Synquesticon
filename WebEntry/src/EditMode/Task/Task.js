@@ -300,7 +300,7 @@ class EditTask extends Component {
 
 /*
 
-<FormControlLabel label="Treat Response as Global Variable"
+<FormControlLabel label="Make Global Variable"
   value="end"
   padding="dense"
   style={{marginLeft:10}}
