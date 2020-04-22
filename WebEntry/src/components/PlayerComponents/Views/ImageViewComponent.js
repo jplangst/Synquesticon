@@ -133,10 +133,10 @@ class ImageViewComponent extends Component {
       }
 
       return (
-        <svg onClick={this.onImageClicked.bind(this)} style={{left:left}} className="clickableCanvas" width={this.state.imageWidth} height={this.state.imageHeight} viewBox="0 0 100 100" preserveAspectRatio="none">
+        <svg onClick={this.onImageClicked.bind(this)} style={{left:left}} className="clickableCanvas" width={this.state.imageWidth} opacity={OPACITY} height={this.state.imageHeight} viewBox="0 0 100 100" preserveAspectRatio="none">
           <g stroke="none" fill="black">
             {this.clicks.map((item, index) => {
-              return <ellipse key={index} cx={item.x*100} cy={item.y*100} rx={CLICK_RADIUS} ry={CLICK_RADIUS*1.8} opacity={OPACITY} fill={COLOR} style={{pointerEvents:'none'}}/>
+              return <ellipse key={index} cx={item.x*100} cy={item.y*100} rx={CLICK_RADIUS} ry={CLICK_RADIUS*1.8}  fill={COLOR} style={{pointerEvents:'none'}}/>
             })}
           </g>
         </svg>);
