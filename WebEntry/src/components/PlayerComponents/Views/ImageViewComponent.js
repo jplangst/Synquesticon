@@ -136,7 +136,7 @@ class ImageViewComponent extends Component {
         <svg onClick={this.onImageClicked.bind(this)} style={{left:left}} className="clickableCanvas" width={this.state.imageWidth} height={this.state.imageHeight} viewBox="0 0 100 100" preserveAspectRatio="none">
           <g stroke="none" fill="black">
             {this.clicks.map((item, index) => {
-              return <ellipse key={index} cx={item.x*100} cy={item.y*100} rx={CLICK_RADIUS} ry={CLICK_RADIUS*1.8} opacity={OPACITY} fill={COLOR}/>
+              return <ellipse key={index} cx={item.x*100} cy={item.y*100} rx={CLICK_RADIUS} ry={CLICK_RADIUS*1.8} opacity={OPACITY} fill={COLOR} style={{pointerEvents:'none'}}/>
             })}
           </g>
         </svg>);
@@ -164,7 +164,7 @@ class ImageViewComponent extends Component {
       }
 
       return (
-        <svg id={this.props.key + "AOICanvas"} style={{left:left}} className="AOICanvas" width={this.state.imageWidth} height={this.state.imageHeight} viewBox="0 0 100 100" preserveAspectRatio="none">
+        <svg id={this.props.key + "AOICanvas"} style={{left:left,pointerEvents:'none'}} className="AOICanvas" width={this.state.imageWidth} height={this.state.imageHeight} viewBox="0 0 100 100" preserveAspectRatio="none">
           {this.props.task.aois.map((aoi, index) => {
             return <AOIComponent aoi={aoi} key={index}/>
           })}

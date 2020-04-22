@@ -50,8 +50,16 @@ class ObserverMode extends Component {
   }
 
   isSameIdentifier(pair, msg) {
-    return (pair.lineOfData.startTimestamp === msg.lineOfData.startTimestamp
-            && pair.lineOfData.taskContent === msg.lineOfData.taskContent);
+    if(pair.lineOfData){
+      return (pair.lineOfData.startTimestamp === msg.lineOfData.startTimestamp
+              && pair.lineOfData.taskContent === msg.lineOfData.taskContent);
+    }
+    else{
+      console.log("missing data line", msg);
+      return false;
+    }
+    //return (pair.lineOfData.startTimestamp === msg.lineOfData.startTimestamp
+    //        && pair.lineOfData.taskContent === msg.lineOfData.taskContent);
   }
 
   pairMessage(msgArray, msg) {

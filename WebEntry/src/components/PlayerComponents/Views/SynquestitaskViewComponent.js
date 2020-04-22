@@ -32,6 +32,8 @@ class SynquestitaskViewComponent extends Component {
     //Update the map with the resonse to the task, overwriting any existing answer for that task
     var lineOfData = this.taskResponses.get(this.props.task._id+answerObj.mapID);
 
+    console.log(lineOfData);
+
     if (lineOfData.firstResponseTimestamp === -1) { //log the timeToFirstAnswer
       lineOfData.firstResponseTimestamp = playerUtils.getCurrentTime();
       lineOfData.timeToFirstAnswer = lineOfData.firstResponseTimestamp - lineOfData.startTimestamp;

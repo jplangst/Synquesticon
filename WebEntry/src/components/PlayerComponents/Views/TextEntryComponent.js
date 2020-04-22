@@ -60,7 +60,6 @@ class TextEntryComponent extends Component {
         <TextField
           id="outlined-name"
           className="textField"
-
           inputProps={{style: { overflowX:'hidden'}}}
           variant="outlined"
           value={this.textEntry}
