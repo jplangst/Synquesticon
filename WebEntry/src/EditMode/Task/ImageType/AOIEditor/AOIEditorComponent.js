@@ -176,7 +176,6 @@ class AOIEditorComponent extends Component {
     }
     if (this.state.mode === "RECTANGLE") {
       this.p1TempAOI = this.getMousePosition(e);
-      console.log(this.p1TempAOI);
     }
   }
 
