@@ -82,6 +82,10 @@ class ImageViewComponent extends Component {
     for (var i = 0; i < aois.length; i++) {
       var a = aois[i];
 
+      if(a.imageRef.current === null){
+        return;
+      }
+
       //console.log("imageDiv", a.imageRef.ge, a.imageWrapper.current);
       var imageDivRect = a.imageRef.current.getBoundingClientRect();
       var polygon = [];
