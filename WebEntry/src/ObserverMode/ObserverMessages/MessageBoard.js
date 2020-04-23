@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import CommentDialog from './CommentDialog';
 import ObserverMessage from './ObserverMessage';
@@ -15,68 +15,64 @@ import { withTheme } from '@material-ui/styles';
 
 var myStorage = window.localStorage;
 
-class MessageBoard extends React.Component {
-  constructor(props){
-    super(props);
+const MessageBoard = (props) => {
+  const [commentDialogOpen, setCommentDialogOpen] = useState(false);
+  let pickedEvent = null;
 
-    this.state = {
-      openCommentDialog: false
-    }
-    this.pickedEvent = null;
+  const onCommentPressed = (evt) => {
+    pickedEvent = evt;
+    setCommentDialogOpen(true);
   }
 
-  onCommentPressed(evt){
-    this.setState({
-      openCommentDialog: true,
-    });
-    this.pickedEvent = evt;
-  }
-
-  onCommentRecieved(comment){
+  const onCloseCommentDialog = (comment) => {
+    setCommentDialogOpen(false);
     if (comment !== "") {
-      //TODO process comment here, might need to pass task id etc to the observermessage as needed
-      db_helper.addNewObserverMessageToDb(new dbObjects.ObserverMessage(myStorage.getItem('deviceID'),
-                                                                     myStorage.getItem('deviceRole'),
-                                                                     this.pickedEvent.participantId,
-                                                                     this.pickedEvent.lineOfData.taskId,
-                                                                     this.pickedEvent.lineOfData.startTimestamp,
-                                                                     comment));
-      mqtt.broadcastEvents(JSON.stringify({
-                                            eventType: "COMMENT",
-                                            observerName: myStorage.getItem('deviceID'),
-                                            observerRole: myStorage.getItem('deviceRole'),
-                                            timestamp: playerUtils.getCurrentTime(),
-                                            participantId: this.pickedEvent.participantId,
-                                            participantLabel: this.pickedEvent.participantLabel,
-                                            startTimestamp: this.pickedEvent.startTimestamp,
-                                            lineOfData: this.pickedEvent.lineOfData,
-                                            comment: comment
-                                          }));
-}
-    this.setState({
-      openCommentDialog: false
-    });
+      console.log("write to DB");
+      //onCommentRecieved(comment);
+    } else {
+      console.log("empty string");
+    }
+  }
+  const onCommentRecieved = (comment) => {
+    //TODO process comment here, might need to pass task id etc to the observermessage as needed
+    db_helper.addNewObserverMessageToDb(new dbObjects.ObserverMessage(myStorage.getItem('deviceID'),
+      myStorage.getItem('deviceRole'),
+      pickedEvent.participantId,
+      pickedEvent.lineOfData.taskId,
+      pickedEvent.lineOfData.startTimestamp,
+      comment));
+
+    mqtt.broadcastEvents(JSON.stringify({
+      eventType: "COMMENT",
+      observerName: myStorage.getItem('deviceID'),
+      observerRole: myStorage.getItem('deviceRole'),
+      timestamp: playerUtils.getCurrentTime(),
+      participantId: pickedEvent.participantId,
+      participantLabel: pickedEvent.participantLabel,
+      startTimestamp: pickedEvent.startTimestamp,
+      lineOfData: pickedEvent.lineOfData,
+      comment: comment
+    }));
   }
 
-  render() {
-    var displayMessages = this.props.messages.slice();
+  var displayMessages = props.messages.slice();
+  
+  return (
+    <div className="messageBoard">
+      <div className="messageBoardtitle">
+       <Typography color="textPrimary" variant="h6">Messaging Log</Typography>
+      </div>
+      <div className="messages">
+        {displayMessages.reverse().map((pair, pindex) => {
+          return pair.map((item, iindex) => {
+            return <ObserverMessage message={item} key={iindex+item.lineOfData} commentCallback={onCommentPressed} />
+          })
+        })}
+      </div>
 
-    return (
-      <div  className="messageBoard">
-        <div className="messageBoardtitle">
-         <Typography color="textPrimary" variant="h6">Messaging Log</Typography>
-        </div>
-        <div className="messages">
-          {displayMessages.reverse().map((pair, pindex) => {
-            return pair.map((item, iindex) => {
-              return <ObserverMessage message={item} key={iindex+item.lineOfData} commentCallback={this.onCommentPressed.bind(this)} />
-            })
-          })}
-        </div>
-
-        <CommentDialog openDialog={this.state.openCommentDialog} closeDialog={this.onCommentRecieved.bind(this)} />
-      </div>);
-  }
+      <CommentDialog isOpen={commentDialogOpen} closeCommentDialog={onCloseCommentDialog}/>
+    </div>
+  );
 }
 
 export default withTheme(MessageBoard);
