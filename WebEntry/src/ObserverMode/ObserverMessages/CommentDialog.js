@@ -8,55 +8,46 @@ import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-class CommentDialog extends Component {
-  constructor(props){
-    super(props);
+const CommentDialog = (props) => {
+  let comment = "";
 
-    this.comment = "";
-    this.onClosePressed = this.onClose.bind(this);
+  const closeDialog = () => {
+    props.closeCommentDialog(comment);
   }
 
-  onClose(){
-    this.props.closeDialog(this.comment);
-  }
-
-  render() {
-    return(
-      <Dialog
-          open={this.props.openDialog}
-          onClose={this.props.closeDialog}
-          aria-labelledby="form-dialog-title"
-          fullWidth={true}
-          maxWidth='md'
-        >
-          <DialogTitle id="form-dialog-title" variant="h5">
-            Write Comment
-          </DialogTitle>
-          <DialogContent>
-            <TextField
-              required
-              padding="dense"
-              id="taskComment"
-              defaultValue=""
-              label="Comment"
-              ref="taskCommentRef"
-              fullWidth
-              multiline
-              rows="5"
-              onChange={(e)=>{this.comment = e.target.value}}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={e => this.props.closeDialog("")} variant="outlined">
-              Cancel
-            </Button>
-            <Button variant="outlined" onClick={this.onClosePressed}>
-              Submit
-            </Button>
-          </DialogActions>
-      </Dialog>
-    );
-  }
+  return(
+  <Dialog
+    open={props.isOpen}
+    aria-labelledby="form-dialog-title"
+    fullWidth={true}
+    maxWidth='md'
+  >
+    <DialogTitle id="form-dialog-title" variant="h5">
+      Write Comment
+    </DialogTitle>
+    <DialogContent>
+      <TextField
+        required
+        padding="dense"
+        id="taskComment"
+        defaultValue=""
+        label="Comment"
+        fullWidth
+        multiline
+        rows="5"
+        onChange={(e)=>{comment = e.target.value;console.log(comment)}}
+      />
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={closeDialog} variant="outlined">
+        Cancel
+      </Button>
+      <Button  onClick={closeDialog} variant="outlined">
+        Submit
+      </Button>
+    </DialogActions>
+  </Dialog>
+  );
 }
 
 export default CommentDialog;
