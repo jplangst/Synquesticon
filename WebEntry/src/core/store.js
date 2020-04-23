@@ -108,6 +108,8 @@ function prepareMUITheme(themeType){
 let theme = prepareMUITheme(savedThemeType);
 
 const initialState = {
+  screenID:'',
+  multipleScreens:false,
   participants: {},
   remoteEyeTrackers: [],
   selectedEyeTracker: "",
@@ -141,6 +143,9 @@ const store = createStore ((state = initialState, action) => {
         eventStore.emitNewRemoteTrackerListener();
       }
       return state;
+    }
+    case 'SET_MULTISCREEN':{
+      return { ...state, multipleScreens:action.multipleScreens, screenID:action.screenID};
     }
     case 'SET_SELECTED_EYETRACKER': {
       return { ...state, selectedEyeTracker:action.selectedEyeTracker};
