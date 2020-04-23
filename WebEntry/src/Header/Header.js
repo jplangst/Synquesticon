@@ -20,10 +20,9 @@ import PlayIcon from '@material-ui/icons/PlayArrow';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import ExportationIcon from '@material-ui/icons/Archive';
 
-//class Header extends Component {
-function Header (props) {
+const Header = (props) => {
   const [showMenu, setShowMenu] = useState(false);
-  const gotoPage = route =>  props.history.push(route); 
+  const gotoPage = route => props.history.push(route); 
   const handleBackwardsNavigation = () => props.history.push("/");
   const openSettingsMenu = () => setShowMenu(true);
   const closeSettingsMenu = () => setShowMenu(false);
