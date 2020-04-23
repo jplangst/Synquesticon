@@ -33,7 +33,7 @@ function HEADER(seperator) {
                "set_names" + seperator +
                "timestamp_start" + seperator +
                "timestamp_first_response" + seperator +
-               "clicked_points" + seperator +
+               "clicked_points" + seperator + 
                "database_id" + "\n";
    return header;
  }
@@ -326,10 +326,9 @@ class ExportMode extends Component {
           />
           <TextField label="Delimiter"
             required
-            id="delimID"
-            style={{width:100}}
+            id="questionText"
             defaultValue={this.state.delimiter}
-            placeholder=","
+            placeholder="csv delimiter"
             ref="delimiterRef"
             variant="filled"
             onChange={(e)=>{this.state.delimiter = e.target.value}}
