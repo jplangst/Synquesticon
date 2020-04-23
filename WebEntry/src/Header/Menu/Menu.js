@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 
-import './Menu.css';
-
 import store from '../../core/store';
 import db_helper from '../../core/db_helper';
 
