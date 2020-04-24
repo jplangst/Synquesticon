@@ -77,7 +77,9 @@ class PlayMode extends Component {
 
     mqtt.broadcastMultipleScreen(JSON.stringify({
                             type: "StartExperiment",
-                            taskSet: taskSet
+                            taskSet: taskSet,
+                            deviceID: window.localStorage.getItem('deviceID'),
+                            screenID: store.getState().screenID
                            }));
 
     var url = '/study?id=' + this.selectedTaskSet._id;

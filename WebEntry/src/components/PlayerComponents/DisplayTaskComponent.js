@@ -48,6 +48,8 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
     this.currentTask = null;
     this.currentLineOfData = null;
     this.hasBeenInitiated = false;
+
+    this.handleMultipleScreenEvent = this.onMultipleScreenEvent.bind(this);
   }
 
   /*
@@ -60,6 +62,11 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
 
   componentWillMount() {
     this.progressCount = this.props.progressCount;
+    eventStore.addMultipleScreenListener(this.handleMultipleScreenEvent);
+  }
+
+  componentWillUnmount(){
+    eventStore.removeMultipleScreenListener(this.handleMultipleScreenEvent);
   }
 
   /*
@@ -69,6 +76,13 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
   ██      ██   ██ ██      ██      ██   ██ ██   ██ ██      ██  ██       ██
    ██████ ██   ██ ███████ ███████ ██████  ██   ██  ██████ ██   ██ ███████
   */
+
+  onMultipleScreenEvent(payload) {
+    if(store.getState().multipleScreens && payload.type === 'nextTask'){
+      this.onClickNext(null, true);
+    }
+  }
+
   checkShouldRecordData(label, responses) {
     if (checkShouldSave) {
       if (label.toLowerCase().includes("record data")) {
@@ -112,7 +126,7 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
     store.dispatch(aoiAction);
   }
 
-  onClickNext() {
+  onClickNext(e, fromEmitter) {
     //===========reset aoi list===========
     this.resetAOIs();
 
@@ -163,6 +177,15 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
     mqtt.broadcastEvents(JSON.stringify({eventType: "PROGRESSCOUNT",
                                          participantId: store.getState().experimentInfo.participantId,
                                          progressCount: this.progressCount}));
+
+    //To prevent the receiving components from broadcasting a new click event
+    if(!fromEmitter){
+      mqtt.broadcastMultipleScreen(JSON.stringify({
+                             type: "nextTask",
+                             deviceID: window.localStorage.getItem('deviceID'),
+                             screenID: store.getState().screenID
+                            }));
+    }
 
     //===========reset===========
     this.currentLineOfData = null;

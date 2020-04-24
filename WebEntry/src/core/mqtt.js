@@ -1,4 +1,4 @@
-//var store = require('./store');
+var store = require('./store');
 var eventStore = require('./eventStore');
 //var playerUtils = require('./player_utility_functions');
 
@@ -29,7 +29,12 @@ function onMQTTEvent(message) {
 
 function onMultipleScreenEvent(message) {
   if(message){
-    eventStore.default.emitMultipleScreenEvent(JSON.parse(message));
+    let parsedMessage = JSON.parse(message);
+
+    //Only respond to the message if the device ID matches our own
+    if(parsedMessage.deviceID === window.localStorage.getItem('deviceID') && parsedMessage.screenID !== store.default.getState().screenID){
+      eventStore.default.emitMultipleScreenEvent(JSON.parse(message));
+    }
   }
 }
 
