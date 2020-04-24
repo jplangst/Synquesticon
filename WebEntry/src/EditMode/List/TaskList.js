@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import TaskItem from './TaskItem';
 
@@ -30,82 +30,65 @@ const Clone = styled(TaskClone)`
 `;
 
 //================ React component ================
-class TaskList extends Component {
-  constructor(props) {
-    super(props);
-    this.taskList = props.taskList;
-  }
-
+const TaskList = (props) => {
   //-----------Tasks------------
-  onSelectTask(e) {
-    this.props.selectTask(e);
+  const onSelectTask = (e) => {
+    props.selectTask(e);
   }
 
-  onRemoveTask(task) {
-    var index = this.taskList.findIndex(x => x.question === task.question);
-    this.taskList.splice(index, 1);
-    this.props.removeTask(task);
-    this.forceUpdate();
-  }
+  const { theme } = props;
+  let bgColor = theme.palette.type === "light" ? theme.palette.primary.dark : theme.palette.primary.main;
 
-  render() {
-    this.taskList = this.props.taskList;
+  return(
+    <Droppable droppableId={props.droppableId} isDropDisabled={true} >
+      {(provided, snapshot) => (
+      <div className="taskListComponentContainer" ref={provided.innerRef}>
+        {
+          props.taskList.map((item, index) => {
+            var highlightBG = null;
+            if(props.selectedTask && item && item._id === props.selectedTask._id){
+              highlightBG = true;
+            }
 
-    const { theme} = this.props;
-    let bgColor = theme.palette.type === "light" ? theme.palette.primary.dark : theme.palette.primary.main;
-
-    return(
-      <Droppable droppableId={this.props.droppableId} isDropDisabled={true} >
-       {(provided, snapshot) => (
-        <div className="taskListComponentContainer" ref={provided.innerRef}>
-          {
-            this.taskList.map((item, index) => {
-              var highlightBG = null;
-              if(this.props.selectedTask && item && item._id === this.props.selectedTask._id){
-                highlightBG = true;
-              }
-
-              var content = listUtils.getTaskContent(item);
-              var clonedContent= <div
-                className={"listItem"} style={{backgroundColor:bgColor}}>
-                <div className="listItemTextContainer" >
-                  <div className="listItemText">
-                    <Typography color="textPrimary" noWrap> {content} </Typography>
-                  </div>
+            var content = listUtils.getTaskContent(item);
+            var clonedContent= <div
+              className={"listItem"} style={{backgroundColor:bgColor}}>
+              <div className="listItemTextContainer" >
+                <div className="listItemText">
+                  <Typography color="textPrimary" noWrap> {content} </Typography>
                 </div>
-                <div className="listItemDragBtnContainer" style={{backgroundColor:bgColor}}>
-                  <Button style={{cursor:'move',width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
-                    className="listItemDragBtn" size="small" fullWidth >
-                    <DragIcon className="dragBtnIcon"/>
-                  </Button>
-                </div>
-              </div>;
+              </div>
+              <div className="listItemDragBtnContainer" style={{backgroundColor:bgColor}}>
+                <Button style={{cursor:'move',width: '100%', height: '100%', minWidth: '30px', minHeight: '30px'}}
+                  className="listItemDragBtn" size="small" fullWidth >
+                  <DragIcon className="dragBtnIcon"/>
+                </Button>
+              </div>
+            </div>;
 
-              return(
-                <Draggable key={item._id + this.props.idSuffix} draggableId={item._id + '_' + this.props.idSuffix}
-                  index={index} shouldRespectForceTouch={false} isDragDisabled={!this.props.dragEnabled}>
-                {(provided, snapshot) => (
-
-                  <React.Fragment>
-                    <TaskItem domRef={provided.innerRef} provided={provided} dragEnabled={this.props.dragEnabled}
-                      isDragging={snapshot.isDragging} snapshot={snapshot}
-                      highlight={highlightBG} placeholder={false} task={item} itemType={this.props.itemType}
-                      handleDrop={this.props.dragDropCallback} onSelectedCallback={this.onSelectTask.bind(this)} content={content}
-                    />
-                    {snapshot.isDragging && (
-                      <Clone>{clonedContent}</Clone>
-                    )}
-                  </React.Fragment>
-                )}
-                </Draggable>
-              );
-            })}
-             <div style={{display: 'none'}}>{provided.placeholder}</div>
-          </div>
-      )}
-      </Droppable>
-    );
-  }
+            return(
+              <Draggable key={item._id + props.idSuffix} draggableId={item._id + '_' + props.idSuffix}
+                index={index} shouldRespectForceTouch={false} isDragDisabled={!props.dragEnabled}>
+              {(provided, snapshot) => (
+                <React.Fragment>
+                  <TaskItem domRef={provided.innerRef} provided={provided} dragEnabled={props.dragEnabled}
+                    isDragging={snapshot.isDragging} snapshot={snapshot}
+                    highlight={highlightBG} placeholder={false} task={item} itemType={props.itemType}
+                    handleDrop={props.dragDropCallback} onSelectedCallback={onSelectTask} content={content}
+                  />
+                  {snapshot.isDragging && (
+                    <Clone>{clonedContent}</Clone>
+                  )}
+                </React.Fragment>
+              )}
+              </Draggable>
+            );
+          })}
+            <div style={{display: 'none'}}>{provided.placeholder}</div>
+        </div>
+    )}
+    </Droppable>
+  );
 }
 
 export default withTheme(TaskList);

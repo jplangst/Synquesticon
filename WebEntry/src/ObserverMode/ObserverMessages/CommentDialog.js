@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
