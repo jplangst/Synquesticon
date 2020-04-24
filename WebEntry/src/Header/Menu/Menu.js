@@ -20,7 +20,7 @@ import Switch from '@material-ui/core/Switch';
 var myStorage = window.localStorage;
 
 const Menu = (props) => {
-  const [showMenu, setShowMenu] = useState(true);
+//  const [showMenu, setShowMenu] = useState(true);
   const [openDeviceIDSettings, setOpenDeviceIDSettings] = useState(false);
   const [openSpeechSettings, setOpenSpeechSettings] = useState(false);
   const [openMQTTSettings, setOpenMQTTSettings] = useState(false);
@@ -46,15 +46,7 @@ const Menu = (props) => {
     }
   }
 
-  const onOpenDeviceIDSettings = (e) => setOpenDeviceIDSettings(true);
-  const onCloseDeviceIDSettings = (e) => setOpenDeviceIDSettings(false);
-  const onOpenMQTTSettings = (e) => setOpenMQTTSettings(true);
-  const onCloseMQTTSettings= (e) => setOpenMQTTSettings(false);
-
   //-----------Speech Settings------------
-  const onOpenSpeechSettings = (e) => setOpenSpeechSettings(true);
-  const onCloseSpeechSettings = (e) => setOpenSpeechSettings(false);
-
   //TODO move this into a utility file or something
   //var synth = window.speechSynthesis;
   const speak = (synth, inputTxt) => {
@@ -74,15 +66,6 @@ const Menu = (props) => {
     }
   }
 
-  //button click handlers
-  const openSettingsMenu = () => {
-    console.log("open");
-    //setShowMenu(true);
-  }
-  const closeSettingsMenu = (e) => {
-    console.log("close");
-    setShowMenu(false);
-  }
   const onToggleThemeChange = () => {
     var toggleThemeAction = {
       type: 'TOGGLE_THEME_TYPE',
@@ -90,17 +73,13 @@ const Menu = (props) => {
     store.dispatch(toggleThemeAction);
   }
 
-  const onEmptySets = () => db_helper.deleteAllTaskSetsFromDb();
-
-  const onEmptyLegacyTasks = () => db_helper.deleteAllLegacyTasksFromDb();
-
   var deviceName = myStorage.getItem('deviceID');
   if (!deviceName || deviceName === "") {
     deviceName="Device ID";
   }
 
   let speechSettings = props.showSpeechSettings ?
-    <ListItem button key="Speech Settings" onClick={onOpenSpeechSettings}>
+    <ListItem button key="Speech Settings" onClick={() => setOpenSpeechSettings(true)}>
       <ListItemText primary="Speech Settings" />
     </ListItem> :
     null;
@@ -115,10 +94,10 @@ const Menu = (props) => {
           style={{minWidth: 200, height:'100%'}}
         >
           <List >
-            <ListItem button key="Device ID" onClick={onOpenDeviceIDSettings}>
+            <ListItem button key="Device ID" onClick={() => setOpenDeviceIDSettings(true)}>
               <ListItemText primary={deviceName} />
             </ListItem>
-            <ListItem button key="MQTT Settings" onClick={onOpenMQTTSettings}>
+            <ListItem button key="MQTT Settings" onClick={() => setOpenMQTTSettings(true)}>
               <ListItemText primary="MQTT Settings" />
             </ListItem>
             {speechSettings}
@@ -148,21 +127,21 @@ const Menu = (props) => {
             </ListItem>
            </List>
           <List>
-            <ListItem button key="DummySet" onClick={onEmptySets}>
+            <ListItem button key="DummySet" onClick={() => db_helper.deleteAllTaskSetsFromDb()}>
               <ListItemText primary="Empty Sets" />
             </ListItem>
-            <ListItem button key="DummyLegacy" onClick={onEmptyLegacyTasks}>
+            <ListItem button key="DummyLegacy" onClick={() => db_helper.deleteAllLegacyTasksFromDb()}>
               <ListItemText primary="Empty Legacy Tasks" />
             </ListItem>
           </List>
         </div>
       </Drawer>
       <DeviceIDDialog openDeviceIDSettings={openDeviceIDSettings}
-        closeDeviceIDSettings={onCloseDeviceIDSettings} myStorage={myStorage} />
+        closeDeviceIDSettings={() => setOpenDeviceIDSettings(false)} myStorage={myStorage} />
       <MQTTDialog openMQTTSettings={openMQTTSettings}
-        closeMQTTSettings={onCloseMQTTSettings} myStorage={myStorage}/>
+        closeMQTTSettings={() => setOpenMQTTSettings(false)} myStorage={myStorage}/>
       <SpeechDialog openSpeechSettings={openSpeechSettings}
-        closeSpeechSettings={onCloseSpeechSettings} myStorage={myStorage}/>
+        closeSpeechSettings={() => setOpenSpeechSettings(false)} myStorage={myStorage}/>
     </span>
   );
 }
