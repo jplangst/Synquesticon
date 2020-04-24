@@ -117,7 +117,7 @@ const initialState = {
   gazeData: {},
   aois: [],
   showHeader: true,
-  experimentInfo: null,
+  experimentInfo: {},
   shouldSave: true,
   windowSize: {
     width: window.innerWidth,

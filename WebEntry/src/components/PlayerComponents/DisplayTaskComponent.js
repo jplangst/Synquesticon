@@ -341,11 +341,13 @@ class DisplayTaskComponent extends Component {
           });
         }
 
+        console.log(store.getState().experimentInfo);
+
         var action = {
           type: 'SET_EXPERIMENT_INFO',
           experimentInfo: {
             participantLabel: playerUtils.getDeviceName(),
-            participantId: undefined,
+            participantId: store.getState().experimentInfo.participantId?store.getState().experimentInfo.participantId:undefined,
             shouldSave: true,
             startTimestamp: playerUtils.getFormattedCurrentTime(),
             mainTaskSetId: mainTaskSetName,
@@ -356,6 +358,7 @@ class DisplayTaskComponent extends Component {
         }
 
         store.dispatch(action);
+        this.forceUpdate();
 
         if (store.getState().experimentInfo.participantId === undefined) {
           db_helper.addParticipantToDb(new dbObjects.ParticipantObject(store.getState().experimentInfo.taskSet._id), (returnedIdFromDB)=> {
@@ -370,6 +373,8 @@ class DisplayTaskComponent extends Component {
       });
 
       eventStore.addNewCommandListener(this.handleNewCommandEvent);
+
+
     }
   }
 
