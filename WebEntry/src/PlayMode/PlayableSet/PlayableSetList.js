@@ -1,7 +1,5 @@
 import React from 'react';
-
 import PlayableSet from './PlayableSet';
-
 import * as listUtils from '../../core/db_objects_utility_functions';
 
 const PlayableSetList = (props) => {
