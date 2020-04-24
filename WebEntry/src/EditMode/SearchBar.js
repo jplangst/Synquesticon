@@ -80,7 +80,7 @@ const styles = theme => ({
   },
 });
 
-function ClearSearch(e, elementID, onChange){
+const ClearSearch = (e, elementID, onChange) => {
   document.getElementById(elementID).value = "";
   onChange("");
 }
