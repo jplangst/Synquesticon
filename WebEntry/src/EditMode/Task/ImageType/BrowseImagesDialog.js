@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -17,7 +17,10 @@ const BrowseImagesDialog = (props) => {
   const [images, setImages] = useState([]);
   const [pickedImage, setPickedImage] = useState(null);
 
-  db_helper.getAllImages((imgs) => setImages(imgs));
+  useEffect( () => {
+    db_helper.getAllImages((imgs) => setImages(imgs));
+  }, []);
+  
 
   var buttonContainerHeight = 60;
   var buttonHeight = buttonContainerHeight - 4;
