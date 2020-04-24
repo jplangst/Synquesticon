@@ -109,7 +109,7 @@ let theme = prepareMUITheme(savedThemeType);
 
 const initialState = {
   screenID:'',
-  multipleScreens:true,
+  multipleScreens:false,
   participants: {},
   remoteEyeTrackers: [],
   selectedEyeTracker: "",
