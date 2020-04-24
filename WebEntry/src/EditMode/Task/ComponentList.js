@@ -60,9 +60,7 @@ const TaskComponentList = props => {
     );
   });
 
-  return(
-    <div style={{height:'100%', width:'100%', overflowY:'auto'}}>{collapsableContent}</div>
-  );
+  return <div style={{height:'100%', width:'100%', overflowY:'auto'}}>{collapsableContent}</div>;
 }
 
 export default withTheme(TaskComponentList);
