@@ -220,9 +220,9 @@ class AOIEditorComponent extends Component {
   }
 
   render() {
-    var imageReview = null;
+    var imagePreview = null;
     if (this.state.mode === "SELECT") {
-      imageReview = <AOIImageViewComponent     imageName={this.props.task.image}
+      imagePreview = <AOIImageViewComponent    imageName={this.props.task.image}
                                                image={this.props.image}
                                                aois={this.props.task.aois}
                                                mode={this.state.mode}
@@ -231,7 +231,7 @@ class AOIEditorComponent extends Component {
                                                />
     }
     else {
-      imageReview = <AOIImageViewComponent     imageName={this.props.task.image}
+      imagePreview = <AOIImageViewComponent    imageName={this.props.task.image}
                                                image={this.props.image}
                                                aois={this.props.task.aois}
                                                mode={this.state.mode}
@@ -245,11 +245,10 @@ class AOIEditorComponent extends Component {
 
     return (
       <div className="AOIEditor">
+        {imagePreview}
         <AOIToolboxComponent onSwitchMode={this.switchMode.bind(this)}
                              mode={this.state.mode}
                              callbacks={this.callbacks}/>
-
-        {imageReview}
         <AOINameDialog name={this.tempAOI.name} openDialog={this.state.openAOINameDialog} closeDialog={this.onCloseAOINameDialog.bind(this)}/>
       </div>
     );

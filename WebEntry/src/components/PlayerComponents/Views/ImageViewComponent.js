@@ -7,7 +7,7 @@ import * as playerUtils from '../../../core/player_utility_functions';
 
 import './ImageViewComponent.css';
 
-var CLICK_RADIUS = "5";
+var CLICK_RADIUS = "1";
 var OPACITY = "0.5";
 var COLOR = "red";
 
@@ -15,15 +15,17 @@ class ImageViewComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      imageSrc: null
+      imageSrc: null,
+      imageWidth: 100,
+      imageHeight: 100,
+      imageElement: null
     }
     this.image = null;
     this.imageRef = React.createRef();
     this.clicks = [];
   }
+
   componentWillMount() {
-    //db_helper.getImage(this.props.task.image, this.onReceivedImage.bind(this));
-    //
     this.image = new Image();
     this.image.src = "/Images/" + this.props.task.image;
     this.image.ref = this.imageRef;
@@ -80,6 +82,10 @@ class ImageViewComponent extends Component {
     for (var i = 0; i < aois.length; i++) {
       var a = aois[i];
 
+      if(a.imageRef.current === null){
+        return;
+      }
+
       //console.log("imageDiv", a.imageRef.ge, a.imageWrapper.current);
       var imageDivRect = a.imageRef.current.getBoundingClientRect();
       var polygon = [];
@@ -125,11 +131,16 @@ class ImageViewComponent extends Component {
 
   getClickableComponent() {
     if (this.props.task.recordClicks) {
+      var left = 0;
+      if(this.state.imageElement){
+        left = parseInt(this.state.imageElement.offsetLeft);
+      }
+
       return (
-        <svg onClick={this.onImageClicked.bind(this)} className="clickableCanvas" width='100%' height='100%' viewBox="0 0 100 100">
+        <svg onClick={this.onImageClicked.bind(this)} style={{left:left}} className="clickableCanvas" width={this.state.imageWidth} opacity={OPACITY} height={this.state.imageHeight} viewBox="0 0 100 100" preserveAspectRatio="none">
           <g stroke="none" fill="black">
             {this.clicks.map((item, index) => {
-              return <circle cx={item.x*100} cy={item.y*100} r={CLICK_RADIUS} opacity={OPACITY} fill={COLOR}/>
+              return <ellipse key={index} cx={item.x*100} cy={item.y*100} rx={CLICK_RADIUS} ry={CLICK_RADIUS*1.8}  fill={COLOR} style={{pointerEvents:'none'}}/>
             })}
           </g>
         </svg>);
@@ -140,7 +151,6 @@ class ImageViewComponent extends Component {
   }
 
   getFullScreenImage() {
-    console.log("show fullscreen", this.props.task.fullScreenImage);
     if (this.props.task.fullScreenImage) {
       return "fullScreenImage";
     }
@@ -151,8 +161,14 @@ class ImageViewComponent extends Component {
 
   showAOIs() {
     if (this.props.task.showAOIs) {
+
+      var left = 0;
+      if(this.state.imageElement){
+        left = parseInt(this.state.imageElement.offsetLeft);
+      }
+
       return (
-        <svg id={this.props.key + "AOICanvas"} className="AOICanvas" width='100%' height='100%' viewBox="0 0 100 100" preserveAspectRatio="none">
+        <svg id={this.props.key + "AOICanvas"} style={{left:left,pointerEvents:'none'}} className="AOICanvas" width={this.state.imageWidth} height={this.state.imageHeight} viewBox="0 0 100 100" preserveAspectRatio="none">
           {this.props.task.aois.map((aoi, index) => {
             return <AOIComponent aoi={aoi} key={index}/>
           })}
@@ -164,22 +180,33 @@ class ImageViewComponent extends Component {
     }
   }
 
-  render() {
+  handleImageLoaded(){
+    var image = this.imageRef.current;
+    this.setState({
+      imageHeight: image.height,
+      imageWidth: image.width,
+      imageElement: image
+    });
+  }
 
-    //if (this.state.imageSrc) {
+  render() {
     var url = "/Images/" + this.props.task.image;
+
+    var clickable = null;
+    var aois = null;
+    if(this.state.imageElement){
+      clickable = this.getClickableComponent();
+      aois = this.showAOIs();
+    }
 
     return (
       <div className="imagePreviewContainer">
-        <img className={this.getFullScreenImage()} src={url} alt="" ref={this.imageRef}/>
-        {this.getClickableComponent()}
-        {this.showAOIs()}
+        <img className={this.getFullScreenImage()} src={url} alt="" ref={this.imageRef}
+          onLoad={this.handleImageLoaded.bind(this)}/>
+        {clickable}
+        {aois}
       </div>
     );
-    // }
-    // else {
-    //   return (<div/>);
-    // }
   }
 }
 

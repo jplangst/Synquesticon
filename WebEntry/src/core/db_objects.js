@@ -43,6 +43,7 @@ export class SynquestitaskChildComponent{
     this.objType = taskType.type; //The type of the object, see enum above
     this.label = taskType.label ? taskType.label : getLabel(taskType);
     this.displayText = ""; //The text that will be displayed
+    this.screenIDS = []; //A list of screen IDs
 
     //For user responses
     this.responses = []; //The possible responses to the task

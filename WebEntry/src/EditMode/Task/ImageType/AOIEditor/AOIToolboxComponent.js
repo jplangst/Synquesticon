@@ -44,7 +44,6 @@ class AOIToolboxComponent extends Component {
 
     return (
       <div style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
-        <Typography color="textPrimary" variant="h6"> AOI creation mode </Typography>
         <Tabs
           value={this.props.mode}
           onChange={this.handleTabs}

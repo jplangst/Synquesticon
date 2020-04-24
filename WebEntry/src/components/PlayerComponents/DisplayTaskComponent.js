@@ -253,7 +253,7 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
                                               mqtt.broadcastEvents(playerUtils.stringifyMessage(store, task, log, "START", this.progressCount, this.progressCount+1));
                                                    this.hasBeenInitiated = true;
                                               }}
-                                          key={id}/>
+                                          renderKey={id}/>
             </div>
             <div className="nextButton">
               <Button className="nextButton" variant="outlined" onClick={this.onClickNext.bind(this)}>
@@ -563,7 +563,7 @@ class DisplayTaskComponent extends Component {
         return (
             <div style={{backgroundColor:rightBG}} className="page" ref={this.frameDiv}>
               {renderObj}
-              <PauseDialog openDialog={this.state.isPaused}/>
+              <PauseDialog openDialog={this.state.isPaused} pauseMessage="Task paused."/>
             </div>
         );
       }

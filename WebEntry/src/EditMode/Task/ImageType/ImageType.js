@@ -14,7 +14,6 @@ import './ImageType.css';
 class ImageTaskType extends Component {
   constructor(props){
     super(props);
-    console.log("image task", this.props.task);
     this.state = { //We keep these fields in the state as they affect how the component is rendered
       selectedImage: this.props.task ? this.props.task.image : "",
       recordClicks: this.props.task ? this.props.task.recordClicks : false,
@@ -96,11 +95,9 @@ class ImageTaskType extends Component {
 
     var imageTypeContent =
     <div className="imageTypeContainer">
-      <div className="editTaskImagePreview">{previewImage}</div>
+
 
       <div className="imagePickingContainer">
-        <Button variant="outlined" onClick={this.onBrowseImages.bind(this)}>Browse Image Database</Button>
-        <FileSelector handleSelectionCallback={this.handleImageSelectedCallback}/>
         <FormControlLabel label="Record Clicks"
           value="end"
           id={this.props.uniqueID+"rclick"}
@@ -129,8 +126,10 @@ class ImageTaskType extends Component {
           onChange={this.handleShowAOIsCallback}
           labelPlacement="end"
         />
+        <Button variant="outlined" onClick={this.onBrowseImages.bind(this)}>Browse Images</Button>
+        <FileSelector handleSelectionCallback={this.handleImageSelectedCallback}/>
       </div>
-
+      <div className="editTaskImagePreview">{previewImage}</div>
       <BrowseImagesDialog openDialog={this.state.openBrowseImage}
                           closeDialog={this.onCloseBrowseImages.bind(this)}
                           onPickImage={this.onPickImageBrowseImages.bind(this)}/>

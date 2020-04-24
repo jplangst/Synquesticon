@@ -10,6 +10,7 @@ import ImageViewComponent from './ImageViewComponent';
 //import ComparisonViewComponent from './Views/ComparisonViewComponent';
 
 import shuffle from '../../../core/shuffle';
+import store from '../../../core/store';
 import * as dbObjects from '../../../core/db_objects';
 import * as dbObjectsUtilityFunctions from '../../../core/db_objects_utility_functions';
 import * as playerUtils from '../../../core/player_utility_functions';
@@ -80,27 +81,30 @@ class SynquestitaskViewComponent extends Component {
 
       var key = this.props.key+"Synquestitask"+i;
 
-      if(item.objType === dbObjects.TaskTypes.INSTRUCTION.type){
-          return <InstructionViewComponent className="itemContainer" key={key} task={item} mapID={mapIndex} parentSet={this.props.task.name}/>;
+      if(store.getState().multipleScreens && (item.screenIDS.includes(store.getState().screenID) || item.screenIDS.length===0) || !store.getState().multipleScreens){
+        if(item.objType === dbObjects.TaskTypes.INSTRUCTION.type){
+            return <InstructionViewComponent className="itemContainer" key={key} task={item} mapID={mapIndex} parentSet={this.props.task.name}/>;
+        }
+        else if(item.objType === dbObjects.TaskTypes.TEXTENTRY.type){
+            return <TextEntryComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
+        }
+        else if(item.objType === dbObjects.TaskTypes.MCHOICE.type){
+            return <ButtonViewComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name} delegate={newLine}/>;
+        }
+        else if(item.objType === dbObjects.TaskTypes.IMAGE.type) {
+            return <ImageViewComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
+        }
+        else if(item.objType === dbObjects.TaskTypes.NUMPAD.type) {
+            return <NumpadComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
+        }
+        // else if(item.objType === "Comparison") {
+        //     return <ComparisonViewComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
+        // }
+        else{
+          return null;
+        }
       }
-      else if(item.objType === dbObjects.TaskTypes.TEXTENTRY.type){
-          return <TextEntryComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
-      }
-      else if(item.objType === dbObjects.TaskTypes.MCHOICE.type){
-          return <ButtonViewComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name} delegate={newLine}/>;
-      }
-      else if(item.objType === dbObjects.TaskTypes.IMAGE.type) {
-          return <ImageViewComponent style={{backgroundColor: 'red'}} className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
-      }
-      else if(item.objType === dbObjects.TaskTypes.NUMPAD.type) {
-          return <NumpadComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
-      }
-      // else if(item.objType === "Comparison") {
-      //     return <ComparisonViewComponent className="itemContainer" key={key} task={item} answerCallback={this.answerCallback} mapID={mapIndex} parentSet={this.props.task.name}/>;
-      // }
-      else{
-        return null;
-      }
+      return null;
     });
   }
 
@@ -110,7 +114,7 @@ class SynquestitaskViewComponent extends Component {
     var content = this.getDisplayedContent(runThisTaskSet, this.props.task._id ,0);
     this.props.initCallback(this.taskResponses);
     return (
-        <div className="multiItemContent">
+        <div key={this.props.renderKey} className="multiItemContent">
           {content}
         </div>
       );

@@ -4,6 +4,7 @@ const NEW_MESSAGE_EVENT = "MQTTEvent";
 const NEW_PARTICIPANT_EVENT = "ParticipantEvent";
 const NEW_REMOTE_TRACKER_EVENT = "NewRemoteTrackerEvent";
 const NEW_COMMAND_EVENT = "NewCommandEvent";
+const MULTIPLE_SCREEN_EVENT = "MuiltipleScreenEvent";
 
 class CEventStore extends EventEmitter {
   constructor() {
@@ -42,6 +43,16 @@ class CEventStore extends EventEmitter {
   }
   emitNewCommand() {
     this.emit(NEW_COMMAND_EVENT);
+  }
+
+  addMultipleScreenListener(callback) {
+    this.addListener(MULTIPLE_SCREEN_EVENT, callback);
+  }
+  removeMultipleScreenListener(callback) {
+    this.removeListener(MULTIPLE_SCREEN_EVENT, callback);
+  }
+  emitMultipleScreenEvent(payload) {
+    this.emit(MULTIPLE_SCREEN_EVENT, payload);
   }
 
   addNewRemoteTrackerListener(callback) {
