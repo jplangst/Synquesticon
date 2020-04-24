@@ -563,7 +563,7 @@ class DisplayTaskComponent extends Component {
         return (
             <div style={{backgroundColor:rightBG}} className="page" ref={this.frameDiv}>
               {renderObj}
-              <PauseDialog openDialog={this.state.isPaused}/>
+              <PauseDialog openDialog={this.state.isPaused} pauseMessage="Task paused."/>
             </div>
         );
       }
