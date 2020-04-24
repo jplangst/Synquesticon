@@ -42,7 +42,8 @@ const BrowseImagesDialog = (props) => {
             if (pickedImage === img) {
               borderStyle={borderWidth:3, borderStyle:'solid', borderColor:props.theme.palette.secondary.main};
             }
-            
+
+
             rowContent.push(<img src={url}
                         alt="Task" className="image"
                         style={borderStyle} key={"img"+ind}
