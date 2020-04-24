@@ -163,7 +163,6 @@ function handleClickedPoints(points) {
 }
 
 exports.save_to_csv = async function(p, seperator) {
-
     var globalVariables = "";
     var file_name = "";
 

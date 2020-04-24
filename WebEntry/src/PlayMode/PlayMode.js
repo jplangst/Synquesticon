@@ -72,19 +72,36 @@ class PlayMode extends Component {
     this.gotoPage("/"+AppModes.EDIT);
   }
 
-  onPlayButtonClick(taskSet) {
+  onPlayButtonClick(taskSet, emitterTriggered) {
     this.selectedTaskSet = taskSet;
 
-    mqtt.broadcastMultipleScreen(JSON.stringify({
-                            type: "StartExperiment",
-                            taskSet: taskSet,
-                            deviceID: window.localStorage.getItem('deviceID'),
-                            screenID: store.getState().screenID
-                           }));
+    if(emitterTriggered===undefined && store.getState().multipleScreens){
+        db_helper.addParticipantToDb(new db_objects.ParticipantObject(taskSet._id), (dbID)=> {
 
-    var url = '/study?id=' + this.selectedTaskSet._id;
-    url = this.appendEyeTrackerInfo(url);
-    this.gotoPage(url);
+        var idAction = {
+          type: 'SET_PARTICIPANT_ID',
+          participantId: dbID
+        };
+        store.dispatch(idAction);
+
+        mqtt.broadcastMultipleScreen(JSON.stringify({
+                                type: "StartExperiment",
+                                taskSet: taskSet,
+                                deviceID: window.localStorage.getItem('deviceID'),
+                                screenID: store.getState().screenID,
+                                participantID: dbID
+                               }));
+
+         var url = '/study?id=' + this.selectedTaskSet._id;
+         url = this.appendEyeTrackerInfo(url);
+         this.gotoPage(url);
+        });
+    }
+    else{
+      var url = '/study?id=' + this.selectedTaskSet._id;
+      url = this.appendEyeTrackerInfo(url);
+      this.gotoPage(url);
+    }
   }
 
   onGetLinkCallback(taskSet) {
@@ -110,7 +127,14 @@ class PlayMode extends Component {
 
   onMultipleScreenEvent(payload) {
     if(store.getState().multipleScreens && payload.type === 'StartExperiment'){
-      this.onPlayButtonClick(payload.taskSet);
+
+      let idAction = {
+        type: 'SET_PARTICIPANT_ID',
+        participantId: payload.participantID
+      };
+      store.dispatch(idAction);
+
+      this.onPlayButtonClick(payload.taskSet, true);
     }
   }
 

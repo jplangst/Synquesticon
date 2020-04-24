@@ -180,41 +180,6 @@ class EditSet extends Component {
     });
   }
 
-  onPlaySet() {
-    var runThisTaskSet = this.state.taskListObjects.slice();
-    if (this.state.randomizeSet === "Random") {
-      runThisTaskSet = shuffle(runThisTaskSet);
-    }
-    var testingSet = this.set;
-    testingSet.data = runThisTaskSet;
-
-    var action = {
-      type: 'SET_EXPERIMENT_INFO',
-      experimentInfo: {
-        experimentId: "",
-        participantLabel: "",
-        startTimestamp: "",
-        participantId: "TESTING",
-        mainTaskSetId: this.set.name,
-        taskSet: testingSet,
-        taskSetCount: -1,
-        selectedTaskSetObject: this.set,
-        selectedTracker: ""
-      }
-    }
-
-    store.dispatch(action);
-
-    var layoutAction = {
-      type: 'SET_SHOW_HEADER',
-      showHeader: false
-    }
-
-    store.dispatch(layoutAction);
-
-    this.props.runTestSet();
-  }
-
   //Returns true if adding the task will result in a circular reference
   willCauseCircularReference(task){
     //We only need to check if the task we are adding is a TaskSet
