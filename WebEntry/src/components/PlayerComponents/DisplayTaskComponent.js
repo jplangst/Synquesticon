@@ -253,7 +253,7 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
                                               mqtt.broadcastEvents(playerUtils.stringifyMessage(store, task, log, "START", this.progressCount, this.progressCount+1));
                                                    this.hasBeenInitiated = true;
                                               }}
-                                          key={id}/>
+                                          renderKey={id}/>
             </div>
             <div className="nextButton">
               <Button className="nextButton" variant="outlined" onClick={this.onClickNext.bind(this)}>

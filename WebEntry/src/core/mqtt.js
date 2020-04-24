@@ -12,6 +12,7 @@ var last_config = null;
 //Publication topics
 var SynquesticonTopic = "Synquesticon.Task";
 var SynquesticonCommandTopic = "Synquesticon.Command";
+var SynquesticonMultipleScreenTopic = "Synquesticon.MultipleScreen";
 var RemoteEyeTrackingTopic = "RETDataSample";
 
 function onCommandEvent(message) {
@@ -23,6 +24,12 @@ function onMQTTEvent(message) {
   if(message){
     eventStore.default.setCurrentMessage(message);
     eventStore.default.emitMQTTEvent();
+  }
+}
+
+function onMultipleScreenEvent(message) {
+  if(message){
+    eventStore.default.emitMultipleScreenEvent(JSON.parse(message));
   }
 }
 
@@ -82,6 +89,11 @@ function _startMQTT(config, restart) {
         console.log(err);
       }
     });
+    mqttClient.subscribe(SynquesticonMultipleScreenTopic, function (err) {
+      if (err) {
+        console.log(err);
+      }
+    });
     mqttClient.subscribe(RemoteEyeTrackingTopic, function (err) {
       if (err) {
         console.log(err);
@@ -99,6 +111,9 @@ function _startMQTT(config, restart) {
     }
     else if(topic === RemoteEyeTrackingTopic){
       onRETData(message);
+    }
+    else if(topic === SynquesticonMultipleScreenTopic){
+      onMultipleScreenEvent(message);
     }
     else{
       console.log("message from unknown topic recieved: ", topic);
@@ -118,6 +133,14 @@ module.exports = {
   broadcastCommands(command) {
     if(mqttClient){
       mqttClient.publish(SynquesticonCommandTopic, command);
+    }
+    else{
+      console.log("Tried to publish, but MQTT client was null")
+    }
+  },
+  broadcastMultipleScreen(command) {
+    if(mqttClient){
+      mqttClient.publish(SynquesticonMultipleScreenTopic, command);
     }
     else{
       console.log("Tried to publish, but MQTT client was null")
