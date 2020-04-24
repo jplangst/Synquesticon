@@ -36,6 +36,8 @@ class TaskComponentItem extends Component {
   }
 
   onTaskChanged(){
+    console.log("task changed");
+    console.log(this.props.task.objType, this.shouldUpload);
     if (this.props.task.objType === dbObjects.TaskTypes.IMAGE && this.shouldUpload) {
       this.uploadImages();
     }
@@ -45,6 +47,13 @@ class TaskComponentItem extends Component {
   onSelectImage(shouldUpload, image) {
     this.shouldUpload = shouldUpload;
     this.imageToUpload = image;
+
+    console.log("HERE");
+
+    if (this.shouldUpload) {
+      console.log("HERE");
+      this.uploadImages();
+    }
   }
   //Upload the sleected image to the database
   uploadImages() {
@@ -56,6 +65,7 @@ class TaskComponentItem extends Component {
               'content-type': 'multipart/form-data'
           }
       };
+
       db_helper.uploadImage(this.imageToUpload, formData, config, null);
     }
   }
