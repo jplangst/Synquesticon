@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { withTheme } from '@material-ui/styles';
 import { Typography } from '@material-ui/core';
@@ -13,46 +13,26 @@ import PlayableSetList from './PlayableSet/PlayableSetList';
 
 import './PlayMode.css';
 
-class PlayMode extends Component {
-  constructor(props) {
-    super(props);
+const PlayMode = props => {
+  const [taskSets, setTaskSets] = useState ([]);
+//  const [openGetLinkDialog, setOpenGetLinkDialog] = useState(false);
+  let selectedTaskSet = null;
 
-    this.state = {
-      taskSets: [],
-      openGetLinkDialog: false
-    }
-
-    this.selectedTaskSet = null;
-
-    //Database callbacks
-    this.dbTaskSetCallback = this.dbTaskSetCallbackFunction.bind(this);
-
-    this.gotoPage = this.gotoPageHandler.bind(this);
-
-    this.handleMultipleScreenEvent = this.onMultipleScreenEvent.bind(this);
-  }
-
-  gotoPageHandler(route){
-    this.props.history.push(route);
-  }
-
-  componentWillMount() {
+  useEffect( () => {
     //save data into DB before closing
-    db_helper.queryTasksFromDb(db_objects.ObjectTypes.SET, ["experiment"],"OR", this.dbTaskSetCallback);
-
-    eventStore.addMultipleScreenListener(this.handleMultipleScreenEvent);
-  }
-
-  componentWillUnmount(){
-    eventStore.removeMultipleScreenListener(this.handleMultipleScreenEvent);
-  }
+    db_helper.queryTasksFromDb(db_objects.ObjectTypes.SET, ["experiment"],"OR", dbTaskSetCallback);
+    eventStore.addMultipleScreenListener(onMultipleScreenEvent);
+    return () => {
+      eventStore.removeMultipleScreenListener(onMultipleScreenEvent);
+    }
+  }, []);
 
   //query all tasksets with experiment tag
-  dbTaskSetCallbackFunction(queryTasks, data) {
-    this.setState({taskSets: data.tasks});
+  const dbTaskSetCallback = (queryTasks, data) => {
+    setTaskSets(data.tasks);
   }
 
-  appendEyeTrackerInfo(url){
+  const appendEyeTrackerInfo = url =>{
     let storeState = store.getState();
     if (storeState.selectedEyeTracker !== "" && storeState.selectedEyeTracker !== undefined) {
       url = url + '&tracker=' + storeState.selectedEyeTracker;
@@ -60,25 +40,23 @@ class PlayMode extends Component {
     return url;
   }
 
-  onEditButtonClick(taskSet) {
-    var setEditSetAction = {
+  const onEditButtonClick = taskSet => {
+    const setEditSetAction = {
       type: 'SET_SHOULD_EDIT',
       shouldEdit: true,
       objectToEdit:taskSet,
       typeToEdit:'set'
     };
     store.dispatch(setEditSetAction);
-
-    this.gotoPage("/"+AppModes.EDIT);
+    props.history.push("/"+AppModes.EDIT);
   }
 
-  onPlayButtonClick(taskSet, emitterTriggered) {
-    this.selectedTaskSet = taskSet;
+  const onPlayButtonClick = (taskSet, emitterTriggered) => {
+    selectedTaskSet = taskSet;
 
     if(emitterTriggered===undefined && store.getState().multipleScreens){
         db_helper.addParticipantToDb(new db_objects.ParticipantObject(taskSet._id), (dbID)=> {
-
-        var idAction = {
+        const idAction = {
           type: 'SET_PARTICIPANT_ID',
           participantId: dbID
         };
@@ -92,32 +70,31 @@ class PlayMode extends Component {
                                 participantID: dbID
                                }));
 
-         var url = '/study?id=' + this.selectedTaskSet._id;
-         url = this.appendEyeTrackerInfo(url);
-         this.gotoPage(url);
+         var url = '/study?id=' + selectedTaskSet._id;
+         url = appendEyeTrackerInfo(url);
+         props.history.push(url);
         });
-    }
-    else{
-      var url = '/study?id=' + this.selectedTaskSet._id;
-      url = this.appendEyeTrackerInfo(url);
-      this.gotoPage(url);
+    } else {
+      var url = '/study?id=' + selectedTaskSet._id;
+      url = appendEyeTrackerInfo(url);
+      props.history.push(url);
     }
   }
 
-  onGetLinkCallback(taskSet) {
-    this.selectedTaskSet = taskSet;
-    this.copyToClipboard();
+  const onGetLinkCallback = (taskSet) => {
+    selectedTaskSet = taskSet;
+    copyToClipboard();
   }
 
-  copyToClipboard() {
+  const copyToClipboard = () => {
     var url = window.location.href + 'study?id=';
-    if (this.selectedTaskSet) {
-       url += this.selectedTaskSet._id;
-       url = this.appendEyeTrackerInfo(url);
+    if (selectedTaskSet) {
+       url += selectedTaskSet._id;
+       url = appendEyeTrackerInfo(url);
     }
     navigator.clipboard.writeText(url);
 
-    var snackbarAction = {
+    const snackbarAction = {
       type: 'TOAST_SNACKBAR_MESSAGE',
       snackbarOpen: true,
       snackbarMessage: "Link copied to clipboard"
@@ -125,44 +102,40 @@ class PlayMode extends Component {
     store.dispatch(snackbarAction);
   }
 
-  onMultipleScreenEvent(payload) {
+  const onMultipleScreenEvent = payload => {
     if(store.getState().multipleScreens && payload.type === 'StartExperiment'){
-
       let idAction = {
         type: 'SET_PARTICIPANT_ID',
         participantId: payload.participantID
       };
       store.dispatch(idAction);
-
-      this.onPlayButtonClick(payload.taskSet, true);
+      onPlayButtonClick(payload.taskSet, true);
     }
   }
 
-  render() {
-    let theme = this.props.theme;
-    let viewerBG = theme.palette.type === "light" ? theme.palette.primary.main : theme.palette.primary.dark;
+  let theme = props.theme;
+  let viewerBG = theme.palette.type === "light" ? theme.palette.primary.main : theme.palette.primary.dark;
 
-    return(
-      <div className="introductionScreenContainer">
-        <div className="experimentsHeader" style={{backgroundColor:viewerBG}}>
-          <Typography style={{marginLeft:20, marginTop:20}} variant="h4" color="textPrimary">
-            Experiments
-          </Typography>
-        </div>
-        <div style={{backgroundColor:viewerBG}} className="IntroViewer">
-          <div className="PlayerViewerContent">
-            <div className="TaskSetContainer">
-              < PlayableSetList taskList={ this.state.taskSets }
-                      runSetCallback={ this.onPlayButtonClick.bind(this) }
-                      getLinkCallback={ this.onGetLinkCallback.bind(this) }
-                      editSetCallback={ this.onEditButtonClick.bind(this) }
-                      showEditButton={true}/>
-            </div>
+  return(
+    <div className="introductionScreenContainer">
+      <div className="experimentsHeader" style={{backgroundColor:viewerBG}}>
+        <Typography style={{marginLeft:20, marginTop:20}} variant="h4" color="textPrimary">
+          Experiments
+        </Typography>
+      </div>
+      <div style={{backgroundColor:viewerBG}} className="IntroViewer">
+        <div className="PlayerViewerContent">
+          <div className="TaskSetContainer">
+            < PlayableSetList taskList={ taskSets }
+                    runSetCallback={ onPlayButtonClick }
+                    getLinkCallback={ onGetLinkCallback }
+                    editSetCallback={ onEditButtonClick }
+                    showEditButton={true}/>
           </div>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 export default withTheme(PlayMode);
