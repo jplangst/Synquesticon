@@ -14,7 +14,6 @@ import './ImageType.css';
 class ImageTaskType extends Component {
   constructor(props){
     super(props);
-    console.log("image task", this.props.task);
     this.state = { //We keep these fields in the state as they affect how the component is rendered
       selectedImage: this.props.task ? this.props.task.image : "",
       recordClicks: this.props.task ? this.props.task.recordClicks : false,
@@ -96,7 +95,7 @@ class ImageTaskType extends Component {
 
     var imageTypeContent =
     <div className="imageTypeContainer">
-      
+
 
       <div className="imagePickingContainer">
         <FormControlLabel label="Record Clicks"

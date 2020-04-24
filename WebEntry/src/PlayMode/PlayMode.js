@@ -5,6 +5,8 @@ import { Typography } from '@material-ui/core';
 
 import store from '../core/store';
 import db_helper from '../core/db_helper.js';
+import eventStore from '../core/eventStore';
+import mqtt from '../core/mqtt'
 import * as db_objects from '../core/db_objects.js';
 import {AppModes} from '../core/sharedObjects';
 import PlayableSetList from './PlayableSet/PlayableSetList';
@@ -26,6 +28,8 @@ class PlayMode extends Component {
     this.dbTaskSetCallback = this.dbTaskSetCallbackFunction.bind(this);
 
     this.gotoPage = this.gotoPageHandler.bind(this);
+
+    this.handleMultipleScreenEvent = this.onMultipleScreenEvent.bind(this);
   }
 
   gotoPageHandler(route){
@@ -35,6 +39,12 @@ class PlayMode extends Component {
   componentWillMount() {
     //save data into DB before closing
     db_helper.queryTasksFromDb(db_objects.ObjectTypes.SET, ["experiment"],"OR", this.dbTaskSetCallback);
+
+    eventStore.addMultipleScreenListener(this.handleMultipleScreenEvent);
+  }
+
+  componentWillUnmount(){
+    eventStore.removeMultipleScreenListener(this.handleMultipleScreenEvent);
   }
 
   //query all tasksets with experiment tag
@@ -64,6 +74,12 @@ class PlayMode extends Component {
 
   onPlayButtonClick(taskSet) {
     this.selectedTaskSet = taskSet;
+
+    mqtt.broadcastMultipleScreen(JSON.stringify({
+                            type: "StartExperiment",
+                            taskSet: taskSet
+                           }));
+
     var url = '/study?id=' + this.selectedTaskSet._id;
     url = this.appendEyeTrackerInfo(url);
     this.gotoPage(url);
@@ -88,6 +104,12 @@ class PlayMode extends Component {
       snackbarMessage: "Link copied to clipboard"
     };
     store.dispatch(snackbarAction);
+  }
+
+  onMultipleScreenEvent(payload) {
+    if(store.getState().multipleScreens && payload.type === 'StartExperiment'){
+      this.onPlayButtonClick(payload.taskSet);
+    }
   }
 
   render() {
