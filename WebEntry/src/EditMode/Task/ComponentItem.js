@@ -22,8 +22,8 @@ const TaskComponentItem = props => {
   _id++;
 
   //Callback form the SynquestiImage component
-  const onSelectImage = (shouldUpload, image) => {
-    shouldUpload = shouldUpload;
+  const onSelectImage = (shouldUploadFlag, image) => {
+    shouldUpload = shouldUploadFlag;
     imageToUpload = image;
     if (shouldUpload) {
       uploadImages();
