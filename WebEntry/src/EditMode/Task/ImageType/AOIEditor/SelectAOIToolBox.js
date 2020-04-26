@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import Button from '@material-ui/core/Button';
 
@@ -8,22 +8,19 @@ import RenameIcon from '@material-ui/icons/TextFormatOutlined';
 
 import './AOIEditorComponent.css';
 
-class SelectAOIToolBox extends Component {
-  render() {
-    return (
-      <div>
-        <Button variant="outlined" onClick={this.props.onRename} >
-          Rename
-          <RenameIcon />
-        </Button>
-        <Button variant="outlined" onClick={this.props.onRemove} >
-          Remove
-          <RemoveIcon />
-        </Button>
-      </div>
-    );
-  }
-
+const SelectAOIToolBox = props => {
+  return (
+    <div>
+      <Button variant="outlined" onClick={props.onRename} >
+        Rename
+        <RenameIcon />
+      </Button>
+      <Button variant="outlined" onClick={props.onRemove} >
+        Remove
+        <RemoveIcon />
+      </Button>
+    </div>
+  );
 }
 
 export default SelectAOIToolBox;
