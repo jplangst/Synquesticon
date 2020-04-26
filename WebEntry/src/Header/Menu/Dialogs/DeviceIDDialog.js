@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
@@ -23,31 +22,14 @@ import store from '../../../core/store';
 
 const DEFAULT_ROLES = ["SRO", "RO", "TO"];
 
-class DeviceIDDialog extends Component {
-  constructor(props){
-    super(props);
-    this.deviceName = "";
-    this.selectedRole = null;
-    this.screenID = "";
-    this.state = {
-      roles: DEFAULT_ROLES,
-      multipleScreens: false
-    }
+const DeviceIDDialog = props => {
+  let deviceName = props.myStorage.getItem('deviceID');
+  let screenID = store.getState().screenID;
+  const [roles, setRoles] = useState(DEFAULT_ROLES);
+  const [multipleScreens, setMultipleScreens] = useState(store.getState().multipleScreens);
+  let selectedRole = props.myStorage.getItem('deviceRole') ? props.myStorage.getItem('deviceRole') : roles[0];  
 
-    this.handleMultipleScreens = this.multipleScreensToggled.bind(this);
-  }
-
-  componentWillMount() {
-    this.screenID = store.getState().screenID;
-
-    this.setState({multipleScreens:store.getState().multipleScreens});
-
-    this.deviceName = this.props.myStorage.getItem('deviceID');
-    this.selectedRole = this.props.myStorage.getItem('deviceRole');
-
-    if (!this.selectedRole) {
-      this.selectedRole = this.state.roles[0];
-    }
+  useEffect( () => {
     db_helper.getAllRolesFromDb((receivedRoles) => {
       if (receivedRoles.length <= 0) {
         //init the roles
@@ -55,105 +37,96 @@ class DeviceIDDialog extends Component {
           db_helper.addRoleToDb({name: item});
           return 1;
         });
-      }
-      else {
+      } else {
         var roleArray = [];
         receivedRoles.map((role, index) => {
           roleArray.push(role.name);
           return 1;
         })
-        this.setState({
-          roles: roleArray
-        });
+        setRoles(roleArray);
       }
       return 1;
     });
+  }, []);
+
+  const multipleScreensToggled = (e, checked) => {
+    setMultipleScreens(checked);
   }
 
-  multipleScreensToggled(e, checked){
-    this.setState({
-      multipleScreens: checked,
-    });
-  }
-
-  onChangeDeviceID(e) {
-    this.props.myStorage.setItem('deviceID', this.deviceName);
-    this.props.myStorage.setItem('deviceRole', this.selectedRole);
+  const onChangeDeviceID = e => {
+    props.myStorage.setItem('deviceID', deviceName);
+    props.myStorage.setItem('deviceRole', selectedRole);
 
     var storeAction = {
       type: 'SET_MULTISCREEN',
-      screenID: this.screenID,
-      multipleScreens: this.state.multipleScreens,
+      screenID: screenID,
+      multipleScreens: multipleScreens,
     };
     store.dispatch(storeAction);
-
-    this.props.closeDeviceIDSettings();
+    props.closeDeviceIDSettings();
   }
 
-  render() {
-
-    return(
-      <Dialog //------------------------speech settings------------------------
-             open={this.props.openDeviceIDSettings}
-             onClose={this.props.closeDeviceIDSettings}
-             aria-labelledby="form-dialog-title"
-       >
-          <DialogTitle id="form-dialog-title" variant="h5">Device Settings</DialogTitle>
-          <DialogContent>
-            <TextField
-              defaultValue={this.deviceName}
-              style={{width:'calc(50% - 5px)', marginRight: 5}}
-              id="deviceName"
-              label="Device ID"
+  return(
+    <Dialog 
+            open={props.openDeviceIDSettings}
+            onClose={props.closeDeviceIDSettings}
+            aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title" variant="h5">Device Settings</DialogTitle>
+        <DialogContent>
+          <TextField
+            defaultValue={deviceName}
+            style={{width:'calc(50% - 5px)', marginRight: 5}}
+            id="deviceName"
+            label="Device ID"
+            padding="dense"
+            variant="outlined"
+            onChange={(e)=>{deviceName = e.target.value}}
+          />
+          <TextField
+              defaultValue={screenID}
+              style={{width:'calc(50% - 5px)', marginRight:5}}
+              id="screenID"
+              label="Screen ID"
               padding="dense"
               variant="outlined"
-              onChange={(e)=>{this.deviceName = e.target.value}}
+              onChange={(e)=>{screenID = e.target.value}}
             />
-            <TextField
-               defaultValue={this.screenID}
-               style={{width:'calc(50% - 5px)', marginRight:5}}
-               id="screenID"
-               label="Screen ID"
-               padding="dense"
-               variant="outlined"
-               onChange={(e)=>{this.screenID = e.target.value}}
-             />
-            <FormControl style={{width:'calc(50% - 5px)', marginRight:5}}>
-             <InputLabel htmlFor="uncontrolled-native">Role</InputLabel>
-             <NativeSelect
-                defaultValue={this.selectedRole}
+          <FormControl style={{width:'calc(50% - 5px)', marginRight:5}}>
+            <InputLabel htmlFor="uncontrolled-native">Role</InputLabel>
+            <NativeSelect
+              defaultValue={selectedRole}
 
-                input={<Input style={{backgroundColor:this.props.theme.palette.primary.main,
-                  color:this.props.theme.palette.text.primary}} name="role" id="role-selector" />}
-                onChange={(e)=>{this.selectedRole = e.target.value}}
-              >
-                {this.state.roles.map((role, index) => {
-                  return <option style={{backgroundColor:this.props.theme.palette.primary.main, color:this.props.theme.palette.text.primary}}
-                  value={role} key={index}>{role}</option>
-                })}
-              </NativeSelect>
-            </FormControl>
-             <FormControlLabel label="Multiple screens"
-               style={{marginTop:5}}
-               checked={this.state.multipleScreens}
-               id="mScreens"
+              input={<Input style={{backgroundColor:props.theme.palette.primary.main,
+                color:props.theme.palette.text.primary}} name="role" id="role-selector" />}
+              onChange={(e)=>{selectedRole = e.target.value}}
+            >
+              {roles.map((role, index) => {
+                return <option style={{backgroundColor:props.theme.palette.primary.main, color:props.theme.palette.text.primary}}
+                value={role} key={index}>{role}</option>
+              })}
+            </NativeSelect>
+          </FormControl>
+            <FormControlLabel label="Multiple screens"
+              style={{marginTop:5}}
+              checked={multipleScreens}
+              id="mScreens"
 
-               control={<Checkbox color="secondary" />}
-               onChange={this.handleMultipleScreens}
-               labelPlacement="end"
-             />
-          </DialogContent>
-          <DialogActions>
-             <Button variant="outlined" onClick={this.props.closeDeviceIDSettings}>
-               Cancel
-             </Button>
-             <Button variant="outlined" onClick={this.onChangeDeviceID.bind(this)}>
-               OK
-             </Button>
-          </DialogActions>
-        </Dialog>
-    );
-  }
+              control={<Checkbox color="secondary" />}
+              onChange={multipleScreensToggled}
+              labelPlacement="end"
+            />
+        </DialogContent>
+        <DialogActions>
+            <Button variant="outlined" onClick={props.closeDeviceIDSettings}>
+              Cancel
+            </Button>
+            <Button variant="outlined" onClick={onChangeDeviceID}>
+              OK
+            </Button>
+        </DialogActions>
+      </Dialog>
+  );
 }
 
 export default withTheme(DeviceIDDialog);
