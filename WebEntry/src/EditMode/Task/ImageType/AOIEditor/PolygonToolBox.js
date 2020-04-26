@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import Button from '@material-ui/core/Button';
 
@@ -8,26 +8,23 @@ import CancelIcon from '@material-ui/icons/ClearOutlined';
 
 import './AOIEditorComponent.css';
 
-class PolygonToolBox extends Component {
-  render() {
-    return (
-      <div>
-        <Button variant="outlined" onClick={this.props.onRemoveLastPoint}>
-          Undo Point
-          <RemoveLastPointIcon />
-        </Button>
-        <Button variant="outlined" onClick={this.props.onFinished} >
-          Confirm
-          <DoneIcon />
-        </Button>
-        <Button variant="outlined" onClick={this.props.onCancel} >
-          Cancel
-          <CancelIcon />
-        </Button>
-      </div>
-    );
-  }
-
+const PolygonToolBox = props => {
+  return (
+    <div>
+      <Button variant="outlined" onClick={props.onRemoveLastPoint}>
+        Undo Point
+        <RemoveLastPointIcon />
+      </Button>
+      <Button variant="outlined" onClick={props.onFinished} >
+        Confirm
+        <DoneIcon />
+      </Button>
+      <Button variant="outlined" onClick={props.onCancel} >
+        Cancel
+        <CancelIcon />
+      </Button>
+    </div>
+  );
 }
 
 export default PolygonToolBox;
