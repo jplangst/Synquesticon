@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -8,65 +8,55 @@ import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-class AOINameDialog extends Component {
-  constructor(props){
-    super(props);
-    //this.closeDialogCallback = this.onClose.bind(this);
-    this.name = "";
+const AOINameDialog = props => {
+  let name = "";
 
-    this.onClosePressed = this.onClose.bind(this);
-  }
-
-  onClose(){
-    if (this.name !== "") {
-      this.props.closeDialog(this.name);
+  const onClose = () => {
+    if (name !== "") {
+      props.closeDialog(name);
     }
   }
 
-  render() {
-    this.name = this.props.name;
-    var label = "";
-    if (this.name !== "") {
-      label = "Rename";
-    }
-    else {
-      label = "Create";
-    }
-    return(
-      <Dialog
-          open={this.props.openDialog}
-          onClose={this.props.closeDialog}
-          aria-labelledby="form-dialog-title"
-          fullWidth={true}
-          maxWidth='md'
-        >
-          <DialogTitle id="form-dialog-title" variant="h5">Enter AOI's Name</DialogTitle>
-          <DialogContent>
-            <TextField
-              required
-
-              padding="dense"
-              id="taskComment"
-              defaultValue={this.name}
-              label="Comment"
-              ref="taskCommentRef"
-              fullWidth
-              multiline
-              rows="5"
-              onChange={(e)=>{this.name = e.target.value}}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={e => this.props.closeDialog("")} variant="outlined">
-              Cancel
-            </Button>
-            <Button onClick={this.onClosePressed} variant="outlined">
-              {label}
-            </Button>
-          </DialogActions>
-      </Dialog>
-    );
+  name = props.name;
+  var label = "";
+  if (name !== "") {
+    label = "Rename";
+  } else {
+    label = "Create";
   }
+
+  return(
+    <Dialog
+        open={props.openDialog}
+        onClose={props.closeDialog}
+        aria-labelledby="form-dialog-title"
+        fullWidth={true}
+        maxWidth='md'
+      >
+        <DialogTitle id="form-dialog-title" variant="h5">Enter AOI Name</DialogTitle>
+        <DialogContent>
+          <TextField
+            required
+            padding="dense"
+            id="taskComment"
+            defaultValue={name}
+            label="Comment"
+            fullWidth
+            multiline
+            rows="5"
+            onChange={(e)=>{name = e.target.value}}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={e => props.closeDialog("")} variant="outlined">
+            Cancel
+          </Button>
+          <Button onClick={onClose} variant="outlined">
+            {label}
+          </Button>
+        </DialogActions>
+    </Dialog>
+  );
 }
 
 export default AOINameDialog;
