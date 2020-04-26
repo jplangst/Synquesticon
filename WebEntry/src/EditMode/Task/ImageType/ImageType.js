@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {useState} from 'react';
 import FileSelector from '../../../core/fileSelector';
 import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
@@ -11,134 +11,101 @@ import BrowseImagesDialog from './BrowseImagesDialog';
 
 import './ImageType.css';
 
-class ImageTaskType extends Component {
-  constructor(props){
-    super(props);
-    this.state = { //We keep these fields in the state as they affect how the component is rendered
-      selectedImage: this.props.task ? this.props.task.image : "",
-      recordClicks: this.props.task ? this.props.task.recordClicks : false,
-      fullScreenImage: this.props.task ? this.props.task.fullScreenImage : false,
-      showAOIs: this.props.task ? this.props.task.showAOIs : false,
-      openBrowseImage: false,
-    };
+const ImageTaskType = props => {
+  const [selectedImage, setSelectedImage] = useState(props.task ? props.task.image : "");
+  const [recordClicks, setRecordClicks] = useState(props.task ? props.task.recordClicks : false);
+  const [fullScreenImage, setFullScreenImage] = useState(props.task ? props.task.fullScreenImage : false);
+  const [showAOIs, setShowAOIs] = useState(props.task ? props.task.showAOIs : false);
+  const [openBrowseImage, setOpenBrowseImage] = useState(false);
 
-    this.preview = false;
-    this.image = null;
+  let preview = false;
+  let image = null;
 
-    this.responseHandler = this.onResponsesChanged;
-    this.handleImageSelectedCallback = this.onImageFileSelected.bind(this);
-    this.handleRecordClickCallback = this.onRecordClickChanged.bind(this);
-    this.handleShowFullScreenCallback = this.onShowFullScreenChanged.bind(this);
-    this.handleShowAOIsCallback = this.onShowAOIsChanged.bind(this);
+  const onRecordClickChanged = (e, checked) => {
+    props.task.recordClicks = checked;
+    setRecordClicks(checked);
   }
 
-  onRecordClickChanged(e, checked){
-    this.props.task.recordClicks = checked;
-    this.setState({
-      recordClicks: checked,
-    });
+  const onShowFullScreenChanged = (e, checked) => {
+    props.task.fullScreenImage = checked;
+    setFullScreenImage(checked);
   }
 
-  onShowFullScreenChanged(e, checked){
-    this.props.task.fullScreenImage = checked;
-    this.setState({
-      fullScreenImage: checked,
-    });
+  const onShowAOIsChanged = (e, checked) => {
+    props.task.showAOIs = checked;
+    setShowAOIs(checked);
   }
 
-  onShowAOIsChanged(e, checked){
-    this.props.task.showAOIs = checked;
-    this.setState({
-      showAOIs: checked,
-    });
+  const onImageFileSelected = selectedFile => {
+    props.task.image = selectedFile.name;
+    image = selectedFile;
+    props.task.aois = [];
+    preview = true;
+    props.selectImageCallback(true, image);
+    setSelectedImage(props.task.image);
   }
 
-  onImageFileSelected(selectedFile){
-    this.props.task.image = selectedFile.name;
-    this.image = selectedFile;
-    this.props.task.aois = [];
-    this.preview = true;
-    this.props.selectImageCallback(true, this.image);
-    this.setState({selectedImage: this.props.task.image});
+  const onPickImageBrowseImages = img => {
+    props.task.image = img;
+    image = null;
+    props.task.aois = [];
+    preview = true;
+    props.selectImageCallback(false, image);
+    setSelectedImage(props.task.image);
+    setOpenBrowseImage(false);
   }
 
-  onPickImageBrowseImages(img) {
-    this.props.task.image = img;
-    this.image = null;
-    this.props.task.aois = [];
-    this.preview = true;
-    this.props.selectImageCallback(false, this.image);
-    this.setState({selectedImage: this.props.task.image});
-    this.onCloseBrowseImages();
+  let previewImage = <div style={{width:'100%', display:'flex', alignItems:'center', justifyContent:'center'}}>
+                      <Typography color="textPrimary"> "No Image selected" </Typography>
+                      </div>;
+
+  if(selectedImage !== ""){
+    previewImage = <AOIEditorComponent preview={preview} task={props.task} image={image}/>
   }
 
-  onBrowseImages() {
-    this.setState({
-      openBrowseImage: true
-    });
-  }
+  const imageTypeContent =
+  <div className="imageTypeContainer">
+    <div className="imagePickingContainer">
+      <FormControlLabel label="Record Clicks"
+        value="end"
+        id={props.uniqueID+"rclick"}
+        padding="dense"
+        style={{marginLeft:5}}
+        checked={recordClicks}
+        control={<Checkbox color="secondary" />}
+        onChange={onRecordClickChanged}
+        labelPlacement="end"
+      />
+      <FormControlLabel label="Show Fullscreen"
+        value="end"
+        id={props.uniqueID+"fscreen"}
+        padding="dense"
+        checked={fullScreenImage}
+        control={<Checkbox color="secondary" />}
+        onChange={onShowFullScreenChanged}
+        labelPlacement="end"
+      />
+      <FormControlLabel label="Show AOIs"
+        value="end"
+        id={props.uniqueID+"saois"}
+        padding="dense"
+        checked={showAOIs}
+        control={<Checkbox color="secondary" />}
+        onChange={onShowAOIsChanged}
+        labelPlacement="end"
+      />
+      <Button variant="outlined" onClick={() => setOpenBrowseImage(true)}>Browse Images</Button>
+      <FileSelector handleSelectionCallback={onImageFileSelected}/>
+    </div>
+    <div className="editTaskImagePreview">{previewImage}</div>
+    <BrowseImagesDialog openDialog={openBrowseImage}
+                        closeDialog={() => setOpenBrowseImage(false)}
+                        onPickImage={onPickImageBrowseImages}/>
+  </div>;
 
-  onCloseBrowseImages() {
-    this.setState({
-      openBrowseImage: false
-    });
-  }
-
-  render() {
-    var previewImage = <div style={{width:'100%', display:'flex', alignItems:'center', justifyContent:'center'}}>
-                        <Typography color="textPrimary"> "No Image selected" </Typography>
-                       </div>;
-
-    if(this.state.selectedImage !== ""){
-      previewImage = <AOIEditorComponent preview={this.preview} task={this.props.task} image={this.image}/>
-    }
-
-    var imageTypeContent =
-    <div className="imageTypeContainer">
-
-
-      <div className="imagePickingContainer">
-        <FormControlLabel label="Record Clicks"
-          value="end"
-          id={this.props.uniqueID+"rclick"}
-          padding="dense"
-          style={{marginLeft:5}}
-          checked={this.state.recordClicks}
-          control={<Checkbox color="secondary" />}
-          onChange={this.handleRecordClickCallback}
-          labelPlacement="end"
-        />
-        <FormControlLabel label="Show Fullscreen"
-          value="end"
-          id={this.props.uniqueID+"fscreen"}
-          padding="dense"
-          checked={this.state.fullScreenImage}
-          control={<Checkbox color="secondary" />}
-          onChange={this.handleShowFullScreenCallback}
-          labelPlacement="end"
-        />
-        <FormControlLabel label="Show AOIs"
-          value="end"
-          id={this.props.uniqueID+"saois"}
-          padding="dense"
-          checked={this.state.showAOIs}
-          control={<Checkbox color="secondary" />}
-          onChange={this.handleShowAOIsCallback}
-          labelPlacement="end"
-        />
-        <Button variant="outlined" onClick={this.onBrowseImages.bind(this)}>Browse Images</Button>
-        <FileSelector handleSelectionCallback={this.handleImageSelectedCallback}/>
-      </div>
-      <div className="editTaskImagePreview">{previewImage}</div>
-      <BrowseImagesDialog openDialog={this.state.openBrowseImage}
-                          closeDialog={this.onCloseBrowseImages.bind(this)}
-                          onPickImage={this.onPickImageBrowseImages.bind(this)}/>
-    </div>;
-
-    return(
-      imageTypeContent
-    );
-  }
+  return(
+    imageTypeContent
+  );
 }
 
 export default ImageTaskType;
