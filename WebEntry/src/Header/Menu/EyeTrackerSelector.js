@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { withTheme } from '@material-ui/styles';
 
@@ -13,35 +13,23 @@ import { Typography } from '@material-ui/core';
 import store from '../../core/store';
 import eventStore from '../../core/eventStore';
 
-class EyeTrackerSelector extends Component {
-  constructor(props) {
-    super(props);
+const EyeTrackerSelector = props => {
+  const [selectedTracker, setSelectedTracker] = useState(store.getState().selectedEyeTracker ? store.getState().selectedEyeTracker : '');
+  const remoteEyeTrackers = store.getState().remoteEyeTrackers;
 
-    this.state = {
-      selectedTracker: store.getState().selectedEyeTracker ? store.getState().selectedEyeTracker : ''
-    }
+  useEffect( () => {
+    eventStore.addNewRemoteTrackerListener(onNewRemoteTracker);
+    return () => eventStore.removeNewRemoteTrackerListener(onNewRemoteTracker);
+  }, []);
 
-    this.remoteEyeTrackers = store.getState().remoteEyeTrackers;
-  }
-
-  componentWillMount() {
-    eventStore.addNewRemoteTrackerListener(this.onNewRemoteTracker.bind(this));
-  }
-
-  componentWillUnmount() {
-    eventStore.removeNewRemoteTrackerListener(this.onNewRemoteTracker.bind(this));
-  }
-
-  onNewRemoteTracker() {
-    if (!this.remoteEyeTrackers.includes(eventStore.getCurrentRemoteTracker())) {
+  const onNewRemoteTracker = () => {
+    if (!remoteEyeTrackers.includes(eventStore.getCurrentRemoteTracker())) {
       eventStore.confirmRecevingRemoteTracker();
-      this.remoteEyeTrackers.push(eventStore.getCurrentRemoteTracker());
-
-      this.forceUpdate();
+      remoteEyeTrackers.push(eventStore.getCurrentRemoteTracker());
     }
   }
 
-  onSelectRemoteTracker(e) {
+  const onSelectRemoteTracker = e => {
     var setETAction = {
       type: 'SET_SELECTED_EYETRACKER',
       selectedEyeTracker: e.target.value
@@ -49,34 +37,30 @@ class EyeTrackerSelector extends Component {
     console.log(setETAction);
     store.dispatch(setETAction);
 
-    this.setState({
-      selectedTracker: e.target.value
-    });
+    setSelectedTracker(e.target.value);
   }
 
-  render() {
-    let theme = this.props.theme;
-    let textColor = theme.palette.type === "light" ? "textSecondary" : "textPrimary";
+  let theme = props.theme;
+  let textColor = theme.palette.type === "light" ? "textSecondary" : "textPrimary";
 
-    return (
-          <FormControl style={{width:'100%', height:75, marginTop:20, alignItems:'center', display:'flex'}}>
-            <InputLabel style={{paddingLeft: theme.spacing(1)}} htmlFor="outlined-age-simple"><Typography color={textColor} variant="h6">Eye Tracker</Typography></InputLabel>
-            <Select
-              style={{width:'100%', height:'100%', position:'relative', outlined:{height:'100%', width:'100%'}}}
-              autoWidth={true}
-              value={this.state.selectedTracker}
-              onChange={this.onSelectRemoteTracker.bind(this)}
-              input={<OutlinedInput style={{marginRight: theme.spacing(1)}} name="selectedTracker" id="selectedTracker-helper" />}
-            >
-              {
-                this.remoteEyeTrackers.map((item, index) => {
-                  return <MenuItem key={index} value={item} id={index}>{item}</MenuItem>
-                })
-              }
-            </Select>
-          </FormControl>
-      );
-  }
+  return (
+    <FormControl style={{width:'100%', height:75, marginTop:20, alignItems:'center', display:'flex'}}>
+      <InputLabel style={{paddingLeft: theme.spacing(1)}} htmlFor="outlined-age-simple"><Typography color={textColor} variant="h6">Eye Tracker</Typography></InputLabel>
+      <Select
+        style={{width:'100%', height:'100%', position:'relative', outlined:{height:'100%', width:'100%'}}}
+        autoWidth={true}
+        value={selectedTracker}
+        onChange={onSelectRemoteTracker}
+        input={<OutlinedInput style={{marginRight: theme.spacing(1)}} name="selectedTracker" id="selectedTracker-helper" />}
+      >
+        {
+          remoteEyeTrackers.map((item, index) => {
+            return <MenuItem key={index} value={item} id={index}>{item}</MenuItem>
+          })
+        }
+      </Select>
+    </FormControl>
+  );
 }
 
 export default withTheme(EyeTrackerSelector);
