@@ -14,6 +14,17 @@ const ObserverTab = props => {
   const [forcedPause, setForcedPause] = useState(props.shouldPause);
   const [isPaused, setIsPaused] = useState(false);
 
+/*
+  static getDerivedStateFromProps(props, state) {
+    if(props.shouldPause !== state.forcedPause){
+      return {forcedPause: props.shouldPause,
+              isPaused: props.shouldPause};
+    }
+
+    return null;
+  }
+*/
+
   const onTabPressed = evt => {
     evt.stopPropagation();
     evt.preventDefault();
