@@ -1,77 +1,65 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import AOIComponent from './AOIComponent';
 
 import './AOIEditorComponent.css';
 
-class AOIImageViewComponent extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      imageWidth: 100,
-      imageHeight: 100,
-      imageElement: null
-    }
-    this.imageRef = React.createRef();
-  }
+const imageRef = React.createRef();
 
-  onSelectAOI(aoi) {
-    if(this.props.onSelectAOI !== undefined) {
-      this.props.onSelectAOI(aoi);
+const AOIImageViewComponent = props => {
+
+  const [imageWidth, setImageWidth] = useState(100);
+  const [imageHeight, setImageHeight] = useState(100);
+  const [imageElement, setImageElement] = useState(null);
+
+  const onSelectAOI = aoi => {
+    if (props.onSelectAOI !== undefined) {
+      props.onSelectAOI(aoi);
     }
   }
 
-  componentDidMount() {
-    //db_helper.getImage(this.props.task.image, this.onReceivedImage.bind(this));
-    //
-
-    //Force preload the image
-    var url = "/Images/" + this.props.imageName;
-    if (this.props.image) {
-      url = URL.createObjectURL(this.props.image);
+  useEffect ( () =>  {
+    let url = "/Images/" + props.imageName;
+    if (props.image) {
+      url = URL.createObjectURL(props.image);
       const img = document.createElement('img');
       img.src = url;
     }
+  }, []);
+
+  const handleImageLoaded = () => {
+    const image = imageRef.current;
+    setImageHeight(image.height);
+    setImageWidth(image.width);
+    setImageElement(image);
   }
 
-  handleImageLoaded(){
-    var image = this.imageRef.current;
-    this.setState({
-      imageHeight: image.height,
-      imageWidth: image.width,
-      imageElement: image
-    });
+  const tempAOI = props.mode !== "SELECT" ? <AOIComponent aoi={props.tempAOI}/> : null;
+  let url = "/Images/" + props.imageName;
+  if (props.image) {
+    url = URL.createObjectURL(props.image);
   }
 
-  render() {
-    var tempAOI = this.props.mode !== "SELECT" ? <AOIComponent aoi={this.props.tempAOI}/> : null;
-    var url = "/Images/" + this.props.imageName;
-    if (this.props.image) {
-      url = URL.createObjectURL(this.props.image);
-    }
-
-    var left = 0;
-    if(this.state.imageElement){
-      left = parseInt(this.state.imageElement.offsetLeft);
-    }
-
-    return (
-      <div className="imagePreviewContainer"
-        onMouseDown={this.props.onMouseDown}
-        onMouseUp={this.props.onMouseUp}
-        onMouseMove={this.props.onMouseMove}>
-        <img className="imageCanvas" src={url} alt="Task" ref={this.imageRef}
-          onLoad={this.handleImageLoaded.bind(this)}/>
-        <svg style={{left:left}} id="AOICanvas" className="AOICanvas" width={this.state.imageWidth} height={this.state.imageHeight} viewBox="0 0 100 100" preserveAspectRatio="none">
-          {tempAOI}
-          {this.props.aois.map((aoi, index) => {
-            return <AOIComponent aoi={aoi} key={index} onSelected={e => this.onSelectAOI(aoi)}/>
-          })}
-        </svg>
-      </div>
-    );
+  let left = 0;
+  if (imageElement) {
+    left = parseInt(imageElement.offsetLeft);
   }
 
+  return (
+    <div className="imagePreviewContainer"
+      onMouseDown={props.onMouseDown}
+      onMouseUp={props.onMouseUp}
+      onMouseMove={props.onMouseMove}>
+      <img className="imageCanvas" src={url} alt="Task" ref={imageRef}
+        onLoad={handleImageLoaded.bind(this)}/>
+      <svg style={{left:left}} id="AOICanvas" className="AOICanvas" width={imageWidth} height={imageHeight} viewBox="0 0 100 100" preserveAspectRatio="none">
+        {tempAOI}
+        {props.aois.map((aoi, index) => {
+          return <AOIComponent aoi={aoi} key={index} onSelected={e => onSelectAOI(aoi)}/>
+        })}
+      </svg>
+    </div>
+  );
 }
 
 export default AOIImageViewComponent;
