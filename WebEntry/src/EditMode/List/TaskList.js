@@ -29,9 +29,7 @@ const Clone = styled(TaskClone)`
     }
 `;
 
-//================ React component ================
-const TaskList = (props) => {
-  //-----------Tasks------------
+const TaskList = props => {
   const onSelectTask = (e) => {
     props.selectTask(e);
   }
