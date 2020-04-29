@@ -41,7 +41,6 @@ class ButtonViewComponent extends Component {
   }
 
   reset() {
-    console.log("reset");
     this.pickedItems = [];
     this.forceUpdate();
   }
@@ -70,13 +69,11 @@ class ButtonViewComponent extends Component {
     }
 
     if (this.props.task.resetResponses) { //buttons with this feature are authorized to log their own data
-      console.log("log individual button click");
       var lineOfData = JSON.parse(JSON.stringify(this.delegate));
       lineOfData.timeToCompletion = playerUtils.getCurrentTime() - lineOfData.startTimestamp;
       lineOfData.responses = [response];
       lineOfData.correctlyAnswered = this.checkAnswer();
-
-      console.log("responses", lineOfData);
+      lineOfData.componentType = this.props.task.objType;
 
       db_helper.addNewLineToParticipantDB(store.getState().experimentInfo.participantId, JSON.stringify(lineOfData));
       mqtt.broadcastEvents(playerUtils.stringifyMessage(store,
@@ -90,13 +87,15 @@ class ButtonViewComponent extends Component {
       var answerObj = {
         responses: [response],
         correctlyAnswered: this.checkAnswer(),
-        taskID: this.props.task._id,
+        taskID: this.props.task._id, //TODO This is undefined, might be legacy from earlier version where we did not have task components. Remove after confirming
         mapID: this.props.mapID,
+        componentType: this.props.task.objType
       }
 
       this.props.answerCallback(answerObj);
     }
   }
+
   render() {
     let theme=this.props.theme;
 

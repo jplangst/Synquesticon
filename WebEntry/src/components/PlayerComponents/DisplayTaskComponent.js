@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 
 import Button from '@material-ui/core/Button';
-
 import { Typography } from '@material-ui/core';
 import { withTheme } from '@material-ui/styles';
 
-//view components
 import SynquestitaskViewComponent from './Views/SynquestitaskViewComponent';
 
 import PauseDialog from './PauseDialog';
@@ -25,8 +23,6 @@ import './DisplayTaskComponent.css';
 import '../../core/utility.css';
 
 var checkShouldSave = true;
-
-//task: dbObjects.removeCircular(task),
 
 /*
 ██████  ███████  ██████ ██    ██ ██████  ███████ ██  ██████  ███    ██      ██████  ██████  ███    ███ ██████   ██████  ███    ██ ███████ ███    ██ ████████
@@ -341,8 +337,6 @@ class DisplayTaskComponent extends Component {
           });
         }
 
-        console.log(store.getState().experimentInfo);
-
         var action = {
           type: 'SET_EXPERIMENT_INFO',
           experimentInfo: {
@@ -373,8 +367,6 @@ class DisplayTaskComponent extends Component {
       });
 
       eventStore.addNewCommandListener(this.handleNewCommandEvent);
-
-
     }
   }
 

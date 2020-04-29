@@ -30,6 +30,8 @@ class SynquestitaskViewComponent extends Component {
 
   //Callback from the task components when the user has provided an answer
   onAnswer(answerObj) {
+    console.log(answerObj);
+
     //Update the map with the resonse to the task, overwriting any existing answer for that task
     var lineOfData = this.taskResponses.get(this.props.task._id+answerObj.mapID);
 
