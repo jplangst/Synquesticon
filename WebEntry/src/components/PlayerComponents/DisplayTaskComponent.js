@@ -141,6 +141,7 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
       else {
         line.timeToCompletion = playerUtils.getCurrentTime() - line.startTimestamp;
         if (store.getState().experimentInfo.shouldSave) {
+          console.log(line);
           db_helper.addNewLineToParticipantDB(store.getState().experimentInfo.participantId, JSON.stringify(line));
         }
       }

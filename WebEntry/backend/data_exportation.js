@@ -254,6 +254,7 @@ exports.save_to_csv = async function(p, seperator) {
                      handleMissingData(line.timeToCompletion) + seperator +
                      escapeCSV(commentText) + seperator +
                      escapeCSV(line.tags.join('_')) + seperator +
+                     escapeCSV(line.objType) + seperator +
                      escapeCSV(line.tasksFamilyTree.join('_')) + seperator +
                      getFormattedTime(line.startTimestamp) + seperator + //Remove linebreaks and extra whitespace
                      getFormattedTime(line.firstResponseTimestamp)).replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ") + seperator +

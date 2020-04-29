@@ -30,6 +30,7 @@ function HEADER(seperator) {
                "time_to_completion" + seperator +
                "comments" + seperator +
                "tags" + seperator +
+               "type" + seperator +
                "set_names" + seperator +
                "timestamp_start" + seperator +
                "timestamp_first_response" + seperator +
