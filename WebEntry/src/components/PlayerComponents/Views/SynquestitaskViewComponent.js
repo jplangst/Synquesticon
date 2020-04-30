@@ -40,7 +40,7 @@ class SynquestitaskViewComponent extends Component {
 
     //update answer
     lineOfData.clickedPoints = answerObj.clickedPoints;
-    lineOfData.responses = answerObj.responses;
+    lineOfData.responses = Array.isArray(answerObj.responses)?answerObj.responses:[];
     lineOfData.correctlyAnswered = answerObj.correctlyAnswered;
 
     if (answerObj.taskID+answerObj.mapID) {

@@ -89,6 +89,8 @@ class ObserverMode extends Component {
   }
 
   onNewEvent() {
+    console.log(eventStore.getCurrentMessage());
+
     var args = JSON.parse(eventStore.getCurrentMessage());
 
     //set up a new participant, this is for catching gaze data

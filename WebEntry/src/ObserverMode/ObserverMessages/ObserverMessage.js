@@ -15,13 +15,15 @@ class ObserverMessage extends React.Component {
     this.showCommentButton = true;
     this.marginTop = false;
   }
+
   parseMessage(args) {
     var redColor = "#E94B3C";
     var greenColor = "#006B38";
     this.marginTop = false;
 
-    var displayText = '';
+    var displayText = null;
     var timeToCompletion = 0;
+    
     switch (args.eventType) {
       case "NEW EXPERIMENT":
         /*
@@ -61,7 +63,6 @@ class ObserverMessage extends React.Component {
                    obj.correctlyAnswered,
                    obj.aoiCheckedList];
        */
-
         var responses = args.lineOfData.responses.join(', ');
         timeToCompletion = args.lineOfData.timeToCompletion < 0 ? 0 : args.lineOfData.timeToCompletion/1000;
         var timeToFirstAnswer = args.lineOfData.timeToFirstAnswer < 0 ? 0 : args.lineOfData.timeToFirstAnswer/1000;
@@ -76,12 +77,12 @@ class ObserverMessage extends React.Component {
                       <font color={color}>"{responses}"</font> ({timeToFirstAnswer}s /{timeToCompletion}s)
                       </Typography>;
 
-
         /*var aoisList = "";
         args.lineOfData.aoiCheckedList.map((item, index) => {
           aoisList += "\t" + item["name"] + ":" + (item["checked"] !== undefined ? "checked" : "unchecked");
         });
         //displayText += aoisList;*/
+        //
         this.showCommentButton = false;
         break;
       case "SKIPPED":

@@ -266,12 +266,12 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
                                           hasBeenInitiated={this.hasBeenInitiated}
                                           parentSet={parentSet}
                                           initCallback={(taskResponses) => {
-                                              this.currentLineOfData = taskResponses;
+                                            this.currentLineOfData = taskResponses;
                                           }}
                                           logTheStartOfTask={(task, log, ind) => {
-                                              mqtt.broadcastEvents(playerUtils.stringifyMessage(store, task, log, "START", this.progressCount, this.progressCount+1));
-                                                   this.hasBeenInitiated = true;
-                                              }}
+                                            mqtt.broadcastEvents(playerUtils.stringifyMessage(store, task, log, "START", this.progressCount, this.progressCount+1));
+                                            this.hasBeenInitiated = true;
+                                          }}
                                           renderKey={id}/>
             </div>
             <div className="nextButton">
@@ -440,7 +440,7 @@ class DisplayTaskComponent extends Component {
           var a = aois[i];
           var imageDivRect = a.imageRef.current.getBoundingClientRect();
           var polygon = [];
-          
+
           if (a.boundingbox.length > 0) {
             a.boundingbox.map((p, ind) => {
               var x = p[0]*imageDivRect.width/100 + imageDivRect.x;
