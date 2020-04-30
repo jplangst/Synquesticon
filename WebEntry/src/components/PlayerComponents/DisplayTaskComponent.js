@@ -263,7 +263,8 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
         return (
           <div className="page" key={this.currentTaskIndex}>
             <div className="mainDisplay">
-              <SynquestitaskViewComponent tasksFamilyTree={trackingTaskSetNames}
+              <SynquestitaskViewComponent key={id}
+                                          tasksFamilyTree={trackingTaskSetNames}
                                           task={this.currentTask}
                                           answerCallback={this.onAnswer.bind(this)}
                                           answerItem={this.state.answerItem}

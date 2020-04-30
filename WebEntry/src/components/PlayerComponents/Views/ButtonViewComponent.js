@@ -85,7 +85,7 @@ class ButtonViewComponent extends Component {
     }
     else { //normal buttons behaviour
       var answerObj = {
-        responses: [response],
+        responses: [this.pickedItems],
         correctlyAnswered: this.checkAnswer(),
         taskID: this.props.task._id, //TODO This is undefined, might be legacy from earlier version where we did not have task components. Remove after confirming
         mapID: this.props.mapID,
