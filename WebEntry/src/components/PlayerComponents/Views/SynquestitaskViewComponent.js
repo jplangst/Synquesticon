@@ -46,6 +46,7 @@ class SynquestitaskViewComponent extends Component {
     if (answerObj.taskID+answerObj.mapID) {
       this.taskResponses.set(answerObj.taskID+answerObj.mapID, lineOfData);
     }
+
     this.props.answerCallback({linesOfData: this.taskResponses, correctlyAnswered: answerObj.correctlyAnswered});
   }
 
@@ -77,7 +78,7 @@ class SynquestitaskViewComponent extends Component {
       if(store.getState().multipleScreens && (item.screenIDS.includes(store.getState().screenID) || item.screenIDS.length===0) || !store.getState().multipleScreens){
         mapIndex = i;
         var newLine = null;
-        if(this.props.newTask && item.objType !== "Instruction") {
+        if(this.props.newTask /*&& item.objType !== "Instruction"*/) {
           newLine = this.logTheStartOfTask(item, _id, mapIndex);
         }
         var key = this.props.key+"Synquestitask"+i;

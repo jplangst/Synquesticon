@@ -58,8 +58,6 @@ class ObserverMode extends Component {
       console.log("missing data line", msg);
       return false;
     }
-    //return (pair.lineOfData.startTimestamp === msg.lineOfData.startTimestamp
-    //        && pair.lineOfData.taskContent === msg.lineOfData.taskContent);
   }
 
   pairMessage(msgArray, msg) {
@@ -88,9 +86,9 @@ class ObserverMode extends Component {
     return msgArray;
   }
 
+  // Called when a new mqtt event has been received
+  // Updates the information displayed in the observer
   onNewEvent() {
-    console.log(eventStore.getCurrentMessage());
-
     var args = JSON.parse(eventStore.getCurrentMessage());
 
     //set up a new participant, this is for catching gaze data
@@ -103,22 +101,24 @@ class ObserverMode extends Component {
       store.dispatch(action);
     }
 
-    if (args.taskSetCount !== undefined) {
+    if (args.taskSetCount) {
       this.totalTasks[args.participantId] = args.taskSetCount;
     }
-    if (args.progressCount !== undefined) {
+    if (args.progressCount) {
       this.completedTasks[args.participantId] = args.progressCount;
     }
+
+    console.log(args);
 
     var existed = false;
     for (let i = 0; i < this.state.participants.length; i++) {
       if (this.state.participants[i].id === args.participantId) {
         var newMessages = this.pairMessage(this.state.participants[i].messages, args);
-
         existed = true;
         break;
       }
     }
+
     if (!existed) {
       var label = (!args.participantLabel || args.participantLabel === "") ? "" : args.participantLabel;
       this.state.participants.push({

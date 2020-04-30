@@ -81,20 +81,23 @@ function getImagePath(dataList, imageFiles){
 export function stringifyMessage(store, task, lineOfData, eventType, progressCount, taskIndex) {
   try {
     if (store.getState().experimentInfo.participantId === undefined) {
+      console.log("PaarticipantID is undefined");
       return null;
     }
-    return JSON.stringify({
-                            eventType: eventType,
-                            participantId: store.getState().experimentInfo.participantId,
-                            participantLabel: store.getState().experimentInfo.participantLabel,
-                            startTimestamp: store.getState().experimentInfo.startTimestamp,
-                            selectedTracker: store.getState().experimentInfo.selectedTracker,
-                            task: task,
-                            lineOfData: lineOfData,
-                            taskSetCount: store.getState().experimentInfo.taskSetCount,
-                            progressCount: progressCount,
-                            taskIndex: taskIndex
-                          });
+
+    let messageObject = {
+      eventType: eventType,
+      participantId: store.getState().experimentInfo.participantId,
+      participantLabel: store.getState().experimentInfo.participantLabel,
+      startTimestamp: store.getState().experimentInfo.startTimestamp,
+      selectedTracker: store.getState().experimentInfo.selectedTracker,
+      task: task,
+      lineOfData: lineOfData,
+      taskSetCount: store.getState().experimentInfo.taskSetCount,
+      progressCount: progressCount,
+      taskIndex: taskIndex
+    };
+    return JSON.stringify(messageObject);
   } catch (err) {
     // return JSON.stringify({
     //                         eventType: eventType,

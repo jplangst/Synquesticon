@@ -145,9 +145,12 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
         }
       }
 
-      mqtt.broadcastEvents(playerUtils.stringifyMessage(store, {_id:line.taskId}, line,
+      //TODO investigate this if needed
+      let stringifiedMessage = playerUtils.stringifyMessage(store, {_id:line.taskId}, line,
                                                 (line.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED",
-                                                this.progressCount, -1));
+                                                this.progressCount, -1);
+
+      mqtt.broadcastEvents(stringifiedMessage);
     });
 
     //===========check requirement of number of correct answers===========
@@ -170,9 +173,11 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
       }
     }
 
-    mqtt.broadcastEvents(JSON.stringify({eventType: "PROGRESSCOUNT",
-                                         participantId: store.getState().experimentInfo.participantId,
-                                         progressCount: this.progressCount}));
+    let eventObject = {eventType: "PROGRESSCOUNT",
+                       participantId: store.getState().experimentInfo.participantId,
+                       progressCount: this.progressCount};
+
+    mqtt.broadcastEvents(JSON.stringify(eventObject));
 
     //To prevent the receiving components from broadcasting a new click event
     if(!fromEmitter){
@@ -269,7 +274,9 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
                                             this.currentLineOfData = taskResponses;
                                           }}
                                           logTheStartOfTask={(task, log, ind) => {
-                                            mqtt.broadcastEvents(playerUtils.stringifyMessage(store, task, log, "START", this.progressCount, this.progressCount+1));
+                                            //TODO investigate if neccassary
+                                            let eventObject = playerUtils.stringifyMessage(store, task, log, "START", this.progressCount, this.progressCount+1);
+                                            mqtt.broadcastEvents(eventObject);
                                             this.hasBeenInitiated = true;
                                           }}
                                           renderKey={id}/>
@@ -326,18 +333,60 @@ class DisplayTaskComponent extends Component {
     var mainTaskSetId = parsed.id;
     var tracker = parsed.tracker;
 
-    if (mainTaskSetId !== undefined) {
-      db_helper.getTasksOrTaskSetsWithIDs(mainTaskSetId, (dbQueryResult, count, mainTaskSetName) => {
+    if (mainTaskSetId === undefined) {
+      return;
+    }
 
-        //Force preload all images
-        if(dbQueryResult.data){
-          playerUtils.getAllImagePaths(dbQueryResult.data).forEach((picture) => {
-              const img = document.createElement('img');
-              img.src = picture;
-          });
+    db_helper.getTasksOrTaskSetsWithIDs(mainTaskSetId, (dbQueryResult, count, mainTaskSetName) => {
+
+      //Force preload all images
+      if(dbQueryResult.data){
+        playerUtils.getAllImagePaths(dbQueryResult.data).forEach((picture) => {
+            const img = document.createElement('img');
+            img.src = picture;
+        });
+      }
+
+      //If the participantID is undefined we create a participant and add it to he experiment
+      if(store.getState().experimentInfo.participantId===undefined){
+        db_helper.addParticipantToDb(new dbObjects.ParticipantObject(dbQueryResult._id),
+          (returnedIdFromDB)=> {
+            let action = {
+              type: 'SET_EXPERIMENT_INFO',
+              experimentInfo: {
+                participantLabel: playerUtils.getDeviceName(),
+                participantId: returnedIdFromDB,
+                shouldSave: true,
+                startTimestamp: playerUtils.getFormattedCurrentTime(),
+                mainTaskSetId: mainTaskSetName,
+                taskSet: dbQueryResult,
+                taskSetCount: count,
+                selectedTracker: tracker,
+              }
+            }
+            store.dispatch(action);
+            this.forceUpdate();
+        });
+      }
+      else{
+      let action = {
+        type: 'SET_EXPERIMENT_INFO',
+        experimentInfo: {
+          participantLabel: playerUtils.getDeviceName(),
+          participantId: store.getState().experimentInfo.participantId,
+          shouldSave: true,
+          startTimestamp: playerUtils.getFormattedCurrentTime(),
+          mainTaskSetId: mainTaskSetName,
+          taskSet: dbQueryResult,
+          taskSetCount: count,
+          selectedTracker: tracker,
         }
+      }
 
-        var action = {
+      store.dispatch(action);
+      this.forceUpdate();
+    }
+        /*var action = {
           type: 'SET_EXPERIMENT_INFO',
           experimentInfo: {
             participantLabel: playerUtils.getDeviceName(),
@@ -364,10 +413,9 @@ class DisplayTaskComponent extends Component {
             this.forceUpdate();
           });
         }
-      });
-
-      eventStore.addNewCommandListener(this.handleNewCommandEvent);
-    }
+      });*/
+    });
+    eventStore.addNewCommandListener(this.handleNewCommandEvent);
   }
 
   componentDidMount() {
@@ -478,40 +526,25 @@ class DisplayTaskComponent extends Component {
  ███ ███  ██   ██ ██      ██ ██          ███████   ████   ███████ ██   ████    ██
 */
 
-
-  broadcastStartEvent() {
-    try {
-      var info = JSON.stringify({
-                                  eventType: "NEW EXPERIMENT",
-                                  participantId: store.getState().experimentInfo.participantId,
-                                  participantLabel: store.getState().experimentInfo.participantLabel,
-                                  startTimestamp: store.getState().experimentInfo.startTimestamp,
-                                  selectedTracker: store.getState().experimentInfo.selectedTracker,
-                                  mainTaskSetId: store.getState().experimentInfo.mainTaskSetId,
-                                  taskSetCount: store.getState().experimentInfo.taskSetCount
-                                });
-      mqtt.broadcastEvents(info);
-    }
-    catch(err) {
-      console.log(err);
-    }
-  }
   broadcastEndEvent() {
     var dt = new Date();
     var timestamp = dt.toUTCString();
 
-    var info = JSON.stringify({
-                                eventType: "FINISHED",
-                                participantId: store.getState().experimentInfo.participantId,
-                                participantLabel: store.getState().experimentInfo.participantLabel,
-                                startTimestamp: store.getState().experimentInfo.startTimestamp,
-                                selectedTracker: store.getState().experimentInfo.selectedTracker,
-                                mainTaskSetId: store.getState().experimentInfo.mainTaskSetId,
-                                lineOfData: {
-                                  startTaskTime: timestamp
-                                },
-                                timestamp: timestamp
-                              });
+    let eventObject = {
+      eventType: "FINISHED",
+      participantId: store.getState().experimentInfo.participantId,
+      participantLabel: store.getState().experimentInfo.participantLabel,
+      startTimestamp: store.getState().experimentInfo.startTimestamp,
+      selectedTracker: store.getState().experimentInfo.selectedTracker,
+      mainTaskSetId: store.getState().experimentInfo.mainTaskSetId,
+      lineOfData: {
+        startTaskTime: timestamp
+      },
+      timestamp: timestamp
+    };
+    console.log(eventObject);
+
+    var info = JSON.stringify(eventObject);
     mqtt.broadcastEvents(info);
   }
 
