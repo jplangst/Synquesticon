@@ -56,9 +56,9 @@ class ExportMode extends Component {
         participants: ids
       });
     });
-    db_helper.getAllObserverMessagesFromDb((msgs) => {
+    /*db_helper.getAllObserverMessagesFromDb((msgs) => {
       /*console.log("all comments", msgs);*/
-    });
+    //});
   }
 
   componenWillUnmount() {

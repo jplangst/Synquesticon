@@ -160,7 +160,6 @@ class ComparisonComponent extends Component {
 */
 
   render() {
-    console.log("ComparisonComponent", this.props.task);
     return(
       <div className="comparisonContainer">
         <TextField label="Question"

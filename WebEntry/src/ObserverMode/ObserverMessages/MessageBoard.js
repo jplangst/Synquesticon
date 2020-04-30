@@ -26,12 +26,12 @@ const MessageBoard = (props) => {
 
   const onCloseCommentDialog = (comment) => {
     setCommentDialogOpen(false);
-    if (comment !== "") {
+    /*if (comment !== "") {
       console.log("write to DB");
       //onCommentRecieved(comment);
     } else {
       console.log("empty string");
-    }
+    }*/
   }
   const onCommentRecieved = (comment) => {
     //TODO process comment here, might need to pass task id etc to the observermessage as needed
@@ -56,7 +56,7 @@ const MessageBoard = (props) => {
   }
 
   var displayMessages = props.messages.slice();
-  
+
   return (
     <div className="messageBoard">
       <div className="messageBoardtitle">

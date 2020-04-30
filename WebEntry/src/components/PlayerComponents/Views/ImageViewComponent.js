@@ -86,7 +86,6 @@ class ImageViewComponent extends Component {
         return;
       }
 
-      //console.log("imageDiv", a.imageRef.ge, a.imageWrapper.current);
       var imageDivRect = a.imageRef.current.getBoundingClientRect();
       var polygon = [];
       if (a.boundingbox.length > 0) {

@@ -128,7 +128,6 @@ class ObserverMessage extends React.Component {
   }
 
   onCommentButtonClicked() {
-    console.log(this.props.message);
     this.props.commentCallback(this.props.message);
   }
 

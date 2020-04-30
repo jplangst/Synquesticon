@@ -34,7 +34,6 @@ const EyeTrackerSelector = props => {
       type: 'SET_SELECTED_EYETRACKER',
       selectedEyeTracker: e.target.value
     };
-    console.log(setETAction);
     store.dispatch(setETAction);
 
     setSelectedTracker(e.target.value);

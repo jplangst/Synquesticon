@@ -73,15 +73,15 @@ class SynquestitaskViewComponent extends Component {
 
   getDisplayedContent(taskList, _id, mapIndex){
     return taskList.map((item, i) => {
-      mapIndex = i;
-      var newLine = null;
-      if(this.props.newTask && item.objType !== "Instruction") {
-        newLine = this.logTheStartOfTask(item, _id, mapIndex);
-      }
-
-      var key = this.props.key+"Synquestitask"+i;
 
       if(store.getState().multipleScreens && (item.screenIDS.includes(store.getState().screenID) || item.screenIDS.length===0) || !store.getState().multipleScreens){
+        mapIndex = i;
+        var newLine = null;
+        if(this.props.newTask && item.objType !== "Instruction") {
+          newLine = this.logTheStartOfTask(item, _id, mapIndex);
+        }
+        var key = this.props.key+"Synquestitask"+i;
+
         if(item.objType === dbObjects.TaskTypes.INSTRUCTION.type){
             return <InstructionViewComponent className="itemContainer" key={key} task={item} mapID={mapIndex} parentSet={this.props.task.name}/>;
         }
@@ -113,6 +113,7 @@ class SynquestitaskViewComponent extends Component {
 
     var content = this.getDisplayedContent(runThisTaskSet, this.props.task._id ,0);
     this.props.initCallback(this.taskResponses);
+
     return (
         <div key={this.props.renderKey} className="multiItemContent">
           {content}

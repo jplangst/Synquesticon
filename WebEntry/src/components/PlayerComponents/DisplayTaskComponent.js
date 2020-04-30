@@ -141,7 +141,6 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
       else {
         line.timeToCompletion = playerUtils.getCurrentTime() - line.startTimestamp;
         if (store.getState().experimentInfo.shouldSave) {
-          console.log(line);
           db_helper.addNewLineToParticipantDB(store.getState().experimentInfo.participantId, JSON.stringify(line));
         }
       }
@@ -439,10 +438,9 @@ class DisplayTaskComponent extends Component {
 
         for (var i = 0; i < aois.length; i++) {
           var a = aois[i];
-
-          //console.log("imageDiv", a.imageRef.ge, a.imageWrapper.current);
           var imageDivRect = a.imageRef.current.getBoundingClientRect();
           var polygon = [];
+          
           if (a.boundingbox.length > 0) {
             a.boundingbox.map((p, ind) => {
               var x = p[0]*imageDivRect.width/100 + imageDivRect.x;
