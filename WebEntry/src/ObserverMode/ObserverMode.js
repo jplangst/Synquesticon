@@ -114,7 +114,17 @@ class ObserverMode extends Component {
         // Only print the finished event once. Needed because of the multiple screens.
         // Every screen will send a finished event.
         if(args.eventType==="FINISHED" && !this.state.participants[i].hasReceivedFinish){
-          this.state.participants[i].hasReceivedFinish = true;
+          this.setState(state => {
+            let participants = state.participants;
+            let participantData = participants[i];
+            participantData.hasReceivedFinish = true;
+            participants[i] = participantData;
+
+            return {
+              participants,
+            };
+          });
+
           this.pairMessage(this.state.participants[i].messages, args);
           exists = true;
         }
@@ -134,13 +144,19 @@ class ObserverMode extends Component {
     //If the participant id did not exist we create a new participant
     if (!exists) {
       var label = (!args.participantLabel || args.participantLabel === "") ? "" : args.participantLabel;
-      this.state.participants.push({
-        id: args.participantId,
-        name: label,
-        timestamp: args.startTimestamp,
-        tracker: args.selectedTracker,
-        messages: [[args]]
-      })
+      this.setState(state => {
+        const participants = state.participants.concat({
+          id: args.participantId,
+          name: label,
+          timestamp: args.startTimestamp,
+          tracker: args.selectedTracker,
+          messages: [[args]]
+        });
+
+        return {
+          participants,
+        };
+      });
     }
 
     if (this.state.currentParticipant < 0) {
