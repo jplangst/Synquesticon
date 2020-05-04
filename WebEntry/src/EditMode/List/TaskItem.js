@@ -11,8 +11,6 @@ import * as dnd from '../../core/beautifulDND.js';
 
 const TaskItem = (props) => {
   let setRef = ref => {
-    // keep a reference to the dom ref as an instance property
-    ref = ref;
     // give the dom ref to react-beautiful-dnd
     props.domRef(ref);
   };

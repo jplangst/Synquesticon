@@ -115,11 +115,11 @@ class ObserverMode extends Component {
         // Every screen will send a finished event.
         if(args.eventType==="FINISHED" && !this.state.participants[i].hasReceivedFinish){
           this.state.participants[i].hasReceivedFinish = true;
-          var newMessages = this.pairMessage(this.state.participants[i].messages, args);
+          this.pairMessage(this.state.participants[i].messages, args);
           exists = true;
         }
         else if(args.eventType!=="FINISHED"){
-          var newMessages = this.pairMessage(this.state.participants[i].messages, args);
+          this.pairMessage(this.state.participants[i].messages, args);
           exists = true;
           break;
         }
@@ -131,7 +131,7 @@ class ObserverMode extends Component {
       }
     }
 
-    //If the participant id did not exist we create a new participant 
+    //If the participant id did not exist we create a new participant
     if (!exists) {
       var label = (!args.participantLabel || args.participantLabel === "") ? "" : args.participantLabel;
       this.state.participants.push({

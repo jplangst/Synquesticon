@@ -35,7 +35,7 @@ const CommentDialog = (props) => {
         fullWidth
         multiline
         rows="5"
-        onChange={(e)=>{comment = e.target.value;console.log(comment)}}
+        onChange={(e)=>{comment = e.target.value;}}
       />
     </DialogContent>
     <DialogActions>

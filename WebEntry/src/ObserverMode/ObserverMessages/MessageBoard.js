@@ -17,24 +17,23 @@ var myStorage = window.localStorage;
 
 const MessageBoard = (props) => {
   const [commentDialogOpen, setCommentDialogOpen] = useState(false);
-  let pickedEvent = null;
+  const [pickedEvent, setPickedEvent] = useState(false);
 
   const onCommentPressed = (evt) => {
-    pickedEvent = evt;
+    setPickedEvent(evt);
     setCommentDialogOpen(true);
   }
 
   const onCloseCommentDialog = (comment) => {
     setCommentDialogOpen(false);
-    /*if (comment !== "") {
+    if (comment !== "") {
       console.log("write to DB");
-      //onCommentRecieved(comment);
+      onCommentRecieved(comment);
     } else {
       console.log("empty string");
-    }*/
+    }
   }
   const onCommentRecieved = (comment) => {
-    //TODO process comment here, might need to pass task id etc to the observermessage as needed
     db_helper.addNewObserverMessageToDb(new dbObjects.ObserverMessage(myStorage.getItem('deviceID'),
       myStorage.getItem('deviceRole'),
       pickedEvent.participantId,

@@ -11,7 +11,7 @@ import { Typography } from '@material-ui/core';
 import { withTheme } from '@material-ui/styles';
 
 const ObserverTab = props => {
-  const [forcedPause, setForcedPause] = useState(props.shouldPause);
+  const [forcedPause] = useState(props.shouldPause);
   const [isPaused, setIsPaused] = useState(false);
 
 /*
