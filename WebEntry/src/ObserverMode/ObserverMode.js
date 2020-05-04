@@ -88,7 +88,7 @@ class ObserverMode extends Component {
 
   // Called when a new mqtt event has been received
   // Updates the information displayed in the observer
-  onNewEvent() { 
+  onNewEvent() {
     var args = JSON.parse(eventStore.getCurrentMessage());
 
     //set up a new participant, this is for catching gaze data
@@ -108,16 +108,31 @@ class ObserverMode extends Component {
       this.completedTasks[args.participantId] = args.progressCount;
     }
 
-    var existed = false;
+    var exists = false;
     for (let i = 0; i < this.state.participants.length; i++) {
       if (this.state.participants[i].id === args.participantId) {
-        var newMessages = this.pairMessage(this.state.participants[i].messages, args);
-        existed = true;
-        break;
+        // Only print the finished event once. Needed because of the multiple screens.
+        // Every screen will send a finished event.
+        if(args.eventType==="FINISHED" && !this.state.participants[i].hasReceivedFinish){
+          this.state.participants[i].hasReceivedFinish = true;
+          var newMessages = this.pairMessage(this.state.participants[i].messages, args);
+          exists = true;
+        }
+        else if(args.eventType!=="FINISHED"){
+          var newMessages = this.pairMessage(this.state.participants[i].messages, args);
+          exists = true;
+          break;
+        }
+        else{
+          //The id did exist so we do not want to create a new participant
+          exists = true;
+          break;
+        }
       }
     }
 
-    if (!existed) {
+    //If the participant id did not exist we create a new participant 
+    if (!exists) {
       var label = (!args.participantLabel || args.participantLabel === "") ? "" : args.participantLabel;
       this.state.participants.push({
         id: args.participantId,
