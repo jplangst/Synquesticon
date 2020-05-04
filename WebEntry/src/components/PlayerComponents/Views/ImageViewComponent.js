@@ -33,7 +33,6 @@ class ImageViewComponent extends Component {
 
   componentDidMount() {
 
-
     /*this.image = new Image();
     this.image.src = "/Images/" + this.props.task.image;
     this.image.ref = this.imageRef;*/

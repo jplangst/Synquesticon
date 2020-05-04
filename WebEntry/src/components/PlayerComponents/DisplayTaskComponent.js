@@ -145,7 +145,6 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
         }
       }
 
-      //TODO investigate this if needed
       let stringifiedMessage = playerUtils.stringifyMessage(store, {_id:line.taskId}, line,
                                                 (line.firstResponseTimestamp !== -1) ? "ANSWERED" : "SKIPPED",
                                                 this.progressCount, -1);
@@ -275,7 +274,6 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
                                             this.currentLineOfData = taskResponses;
                                           }}
                                           logTheStartOfTask={(task, log, ind) => {
-                                            //TODO investigate if neccassary
                                             let eventObject = playerUtils.stringifyMessage(store, task, log, "START", this.progressCount, this.progressCount+1);
                                             mqtt.broadcastEvents(eventObject);
                                             this.hasBeenInitiated = true;
@@ -283,7 +281,7 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
                                           renderKey={id}/>
             </div>
             <div className="nextButton">
-              <Button className="nextButton" variant="outlined" onClick={this.onClickNext.bind(this)}>
+              <Button className="nextButton" variant="contained" onClick={this.onClickNext.bind(this)}>
                 {nextButtonText}
               </Button>
             </div>
@@ -291,7 +289,7 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
           );
       }
     }
-    else { //TODO: end of set
+    else {
       this.props.onFinished();
       return (null);
     }
@@ -543,7 +541,6 @@ class DisplayTaskComponent extends Component {
       },
       timestamp: timestamp
     };
-    console.log(eventObject);
 
     var info = JSON.stringify(eventObject);
     mqtt.broadcastEvents(info);

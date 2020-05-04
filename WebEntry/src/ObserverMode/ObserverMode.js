@@ -88,7 +88,7 @@ class ObserverMode extends Component {
 
   // Called when a new mqtt event has been received
   // Updates the information displayed in the observer
-  onNewEvent() {
+  onNewEvent() { 
     var args = JSON.parse(eventStore.getCurrentMessage());
 
     //set up a new participant, this is for catching gaze data
@@ -107,8 +107,6 @@ class ObserverMode extends Component {
     if (args.progressCount) {
       this.completedTasks[args.participantId] = args.progressCount;
     }
-
-    console.log(args);
 
     var existed = false;
     for (let i = 0; i < this.state.participants.length; i++) {

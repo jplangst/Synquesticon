@@ -64,7 +64,6 @@ class ObserverMessage extends React.Component {
                    obj.aoiCheckedList];
        */
         var responses = args.lineOfData.responses.join(', ');
-        console.log("response", responses);
         timeToCompletion = args.lineOfData.timeToCompletion < 0 ? 0 : args.lineOfData.timeToCompletion/1000;
         var timeToFirstAnswer = args.lineOfData.timeToFirstAnswer < 0 ? 0 : args.lineOfData.timeToFirstAnswer/1000;
         var color = this.props.theme.palette.textPrimary;

@@ -51,11 +51,12 @@ class SynquestitaskViewComponent extends Component {
   }
 
   logTheStartOfTask(task, _id, mapIndex) {
+    console.log(task);
     if (!this.props.hasBeenInitiated) {
       var newLine = new dbObjects.LineOfData(playerUtils.getCurrentTime(),
                                              _id,
                                              this.props.tasksFamilyTree,
-                                             task.displayText,
+                                             task.objType===dbObjects.TaskTypes.IMAGE.type?task.image:task.displayText,
                                              task.correctResponses,
                                              task.objType);
       if(task.globalVariable) {
