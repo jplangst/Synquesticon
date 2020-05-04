@@ -35,7 +35,7 @@ function HEADER(seperator) {
                "timestamp_start" + seperator +
                "timestamp_first_response" + seperator +
                "clicked_points" + seperator +
-               "database_id" + "\n";
+               "database_id\n"; //Note the \n in case more fields are added later
    return header;
  }
 
@@ -170,7 +170,7 @@ class ExportMode extends Component {
       var blob = new Blob([HEADER(this.state.delimiter) + exported_csv], {type: 'text/csv'});
       FileSaver.saveAs(blob, file_name + '.csv');
 
-      if (this.state.combineFiles && exported_gaze != "") {
+      if (this.state.combineFiles && exported_gaze !== "") {
         var gaze_blob = new Blob([GAZE_HEADER + exported_gaze], {type: 'text/csv'});
         FileSaver.saveAs(gaze_blob, file_name + '_gaze.csv');
       }
@@ -333,7 +333,7 @@ class ExportMode extends Component {
             placeholder=","
             ref="delimiterRef"
             variant="filled"
-            onChange={(e)=>{this.state.delimiter = e.target.value}}
+            onChange={(e)=>{this.setState({delimiter: e.target.value}) }} //state.delimiter = e.target.value
           />
 
           <Button style={{height:buttonHeight, marginLeft:20}} onClick={this.handleExport.bind(this)} variant="outlined">

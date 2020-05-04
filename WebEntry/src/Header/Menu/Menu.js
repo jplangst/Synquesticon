@@ -49,7 +49,7 @@ const Menu = (props) => {
   //-----------Speech Settings------------
   //TODO move this into a utility file or something
   //var synth = window.speechSynthesis;
-  const speak = (synth, inputTxt) => {
+  /*const speak = (synth, inputTxt) => {
     if (synth.speaking) {
         console.error('speechSynthesis.speaking');
         return;
@@ -64,7 +64,7 @@ const Menu = (props) => {
       }
       synth.speak(utterThis);
     }
-  }
+  }*/
 
   const onToggleThemeChange = () => {
     var toggleThemeAction = {

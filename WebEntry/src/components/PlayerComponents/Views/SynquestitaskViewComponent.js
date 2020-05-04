@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 
-import TextField from '@material-ui/core/TextField';
-
 import InstructionViewComponent from './InstructionViewComponent';
 import TextEntryComponent from './TextEntryComponent';
 import NumpadComponent from './NumpadComponent';
@@ -9,10 +7,8 @@ import ButtonViewComponent from './ButtonViewComponent';
 import ImageViewComponent from './ImageViewComponent';
 //import ComparisonViewComponent from './Views/ComparisonViewComponent';
 
-import shuffle from '../../../core/shuffle';
 import store from '../../../core/store';
 import * as dbObjects from '../../../core/db_objects';
-import * as dbObjectsUtilityFunctions from '../../../core/db_objects_utility_functions';
 import * as playerUtils from '../../../core/player_utility_functions';
 
 import './SynquestitaskItem.css';
@@ -76,7 +72,8 @@ class SynquestitaskViewComponent extends Component {
   getDisplayedContent(taskList, _id, mapIndex){
     return taskList.map((item, i) => {
 
-      if(store.getState().multipleScreens && (item.screenIDS.includes(store.getState().screenID) || item.screenIDS.length===0) || !store.getState().multipleScreens){
+      if((store.getState().multipleScreens && (item.screenIDS.includes(store.getState().screenID)
+      || item.screenIDS.length===0)) || !store.getState().multipleScreens){
         mapIndex = i;
         var newLine = null;
         if(this.props.newTask /*&& item.objType !== "Instruction"*/) {

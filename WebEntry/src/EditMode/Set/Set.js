@@ -4,7 +4,6 @@ import db_helper from '../../core/db_helper';
 import * as db_utils from '../../core/db_objects_utility_functions';
 import * as dbObjects from '../../core/db_objects';
 
-import shuffle from '../../core/shuffle';
 import store from '../../core/store';
 
 import Button from '@material-ui/core/Button';
