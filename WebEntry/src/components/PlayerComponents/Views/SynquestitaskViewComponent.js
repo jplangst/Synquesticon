@@ -47,7 +47,6 @@ class SynquestitaskViewComponent extends Component {
   }
 
   logTheStartOfTask(task, _id, mapIndex) {
-    console.log(task);
     if (!this.props.hasBeenInitiated) {
       var newLine = new dbObjects.LineOfData(playerUtils.getCurrentTime(),
                                              _id,
@@ -79,7 +78,7 @@ class SynquestitaskViewComponent extends Component {
         if(this.props.newTask /*&& item.objType !== "Instruction"*/) {
           newLine = this.logTheStartOfTask(item, _id, mapIndex);
         }
-        var key = this.props.key+"Synquestitask"+i;
+        var key = this.props.childKey+"Synquestitask"+i;
 
         if(item.objType === dbObjects.TaskTypes.INSTRUCTION.type){
             return <InstructionViewComponent className="itemContainer" key={key} task={item} mapID={mapIndex} parentSet={this.props.task.name}/>;

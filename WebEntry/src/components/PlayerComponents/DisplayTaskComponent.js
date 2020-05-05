@@ -262,7 +262,7 @@ class DisplayTaskHelper extends React.Component { //for the sake of recursion
         return (
           <div className="page" key={this.currentTaskIndex}>
             <div className="mainDisplay">
-              <SynquestitaskViewComponent key={id}
+              <SynquestitaskViewComponent childKey={id}
                                           tasksFamilyTree={trackingTaskSetNames}
                                           task={this.currentTask}
                                           answerCallback={this.onAnswer.bind(this)}
@@ -472,6 +472,8 @@ class DisplayTaskComponent extends Component {
     }
   }
 
+
+
   //Updates the location of the Gaze Cursor. And checks if any of the AOIs were looked at
   updateCursorLocation(){
     try {
@@ -489,12 +491,11 @@ class DisplayTaskComponent extends Component {
           var polygon = [];
 
           if (a.boundingbox.length > 0) {
-            a.boundingbox.map((p, ind) => {
-              var x = p[0]*imageDivRect.width/100 + imageDivRect.x;
-              var y = p[1]*imageDivRect.height/100 + imageDivRect.y;
+            for(let boundingbox of a.boundingbox){
+              var x = boundingbox[0]*imageDivRect.width/100 + imageDivRect.x;
+              var y = boundingbox[1]*imageDivRect.height/100 + imageDivRect.y;
               polygon.push([x, y]);
-              return 1;
-            });
+            }
           }
           else {
             polygon.push([imageDivRect.x, imageDivRect.y]);
