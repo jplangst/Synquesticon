@@ -83,7 +83,7 @@ class ImageViewComponent extends Component {
   normalizeBoundingBoxes(boundingBox,imageDivRectangle,polygonList){
       var x = boundingBox[0]*imageDivRectangle.width/100 + imageDivRectangle.x;
       var y = boundingBox[1]*imageDivRectangle.height/100 + imageDivRectangle.y;
-      polygonList.push([x, y]);
+      return [x,y];
   }
 
   checkHitAOI(click) {
@@ -100,7 +100,9 @@ class ImageViewComponent extends Component {
       var imageDivRect = a.imageRef.current.getBoundingClientRect();
       var polygon = [];
       if (a.boundingbox.length > 0) {
-        a.boundingbox.map(boundingbox => this.normalizeBoundingBoxes(boundingbox,imageDivRect,polygon));
+        for(let boundingbox of a.boundingbox){
+          polygon.push(this.normalizeBoundingBoxes(boundingbox,imageDivRect));
+        }
       }
       else {
         polygon.push([imageDivRect.x, imageDivRect.y]);
@@ -190,7 +192,7 @@ class ImageViewComponent extends Component {
   }
 
   handleImageLoaded(){
-    if(this.imageRef){
+    if(this.imageRef && this.imageRef.current){
       var image = this.imageRef.current;
       this.setState({
         imageHeight: image.height,

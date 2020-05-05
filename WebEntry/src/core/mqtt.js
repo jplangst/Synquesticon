@@ -71,7 +71,7 @@ function _startMQTT(config, restart) {
   }
 
   var wsURL = "ws://";
-  if(config.ip.includes("/crossbarproxy")){
+  if(config.ip.includes("/crossbarproxy")){ //TODO check if needed after pushing to the server. If so rename to /mqttProxy
     wsURL = "wss://";
   }
   wsURL += config.ip + ":" + config.port;
