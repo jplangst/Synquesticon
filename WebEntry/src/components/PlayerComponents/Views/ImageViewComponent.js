@@ -37,6 +37,8 @@ class ImageViewComponent extends Component {
     this.image.src = "/Images/" + this.props.task.image;
     this.image.ref = this.imageRef;*/
 
+    window.addEventListener("resize", this.handleImageLoaded.bind(this));
+
     if (this.props.task.aois.length > 0) {
       var aois = this.props.task.aois.slice();
       for (var i = 0; i < aois.length; i++) {
@@ -61,6 +63,10 @@ class ImageViewComponent extends Component {
     store.dispatch(imageAOIAction);
   }
 
+  componentWillUnmount(){
+    window.removeEventListener("resize", this.handleImageLoaded.bind(this));
+  }
+
   onReceivedImage(img) {
     this.image = this.props.task.image;
     this.setState({
@@ -72,6 +78,12 @@ class ImageViewComponent extends Component {
     var imageRect = e.target.getBoundingClientRect();
     return {x : (e.clientX - imageRect.left)/imageRect.width,
             y: (e.clientY - imageRect.top)/imageRect.height}
+  }
+
+  normalizeBoundingBoxes(boundingBox,imageDivRectangle,polygonList){
+      var x = boundingBox[0]*imageDivRectangle.width/100 + imageDivRectangle.x;
+      var y = boundingBox[1]*imageDivRectangle.height/100 + imageDivRectangle.y;
+      polygonList.push([x, y]);
   }
 
   checkHitAOI(click) {
@@ -88,12 +100,7 @@ class ImageViewComponent extends Component {
       var imageDivRect = a.imageRef.current.getBoundingClientRect();
       var polygon = [];
       if (a.boundingbox.length > 0) {
-        a.boundingbox.map((p, ind) => {
-          var x = p[0]*imageDivRect.width/100 + imageDivRect.x;
-          var y = p[1]*imageDivRect.height/100 + imageDivRect.y;
-          polygon.push([x, y]);
-          return 1;
-        });
+        a.boundingbox.map(boundingbox => this.normalizeBoundingBoxes(boundingbox,imageDivRect,polygon));
       }
       else {
         polygon.push([imageDivRect.x, imageDivRect.y]);
@@ -135,10 +142,13 @@ class ImageViewComponent extends Component {
       }
 
       return (
-        <svg onClick={this.onImageClicked.bind(this)} style={{left:left}} className="clickableCanvas" width={this.state.imageWidth} opacity={OPACITY} height={this.state.imageHeight} viewBox="0 0 100 100" preserveAspectRatio="none">
+        <svg onClick={this.onImageClicked.bind(this)} style={{left:left}} className="clickableCanvas"
+            width={this.state.imageWidth} opacity={OPACITY} height={this.state.imageHeight} viewBox="0 0 100 100"
+            preserveAspectRatio="none">
           <g stroke="none" fill="black">
             {this.clicks.map((item, index) => {
-              return <ellipse key={index} cx={item.x*100} cy={item.y*100} rx={CLICK_RADIUS} ry={CLICK_RADIUS*1.8}  fill={COLOR} style={{pointerEvents:'none'}}/>
+              return <ellipse key={index} cx={item.x*100} cy={item.y*100} rx={CLICK_RADIUS}
+                ry={CLICK_RADIUS*1.8}  fill={COLOR} style={{pointerEvents:'none'}}/>
             })}
           </g>
         </svg>);
@@ -166,7 +176,8 @@ class ImageViewComponent extends Component {
       }
 
       return (
-        <svg id={this.props.key + "AOICanvas"} style={{left:left,pointerEvents:'none'}} className="AOICanvas" width={this.state.imageWidth} height={this.state.imageHeight} viewBox="0 0 100 100" preserveAspectRatio="none">
+        <svg id={this.props.key + "AOICanvas"} style={{left:left,pointerEvents:'none'}} className="AOICanvas"
+          width={this.state.imageWidth} height={this.state.imageHeight} viewBox="0 0 100 100" preserveAspectRatio="none">
           {this.props.task.aois.map((aoi, index) => {
             return <AOIComponent aoi={aoi} key={index}/>
           })}
@@ -179,12 +190,14 @@ class ImageViewComponent extends Component {
   }
 
   handleImageLoaded(){
-    var image = this.imageRef.current;
-    this.setState({
-      imageHeight: image.height,
-      imageWidth: image.width,
-      imageElement: image
-    });
+    if(this.imageRef){
+      var image = this.imageRef.current;
+      this.setState({
+        imageHeight: image.height,
+        imageWidth: image.width,
+        imageElement: image
+      });
+    }
   }
 
   render() {
