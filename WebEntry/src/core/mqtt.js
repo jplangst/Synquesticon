@@ -46,8 +46,6 @@ function onRETData(newMessage) {
    let gazeX = gazeData[12];
    let gazeY = gazeData[13];
 
-   console.log(gazeX, gazeY);
-
    let gazeAction = {
      type: 'SET_GAZE_DATA',
      tracker: message[0],
