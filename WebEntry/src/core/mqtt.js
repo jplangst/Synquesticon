@@ -1,6 +1,6 @@
 var store = require('./store');
 var eventStore = require('./eventStore');
-//var playerUtils = require('./player_utility_functions');
+var playerUtils = require('./player_utility_functions');
 
 //MQTT javascript library
 var mqtt = require('mqtt')
@@ -39,12 +39,14 @@ function onMultipleScreenEvent(message) {
 }
 
 //TODO test and finish
-function onRETData(message) {
-  console.log("RET MESSAGES ARE NOT IMPLEMENTED YET");
-  console.log(JSON.patse(message));
-   /*let gazeData = message[1];
+function onRETData(newMessage) {
+
+   let message = JSON.parse(newMessage);
+   let gazeData = message[1];
    let gazeX = gazeData[12];
    let gazeY = gazeData[13];
+
+   console.log(gazeX, gazeY);
 
    let gazeAction = {
      type: 'SET_GAZE_DATA',
@@ -57,7 +59,7 @@ function onRETData(message) {
        rightPupilRadius: gazeData[3]/2
      }
    }
-   store.default.dispatch(gazeAction);*/
+   store.default.dispatch(gazeAction);
  }
 
 function _startMQTT(config, restart) {

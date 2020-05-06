@@ -472,8 +472,8 @@ class DisplayTaskComponent extends Component {
     }
   }
 
-
-
+  //TODO currently this is updated using an interval timer.However it would be better to only update when
+  // new events occur.
   //Updates the location of the Gaze Cursor. And checks if any of the AOIs were looked at
   updateCursorLocation(){
     try {
@@ -483,7 +483,6 @@ class DisplayTaskComponent extends Component {
         var cursorY = (gazeLoc.locY*this.frameDiv.current.offsetHeight-this.cursorRadius);
 
         var aois = store.getState().aois;
-
 
         for (var i = 0; i < aois.length; i++) {
           var a = aois[i];
